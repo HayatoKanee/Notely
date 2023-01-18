@@ -1,0 +1,630 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		DAE0E0EE29778F4E0018149E /* NotelyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAE0E0ED29778F4E0018149E /* NotelyApp.swift */; };
+		DAE0E0F029778F4E0018149E /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAE0E0EF29778F4E0018149E /* Persistence.swift */; };
+		DAE0E0F329778F4E0018149E /* Notely.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = DAE0E0F129778F4E0018149E /* Notely.xcdatamodeld */; };
+		DAE0E0F529778F4E0018149E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAE0E0F429778F4E0018149E /* ContentView.swift */; };
+		DAE0E0F729778F500018149E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DAE0E0F629778F500018149E /* Assets.xcassets */; };
+		DAE0E0FB29778F500018149E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DAE0E0FA29778F500018149E /* Preview Assets.xcassets */; };
+		DAE0E10529778F500018149E /* NotelyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAE0E10429778F500018149E /* NotelyTests.swift */; };
+		DAE0E10F29778F500018149E /* NotelyUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAE0E10E29778F500018149E /* NotelyUITests.swift */; };
+		DAE0E11129778F500018149E /* NotelyUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAE0E11029778F500018149E /* NotelyUITestsLaunchTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		DAE0E10129778F500018149E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DAE0E0E229778F4E0018149E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DAE0E0E929778F4E0018149E;
+			remoteInfo = Notely;
+		};
+		DAE0E10B29778F500018149E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DAE0E0E229778F4E0018149E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DAE0E0E929778F4E0018149E;
+			remoteInfo = Notely;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		DAE0E0EA29778F4E0018149E /* Notely.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Notely.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DAE0E0ED29778F4E0018149E /* NotelyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotelyApp.swift; sourceTree = "<group>"; };
+		DAE0E0EF29778F4E0018149E /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
+		DAE0E0F229778F4E0018149E /* Notely.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Notely.xcdatamodel; sourceTree = "<group>"; };
+		DAE0E0F429778F4E0018149E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		DAE0E0F629778F500018149E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		DAE0E0F829778F500018149E /* Notely.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Notely.entitlements; sourceTree = "<group>"; };
+		DAE0E0FA29778F500018149E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		DAE0E10029778F500018149E /* NotelyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NotelyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		DAE0E10429778F500018149E /* NotelyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotelyTests.swift; sourceTree = "<group>"; };
+		DAE0E10A29778F500018149E /* NotelyUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NotelyUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		DAE0E10E29778F500018149E /* NotelyUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotelyUITests.swift; sourceTree = "<group>"; };
+		DAE0E11029778F500018149E /* NotelyUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotelyUITestsLaunchTests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		DAE0E0E729778F4E0018149E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DAE0E0FD29778F500018149E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DAE0E10729778F500018149E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		DAE0E0E129778F4E0018149E = {
+			isa = PBXGroup;
+			children = (
+				DAE0E0EC29778F4E0018149E /* Notely */,
+				DAE0E10329778F500018149E /* NotelyTests */,
+				DAE0E10D29778F500018149E /* NotelyUITests */,
+				DAE0E0EB29778F4E0018149E /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		DAE0E0EB29778F4E0018149E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				DAE0E0EA29778F4E0018149E /* Notely.app */,
+				DAE0E10029778F500018149E /* NotelyTests.xctest */,
+				DAE0E10A29778F500018149E /* NotelyUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		DAE0E0EC29778F4E0018149E /* Notely */ = {
+			isa = PBXGroup;
+			children = (
+				DAE0E0ED29778F4E0018149E /* NotelyApp.swift */,
+				DAE0E0EF29778F4E0018149E /* Persistence.swift */,
+				DAE0E0F429778F4E0018149E /* ContentView.swift */,
+				DAE0E0F629778F500018149E /* Assets.xcassets */,
+				DAE0E0F829778F500018149E /* Notely.entitlements */,
+				DAE0E0F129778F4E0018149E /* Notely.xcdatamodeld */,
+				DAE0E0F929778F500018149E /* Preview Content */,
+			);
+			path = Notely;
+			sourceTree = "<group>";
+		};
+		DAE0E0F929778F500018149E /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				DAE0E0FA29778F500018149E /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		DAE0E10329778F500018149E /* NotelyTests */ = {
+			isa = PBXGroup;
+			children = (
+				DAE0E10429778F500018149E /* NotelyTests.swift */,
+			);
+			path = NotelyTests;
+			sourceTree = "<group>";
+		};
+		DAE0E10D29778F500018149E /* NotelyUITests */ = {
+			isa = PBXGroup;
+			children = (
+				DAE0E10E29778F500018149E /* NotelyUITests.swift */,
+				DAE0E11029778F500018149E /* NotelyUITestsLaunchTests.swift */,
+			);
+			path = NotelyUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		DAE0E0E929778F4E0018149E /* Notely */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DAE0E11429778F500018149E /* Build configuration list for PBXNativeTarget "Notely" */;
+			buildPhases = (
+				DAE0E0E629778F4E0018149E /* Sources */,
+				DAE0E0E729778F4E0018149E /* Frameworks */,
+				DAE0E0E829778F4E0018149E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Notely;
+			productName = Notely;
+			productReference = DAE0E0EA29778F4E0018149E /* Notely.app */;
+			productType = "com.apple.product-type.application";
+		};
+		DAE0E0FF29778F500018149E /* NotelyTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DAE0E11729778F500018149E /* Build configuration list for PBXNativeTarget "NotelyTests" */;
+			buildPhases = (
+				DAE0E0FC29778F500018149E /* Sources */,
+				DAE0E0FD29778F500018149E /* Frameworks */,
+				DAE0E0FE29778F500018149E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DAE0E10229778F500018149E /* PBXTargetDependency */,
+			);
+			name = NotelyTests;
+			productName = NotelyTests;
+			productReference = DAE0E10029778F500018149E /* NotelyTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		DAE0E10929778F500018149E /* NotelyUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DAE0E11A29778F500018149E /* Build configuration list for PBXNativeTarget "NotelyUITests" */;
+			buildPhases = (
+				DAE0E10629778F500018149E /* Sources */,
+				DAE0E10729778F500018149E /* Frameworks */,
+				DAE0E10829778F500018149E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DAE0E10C29778F500018149E /* PBXTargetDependency */,
+			);
+			name = NotelyUITests;
+			productName = NotelyUITests;
+			productReference = DAE0E10A29778F500018149E /* NotelyUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		DAE0E0E229778F4E0018149E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1420;
+				LastUpgradeCheck = 1420;
+				TargetAttributes = {
+					DAE0E0E929778F4E0018149E = {
+						CreatedOnToolsVersion = 14.2;
+					};
+					DAE0E0FF29778F500018149E = {
+						CreatedOnToolsVersion = 14.2;
+						TestTargetID = DAE0E0E929778F4E0018149E;
+					};
+					DAE0E10929778F500018149E = {
+						CreatedOnToolsVersion = 14.2;
+						TestTargetID = DAE0E0E929778F4E0018149E;
+					};
+				};
+			};
+			buildConfigurationList = DAE0E0E529778F4E0018149E /* Build configuration list for PBXProject "Notely" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = DAE0E0E129778F4E0018149E;
+			productRefGroup = DAE0E0EB29778F4E0018149E /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				DAE0E0E929778F4E0018149E /* Notely */,
+				DAE0E0FF29778F500018149E /* NotelyTests */,
+				DAE0E10929778F500018149E /* NotelyUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		DAE0E0E829778F4E0018149E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DAE0E0FB29778F500018149E /* Preview Assets.xcassets in Resources */,
+				DAE0E0F729778F500018149E /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DAE0E0FE29778F500018149E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DAE0E10829778F500018149E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		DAE0E0E629778F4E0018149E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DAE0E0EE29778F4E0018149E /* NotelyApp.swift in Sources */,
+				DAE0E0F329778F4E0018149E /* Notely.xcdatamodeld in Sources */,
+				DAE0E0F529778F4E0018149E /* ContentView.swift in Sources */,
+				DAE0E0F029778F4E0018149E /* Persistence.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DAE0E0FC29778F500018149E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DAE0E10529778F500018149E /* NotelyTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DAE0E10629778F500018149E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DAE0E10F29778F500018149E /* NotelyUITests.swift in Sources */,
+				DAE0E11129778F500018149E /* NotelyUITestsLaunchTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		DAE0E10229778F500018149E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DAE0E0E929778F4E0018149E /* Notely */;
+			targetProxy = DAE0E10129778F500018149E /* PBXContainerItemProxy */;
+		};
+		DAE0E10C29778F500018149E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DAE0E0E929778F4E0018149E /* Notely */;
+			targetProxy = DAE0E10B29778F500018149E /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		DAE0E11229778F500018149E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		DAE0E11329778F500018149E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		DAE0E11529778F500018149E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Notely/Notely.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Notely/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 13.1;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "Winnie-The-Pooh.Notely";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		DAE0E11629778F500018149E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Notely/Notely.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Notely/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 13.1;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "Winnie-The-Pooh.Notely";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		DAE0E11829778F500018149E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				MACOSX_DEPLOYMENT_TARGET = 13.1;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "Winnie-The-Pooh.NotelyTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Notely.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Notely";
+			};
+			name = Debug;
+		};
+		DAE0E11929778F500018149E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				MACOSX_DEPLOYMENT_TARGET = 13.1;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "Winnie-The-Pooh.NotelyTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Notely.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Notely";
+			};
+			name = Release;
+		};
+		DAE0E11B29778F500018149E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				MACOSX_DEPLOYMENT_TARGET = 13.1;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "Winnie-The-Pooh.NotelyUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Notely;
+			};
+			name = Debug;
+		};
+		DAE0E11C29778F500018149E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				MACOSX_DEPLOYMENT_TARGET = 13.1;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "Winnie-The-Pooh.NotelyUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Notely;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		DAE0E0E529778F4E0018149E /* Build configuration list for PBXProject "Notely" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DAE0E11229778F500018149E /* Debug */,
+				DAE0E11329778F500018149E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DAE0E11429778F500018149E /* Build configuration list for PBXNativeTarget "Notely" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DAE0E11529778F500018149E /* Debug */,
+				DAE0E11629778F500018149E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DAE0E11729778F500018149E /* Build configuration list for PBXNativeTarget "NotelyTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DAE0E11829778F500018149E /* Debug */,
+				DAE0E11929778F500018149E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DAE0E11A29778F500018149E /* Build configuration list for PBXNativeTarget "NotelyUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DAE0E11B29778F500018149E /* Debug */,
+				DAE0E11C29778F500018149E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		DAE0E0F129778F4E0018149E /* Notely.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				DAE0E0F229778F4E0018149E /* Notely.xcdatamodel */,
+			);
+			currentVersion = DAE0E0F229778F4E0018149E /* Notely.xcdatamodel */;
+			path = Notely.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = DAE0E0E229778F4E0018149E /* Project object */;
+}
