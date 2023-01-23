@@ -7,66 +7,68 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		DAE0E0EE29778F4E0018149E /* NotelyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAE0E0ED29778F4E0018149E /* NotelyApp.swift */; };
-		DAE0E0F029778F4E0018149E /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAE0E0EF29778F4E0018149E /* Persistence.swift */; };
-		DAE0E0F329778F4E0018149E /* Notely.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = DAE0E0F129778F4E0018149E /* Notely.xcdatamodeld */; };
-		DAE0E0F529778F4E0018149E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAE0E0F429778F4E0018149E /* ContentView.swift */; };
-		DAE0E0F729778F500018149E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DAE0E0F629778F500018149E /* Assets.xcassets */; };
-		DAE0E0FB29778F500018149E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DAE0E0FA29778F500018149E /* Preview Assets.xcassets */; };
-		DAE0E10529778F500018149E /* NotelyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAE0E10429778F500018149E /* NotelyTests.swift */; };
-		DAE0E10F29778F500018149E /* NotelyUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAE0E10E29778F500018149E /* NotelyUITests.swift */; };
-		DAE0E11129778F500018149E /* NotelyUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAE0E11029778F500018149E /* NotelyUITestsLaunchTests.swift */; };
+		DAE0E1A3297E9B1D0018149E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAE0E1A2297E9B1D0018149E /* AppDelegate.swift */; };
+		DAE0E1A5297E9B1D0018149E /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAE0E1A4297E9B1D0018149E /* SceneDelegate.swift */; };
+		DAE0E1A7297E9B1D0018149E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAE0E1A6297E9B1D0018149E /* ViewController.swift */; };
+		DAE0E1AA297E9B1D0018149E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DAE0E1A8297E9B1D0018149E /* Main.storyboard */; };
+		DAE0E1AD297E9B1D0018149E /* Notely.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = DAE0E1AB297E9B1D0018149E /* Notely.xcdatamodeld */; };
+		DAE0E1AF297E9B200018149E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DAE0E1AE297E9B200018149E /* Assets.xcassets */; };
+		DAE0E1B2297E9B200018149E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DAE0E1B0297E9B200018149E /* LaunchScreen.storyboard */; };
+		DAE0E1BD297E9B200018149E /* NotelyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAE0E1BC297E9B200018149E /* NotelyTests.swift */; };
+		DAE0E1C7297E9B200018149E /* NotelyUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAE0E1C6297E9B200018149E /* NotelyUITests.swift */; };
+		DAE0E1C9297E9B200018149E /* NotelyUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAE0E1C8297E9B200018149E /* NotelyUITestsLaunchTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		DAE0E10129778F500018149E /* PBXContainerItemProxy */ = {
+		DAE0E1B9297E9B200018149E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = DAE0E0E229778F4E0018149E /* Project object */;
+			containerPortal = DAE0E197297E9B1D0018149E /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = DAE0E0E929778F4E0018149E;
+			remoteGlobalIDString = DAE0E19E297E9B1D0018149E;
 			remoteInfo = Notely;
 		};
-		DAE0E10B29778F500018149E /* PBXContainerItemProxy */ = {
+		DAE0E1C3297E9B200018149E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = DAE0E0E229778F4E0018149E /* Project object */;
+			containerPortal = DAE0E197297E9B1D0018149E /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = DAE0E0E929778F4E0018149E;
+			remoteGlobalIDString = DAE0E19E297E9B1D0018149E;
 			remoteInfo = Notely;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		DAE0E0EA29778F4E0018149E /* Notely.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Notely.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		DAE0E0ED29778F4E0018149E /* NotelyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotelyApp.swift; sourceTree = "<group>"; };
-		DAE0E0EF29778F4E0018149E /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
-		DAE0E0F229778F4E0018149E /* Notely.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Notely.xcdatamodel; sourceTree = "<group>"; };
-		DAE0E0F429778F4E0018149E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		DAE0E0F629778F500018149E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		DAE0E0F829778F500018149E /* Notely.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Notely.entitlements; sourceTree = "<group>"; };
-		DAE0E0FA29778F500018149E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		DAE0E10029778F500018149E /* NotelyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NotelyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		DAE0E10429778F500018149E /* NotelyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotelyTests.swift; sourceTree = "<group>"; };
-		DAE0E10A29778F500018149E /* NotelyUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NotelyUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		DAE0E10E29778F500018149E /* NotelyUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotelyUITests.swift; sourceTree = "<group>"; };
-		DAE0E11029778F500018149E /* NotelyUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotelyUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		DAE0E19F297E9B1D0018149E /* Notely.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Notely.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DAE0E1A2297E9B1D0018149E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		DAE0E1A4297E9B1D0018149E /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		DAE0E1A6297E9B1D0018149E /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		DAE0E1A9297E9B1D0018149E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		DAE0E1AC297E9B1D0018149E /* Notely.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Notely.xcdatamodel; sourceTree = "<group>"; };
+		DAE0E1AE297E9B200018149E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		DAE0E1B1297E9B200018149E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		DAE0E1B3297E9B200018149E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DAE0E1B8297E9B200018149E /* NotelyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NotelyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		DAE0E1BC297E9B200018149E /* NotelyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotelyTests.swift; sourceTree = "<group>"; };
+		DAE0E1C2297E9B200018149E /* NotelyUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NotelyUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		DAE0E1C6297E9B200018149E /* NotelyUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotelyUITests.swift; sourceTree = "<group>"; };
+		DAE0E1C8297E9B200018149E /* NotelyUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotelyUITestsLaunchTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		DAE0E0E729778F4E0018149E /* Frameworks */ = {
+		DAE0E19C297E9B1D0018149E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		DAE0E0FD29778F500018149E /* Frameworks */ = {
+		DAE0E1B5297E9B200018149E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		DAE0E10729778F500018149E /* Frameworks */ = {
+		DAE0E1BF297E9B200018149E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -76,61 +78,54 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		DAE0E0E129778F4E0018149E = {
+		DAE0E196297E9B1D0018149E = {
 			isa = PBXGroup;
 			children = (
-				DAE0E0EC29778F4E0018149E /* Notely */,
-				DAE0E10329778F500018149E /* NotelyTests */,
-				DAE0E10D29778F500018149E /* NotelyUITests */,
-				DAE0E0EB29778F4E0018149E /* Products */,
+				DAE0E1A1297E9B1D0018149E /* Notely */,
+				DAE0E1BB297E9B200018149E /* NotelyTests */,
+				DAE0E1C5297E9B200018149E /* NotelyUITests */,
+				DAE0E1A0297E9B1D0018149E /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		DAE0E0EB29778F4E0018149E /* Products */ = {
+		DAE0E1A0297E9B1D0018149E /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				DAE0E0EA29778F4E0018149E /* Notely.app */,
-				DAE0E10029778F500018149E /* NotelyTests.xctest */,
-				DAE0E10A29778F500018149E /* NotelyUITests.xctest */,
+				DAE0E19F297E9B1D0018149E /* Notely.app */,
+				DAE0E1B8297E9B200018149E /* NotelyTests.xctest */,
+				DAE0E1C2297E9B200018149E /* NotelyUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		DAE0E0EC29778F4E0018149E /* Notely */ = {
+		DAE0E1A1297E9B1D0018149E /* Notely */ = {
 			isa = PBXGroup;
 			children = (
-				DAE0E0ED29778F4E0018149E /* NotelyApp.swift */,
-				DAE0E0EF29778F4E0018149E /* Persistence.swift */,
-				DAE0E0F429778F4E0018149E /* ContentView.swift */,
-				DAE0E0F629778F500018149E /* Assets.xcassets */,
-				DAE0E0F829778F500018149E /* Notely.entitlements */,
-				DAE0E0F129778F4E0018149E /* Notely.xcdatamodeld */,
-				DAE0E0F929778F500018149E /* Preview Content */,
+				DAE0E1A2297E9B1D0018149E /* AppDelegate.swift */,
+				DAE0E1A4297E9B1D0018149E /* SceneDelegate.swift */,
+				DAE0E1A6297E9B1D0018149E /* ViewController.swift */,
+				DAE0E1A8297E9B1D0018149E /* Main.storyboard */,
+				DAE0E1AE297E9B200018149E /* Assets.xcassets */,
+				DAE0E1B0297E9B200018149E /* LaunchScreen.storyboard */,
+				DAE0E1B3297E9B200018149E /* Info.plist */,
+				DAE0E1AB297E9B1D0018149E /* Notely.xcdatamodeld */,
 			);
 			path = Notely;
 			sourceTree = "<group>";
 		};
-		DAE0E0F929778F500018149E /* Preview Content */ = {
+		DAE0E1BB297E9B200018149E /* NotelyTests */ = {
 			isa = PBXGroup;
 			children = (
-				DAE0E0FA29778F500018149E /* Preview Assets.xcassets */,
-			);
-			path = "Preview Content";
-			sourceTree = "<group>";
-		};
-		DAE0E10329778F500018149E /* NotelyTests */ = {
-			isa = PBXGroup;
-			children = (
-				DAE0E10429778F500018149E /* NotelyTests.swift */,
+				DAE0E1BC297E9B200018149E /* NotelyTests.swift */,
 			);
 			path = NotelyTests;
 			sourceTree = "<group>";
 		};
-		DAE0E10D29778F500018149E /* NotelyUITests */ = {
+		DAE0E1C5297E9B200018149E /* NotelyUITests */ = {
 			isa = PBXGroup;
 			children = (
-				DAE0E10E29778F500018149E /* NotelyUITests.swift */,
-				DAE0E11029778F500018149E /* NotelyUITestsLaunchTests.swift */,
+				DAE0E1C6297E9B200018149E /* NotelyUITests.swift */,
+				DAE0E1C8297E9B200018149E /* NotelyUITestsLaunchTests.swift */,
 			);
 			path = NotelyUITests;
 			sourceTree = "<group>";
@@ -138,13 +133,13 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		DAE0E0E929778F4E0018149E /* Notely */ = {
+		DAE0E19E297E9B1D0018149E /* Notely */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = DAE0E11429778F500018149E /* Build configuration list for PBXNativeTarget "Notely" */;
+			buildConfigurationList = DAE0E1CC297E9B200018149E /* Build configuration list for PBXNativeTarget "Notely" */;
 			buildPhases = (
-				DAE0E0E629778F4E0018149E /* Sources */,
-				DAE0E0E729778F4E0018149E /* Frameworks */,
-				DAE0E0E829778F4E0018149E /* Resources */,
+				DAE0E19B297E9B1D0018149E /* Sources */,
+				DAE0E19C297E9B1D0018149E /* Frameworks */,
+				DAE0E19D297E9B1D0018149E /* Resources */,
 			);
 			buildRules = (
 			);
@@ -152,69 +147,69 @@
 			);
 			name = Notely;
 			productName = Notely;
-			productReference = DAE0E0EA29778F4E0018149E /* Notely.app */;
+			productReference = DAE0E19F297E9B1D0018149E /* Notely.app */;
 			productType = "com.apple.product-type.application";
 		};
-		DAE0E0FF29778F500018149E /* NotelyTests */ = {
+		DAE0E1B7297E9B200018149E /* NotelyTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = DAE0E11729778F500018149E /* Build configuration list for PBXNativeTarget "NotelyTests" */;
+			buildConfigurationList = DAE0E1CF297E9B200018149E /* Build configuration list for PBXNativeTarget "NotelyTests" */;
 			buildPhases = (
-				DAE0E0FC29778F500018149E /* Sources */,
-				DAE0E0FD29778F500018149E /* Frameworks */,
-				DAE0E0FE29778F500018149E /* Resources */,
+				DAE0E1B4297E9B200018149E /* Sources */,
+				DAE0E1B5297E9B200018149E /* Frameworks */,
+				DAE0E1B6297E9B200018149E /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				DAE0E10229778F500018149E /* PBXTargetDependency */,
+				DAE0E1BA297E9B200018149E /* PBXTargetDependency */,
 			);
 			name = NotelyTests;
 			productName = NotelyTests;
-			productReference = DAE0E10029778F500018149E /* NotelyTests.xctest */;
+			productReference = DAE0E1B8297E9B200018149E /* NotelyTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		DAE0E10929778F500018149E /* NotelyUITests */ = {
+		DAE0E1C1297E9B200018149E /* NotelyUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = DAE0E11A29778F500018149E /* Build configuration list for PBXNativeTarget "NotelyUITests" */;
+			buildConfigurationList = DAE0E1D2297E9B200018149E /* Build configuration list for PBXNativeTarget "NotelyUITests" */;
 			buildPhases = (
-				DAE0E10629778F500018149E /* Sources */,
-				DAE0E10729778F500018149E /* Frameworks */,
-				DAE0E10829778F500018149E /* Resources */,
+				DAE0E1BE297E9B200018149E /* Sources */,
+				DAE0E1BF297E9B200018149E /* Frameworks */,
+				DAE0E1C0297E9B200018149E /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				DAE0E10C29778F500018149E /* PBXTargetDependency */,
+				DAE0E1C4297E9B200018149E /* PBXTargetDependency */,
 			);
 			name = NotelyUITests;
 			productName = NotelyUITests;
-			productReference = DAE0E10A29778F500018149E /* NotelyUITests.xctest */;
+			productReference = DAE0E1C2297E9B200018149E /* NotelyUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		DAE0E0E229778F4E0018149E /* Project object */ = {
+		DAE0E197297E9B1D0018149E /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1420;
 				LastUpgradeCheck = 1420;
 				TargetAttributes = {
-					DAE0E0E929778F4E0018149E = {
+					DAE0E19E297E9B1D0018149E = {
 						CreatedOnToolsVersion = 14.2;
 					};
-					DAE0E0FF29778F500018149E = {
+					DAE0E1B7297E9B200018149E = {
 						CreatedOnToolsVersion = 14.2;
-						TestTargetID = DAE0E0E929778F4E0018149E;
+						TestTargetID = DAE0E19E297E9B1D0018149E;
 					};
-					DAE0E10929778F500018149E = {
+					DAE0E1C1297E9B200018149E = {
 						CreatedOnToolsVersion = 14.2;
-						TestTargetID = DAE0E0E929778F4E0018149E;
+						TestTargetID = DAE0E19E297E9B1D0018149E;
 					};
 				};
 			};
-			buildConfigurationList = DAE0E0E529778F4E0018149E /* Build configuration list for PBXProject "Notely" */;
+			buildConfigurationList = DAE0E19A297E9B1D0018149E /* Build configuration list for PBXProject "Notely" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -222,36 +217,37 @@
 				en,
 				Base,
 			);
-			mainGroup = DAE0E0E129778F4E0018149E;
-			productRefGroup = DAE0E0EB29778F4E0018149E /* Products */;
+			mainGroup = DAE0E196297E9B1D0018149E;
+			productRefGroup = DAE0E1A0297E9B1D0018149E /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				DAE0E0E929778F4E0018149E /* Notely */,
-				DAE0E0FF29778F500018149E /* NotelyTests */,
-				DAE0E10929778F500018149E /* NotelyUITests */,
+				DAE0E19E297E9B1D0018149E /* Notely */,
+				DAE0E1B7297E9B200018149E /* NotelyTests */,
+				DAE0E1C1297E9B200018149E /* NotelyUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		DAE0E0E829778F4E0018149E /* Resources */ = {
+		DAE0E19D297E9B1D0018149E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DAE0E0FB29778F500018149E /* Preview Assets.xcassets in Resources */,
-				DAE0E0F729778F500018149E /* Assets.xcassets in Resources */,
+				DAE0E1B2297E9B200018149E /* LaunchScreen.storyboard in Resources */,
+				DAE0E1AF297E9B200018149E /* Assets.xcassets in Resources */,
+				DAE0E1AA297E9B1D0018149E /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		DAE0E0FE29778F500018149E /* Resources */ = {
+		DAE0E1B6297E9B200018149E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		DAE0E10829778F500018149E /* Resources */ = {
+		DAE0E1C0297E9B200018149E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -261,51 +257,70 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		DAE0E0E629778F4E0018149E /* Sources */ = {
+		DAE0E19B297E9B1D0018149E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DAE0E0EE29778F4E0018149E /* NotelyApp.swift in Sources */,
-				DAE0E0F329778F4E0018149E /* Notely.xcdatamodeld in Sources */,
-				DAE0E0F529778F4E0018149E /* ContentView.swift in Sources */,
-				DAE0E0F029778F4E0018149E /* Persistence.swift in Sources */,
+				DAE0E1A7297E9B1D0018149E /* ViewController.swift in Sources */,
+				DAE0E1A3297E9B1D0018149E /* AppDelegate.swift in Sources */,
+				DAE0E1AD297E9B1D0018149E /* Notely.xcdatamodeld in Sources */,
+				DAE0E1A5297E9B1D0018149E /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		DAE0E0FC29778F500018149E /* Sources */ = {
+		DAE0E1B4297E9B200018149E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DAE0E10529778F500018149E /* NotelyTests.swift in Sources */,
+				DAE0E1BD297E9B200018149E /* NotelyTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		DAE0E10629778F500018149E /* Sources */ = {
+		DAE0E1BE297E9B200018149E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DAE0E10F29778F500018149E /* NotelyUITests.swift in Sources */,
-				DAE0E11129778F500018149E /* NotelyUITestsLaunchTests.swift in Sources */,
+				DAE0E1C7297E9B200018149E /* NotelyUITests.swift in Sources */,
+				DAE0E1C9297E9B200018149E /* NotelyUITestsLaunchTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		DAE0E10229778F500018149E /* PBXTargetDependency */ = {
+		DAE0E1BA297E9B200018149E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = DAE0E0E929778F4E0018149E /* Notely */;
-			targetProxy = DAE0E10129778F500018149E /* PBXContainerItemProxy */;
+			target = DAE0E19E297E9B1D0018149E /* Notely */;
+			targetProxy = DAE0E1B9297E9B200018149E /* PBXContainerItemProxy */;
 		};
-		DAE0E10C29778F500018149E /* PBXTargetDependency */ = {
+		DAE0E1C4297E9B200018149E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = DAE0E0E929778F4E0018149E /* Notely */;
-			targetProxy = DAE0E10B29778F500018149E /* PBXContainerItemProxy */;
+			target = DAE0E19E297E9B1D0018149E /* Notely */;
+			targetProxy = DAE0E1C3297E9B200018149E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
+/* Begin PBXVariantGroup section */
+		DAE0E1A8297E9B1D0018149E /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				DAE0E1A9297E9B1D0018149E /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		DAE0E1B0297E9B200018149E /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				DAE0E1B1297E9B200018149E /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
 /* Begin XCBuildConfiguration section */
-		DAE0E11229778F500018149E /* Debug */ = {
+		DAE0E1CA297E9B200018149E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -355,15 +370,17 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
-		DAE0E11329778F500018149E /* Release */ = {
+		DAE0E1CB297E9B200018149E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -407,86 +424,71 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
-		DAE0E11529778F500018149E /* Debug */ = {
+		DAE0E1CD297E9B200018149E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Notely/Notely.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"Notely/Preview Content\"";
-				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
-				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
-				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
-				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
-				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
-				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
-				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
-				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_FILE = Notely/Info.plist;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
-				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
-				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 13.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "Winnie-The-Pooh.Notely";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
-		DAE0E11629778F500018149E /* Release */ = {
+		DAE0E1CE297E9B200018149E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Notely/Notely.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"Notely/Preview Content\"";
-				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
-				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
-				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
-				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
-				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
-				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
-				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
-				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_FILE = Notely/Info.plist;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
-				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
-				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 13.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "Winnie-The-Pooh.Notely";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
-		DAE0E11829778F500018149E /* Debug */ = {
+		DAE0E1D0297E9B200018149E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
@@ -495,12 +497,9 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
-				MACOSX_DEPLOYMENT_TARGET = 13.1;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "Winnie-The-Pooh.NotelyTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -508,7 +507,7 @@
 			};
 			name = Debug;
 		};
-		DAE0E11929778F500018149E /* Release */ = {
+		DAE0E1D1297E9B200018149E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
@@ -517,12 +516,9 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
-				MACOSX_DEPLOYMENT_TARGET = 13.1;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "Winnie-The-Pooh.NotelyTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -530,20 +526,16 @@
 			};
 			name = Release;
 		};
-		DAE0E11B29778F500018149E /* Debug */ = {
+		DAE0E1D3297E9B200018149E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
-				MACOSX_DEPLOYMENT_TARGET = 13.1;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "Winnie-The-Pooh.NotelyUITests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -551,20 +543,16 @@
 			};
 			name = Debug;
 		};
-		DAE0E11C29778F500018149E /* Release */ = {
+		DAE0E1D4297E9B200018149E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
-				MACOSX_DEPLOYMENT_TARGET = 13.1;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "Winnie-The-Pooh.NotelyUITests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -575,38 +563,38 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		DAE0E0E529778F4E0018149E /* Build configuration list for PBXProject "Notely" */ = {
+		DAE0E19A297E9B1D0018149E /* Build configuration list for PBXProject "Notely" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				DAE0E11229778F500018149E /* Debug */,
-				DAE0E11329778F500018149E /* Release */,
+				DAE0E1CA297E9B200018149E /* Debug */,
+				DAE0E1CB297E9B200018149E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		DAE0E11429778F500018149E /* Build configuration list for PBXNativeTarget "Notely" */ = {
+		DAE0E1CC297E9B200018149E /* Build configuration list for PBXNativeTarget "Notely" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				DAE0E11529778F500018149E /* Debug */,
-				DAE0E11629778F500018149E /* Release */,
+				DAE0E1CD297E9B200018149E /* Debug */,
+				DAE0E1CE297E9B200018149E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		DAE0E11729778F500018149E /* Build configuration list for PBXNativeTarget "NotelyTests" */ = {
+		DAE0E1CF297E9B200018149E /* Build configuration list for PBXNativeTarget "NotelyTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				DAE0E11829778F500018149E /* Debug */,
-				DAE0E11929778F500018149E /* Release */,
+				DAE0E1D0297E9B200018149E /* Debug */,
+				DAE0E1D1297E9B200018149E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		DAE0E11A29778F500018149E /* Build configuration list for PBXNativeTarget "NotelyUITests" */ = {
+		DAE0E1D2297E9B200018149E /* Build configuration list for PBXNativeTarget "NotelyUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				DAE0E11B29778F500018149E /* Debug */,
-				DAE0E11C29778F500018149E /* Release */,
+				DAE0E1D3297E9B200018149E /* Debug */,
+				DAE0E1D4297E9B200018149E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -614,17 +602,17 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		DAE0E0F129778F4E0018149E /* Notely.xcdatamodeld */ = {
+		DAE0E1AB297E9B1D0018149E /* Notely.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				DAE0E0F229778F4E0018149E /* Notely.xcdatamodel */,
+				DAE0E1AC297E9B1D0018149E /* Notely.xcdatamodel */,
 			);
-			currentVersion = DAE0E0F229778F4E0018149E /* Notely.xcdatamodel */;
+			currentVersion = DAE0E1AC297E9B1D0018149E /* Notely.xcdatamodel */;
 			path = Notely.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};
 /* End XCVersionGroup section */
 	};
-	rootObject = DAE0E0E229778F4E0018149E /* Project object */;
+	rootObject = DAE0E197297E9B1D0018149E /* Project object */;
 }

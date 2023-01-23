@@ -2,10 +2,11 @@
 //  NotelyTests.swift
 //  NotelyTests
 //
-//  Created by paul on 18/01/2023.
+//  Created by paul on 23/01/2023.
 //
 
 import XCTest
+@testable import Notely
 
 final class NotelyTests: XCTestCase {
 
@@ -27,7 +28,7 @@ final class NotelyTests: XCTestCase {
 
     func testPerformanceExample() throws {
         // This is an example of a performance test case.
-        measure {
+        self.measure {
             // Put the code you want to measure the time of here.
         }
     }
