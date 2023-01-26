@@ -14,7 +14,7 @@ class LogInForm(forms.Form):
 class SignUpForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['username', 'email', 'new_password', 'password_confirmation']
+        fields = ['username', 'email']
 
     new_password = forms.CharField(
         label='Password',
@@ -38,8 +38,8 @@ class SignUpForm(forms.ModelForm):
     def save(self):
         super().save(commit=False)
         user = User.objects.create_user(
-                self.cleaned_data.get('username'),
-                first_name = self.cleaned_data.get('email'),
-                password= self.cleaned_data.get('new_password'),
-            )
+            username=self.cleaned_data.get('username'),
+            email=self.cleaned_data.get('email'),
+            password=self.cleaned_data.get('new_password'),
+        )
         return user
