@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
-from .forms import SignUpForm, LogInForm
+from .forms import SignUpForm, LogInForm, UserForm, ProfileForm
 from .models import User
 from django.contrib.auth.decorators import login_required
 from .helpers import login_prohibited
@@ -63,4 +63,16 @@ def calendar_tab(request):
 
 @login_required
 def profile_tab(request):
-    return render(request, 'profile_tab.html')
+    if request.method == 'POST':
+        user_form = UserForm(instance=request.user, data=request.POST)
+        profile_form = ProfileForm(instance=request.user, data=request.POST)
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            messages.add_message(request, messages.SUCCESS, "Your profile is updated!")
+            return redirect('profile_tab')
+    else:
+        user_form = UserForm(instance=request.user)
+        profile_form = ProfileForm(instance=request.user)
+    return render(request, 'profile_tab.html', {'user_form': user_form,
+                                                'profile_form': profile_form})

@@ -1,20 +1,25 @@
-{% load static %}
-<div class="topNav">
-<link rel="stylesheet" href="{% static 'NavBarStyle.css' %}" >
-        {% comment %} <img src="{% static 'logo.png' %}" alt="logo" width="100" height="100" /> {% endcomment %}
-        <p><h1 class="navbar-brand">Welcome to Notely!</h1></p>
-        <a href="{% url 'folders_tab' %}">Notes
-            {% comment %} <img src="{% static 'notes.png' %}" alt="logo" width="100" height="100" /> {% endcomment %}
-        </a>
-
-        <a href="{% url 'calendar_tab' %}">Calendar
-            {% comment %} <img src="{% static 'calendar.png' %}" alt="logo" width="100" height="100" /> {% endcomment %}
-        </a>
-        
-        <a href="{% url 'profile_tab' %}">Me
-            {% comment %} <img src="{% static 'profile.png' %}" alt="logo" width="100" height="100" /> {% endcomment %}
-        </a>
-
-        <a href="{% url 'log_out' %}" class="split">Log Out
-        </a>
-</div>
+<nav class="navbar navbar-expand-lg bg-nav shadow-sm">
+  <div class="container-fluid">
+      <img class="logo img-fluid">
+      <a class="navbar-brand fw-bold brand" href='{% url 'folders_tab' %}'>Notely</a>
+      <div class="container-fluid collapse navbar-collapse" id="navbarSupportedContent" style="justify-content: flex-end;">
+          <a class="nav-link nav-link-style nav-item" href="{% url 'folders_tab' %}">Notes</a>
+          <a class="nav-link nav-link-style nav-item" href="{% url 'calendar_tab'%}">Calendar</a>
+          <div class="nav-item dropdown">
+            <button class="nav-link dropdown-toggle fw-bold nav-link-style"  id="user-account-dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <tr>
+                <td>{{user.username}} </td>
+              <td>
+                <img src="{{ user.profile.mini_gravatar }}" alt="Gravatar of {{ user.username }}" class="rounded-circle" >
+              </td>
+            </tr>
+            </button>
+          <div class="dropdown-menu" aria-labelledby="user-account-dropdown">
+            <a class="dropdown-item nav-link nav-link-drop px-2 text-muted" href="{% url 'profile_tab' %}" >Profile</a>
+            <hr class="dropdown-divider"></li>
+            <a class="dropdown-item nav-link nav-link-drop px-2 text-muted" href="{% url 'log_out' %}">Log out</a>
+          </div>
+        </div>
+      </div>
+  </div>
+</nav>
