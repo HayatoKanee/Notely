@@ -1,11 +1,11 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
-from .forms import SignUpForm, LogInForm, UserForm, ProfileForm
+from .forms import SignUpForm, LogInForm, UserForm, ProfileForm, PasswordForm
 from .models import User
 from django.contrib.auth.decorators import login_required
 from .helpers import login_prohibited
+from django.contrib.auth.hashers import check_password
 
 
 @login_prohibited
@@ -76,3 +76,26 @@ def profile_tab(request):
         profile_form = ProfileForm(instance=request.user)
     return render(request, 'profile_tab.html', {'user_form': user_form,
                                                 'profile_form': profile_form})
+
+
+@login_required
+def password_tab(request):
+    current_user = request.user
+    if request.method == 'POST':
+        form = PasswordForm(data=request.POST)
+        if form.is_valid():
+            password = form.cleaned_data.get('password')
+            if check_password(password, current_user.password):
+                new_password = form.cleaned_data.get('new_password')
+                current_user.set_password(new_password)
+                current_user.save()
+                login(request, current_user, backend='django.contrib.auth.backends.ModelBackend')
+                messages.add_message(request, messages.SUCCESS, "Password updated!")
+                return redirect('folders_tab')
+            else:
+                messages.add_message(request, messages.ERROR, "Wrong password!")
+    form = PasswordForm()
+    return render(request, 'password_tab.html', {'form': form})
+
+def gravatar(request):
+    return redirect("https://en.gravatar.com/")

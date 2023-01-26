@@ -23,7 +23,9 @@ urlpatterns = [
     path('log_in/', views.log_in, name='log_in'),
     path('log_out/', views.log_out, name='log_out'),
     path('sign_up/', views.sign_up, name='sign_up'),
-    path('folders_tab/',views.folders_tab,name='folders_tab'),
-    path('calendar_tab/',views.calendar_tab,name='calendar_tab'),
-    path('profile_tab/',views.profile_tab,name='profile_tab'),
+    path('folders_tab/', views.folders_tab, name='folders_tab'),
+    path('calendar_tab/', views.calendar_tab, name='calendar_tab'),
+    path('profile_tab/', views.profile_tab, name='profile_tab'),
+    path('password_tab/', views.password_tab, name='password_tab'),
+    path('gravatar/', views.gravatar, name='gravatar'),
 ]

@@ -16,6 +16,8 @@
             </button>
           <div class="dropdown-menu" aria-labelledby="user-account-dropdown">
             <a class="dropdown-item nav-link nav-link-drop px-2 text-muted" href="{% url 'profile_tab' %}" >Profile</a>
+              <a class="dropdown-item nav-link nav-link-drop px-2 text-muted" href="{% url 'gravatar' %}"  target="_blank">Change Gravatar</a>
+            <a class="dropdown-item nav-link nav-link-drop px-2 text-muted" href="{% url 'password_tab' %}" >Change Password</a>
             <hr class="dropdown-divider"></li>
             <a class="dropdown-item nav-link nav-link-drop px-2 text-muted" href="{% url 'log_out' %}">Log out</a>
           </div>
