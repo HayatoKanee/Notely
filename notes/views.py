@@ -7,6 +7,7 @@ from .models import User
 from django.contrib.auth.decorators import login_required
 from .helpers import login_prohibited
 
+
 @login_prohibited
 def sign_up(request):
     if request.method == 'POST':
@@ -18,6 +19,7 @@ def sign_up(request):
     else:
         form = SignUpForm()
     return render(request, 'sign_up.html', {'form': form})
+
 
 @login_prohibited
 def log_in(request):
@@ -38,25 +40,27 @@ def log_in(request):
     form = LogInForm()
     return render(request, 'log_in.html', {'form': form, 'next': next})
 
+
 @login_required
 def log_out(request):
     logout(request)
     return redirect('home')
 
+
 def home(request):
     return render(request, 'home.html')
 
+
 @login_required
 def folders_tab(request):
-    return render(request,'folders_tab.html')
+    return render(request, 'folders_tab.html')
+
 
 @login_required
 def calendar_tab(request):
-    return render(request,'calendar_tab.html')
+    return render(request, 'calendar_tab.html')
+
 
 @login_required
 def profile_tab(request):
-    return render(request,'profile_tab.html')
-
-
-
+    return render(request, 'profile_tab.html')

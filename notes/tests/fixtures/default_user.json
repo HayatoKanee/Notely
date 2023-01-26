@@ -1,0 +1,12 @@
+[
+    {
+        "model": "notes.User",
+        "pk": 1,
+        "fields": {
+            "username": "johndoe",
+            "email": "johndoe@example.org",
+            "password": "pbkdf2_sha256$390000$DSvSp0MOLePcnhz0aW9qDN$Uq4CEWyMlIRAtgBBeoSXNId88VtbIGWeUKs+dLcKQB8=",
+            "is_active": true
+        }
+    }
+]

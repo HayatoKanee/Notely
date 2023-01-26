@@ -2,6 +2,7 @@ from django import forms
 from django.core.validators import RegexValidator
 from .models import User
 
+
 class LogInForm(forms.Form):
     username = forms.CharField(label="Username")
     password = forms.CharField(label="Password", widget=forms.PasswordInput())
@@ -21,8 +22,8 @@ class SignUpForm(forms.ModelForm):
         widget=forms.PasswordInput(),
         validators=[
             RegexValidator(
-            regex=r'^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).*$',
-            message='Password must contain an uppercase character, a lowercase character and a number'
+                regex=r'^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).*$',
+                message='Password must contain an uppercase character, a lowercase character and a number'
             ),
         ]
     )
