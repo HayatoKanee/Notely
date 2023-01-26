@@ -18,16 +18,6 @@ class User(AbstractUser):
     )
     email = models.EmailField(unique=True, blank=False)
 
-    def gravatar(self, size=120):
-        """Return a URL to the user's gravatar."""
-        gravatar_object = Gravatar(self.email)
-        gravatar_url = gravatar_object.get_image(size=size, default='mp')
-        return gravatar_url
-
-    def mini_gravatar(self):
-        """Return a URL to a miniature version of the user's gravatar."""
-        return self.gravatar(size=30)
-
 
 class Profile(models.Model):
     user = models.OneToOneField(User, related_name="profile", on_delete=models.CASCADE)
@@ -55,3 +45,14 @@ class Profile(models.Model):
         null=True,
         blank=True
     )
+
+    def gravatar(self, size=120):
+        """Return a URL to the user's gravatar."""
+        gravatar_object = Gravatar(self.user.email)
+        gravatar_url = gravatar_object.get_image(size=size, default='mp')
+        return gravatar_url
+
+    def mini_gravatar(self):
+        """Return a URL to a miniature version of the user's gravatar."""
+        return self.gravatar(size=30)
+
