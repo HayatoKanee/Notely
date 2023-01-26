@@ -1,7 +1,6 @@
 from django.test import TestCase
 from django.urls import reverse
-from .models import User
-from .helpers_tests import reverse_with_next
+from notes.tests.helpers_tests import reverse_with_next
 
 class RedirectsTest(TestCase):
     def test_get_redirects_when_not_logged_in(self):
