@@ -50,5 +50,13 @@ def home(request):
 def folders_tab(request):
     return render(request,'folders_tab.html')
 
+@login_required
+def calendar_tab(request):
+    return render(request,'calendar_tab.html')
+
+@login_required
+def profile_tab(request):
+    return render(request,'profile_tab.html')
+
 
 
