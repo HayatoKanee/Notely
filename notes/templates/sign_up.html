@@ -12,20 +12,23 @@
         <title>Notely</title>
     </head>
     <body>
-        <div class="white-box">
-        <div class="header">
-        <h1>Notely</h1>
-       </div>
-        <div class="description">
-        <p>Welcome, please sign up or log in</p>
+        <div class="page-form">
+        <h1>Sign up</h1>
+        <div class="content">
+            <div class="input-field">
+                <form action="{% url 'sign_up' %}" method="post">
+                    {% csrf_token %}
+                    {{form.as_p}}
+            </div>
+            <div class="action">
+                <button>
+                    <input type="submit" value="Sign up" class="button">
+                </button>
+             </div>
+                </form>
+            </div>
         </div>
-        <div>
-        <button><a href="{% url 'sign_up' %}" class="button">Sign Up</a></button>
-        <div class="divider"></div>
-        <button><a href="{% url 'log_in' %}" class="button">Log In</a></button>
-       </div>
-        </div>
-    </body>
-    {% block content2 %}
-    {% endblock %}
-</html>
+     </body>
+     {% block content2 %}
+     {% endblock %}
+ </html>

@@ -124,3 +124,9 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'notes.User'
+
+# Login url for redirecting
+LOGIN_URL = 'log_in'
+
+# The url which @login_prohibited redirects to
+REDIRECT_URL_WHEN_LOGGED_IN = 'folders_tab'

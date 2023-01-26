@@ -17,15 +17,11 @@
         <h1>Notely</h1>
        </div>
         <div class="description">
-        <p>Welcome, please sign up or log in</p>
+        <p>Folders</p>
         </div>
-        <div>
-        <button><a href="{% url 'sign_up' %}" class="button">Sign Up</a></button>
-        <div class="divider"></div>
-        <button><a href="{% url 'log_in' %}" class="button">Log In</a></button>
-       </div>
         </div>
     </body>
+    {% include 'partials/bottomNavBar.html' %}
     {% block content2 %}
     {% endblock %}
 </html>
