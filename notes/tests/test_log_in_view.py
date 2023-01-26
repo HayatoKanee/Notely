@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.urls import reverse
 from notes.forms import LogInForm
 from notes.models import User
-from .helpers_tests import LoginInTester, reverse_with_next
+from notes.tests.helpers_tests import LoginInTester, reverse_with_next
 
 
 class LogInViewTestCase(TestCase, LoginInTester):

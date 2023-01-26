@@ -4,7 +4,7 @@ from django.test import TestCase
 from django.urls import reverse
 from notes.forms import SignUpForm
 from notes.models import User
-from .helpers_tests import LoginInTester
+from notes.tests.helpers_tests import LoginInTester
 
 
 class SignUpViewTestCase(TestCase, LoginInTester):

@@ -2,7 +2,7 @@
 from django.test import TestCase
 from django.urls import reverse
 from notes.models import User
-from .helpers_tests import LoginInTester
+from notes.tests.helpers_tests import LoginInTester
 
 
 class LogOutViewTestCase(TestCase, LoginInTester):
