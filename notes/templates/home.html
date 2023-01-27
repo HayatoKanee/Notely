@@ -5,14 +5,41 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" >
+        <link href="{%static 'homeStyle.css'%}" rel="stylesheet"/>
             <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" ></script> 
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js" integrity="sha384-Atwg2Pkwv9vp0ygtn1JAojH0nYbwNJLPhwyoVbhoPwBhjQPR5VtM2+xf0Uwh9KtT" crossorigin="anonymous"></script>
-        {% block content %}
-        {% endblock %}
         <title>Notely</title>
+        <style>
+            .home {
+                width: max-content;
+                object-fit: cover;
+            }
+        </style>
     </head>
     <body>
-        <div class="white-box">
+        <div class="box">
+            <h2>Notely</h2>
+            <div class="description">
+                <p>Welcome, please sign up or log in</p>
+                </div>
+            <div class="input-box">
+                <label>Account</label>
+                <input type="text"/>
+            </div>
+            <div class="input-box">
+                <label>Password</label>
+                <input type="password"/>
+            </div>
+            <div class="btn-box">
+                <div>
+                    <button><a href="{% url 'sign_up' %}" class="button">Sign Up</a></button>
+                    <button><a href="{% url 'log_in' %}" class="button">Log In</a></button>
+                </div>
+            </div>
+        </div>
+    </body>
+    <!-- <body>
+        <div class="box">
         <div class="header">
         <h1>Notely</h1>
        </div>
@@ -25,7 +52,5 @@
         <button><a href="{% url 'log_in' %}" class="button">Log In</a></button>
        </div>
         </div>
-    </body>
-    {% block content2 %}
-    {% endblock %}
+    </body> -->
 </html>
