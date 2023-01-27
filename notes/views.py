@@ -47,6 +47,7 @@ def log_out(request):
     return redirect('home')
 
 
+@login_prohibited
 def home(request):
     return render(request, 'home.html')
 
