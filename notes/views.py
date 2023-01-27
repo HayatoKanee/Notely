@@ -41,12 +41,12 @@ def log_in(request):
     return render(request, 'log_in.html', {'form': form, 'next': next})
 
 
-@login_required
 def log_out(request):
     logout(request)
     return redirect('home')
 
 
+@login_prohibited
 def home(request):
     return render(request, 'home.html')
 
@@ -65,7 +65,7 @@ def calendar_tab(request):
 def profile_tab(request):
     if request.method == 'POST':
         user_form = UserForm(instance=request.user, data=request.POST)
-        profile_form = ProfileForm(instance=request.user, data=request.POST)
+        profile_form = ProfileForm(instance=request.user.profile, data=request.POST)
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
@@ -73,7 +73,7 @@ def profile_tab(request):
             return redirect('profile_tab')
     else:
         user_form = UserForm(instance=request.user)
-        profile_form = ProfileForm(instance=request.user)
+        profile_form = ProfileForm(instance=request.user.profile)
     return render(request, 'profile_tab.html', {'user_form': user_form,
                                                 'profile_form': profile_form})
 
@@ -96,6 +96,7 @@ def password_tab(request):
                 messages.add_message(request, messages.ERROR, "Wrong password!")
     form = PasswordForm()
     return render(request, 'password_tab.html', {'form': form})
+
 
 def gravatar(request):
     return redirect("https://en.gravatar.com/")
