@@ -1,4 +1,4 @@
-'''Unit tests for the log in form'''
+"""Unit tests for the login form"""
 from django.core.exceptions import ValidationError
 from django.contrib.auth.hashers import check_password
 from django import forms
@@ -7,10 +7,10 @@ from notes.models import User
 from notes.forms import LogInForm
 
 class LogInFormTestCase(TestCase):
-    '''Unit tests for the log in form'''
+    """Unit tests for the login form"""
 
     def setUp(self):
-        self.form_input = {'username': '@janedoe', 'password': 'Password123'}
+        self.form_input = {'username': 'janedoe', 'password': 'Password123'}
 
     def test_form_contains_required_fields(self):
         form = LogInForm()
