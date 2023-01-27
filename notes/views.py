@@ -93,7 +93,7 @@ def password_tab(request):
                 messages.add_message(request, messages.SUCCESS, "Password updated!")
                 return redirect('folders_tab')
             else:
-                messages.add_message(request, messages.ERROR, "Wrong password!")
+                messages.add_message(request, messages.ERROR, "Wrong Password!")
     form = PasswordForm()
     return render(request, 'password_tab.html', {'form': form})
 
