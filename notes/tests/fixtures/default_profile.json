@@ -1,0 +1,12 @@
+[
+    {
+        "model": "notes.profile",
+        "pk": 1,
+        "fields": {
+            "age": 38,
+            "dob": "1999-01-01",
+            "address": "2 Regent Street, London, N1 0AE",
+            "user_id": 1
+        }
+    }
+]

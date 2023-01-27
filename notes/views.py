@@ -65,7 +65,7 @@ def calendar_tab(request):
 def profile_tab(request):
     if request.method == 'POST':
         user_form = UserForm(instance=request.user, data=request.POST)
-        profile_form = ProfileForm(instance=request.user, data=request.POST)
+        profile_form = ProfileForm(instance=request.user.profile, data=request.POST)
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
@@ -96,6 +96,7 @@ def password_tab(request):
                 messages.add_message(request, messages.ERROR, "Wrong password!")
     form = PasswordForm()
     return render(request, 'password_tab.html', {'form': form})
+
 
 def gravatar(request):
     return redirect("https://en.gravatar.com/")
