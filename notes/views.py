@@ -41,7 +41,6 @@ def log_in(request):
     return render(request, 'log_in.html', {'form': form, 'next': next})
 
 
-@login_required
 def log_out(request):
     logout(request)
     return redirect('home')
