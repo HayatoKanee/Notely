@@ -73,7 +73,7 @@ def profile_tab(request):
             return redirect('profile_tab')
     else:
         user_form = UserForm(instance=request.user)
-        profile_form = ProfileForm(instance=request.user)
+        profile_form = ProfileForm(instance=request.user.profile)
     return render(request, 'profile_tab.html', {'user_form': user_form,
                                                 'profile_form': profile_form})
 
