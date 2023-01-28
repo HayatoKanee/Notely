@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
-from .forms import SignUpForm, LogInForm, UserForm, ProfileForm, PasswordForm
+from .forms import SignUpForm, LogInForm, UserForm, ProfileForm, PasswordForm, FolderForm
 from .models import User
 from django.contrib.auth.decorators import login_required
 from .helpers import login_prohibited
@@ -53,7 +53,15 @@ def home(request):
 
 @login_required
 def folders_tab(request):
-    return render(request, 'folders_tab.html')
+    if request.method == "POST":
+        form = FolderForm(request.POST)
+        if form.is_valid():
+            form.save(request.user)
+    else:
+        form = FolderForm()
+
+    return render(request, 'folders_tab.html',
+                  {'folders': request.user.folders.all(), 'form': form})
 
 
 @login_required

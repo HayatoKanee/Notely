@@ -1,6 +1,6 @@
 from django import forms
 from django.core.validators import RegexValidator
-from .models import User, Profile
+from .models import User, Profile, Folder
 
 
 class LogInForm(forms.Form):
@@ -88,3 +88,17 @@ class PasswordForm(forms.Form):
         password_confirmation = self.cleaned_data.get('password_confirmation')
         if new_password != password_confirmation:
             self.add_error('password_confirmation', 'Confirmation does not match password.')
+
+
+class FolderForm(forms.ModelForm):
+    class Meta:
+        model = Folder
+        fields = ['name']
+
+    def save(self, user):
+        super().save(commit=False)
+        folder = Folder.objects.create(
+            user=user,
+            name=self.cleaned_data.get('name'),
+        )
+        return folder

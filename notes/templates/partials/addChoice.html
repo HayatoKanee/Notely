@@ -1,0 +1,26 @@
+<div class="modal fade" id="add" aria-hidden="true" aria-labelledby="addLabel" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalToggleLabel">Modal 1</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <ul class="list-group">
+      <li class="list-group-item">
+                   <button class="add" data-bs-toggle="modal"  data-bs-dismiss="modal"
+                           data-bs-target="#addFolder"> Folder</button>
+      </li>
+      <li class="list-group-item">
+                   <button class="add" data-bs-toggle="modal"  data-bs-dismiss="modal"
+                           data-bs-target="#addFolder"> Notebook</button>
+      </li>
+    </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% include 'partials/addFolder.html' %}

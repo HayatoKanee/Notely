@@ -1,0 +1,24 @@
+#addChoice{
+    background: url("images/addFolder.png") no-repeat;
+    background-size: contain;
+    background-position: center;
+    background-color: transparent;
+    width: 100%;
+    height: 300px;
+}
+
+.add{
+    background-color: transparent;
+    border: none;
+}
+.add:hover{
+    font-weight: bold;
+}
+
+#folder{
+    background: url("images/folder.png") no-repeat;
+    background-size: contain;
+    background-position: center;
+    width: 100%;
+    height: 275px;
+}

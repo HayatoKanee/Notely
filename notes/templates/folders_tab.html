@@ -1,11 +1,40 @@
 {% extends 'base_content.html' %}
 {% block content %}
-    <div class="white-box">
-        <div class="header">
-            <h1>Folders</h1>
-        </div>
-        <div class="description">
-            <p>xxx</p>
-        </div>
+  <section class="py-5 text-center container">
+    <div class="row py-lg-5">
+      <div class="col-lg-6 col-md-8 mx-auto">
+        <h1 class="fw-light">Notes</h1>
+        <p class="lead text-muted">Manage your notes here.</p>
+      </div>
     </div>
+  </section>
+
+  <div class="album py-5 bg-light">
+    <div class="container">
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+      <div class="col">
+          <div class="card shadow-sm">
+          <button id="addChoice" data-bs-toggle="modal" data-bs-target="#add">
+          </button>
+                  <button class="add mx-auto" data-bs-toggle="modal" data-bs-target="#add">New</button>
+            </div>
+      </div>
+          {% for folder in folders %}
+          <div class="col">
+          <div class="card shadow-sm">
+            <div class="card-body">
+                <button id="folder"></button>
+              <div class="d-flex justify-content-between align-items-center">
+                  <button class="add mx-auto" >{{ folder.name }}▼</button>
+              </div>
+            </div>
+          </div>
+        </div>
+          {% endfor %}
+      </div>
+    </div>
+  </div>
+{% include 'partials/addChoice.html' %}
+
+
 {% endblock %}
