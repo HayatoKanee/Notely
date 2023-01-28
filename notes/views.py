@@ -100,3 +100,8 @@ def password_tab(request):
 
 def gravatar(request):
     return redirect("https://en.gravatar.com/")
+
+
+@login_required
+def page(request):
+    return render(request, 'page.html')

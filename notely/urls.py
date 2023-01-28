@@ -28,4 +28,5 @@ urlpatterns = [
     path('profile_tab/', views.profile_tab, name='profile_tab'),
     path('password_tab/', views.password_tab, name='password_tab'),
     path('gravatar/', views.gravatar, name='gravatar'),
+    path('page/', views.page, name='page')
 ]

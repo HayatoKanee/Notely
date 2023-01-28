@@ -1,0 +1,12 @@
+{% extends 'base_content.html' %}
+{% block content %}
+    <canvas id="canvas"> </canvas>
+    <nav class="navbar fixed-bottom navbar-light bg-light">
+        <a class="navbar-brand" href="#">Toolbox</a>
+    </nav>
+    {% block scripts %}
+        {% load static %}
+            <script src="{%static 'javascript/fabric.min.js'%}"></script>
+            <script src="{%static 'javascript/draw.js'%}"></script>
+    {% endblock %}
+{% endblock %}
