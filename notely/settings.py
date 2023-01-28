@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'notes',
     'widget_tweaks',
+    'guardian',
 ]
 
 MIDDLEWARE = [
@@ -125,7 +126,9 @@ AUTH_USER_MODEL = 'notes.User'
 LOGIN_URL = 'log_in'
 
 # Backends that allow users to login using email
-AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend', 'notes.email_authentication.EmailBackend']
+AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend',
+                           'notes.email_authentication.EmailBackend',
+                           'guardian.backends.ObjectPermissionBackend']
 
 # The url which @login_prohibited redirects to
 REDIRECT_URL_WHEN_LOGGED_IN = 'folders_tab'

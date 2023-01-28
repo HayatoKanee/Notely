@@ -1,7 +1,7 @@
 from django import forms
 from django.core.validators import RegexValidator
 from .models import User, Profile, Folder
-
+from guardian.shortcuts import assign_perm
 
 class LogInForm(forms.Form):
     username = forms.CharField(label="Username")
@@ -95,10 +95,14 @@ class FolderForm(forms.ModelForm):
         model = Folder
         fields = ['name']
 
-    def save(self, user):
+    def save(self, user, parent=None):
         super().save(commit=False)
         folder = Folder.objects.create(
             user=user,
+            parent=parent,
             name=self.cleaned_data.get('name'),
         )
+        assign_perm('dg_view_folder', user, folder)
+        assign_perm('dg_edit_folder', user, folder)
+        assign_perm('dg_delete_folder', user, folder)
         return folder

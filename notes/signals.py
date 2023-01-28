@@ -16,3 +16,4 @@ def save_age(sender, instance, **kwargs):
     # when date of birth is saved in the profile, calculate and save the age
     if instance.dob:
         instance.age = calculate_age(instance.dob)
+

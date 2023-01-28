@@ -23,7 +23,8 @@
           <div class="col">
           <div class="card shadow-sm">
             <div class="card-body">
-                <button id="folder"></button>
+                <form action="{% url 'sub_folders_tab' folder.id %}" method="get">
+                    <button id = "folder"></button></form>
               <div class="d-flex justify-content-between align-items-center">
                   <button class="add mx-auto" >{{ folder.name }}▼</button>
               </div>
