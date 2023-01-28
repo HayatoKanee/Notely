@@ -56,3 +56,13 @@ class Profile(models.Model):
         """Return a URL to a miniature version of the user's gravatar."""
         return self.gravatar(size=30)
 
+
+class Folder(models.Model):
+    user = models.ForeignKey(User, related_name="folders", on_delete=models.CASCADE)
+    name = models.CharField(
+        max_length=10
+    )
+
+
+
+

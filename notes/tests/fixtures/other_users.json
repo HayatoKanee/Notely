@@ -8,5 +8,23 @@
             "password": "pbkdf2_sha256$390000$DSvSp0MOLePcnhz0aW9qDN$Uq4CEWyMlIRAtgBBeoSXNId88VtbIGWeUKs+dLcKQB8=",
             "is_active": true
         }
+    },
+    {
+        "model": "notes.Profile",
+        "pk": 2,
+        "fields": {
+            "age": 38,
+            "dob": "1999-01-01",
+            "address": "2 Regent Street, London, N1 0AE",
+            "user_id": 2
+        }
+    },
+    {
+        "model": "notes.Folder",
+        "pk": 2,
+        "fields": {
+            "user_id": 2,
+            "name": "FC2"
+        }
     }
 ]

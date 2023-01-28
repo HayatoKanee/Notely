@@ -5,12 +5,10 @@ from notes.models import User
 
 
 class ProfileModelTestCase(TestCase):
-    """Tests for User Profile model"""
+    """Tests for Profile model"""
     fixtures = [
         'notes/tests/fixtures/default_user.json',
-        'notes/tests/fixtures/other_users.json',
-        'notes/tests/fixtures/default_profile.json',
-        'notes/tests/fixtures/other_profiles.json'
+        'notes/tests/fixtures/other_users.json'
     ]
 
     def setUp(self):
