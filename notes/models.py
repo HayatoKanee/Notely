@@ -59,6 +59,7 @@ class Profile(models.Model):
 
 class Folder(models.Model):
     user = models.ForeignKey(User, related_name="folders", on_delete=models.CASCADE)
+    parent = models.ForeignKey('self', related_name="sub_folders", on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=10)
 
 
