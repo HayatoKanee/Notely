@@ -8,40 +8,60 @@
         <link href="{%static 'log_in.css'%}" rel="stylesheet"/>
             <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" ></script> 
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js" integrity="sha384-Atwg2Pkwv9vp0ygtn1JAojH0nYbwNJLPhwyoVbhoPwBhjQPR5VtM2+xf0Uwh9KtT" crossorigin="anonymous"></script>
-        {% block content %}
-        {% endblock %}
         <title>Notely</title>
     </head>
     <body>
-        <div class="page-form">
-    <h1>Log In</h1>
-    <div class="content">
-        {%for message in messages%}
-            <p><b>{{ message }}</b></p>
-        {%endfor%}
-
-        <form action="{% url 'log_in' %}" method="post">
-            {% csrf_token %}
-            <div class="input-field">
-            <input type="hidden" name="next" value = "{{ next }}">
-            {{form.as_p}}
+        <div class="box">
+            <div class="page-form">
+                <h1>Log In</h1>
+                <div class="input-box">
+                    <label>Username</label>
+                    <input type="text"/>
+                </div>
+                <div class="input-box">
+                    <label>Password</label>
+                    <input type="password"/>
+                </div>
+                <!-- <div class="content">
+                    <p><b>{{ message }}</b></p>
+                <form action="{% url 'log_in' %}" method="post">
+                {% csrf_token %}
+                <div class="input-field">
+                <input type="hidden" name="next" value = "{{ next }}">
+                {{form.as_p}}
+                </div> -->
+                <div class="action">
+                <input type="submit" value="Log in">
+                </div>
+                <div class="container">
+                <p>Don't have an account?</p>
+                    <a href="{% url 'sign_up' %}">Sign up here</a>
+                    <br><br>
+                </div>
+                </form>
             </div>
-            <div class="action">
-            <button>
-            <input type="submit" value="Log in" class="button">
-            </button>
         </div>
-            <div class="container">
-            <p>Don't have an account?</p>
-                <a class="dropdown-item" href="{% url 'sign_up' %}">Sign up here</a>
-                <br><br>
-            </div>
-        
-    </form>
-
-    </div>
-    </div>
     </body>
-     {% block content2 %}
-     {% endblock %}
+    <!-- <body>
+        <div class="box">
+            <h2>Notely</h2>
+            <div class="description">
+                <p>Welcome, please sign up or log in</p>
+                </div>
+            <div class="input-box">
+                <label>Account</label>
+                <input type="text"/>
+            </div>
+            <div class="input-box">
+                <label>Password</label>
+                <input type="password"/>
+            </div>
+            <div class="btn-box">
+                <div>
+                    <button><a href="{% url 'sign_up' %}" class="button">Sign Up</a></button>
+                    <button><a href="{% url 'log_in' %}" class="button">Log In</a></button>
+                </div>
+            </div>
+        </div>
+    </body> -->
  </html>
