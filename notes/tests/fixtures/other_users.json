@@ -24,7 +24,16 @@
         "pk": 2,
         "fields": {
             "user_id": 2,
-            "name": "FC2"
+            "name": "Year1"
+        }
+    },
+    {
+        "model": "notes.NoteBook",
+        "pk": 2,
+        "fields": {
+            "user_id": 2,
+            "folder_id": 2,
+            "name": "FC1"
         }
     }
 ]

@@ -62,12 +62,12 @@ class Folder(models.Model):
     name = models.CharField(max_length=10)
 
 
-class NoteBook(models.Model):
+class Notebook(models.Model):
     user = models.ForeignKey(User, related_name="notebooks", on_delete=models.CASCADE)
-    folder = models.ForeignKey(Folder, related_name="notebooks", on_delete=models.CASCADE, null=True)
+    folder = models.ForeignKey(Folder, related_name="notebooks", on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=10)
 
 
 class Page(models.Model):
-    notebook = models.ForeignKey(NoteBook, related_name="pages", on_delete=models.CASCADE)
+    notebook = models.ForeignKey(Notebook, related_name="pages", on_delete=models.CASCADE)
     drawing = models.TextField(blank=True)

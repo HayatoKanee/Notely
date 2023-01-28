@@ -4,7 +4,7 @@ from django.test import TestCase
 from notes.models import User, Folder
 
 
-class ProfileModelTestCase(TestCase):
+class FolderModelTestCase(TestCase):
     """Tests for folder model"""
     fixtures = [
         'notes/tests/fixtures/default_user.json',
@@ -39,7 +39,7 @@ class ProfileModelTestCase(TestCase):
         try:
             self.folder.full_clean()
         except ValidationError:
-            self.fail('Profile should be valid')
+            self.fail('Folder should be valid')
 
     def _assert_folder_is_invalid(self):
         with self.assertRaises(ValidationError):
