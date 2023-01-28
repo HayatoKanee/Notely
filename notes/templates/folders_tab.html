@@ -1,11 +1,38 @@
 {% extends 'base_content.html' %}
+{% include 'bootstrap.html' %}
 {% block content %}
-    <div class="white-box">
+<nav class="sidebar">
+  <ul class="list-group">
+    <li class="list-group-item">Home</li>
+    <li class="list-group-item">About</li>
+    <li class="list-group-item">Contact</li>
+  </ul>
+</nav>
+<div class="my-div">
+  hello
+</div>
+<div class="my-card">
+  <div class="row">
+    <div class="col-sm-6">
+      <header class="my-header">Online Note Taking Website</header>
+      <body>
+        Supporting both drawing and typing function, make things easy for u to take note.....
+      </body>
+      <p><a href="{% url 'sign_up' %}">
+        <button class="first-card-button">Sign Up </button>
+      </a></p>
+    </div>
+    <div class="col-sm-6">
+      <img src="static" class="img-fluid">
+    </div>
+  </div>
+</div>
+    <!-- <div class="white-box">
         <div class="header">
             <h1>Folders</h1>
         </div>
         <div class="description">
             <p>xxx</p>
         </div>
-    </div>
+    </div> -->
 {% endblock %}
