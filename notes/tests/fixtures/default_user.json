@@ -35,5 +35,13 @@
             "folder_id": 1,
             "name": "FC1"
         }
+    },
+    {
+        "model": "notes.Page",
+        "pk": 1,
+        "fields": {
+            "notebook_id": 1,
+            "drawing": "Some JSON data"
+        }
     }
 ]
