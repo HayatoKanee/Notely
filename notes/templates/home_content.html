@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block scripts %}
+{% endblock %}
+{% block body %}
+    {% include 'partials/home_navbar.html' %}
+    {% include 'partials/messages.html' %}
+    {% block content %}
+    {% endblock %}
+    {% include 'partials/home_footer.html' %}
+{% endblock %}
