@@ -50,3 +50,4 @@ $ python3 manage.py test
 
 ## Sources
 The packages used by this application are specified in `requirements.txt`
+The image "signup_login.jpg" in https://www.wikihow.com/Take-Better-Notes
