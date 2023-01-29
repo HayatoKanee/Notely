@@ -11,21 +11,21 @@
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js" integrity="sha384-Atwg2Pkwv9vp0ygtn1JAojH0nYbwNJLPhwyoVbhoPwBhjQPR5VtM2+xf0Uwh9KtT" crossorigin="anonymous"></script>
         <title>Notely</title>
 </head>
-  <div class="box" style="height: 400px;">
+    <div id="log">
+  <div class="box" >
     <h1>Sign up</h1>
       <div class="page-form">
         <div class="content">
+             <form action="{% url 'sign_up' %}" method="post">
             <div class="input-field">
-              <form action="{% url 'sign_up' %}" method="post">
+
                     {% csrf_token %}
                     {% include 'partials/bootstrap_form.html' with form=form %}
             </div>
-            <div class="action">
-                <button>
-                    <a href="{% url 'log_in' %}"><button class="my-button">Log In</button></a>
-                </button>
-             </div>
-            </div>
+                <input type="submit" value="Sign up" class="my-button" style="font-size: 15px; text-align: center;" />
+             </form>
         </div>
+            </div>
       </div>
+    </div>
 {% endblock %}

@@ -62,5 +62,7 @@
 }
 .icon-image {
   width: 4vw;
-  height:6vh;
+  height:5vh;
+  background: url("../notebookicon.jpg") no-repeat;
+  background-size: contain;
 }
