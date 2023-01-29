@@ -1,7 +1,10 @@
+{% include 'partials/sidebar.html' %}
 <nav class="navbar navbar-expand-lg bg-nav shadow-sm">
   <div class="container-fluid">
       <img class="logo img-fluid">
-      <a class="navbar-brand fw-bold brand" href='{% url 'folders_tab' %}'>Notely</a>
+      <a class="navbar-brand fw-bold brand"data-bs-toggle="offcanvas" href="#sidebar" role="button" aria-controls="sidebar">
+  Notely
+</a>
       <div class="container-fluid collapse navbar-collapse" id="navbarSupportedContent" style="justify-content: flex-end;">
           <a class="nav-link nav-link-style nav-item" href="{% url 'folders_tab' %}">Notes</a>
           <a class="nav-link nav-link-style nav-item" href="{% url 'calendar_tab'%}">Calendar</a>
