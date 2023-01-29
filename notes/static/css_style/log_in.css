@@ -129,3 +129,7 @@ input {
   display: flex;
   justify-content: center;
 }
+
+#reg:hover{
+    font-weight: bold;
+}
