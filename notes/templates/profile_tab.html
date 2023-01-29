@@ -14,7 +14,6 @@
                 <em>Last log in: {{user.last_login}}</em></p>
                 <a class="nav-link px-2" style="font-size: 20px; color: rgb(245, 93, 66)"
                         href="{% url 'password_tab' %}" id="reg">Change Password</a>
-        <p class="text-center text-muted" style="margin-top: 25px;">&copy; 2023 Winnie The Pooh</p>
     </div>
         <div class="col-md-7 mx-auto">
         <div class="profile" style="margin-left: 50px;">
@@ -26,7 +25,7 @@
               {% csrf_token %}
               {% include 'partials/bootstrap_form.html' with form=user_form %}
               {% include 'partials/bootstrap_form.html' with form=profile_form %}
-              <input type="submit" value="Save Changes" class="btn btn-chocolate fw-bold" style="color: rgb(245, 93, 66)">
+              <input type="submit" value="Save Changes" class="btn-chocolate fw-bold" style="color: rgb(245, 93, 66)">
             </form>
           </div>
           <div id="personalDetails" class="collapse multi-collapse show" style="font-size: 20px">
