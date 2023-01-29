@@ -3,3 +3,4 @@ Django
 Faker
 django-widget-tweaks
 libgravatar
+django-guardian

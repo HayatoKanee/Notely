@@ -1,0 +1,23 @@
+#draw{
+    background: url("images/pen.png") no-repeat;
+    background-size: contain;
+    width: 30px;
+    height: 30px;
+    border: none;
+}
+#select.active{
+    background-color: blue;
+}
+#select{
+    background: url("images/select.png") no-repeat;
+    background-size: contain;
+    width: 30px;
+    height: 30px;
+    border: none;
+}
+#draw.active{
+    background-color: blue;
+}
+.toolbox{
+    margin: 20px;
+}

@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 import os
 from pathlib import Path
+from django.contrib.messages import constants as messages
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -37,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'notes',
     'widget_tweaks',
+    'guardian',
 ]
 
 MIDDLEWARE = [
@@ -128,7 +130,14 @@ AUTH_USER_MODEL = 'notes.User'
 LOGIN_URL = 'log_in'
 
 # Backends that allow users to login using email
-AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend', 'notes.email_authentication.EmailBackend']
+AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend',
+                           'notes.email_authentication.EmailBackend',
+                           'guardian.backends.ObjectPermissionBackend']
 
 # The url which @login_prohibited redirects to
 REDIRECT_URL_WHEN_LOGGED_IN = 'folders_tab'
+
+# Show red when message tag is an error
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger',
+}

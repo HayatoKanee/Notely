@@ -55,3 +55,24 @@ class Profile(models.Model):
     def mini_gravatar(self):
         """Return a URL to a miniature version of the user's gravatar."""
         return self.gravatar(size=30)
+class Folder(models.Model):
+    user = models.ForeignKey(User, related_name="folders", on_delete=models.CASCADE)
+    parent = models.ForeignKey('self', related_name="sub_folders", on_delete=models.CASCADE, null=True, blank=True)
+    name = models.CharField(max_length=10)
+
+    class Meta:
+        permissions = [
+            ("dg_view_folder", "can view folder"),
+            ("dg_edit_folder", "can edit folder"),
+            ("dg_delete_folder", "can delete folder")
+        ]
+
+class Notebook(models.Model):
+    user = models.ForeignKey(User, related_name="notebooks", on_delete=models.CASCADE)
+    folder = models.ForeignKey(Folder, related_name="notebooks", on_delete=models.CASCADE, null=True, blank=True)
+    name = models.CharField(max_length=10)
+
+
+class Page(models.Model):
+    notebook = models.ForeignKey(Notebook, related_name="pages", on_delete=models.CASCADE)
+    drawing = models.TextField(blank=True)

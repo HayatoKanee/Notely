@@ -13,9 +13,7 @@ class ProfileViewTestCase(TestCase):
 
     fixtures = [
         'notes/tests/fixtures/default_user.json',
-        'notes/tests/fixtures/default_profile.json',
-        'notes/tests/fixtures/other_users.json',
-        'notes/tests/fixtures/other_profiles.json',
+        'notes/tests/fixtures/other_users.json'
     ]
 
     def setUp(self):

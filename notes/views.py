@@ -1,11 +1,14 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
-from .forms import SignUpForm, LogInForm, UserForm, ProfileForm, PasswordForm
-from .models import User
+
+from notely import settings
+from .forms import SignUpForm, LogInForm, UserForm, ProfileForm, PasswordForm, FolderForm
+from .models import User, Folder
 from django.contrib.auth.decorators import login_required
-from .helpers import login_prohibited
+from .helpers import login_prohibited, check_perm
 from django.contrib.auth.hashers import check_password
+from guardian.shortcuts import get_objects_for_user
 
 
 @login_prohibited
@@ -53,7 +56,33 @@ def home(request):
 
 @login_required
 def folders_tab(request):
-    return render(request, 'folders_tab.html')
+    user = request.user
+    if request.method == "POST":
+        form = FolderForm(request.POST)
+        if form.is_valid():
+            form.save(request.user)
+    else:
+        form = FolderForm()
+    folders = get_objects_for_user(user, 'dg_view_folder', klass=Folder)
+    folders = folders.filter(parent=None)
+
+    return render(request, 'folders_tab.html',
+                  {'folders': folders, 'form': form})
+
+
+@login_required
+@check_perm('view_folder', Folder)
+def sub_folders_tab(request, folder_id):
+    user = request.user
+    folder = Folder.objects.get(id=folder_id)
+    if request.method == "POST":
+        form = FolderForm(request.POST)
+        if form.is_valid():
+            form.save(request.user, folder)
+    else:
+        form = FolderForm()
+    return render(request, 'folders_tab.html',
+                  {'folders': folder.sub_folders.all(), 'form': form ,'folder_id':folder_id})
 
 
 @login_required
@@ -93,10 +122,15 @@ def password_tab(request):
                 messages.add_message(request, messages.SUCCESS, "Password updated!")
                 return redirect('folders_tab')
             else:
-                messages.add_message(request, messages.ERROR, "Wrong password!")
+                messages.add_message(request, messages.ERROR, "Wrong Password!")
     form = PasswordForm()
     return render(request, 'password_tab.html', {'form': form})
 
 
 def gravatar(request):
     return redirect("https://en.gravatar.com/")
+
+
+@login_required
+def page(request):
+    return render(request, 'page.html')
