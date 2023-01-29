@@ -10,7 +10,7 @@ class ProfileFormTestCase(TestCase):
     """Unit tests of the profile form"""
 
     fixtures = [
-        'notes/tests/fixtures/other_users.json'
+        'notes/tests/fixtures/default_user.json'
     ]
 
     def setUp(self):
@@ -42,7 +42,7 @@ class ProfileFormTestCase(TestCase):
 
     # Test that form is saved with the correct information
     def test_form_must_save_correctly(self):
-        user = User.objects.get(username='janedoe')
+        user = User.objects.get(username='johndoe')
         form = ProfileForm(instance=user.profile, data=self.form_input)
         before_count = Profile.objects.count()
         form.save()

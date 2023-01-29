@@ -122,3 +122,14 @@ body {
     border: 1px solid rgba(197,81,58,0.8);/*元素边框的样式、宽度和颜色*/
     background: rgba(197,81,58,0.5);/*元素的背景颜色*/
 }
+.my-button {
+  position: relative;
+  top: -5px;
+  font-weight: bold;
+  padding: 10px 20px;
+  font-size: 12px;
+  color: white;
+  border: 2px solid white;
+  border-radius: 20px;
+  background-color: rgb(245, 93, 66);
+}
