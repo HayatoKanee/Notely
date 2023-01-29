@@ -14,6 +14,7 @@ function selectBtn(btn){
   });
   btn.classList.add('active');
 }
+
 function toggleDraw(btn) {
   selectBtn(btn);
   canvas.isDrawingMode = true;
@@ -25,5 +26,3 @@ function toggleSelect(btn) {
 }
 
 const canvas = initCanvas('canvas');
-
-
