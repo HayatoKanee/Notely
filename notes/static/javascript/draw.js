@@ -24,6 +24,22 @@ function toggleSelect(btn) {
   canvas.isDrawingMode = false;
 }
 
+function addImage(e) {
+    const input = document.getElementById('img')
+    const image = input.files[0];
+    reader.readAsDataURL(image)
+}
+
 const canvas = initCanvas('canvas');
 
+let reader = new FileReader()
 
+let inputImage = document.getElementById('img');
+inputImage.addEventListener('change', addImage)
+
+reader.addEventListener("load", () => {
+    fabric.Image.fromURL(reader.result, img => {
+        canvas.add(img)
+        canvas.requestRenderAll()
+    })
+})
