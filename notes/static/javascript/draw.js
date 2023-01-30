@@ -5,30 +5,32 @@ const initCanvas = (id) => {
         backgroundColor: 'rgba(250,250,250,1)'
     });
 }
-const modes = ['select', 'draw', 'add_text'];
-
+const modes = ['select', 'draw', 'text'];
+let currentMode;
 
 function selectBtn(btn){
   modes.forEach(mode => {
     const b = document.getElementById(mode);
     b.classList.remove('active');
   });
+  canvas.isDrawingMode= false;
   btn.classList.add('active');
 }
 
 function toggleText(btn) {
     selectBtn(btn);
-    canvas.isDrawingMode= false;
+    currentMode = "text";
 }
 
 function toggleDraw(btn) {
   selectBtn(btn);
   canvas.isDrawingMode = true;
+  currentMode = "draw";
 }
 
 function toggleSelect(btn) {
   selectBtn(btn);
-  canvas.isDrawingMode = false;
+  currentMode = "select";
 }
 
 
@@ -51,5 +53,24 @@ reader.addEventListener("load", () => {
         canvas.requestRenderAll()
     })
 })
+
+canvas.on('mouse:down', function(options) {
+    if(currentMode==='text'){
+        let pointer = canvas.getPointer(options.e);
+        if (!options.target) {
+            let textbox = new fabric.IText('Input', {
+          left: pointer.x,
+          top: pointer.y,
+          fontSize: 20,
+          fontFamily: 'Arial',
+          fill: 'black'
+        });
+            canvas.add(textbox);
+        }
+
+
+    }
+    canvas.renderAll();
+});
 
 
