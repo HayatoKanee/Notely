@@ -3,7 +3,6 @@ import datetime
 from django.conf import settings
 from django.shortcuts import redirect, get_object_or_404
 from django.core.exceptions import ValidationError, PermissionDenied
-from django.contrib import messages
 from functools import wraps
 
 
@@ -40,5 +39,9 @@ def check_perm(perm, obj_type):
                     raise PermissionDenied
             result = view_function(request, *args, **kwargs)
             return result
+
         return modified_view_function
+
     return decorator
+
+

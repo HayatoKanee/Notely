@@ -3,12 +3,13 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 
 from notely import settings
-from .forms import SignUpForm, LogInForm, UserForm, ProfileForm, PasswordForm, FolderForm
-from .models import User, Folder
+from .forms import SignUpForm, LogInForm, UserForm, ProfileForm, PasswordForm, FolderForm, NotebookForm
+from .models import User, Folder, Notebook
 from django.contrib.auth.decorators import login_required
 from .helpers import login_prohibited, check_perm
 from django.contrib.auth.hashers import check_password
 from guardian.shortcuts import get_objects_for_user
+from .view_helper import sort_items_by_created_time, save_folder_notebook_forms
 
 
 @login_prohibited
@@ -58,16 +59,19 @@ def home(request):
 def folders_tab(request):
     user = request.user
     if request.method == "POST":
-        form = FolderForm(request.POST)
-        if form.is_valid():
-            form.save(request.user)
+        return save_folder_notebook_forms(request, user)
     else:
-        form = FolderForm()
+        folder_form = FolderForm()
+        notebook_form = NotebookForm()
     folders = get_objects_for_user(user, 'dg_view_folder', klass=Folder)
     folders = folders.filter(parent=None)
+    notebooks = get_objects_for_user(user, 'dg_view_notebook', klass=Notebook)
+    notebooks = notebooks.filter(folder=None)
+    items = sort_items_by_created_time(folders, notebooks)
 
     return render(request, 'folders_tab.html',
-                  {'folders': folders, 'form': form})
+                  {'items': items, 'folder_form': folder_form,
+                   'notebook_form': notebook_form})
 
 
 @login_required
@@ -76,13 +80,16 @@ def sub_folders_tab(request, folder_id):
     user = request.user
     folder = Folder.objects.get(id=folder_id)
     if request.method == "POST":
-        form = FolderForm(request.POST)
-        if form.is_valid():
-            form.save(request.user, folder)
+        return save_folder_notebook_forms(request, user, folder)
     else:
-        form = FolderForm()
+        folder_form = FolderForm()
+        notebook_form = NotebookForm()
+    folders = folder.sub_folders.all()
+    notebooks = folder.notebooks.all()
+    items = sort_items_by_created_time(folders, notebooks)
     return render(request, 'folders_tab.html',
-                  {'folders': folder.sub_folders.all(), 'form': form ,'folder_id':folder_id})
+                  {'items': items, 'folder_form': folder_form,
+                   'notebook_form': notebook_form, 'folder_id': folder_id})
 
 
 @login_required
