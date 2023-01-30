@@ -24,6 +24,7 @@ function toggleText(btn) {
 
 function toggleDraw(btn) {
   selectBtn(btn);
+  canvas.freeDrawingBrush.color = color
   canvas.isDrawingMode = true;
   currentMode = "draw";
 }
@@ -40,7 +41,19 @@ function addImage(e) {
     reader.readAsDataURL(image)
 }
 
+function chooseColor() {
+    const chooser = document.getElementById('chooseColor')
+    chooser.addEventListener('change', (e) => {
+        color = '#' + e.target.value
+        canvas.freeDrawingBrush.color = color
+        canvas.requestRenderAll()
+    })
+}
+
 const canvas = initCanvas('canvas');
+
+let color = '#000000'
+chooseColor()
 
 let reader = new FileReader()
 
@@ -63,7 +76,7 @@ canvas.on('mouse:down', function(options) {
           top: pointer.y,
           fontSize: 20,
           fontFamily: 'Arial',
-          fill: 'black'
+          fill: color
         });
             canvas.add(textbox);
         }

@@ -10,10 +10,13 @@
       <li class="nav-item">
          <button class="toolbox" id="draw" onclick="toggleDraw(this)"></button>
       </li>
-            <li class="nav-item">
-         <button class="toolbox" id="text" onclick="toggleText(this)">
-             <span class="bi bi-journal-text"></span>
-         </button>
+      <li class="nav-item">
+        <button class="toolbox" id="text" onclick="toggleText(this)">
+            <span class="bi bi-journal-text"></span>
+        </button>
+      </li>
+      <li class="nav-item">
+        <input id='chooseColor' value="#000000" data-jscolor="">
       </li>
       <li class="nav-item">
         <input id="img" class="toolbox" type="file" accept="image/*">
@@ -25,5 +28,6 @@
         {% load static %}
             <script src="{%static 'javascript/fabric.min.js'%}"></script>
             <script src="{%static 'javascript/draw.js'%}"></script>
+            <script src="{%static 'javascript/jscolor.js'%}"></script>
     {% endblock %}
 {% endblock %}
