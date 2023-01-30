@@ -19,19 +19,19 @@ class NotebookModelTestCase(TestCase):
 
     # name - test format
     def test_name_cannot_be_blank(self):
-        self.notebook.name = ''
+        self.notebook.notebook_name = ''
         self._assert_notebook_is_invalid()
 
     def test_name_can_be_10_characters_long(self):
-        self.notebook.name = 'x' * 10
+        self.notebook.notebook_name = 'x' * 10
         self._assert_notebook_is_valid()
 
     def test_name_cannot_be_over_10_characters_long(self):
-        self.notebook.name = 'x' * 11
+        self.notebook.notebook_name = 'x' * 11
         self._assert_notebook_is_invalid()
 
     def test_name_can_be_repeated_(self):
-        self.notebook.name = Notebook.objects.get(pk=2).name
+        self.notebook.name = Notebook.objects.get(pk=2).notebook_name
         self._assert_notebook_is_valid()
 
     def test_folder_can_be_null(self):
