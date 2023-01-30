@@ -27,6 +27,7 @@ def sign_up(request):
 
 @login_prohibited
 def log_in(request):
+#
     if request.method == 'POST':
         form = LogInForm(request.POST)
         next = request.POST.get('next') or ''
