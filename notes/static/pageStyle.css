@@ -18,6 +18,9 @@
 #draw.active{
     background-color: blue;
 }
+#add_text.active{
+    background-color: blue;
+}
 .toolbox{
     margin: 20px;
 }

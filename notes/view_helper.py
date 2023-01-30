@@ -9,11 +9,17 @@ def save_folder_notebook_forms(request, user, folder=None):
     if folder_form.is_valid():
         folder_form.save(user, folder)
         messages.add_message(request, messages.SUCCESS, "Added a folder")
-        return redirect('folders_tab' if folder is None else 'sub_folders_tab', folder.id if folder else None)
+        if folder is None:
+            return redirect('folders_tab')
+        else:
+            return redirect('sub_folders_tab', folder.id)
     if notebook_form.is_valid():
         notebook_form.save(user, folder)
         messages.add_message(request, messages.SUCCESS, "Added a notebook")
-        return redirect('folders_tab' if folder is None else 'sub_folders_tab', folder.id if folder else None)
+        if folder is None:
+            return redirect('folders_tab')
+        else:
+            return redirect('sub_folders_tab', folder.id)
 
 
 def sort_items_by_created_time(*args):
