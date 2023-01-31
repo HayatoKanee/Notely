@@ -1,5 +1,6 @@
 {% extends 'base_content_without_footer.html' %}
 {% block content %}
+     <a href="javascript:history.back()" style="color: #1b1b1b; margin-left: 20px"> <i class="bi bi-arrow-left"></i> Go back</a>
     <canvas id="canvas"> </canvas>
     <nav class="navbar navbar-expand-lg fixed-bottom navbar-light bg-light">
     <div class="container-fluid">
@@ -28,8 +29,8 @@
         {% load static %}
         <script src="{%static 'javascript/fabric.min.js'%}"></script>
         <script>
-        const page_id = "{{ page_id }}";
-        const drawing = '{{ drawing|safe}}';
+        const page_id = "{{ page.id }}";
+        const drawing = '{{ page.drawing|safe}}';
         function getCookie(name) {
             var cookieValue = null;
             if (document.cookie && document.cookie !== '') {
