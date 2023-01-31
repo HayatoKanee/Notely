@@ -2,12 +2,11 @@
 {% block content %}
     {% if folder %}
         {% if folder.parent %}
-            <a href={% url 'sub_folders_tab'  folder.parent.id%} style="color:#1b1b1b;margin-left:20px"> <i class="bi bi-arrow-left"></i> Go back</a>
+            <a href="{% url 'sub_folders_tab'  folder.parent.id%}" style="color:#1b1b1b;margin-left:20px"> <button id="goback-button"><span style="margin-right:1200px">Go Back</span></button> Go back</a>
         {% else %}
-            <a href={% url 'folders_tab'%} style="color:#1b1b1b;margin-left:20px"> <i class="bi bi-arrow-left"></i> Go back</a>
+            <a href="{% url 'folders_tab'%}" style="color:#1b1b1b;margin-left:20px"> <button id="goback-button"><span style="margin-right:1200px">Go Back</span></button></a>
         {% endif %}
     {% endif %}
-
 
     <ul class="folder-nav">
       <li style="background-color: white;font-size:23px; font-style: bold;">
@@ -19,22 +18,22 @@
         </button>
       </li>
     </ul>
-
   <div>
 
-    {{folders.get_path}}
-
+    <div class="folder-path">
+      {{folder.get_path}}
+    </div>
   </div>
   <div class="folder-container">
     <div class="container">
           {% for item in items %}
-          <div class="col">
+          <div class="col" style="margin-left:-90px">
                 {% if item.get_type == "Folder" %}
                 <form action="{% url 'sub_folders_tab' item.id %}" method="get">
-                    <button id = "folder_img" style="text-align: left;"><span style="margin-left:30px">{{ item.folder_name }}▼</button></span></form>
+                    <button id = "folder_img" style="text-align: left;"><span style="margin-left:40px">{{ item.folder_name }}▼</button></span></form>
                 {% else %}
                  <form action="{% url 'page' item.last_page.id %}" method="get">
-                    <button id="notebook_img" style="text-align: left; "><span style="margin-left:30px">{{ item.notebook_name }}▼</span></button></form>
+                    <button id="notebook_img" style="text-align: left; "><span style="margin-left:40px">{{ item.notebook_name }}▼</span></button></form>
                 {% endif %}
         </div>
           {% endfor %}
