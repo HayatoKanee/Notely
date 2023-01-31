@@ -1,9 +1,10 @@
 const initCanvas = (id) => {
     return new fabric.Canvas(id, {
-        width: window.innerWidth,
-        height: window.innerHeight,
-        backgroundColor: 'rgba(250,250,250,1)'
-    });
+    width: window.innerWidth,
+    height: window.innerHeight,
+    backgroundColor: 'rgba(250,250,250,1)'
+        });
+
 }
 const modes = ['select', 'draw', 'text'];
 let currentMode;
@@ -37,22 +38,24 @@ function toggleSelect(btn) {
 function addImage(e) {
     const input = document.getElementById('img')
     const image = input.files[0];
-    reader.readAsDataURL(image)
+    reader.readAsDataURL(image);
 }
 
 const canvas = initCanvas('canvas');
+canvas.loadFromJSON(drawing);
+canvas.renderAll();
 
-let reader = new FileReader()
+let reader = new FileReader();
 
 let inputImage = document.getElementById('img');
-inputImage.addEventListener('change', addImage)
+inputImage.addEventListener('change', addImage);
 
 reader.addEventListener("load", () => {
     fabric.Image.fromURL(reader.result, img => {
         canvas.add(img)
         canvas.requestRenderAll()
     })
-})
+});
 
 canvas.on('mouse:down', function(options) {
     if(currentMode==='text'){
@@ -73,4 +76,14 @@ canvas.on('mouse:down', function(options) {
     canvas.renderAll();
 });
 
+window.setInterval(function (){
+    $.ajax({
+        type:"POST",
+        url: "/save_page/"+page_id,
+        data: {
+            data: JSON.stringify(canvas.toDatalessJSON()),
+            csrfmiddlewaretoken: csrf
+        }
+    });
+}, 3000);
 

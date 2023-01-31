@@ -1,10 +1,11 @@
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 
 from notely import settings
 from .forms import SignUpForm, LogInForm, UserForm, ProfileForm, PasswordForm, FolderForm, NotebookForm
-from .models import User, Folder, Notebook
+from .models import User, Folder, Notebook, Page
 from django.contrib.auth.decorators import login_required
 from .helpers import login_prohibited, check_perm
 from django.contrib.auth.hashers import check_password
@@ -75,7 +76,7 @@ def folders_tab(request):
 
 
 @login_required
-@check_perm('view_folder', Folder)
+@check_perm('dg_view_folder', Folder)
 def sub_folders_tab(request, folder_id):
     user = request.user
     folder = Folder.objects.get(id=folder_id)
@@ -139,5 +140,16 @@ def gravatar(request):
 
 
 @login_required
-def page(request):
-    return render(request, 'page.html')
+def page(request, page_id):
+    page = Page.objects.get(id=page_id)
+    return render(request, 'page.html', {'drawing': page.drawing, 'page_id': page_id})
+
+
+def save_page(request, page_id):
+    if request.method == 'POST':
+        data = request.POST.get('data')
+        page = Page.objects.get(id=page_id)
+        page.drawing = data
+        page.save()
+        return JsonResponse({'status': 'success'})
+    return JsonResponse({'status': 'fail'})

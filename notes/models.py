@@ -94,6 +94,8 @@ class Notebook(models.Model):
 class Page(models.Model):
     notebook = models.ForeignKey(Notebook, related_name="pages", on_delete=models.CASCADE)
     drawing = models.TextField(blank=True)
+    last_page_of = models.OneToOneField(Notebook, related_name="last_page", on_delete=models.CASCADE, null=True,
+                                        blank=True)
 
     class Meta:
         permissions = [
@@ -101,3 +103,12 @@ class Page(models.Model):
             ("dg_edit_page", "can edit page"),
             ("dg_delete_page", "can delete page")
         ]
+
+    def delete(self, *args, **kwargs):
+        notebook = self.last_page_of
+        super().delete(*args, **kwargs)
+        pages = notebook.pages.all()
+        if pages.exists():
+            notebook.last_page = pages.last()
+        else:
+            notebook.last_page = Page.objects.create(notebook=notebook, last_page_of=notebook)

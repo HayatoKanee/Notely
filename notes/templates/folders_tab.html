@@ -33,7 +33,7 @@
                   <button class="add mx-auto" >{{ item.folder_name }}▼</button>
               </div>
                 {% else %}
-                 <form action="{% url 'page' %}" method="get">
+                 <form action="{% url 'page' item.last_page.id %}" method="get">
                     <button id="notebook_img"></button></form>
               <div class="d-flex justify-content-between align-items-center">
                   <button class="add mx-auto" >{{ item.notebook_name }}▼</button>

@@ -23,7 +23,29 @@
     </nav>
     {% block scripts %}
         {% load static %}
-            <script src="{%static 'javascript/fabric.min.js'%}"></script>
+        <script src="{%static 'javascript/fabric.min.js'%}"></script>
+        <script>
+        const page_id = "{{ page_id }}";
+        const drawing = '{{ drawing|safe}}';
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        const csrf = getCookie('csrftoken');
+        </script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
             <script src="{%static 'javascript/draw.js'%}"></script>
+
     {% endblock %}
 {% endblock %}
