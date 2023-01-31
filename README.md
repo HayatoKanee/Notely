@@ -55,3 +55,4 @@ select.png:https://www.flaticon.com/free-icon/click_2767163?term=select&page=1&p
 pen.png:https://www.flaticon.com/free-icon/pen_1860115
 addFolder.png:https://www.flaticon.com/free-icon/new-folder_9517944?term=add&page=1&position=8&origin=search&related_id=9517944
 folder.png:https://www.flaticon.com/free-icon/folder_1383970?term=folder&page=1&position=2&origin=search&related_id=1383970
+notebook.png:https://www.flaticon.com/free-icon/notebook_2904859?term=notebook&page=1&position=2&origin=search&related_id=2904859

@@ -1,46 +1,49 @@
 {%extends 'base_content.html'%}
 {%block content%}
 <br>
-<div class="profile-banner">
-  <div class="profile-detail">
-    <p class=" h1 fw-bold">
-      <i class="bi bi-person-fill"></i>
-      {{user.username|upper }}
-    </p>
-    <p class="profile-email h6"><em>Email: {{user.email}}</em></p>
-    <p class="profile-email h6"><em>Last log in: {{user.last_login}}</em></p>
-  </div>
-</div>
+    <div class="container" style="margin-left: 10px; color: rgb(245, 93, 66)">
+    <div class ="row align-items-center g-lg-5 py-5">
+    <div class="col-md-5 text-center" style="border-right: 5px solid rgb(245, 93, 66);">
+    <img src="{{ user.profile.gravatar }}" alt="Gravatar of {{ user.username }}" class="rounded-circle">
+            <p class=" h1 fw-bold">
+              {{user.username|upper}}
+            </p>
+            <p class="profile-email h6" style="font-size: 20px;">
+                <em>Email: {{user.email}}</em></p>
+            <p class="profile-email h6" style="font-size: 20px;">
+                <em>Last log in: {{user.last_login}}</em></p>
+                <a class="nav-link px-2" style="font-size: 20px; color: rgb(245, 93, 66)"
+                        href="{% url 'password_tab' %}" id="reg">Change Password</a>
+    </div>
+        <div class="col-md-7 mx-auto">
+        <div class="profile" style="margin-left: 50px;">
+          <div class="header">
+          <p class="h2 fw-bold" style="margin-bottom:25px; font-size: 50px;">PERSONAL DETAILS</p>
+          </div>
+          <div class="profile-content">
+            <form action="{% url 'profile_tab' %}" method="post" id="userProfileForm" class="collapse multi-collapse">
+              {% csrf_token %}
+              {% include 'partials/bootstrap_form.html' with form=user_form %}
+              {% include 'partials/bootstrap_form.html' with form=profile_form %}
+              <input type="submit" value="Save Changes" class="btn-chocolate fw-bold" style="color: rgb(245, 93, 66)">
+            </form>
+          </div>
+          <div id="personalDetails" class="collapse multi-collapse show" style="font-size: 20px">
+            <p>First Name: {{user.first_name}} </p>
+            <p>Last Name: {{user.last_name}}</p>
+            <p>Date of Birth: {{user.profile.dob}}</p>
+            <p>Address: {{user.profile.address}}</p>
+            <p>Date joined: {{user.date_joined}}</p>
+          </div>
+            <button class="edit h6 fw-bold collapse multi-collapse show" id="EditButton"
+                        style="font-size: 15px; color: rgb(245, 93, 66)"
+                        data-bs-toggle="collapse" data-bs-target=".multi-collapse" aria-expanded="false"
+                        aria-controls="personalDetails userProfileForm EditButton">
+                <a> <i class="bi bi-pencil-square"></i> Edit</a>
+            </button>
+          </div>
+        </div>
+     </div>
+    </div>
 <br>
-<div class="profile">
-  <div class="header">
-  <p class="h2 fw-bold" style="margin-bottom:0 ;">PERSONAL DETAILS</p>
-  <button class="edit h6 fw-bold collapse multi-collapse show" id="EditButton"
-    data-bs-toggle="collapse" data-bs-target=".multi-collapse" aria-expanded="false"
-    aria-controls="personalDetails userProfileForm EditButton">
-    <a> <i class="bi bi-pencil-square"></i> Edit</a>
-  </button>
-  </div>
-  <hr class="profile-hr">
-  <div class="profile-content">
-    <form action="{% url 'profile_tab' %}" method="post" id="userProfileForm" class="collapse multi-collapse">
-      {% csrf_token %}
-      {% include 'partials/bootstrap_form.html' with form=user_form %}
-      {% include 'partials/bootstrap_form.html' with form=profile_form %}
-      <input type="submit" value="Save Changes" class="btn btn-chocolate fw-bold">
-    </form>
-  </div>
-  <div id="personalDetails" class="collapse multi-collapse show">
-    <p>First Name: {{user.first_name}} </p>
-    <p>Last Name: {{user.last_name}}</p>
-      <p>Age: {{user.profile.age }}</p>
-    <p>Date of Birth: {{user.profile.dob}}</p>
-    <p>Address: {{user.profile.address}}</p>
-    <p>Date joined: {{user.date_joined}}</p>
-  </div>
-
-</div>
-
-<br>
-
 {%endblock%}

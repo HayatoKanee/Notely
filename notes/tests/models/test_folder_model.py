@@ -19,19 +19,19 @@ class FolderModelTestCase(TestCase):
 
     # name - test format
     def test_name_cannot_be_blank(self):
-        self.folder.name = ''
+        self.folder.folder_name = ''
         self._assert_folder_is_invalid()
 
     def test_name_can_be_10_characters_long(self):
-        self.folder.name = 'x' * 10
+        self.folder.folder_name = 'x' * 10
         self._assert_folder_is_valid()
 
     def test_name_cannot_be_over_10_characters_long(self):
-        self.folder.name = 'x' * 11
+        self.folder.folder_name = 'x' * 11
         self._assert_folder_is_invalid()
 
     def test_name_can_be_repeated_(self):
-        self.folder.name = Folder.objects.get(pk=2).name
+        self.folder.folder_name = Folder.objects.get(pk=2).folder_name
         self._assert_folder_is_valid()
 
     # Validation (helpers)

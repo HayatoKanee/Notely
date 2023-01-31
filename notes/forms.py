@@ -1,7 +1,8 @@
 from django import forms
 from django.core.validators import RegexValidator
-from .models import User, Profile, Folder
+from .models import User, Profile, Folder, Notebook
 from guardian.shortcuts import assign_perm
+
 
 class LogInForm(forms.Form):
     username = forms.CharField(label="Username")
@@ -93,16 +94,34 @@ class PasswordForm(forms.Form):
 class FolderForm(forms.ModelForm):
     class Meta:
         model = Folder
-        fields = ['name']
+        fields = ['folder_name']
 
     def save(self, user, parent=None):
         super().save(commit=False)
         folder = Folder.objects.create(
             user=user,
             parent=parent,
-            name=self.cleaned_data.get('name'),
+            folder_name=self.cleaned_data.get('folder_name'),
         )
         assign_perm('dg_view_folder', user, folder)
         assign_perm('dg_edit_folder', user, folder)
         assign_perm('dg_delete_folder', user, folder)
         return folder
+
+
+class NotebookForm(forms.ModelForm):
+    class Meta:
+        model = Notebook
+        fields = ['notebook_name']
+
+    def save(self, user, folder=None):
+        super().save(commit=False)
+        notebook = Notebook.objects.create(
+            user=user,
+            folder=folder,
+            notebook_name=self.cleaned_data.get('notebook_name'),
+        )
+        assign_perm('dg_view_notebook', user, notebook)
+        assign_perm('dg_edit_notebook', user, notebook)
+        assign_perm('dg_delete_notebook', user, notebook)
+        return notebook

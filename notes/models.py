@@ -55,10 +55,13 @@ class Profile(models.Model):
     def mini_gravatar(self):
         """Return a URL to a miniature version of the user's gravatar."""
         return self.gravatar(size=30)
+
+
 class Folder(models.Model):
     user = models.ForeignKey(User, related_name="folders", on_delete=models.CASCADE)
     parent = models.ForeignKey('self', related_name="sub_folders", on_delete=models.CASCADE, null=True, blank=True)
-    name = models.CharField(max_length=10)
+    created_at = models.DateTimeField(auto_now_add=True)
+    folder_name = models.CharField(max_length=10)
 
     class Meta:
         permissions = [
@@ -67,12 +70,53 @@ class Folder(models.Model):
             ("dg_delete_folder", "can delete folder")
         ]
 
+    def get_type(self):
+        return 'Folder'
+
+    def get_path(self):
+        path = ""
+        current = self.parent
+        while current != None:
+            path = self.parent.folder_name +">"+path
+            current = current.parent
+        return path
+
+
 class Notebook(models.Model):
     user = models.ForeignKey(User, related_name="notebooks", on_delete=models.CASCADE)
     folder = models.ForeignKey(Folder, related_name="notebooks", on_delete=models.CASCADE, null=True, blank=True)
-    name = models.CharField(max_length=10)
+    notebook_name = models.CharField(max_length=10)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        permissions = [
+            ("dg_view_notebook", "can view notebook"),
+            ("dg_edit_notebook", "can edit notebook"),
+            ("dg_delete_notebook", "can delete notebook")
+        ]
+
+    def get_type(self):
+        return 'Notebook'
 
 
 class Page(models.Model):
     notebook = models.ForeignKey(Notebook, related_name="pages", on_delete=models.CASCADE)
     drawing = models.TextField(blank=True)
+    last_page_of = models.OneToOneField(Notebook, related_name="last_page", on_delete=models.CASCADE, null=True,
+                                        blank=True)
+
+    class Meta:
+        permissions = [
+            ("dg_view_page", "can view page"),
+            ("dg_edit_page", "can edit page"),
+            ("dg_delete_page", "can delete page")
+        ]
+
+    def delete(self, *args, **kwargs):
+        notebook = self.last_page_of
+        super().delete(*args, **kwargs)
+        pages = notebook.pages.all()
+        if pages.exists():
+            notebook.last_page = pages.last()
+        else:
+            notebook.last_page = Page.objects.create(notebook=notebook, last_page_of=notebook)

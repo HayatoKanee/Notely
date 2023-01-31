@@ -13,7 +13,7 @@
         {% endif %}
       <div class="modal-body">
                 {% csrf_token %}
-                {% include 'partials/bootstrap_form.html' with form=form %}
+                {% include 'partials/bootstrap_form.html' with form=folder_form %}
       </div>
       <div class="modal-footer">
         <button class="btn btn-secondary" data-bs-target="#add" data-bs-toggle="modal" data-bs-dismiss="modal">Back</button>

@@ -1,4 +1,4 @@
-{% extends 'base_content.html' %}
+{% extends 'base_content_without_footer.html' %}
 {% block content %}
     <canvas id="canvas"> </canvas>
     <nav class="navbar navbar-expand-lg fixed-bottom navbar-light bg-light">
@@ -10,12 +10,45 @@
       <li class="nav-item">
          <button class="toolbox" id="draw" onclick="toggleDraw(this)"></button>
       </li>
+      <li class="nav-item">
+        <button class="toolbox" id="text" onclick="toggleText(this)">
+            <span class="bi bi-journal-text"></span>
+        </button>
+      </li>
+      <li class="nav-item">
+        <input id='chooseColor' value="#000000" data-jscolor="">
+      </li>
+      <li class="nav-item">
+        <input id="img" class="toolbox" type="file" accept="image/*">
+     </li>
     </ul>
         </div>
     </nav>
     {% block scripts %}
         {% load static %}
-            <script src="{%static 'javascript/fabric.min.js'%}"></script>
+        <script src="{%static 'javascript/fabric.min.js'%}"></script>
+        <script>
+        const page_id = "{{ page_id }}";
+        const drawing = '{{ drawing|safe}}';
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        const csrf = getCookie('csrftoken');
+        </script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
             <script src="{%static 'javascript/draw.js'%}"></script>
+            <script src="{%static 'javascript/jscolor.js'%}"></script>
     {% endblock %}
 {% endblock %}
