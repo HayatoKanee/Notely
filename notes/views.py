@@ -90,7 +90,7 @@ def sub_folders_tab(request, folder_id):
     items = sort_items_by_created_time(folders, notebooks)
     return render(request, 'folders_tab.html',
                   {'items': items, 'folder_form': folder_form,
-                   'notebook_form': notebook_form, 'folder_id': folder_id})
+                   'notebook_form': notebook_form, 'folder': folder})
 
 
 @login_required

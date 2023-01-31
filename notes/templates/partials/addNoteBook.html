@@ -5,8 +5,8 @@
         <h1 class="modal-title fs-5" id="addNotebookLabel">New Notebook</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-        {% if folder_id %}
-         <form action="{% url 'sub_folders_tab' folder_id%}" method="post">
+        {% if folder %}
+         <form action="{% url 'sub_folders_tab' folder.id %}" method="post">
             {% else %}
             <form action="{% url 'folders_tab' %}" method="post">
         {% endif %}
