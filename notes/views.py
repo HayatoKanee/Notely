@@ -90,7 +90,7 @@ def sub_folders_tab(request, folder_id):
     items = sort_items_by_created_time(folders, notebooks)
     return render(request, 'folders_tab.html',
                   {'items': items, 'folder_form': folder_form,
-                   'notebook_form': notebook_form, 'folder_id': folder_id})
+                   'notebook_form': notebook_form, 'folder': folder})
 
 
 @login_required
@@ -142,14 +142,24 @@ def gravatar(request):
 @login_required
 def page(request, page_id):
     page = Page.objects.get(id=page_id)
-    return render(request, 'page.html', {'drawing': page.drawing, 'page_id': page_id})
+    if request.method == 'POST':
+        new_page = Page.objects.create(notebook=page.notebook)
+        return redirect('page', new_page.id)
+    return render(request, 'page.html', {'page': page})
 
 
 def save_page(request, page_id):
     if request.method == 'POST':
         data = request.POST.get('data')
         page = Page.objects.get(id=page_id)
+        notebook = page.notebook
+        last_page = notebook.last_page
+        last_page.last_page_of = None
+        last_page.save()
+        notebook.last_page = page
+        notebook.save()
         page.drawing = data
         page.save()
         return JsonResponse({'status': 'success'})
     return JsonResponse({'status': 'fail'})
+
