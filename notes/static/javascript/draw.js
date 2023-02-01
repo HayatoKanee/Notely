@@ -51,12 +51,24 @@ function chooseColor() {
     })
 }
 
+function chooseWidth() {
+    const slider = document.getElementById('chooseWidth')
+    slider.addEventListener('change', (e) => {
+        width = e.target.value
+        canvas.freeDrawingBrush.width = width
+        canvas.requestRenderAll()
+    })
+}
+
 const canvas = initCanvas('canvas');
 canvas.loadFromJSON(drawing);
 canvas.renderAll();
 
 let color = '#000000'
 chooseColor()
+
+let width = '30'
+chooseWidth()
 
 let reader = new FileReader()
 
