@@ -16,11 +16,18 @@
         </button>
       </li>
       <li class="nav-item">
-        <input id='chooseColor' value="#000000" data-jscolor="">
-      </li>
-      <li class="nav-item">
-        <input id="img" class="toolbox" type="file" accept="image/*">
+        <button class="toolbox" id="upload" type="button" data-bs-toggle="collapse" data-bs-target="#collapseUpload" aria-expanded="false" aria-controls="collapseUpload">
+        </button>
      </li>
+     <li class="nav-item">
+        <div style="min-height: 120px;">
+            <div class="collapse collapse-horizontal" id="collapseUpload">
+              <div class="card card-body" style="width: 300px;">
+                <input id="img" class="toolbox" type="file" accept="image/*">
+              </div>
+            </div>
+          </div>
+      </li>
     </ul>
         </div>
     </nav>
