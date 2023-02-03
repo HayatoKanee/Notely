@@ -24,10 +24,26 @@
         <div style="min-height: 120px;">
             <div class="collapse collapse-horizontal" id="collapsePen">
               <div class="card card-body" style="width: 300px;">
+                <label>Pen Mode</label>
+                <select id="chooseMode">
+                    <option value="circle">Circle Brush</option>
+                    <option value="crayon">Crayon</option>
+                    <option value="ink">Ink Pen</option>
+                    <option value="fur">Fur Brush</option>
+                    <option value="longfur">Long Fur Brush</option>
+                    <option value="marker">Marker</option>
+                    <option value="ribbon">Ribbon Brush</option>
+                    <option value="shaded">Shaded Brush</option>
+                    <option value="sketchy">Sketchy Brush</option>
+                    <option value="spraypaint">Spray Paint</option>
+                    <option value="square">Square brush</option>
+                    <option value="web">Web Brush</option>
+
+                  </select>
                 <label>Pen Colour</label>
                 <input id='chooseColor' value="#000000" data-jscolor="">
                 <label>Pen Width</label>
-                <input id='chooseWidth' value='30' type=range min='1' max='50'>
+                <input id='chooseWidth' value='1' type=range min='1' max='20'>
               </div>
             </div>
           </div>
@@ -74,5 +90,7 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
             <script src="{%static 'javascript/draw.js'%}"></script>
             <script src="{%static 'javascript/jscolor.js'%}"></script>
+            {% comment %} <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.4.0/fabric.min.js"></script> {% endcomment %}
+            <script src="{%static 'javascript/fabric.brushes.min.js'%}"></script>
     {% endblock %}
 {% endblock %}
