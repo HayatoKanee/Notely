@@ -46,7 +46,8 @@
   height: 70px;
 }
 .folder-button {
-  border: none;
+  font-weight: bold;
+  box-shadow: None!important;
 }
 .folder-container {
   position: absolute;
@@ -74,7 +75,6 @@
     margin-right: 500px;
   }
 .folder-path {
-  font-size: 30px;
   position: absolute;
   top: 70px;
   left: 20px;

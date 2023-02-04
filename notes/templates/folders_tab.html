@@ -18,11 +18,14 @@
         </button>
       </li>
     </ul>
-  <div>
-
-    <div class="folder-path">
-      {{folder.get_path}}
-    </div>
+<div>
+<div class="folder-path">
+{% if folder %}
+{% for item in folder.get_path %}
+  ><a href="{% url 'sub_folders_tab' item.id%}" style="color:#1b1b1b;margin-left:20px"><button class="folder-button" style="font-size:20px; background-color:white;">{{item.folder_name}}</button></a>
+{% endfor %}
+{% endif %}
+</div>
   </div>
   <div class="folder-container">
     <div class="container">

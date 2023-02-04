@@ -74,12 +74,12 @@ class Folder(models.Model):
         return 'Folder'
 
     def get_path(self):
-        path = self.folder_name
+        path = [self]
         current = self.parent
         while current != None:
-            path = current.folder_name +" > "+path
+            path.insert(0,current)
             current = current.parent
-        return " > "+path
+        return path
 
 
 class Notebook(models.Model):
