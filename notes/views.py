@@ -1,14 +1,18 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
-
+from datetime import datetime, timedelta
+from calendar import HTMLCalendar
+from .util import EventCalendar
+from .models import Event
 from notely import settings
-from .forms import SignUpForm, LogInForm, UserForm, ProfileForm, PasswordForm, FolderForm
+from .forms import SignUpForm, LogInForm, UserForm, ProfileForm, PasswordForm, FolderForm , EventForm
 from .models import User, Folder
 from django.contrib.auth.decorators import login_required
 from .helpers import login_prohibited, check_perm
 from django.contrib.auth.hashers import check_password
 from guardian.shortcuts import get_objects_for_user
+from django.utils import safestring
 
 
 @login_prohibited
@@ -87,7 +91,23 @@ def sub_folders_tab(request, folder_id):
 
 @login_required
 def calendar_tab(request):
-    return render(request, 'calendar_tab.html')
+    events = request.user.events.all()
+    currentMonth = datetime.now().month
+    currentYear = datetime.now().year
+    cal = EventCalendar(currentYear,currentMonth,events)
+    form = EventForm()
+    if request.method == "POST":
+        form = EventForm(request.POST)
+        if form.is_valid():
+            event = form.save(commit=False)
+            event.user = request.user
+            event.save()
+            return redirect('calendar_tab')
+        else:
+            return redirect('calendar_tab')
+    else:
+        return render(request, 'calendar_tab.html' , {'calendar' : safestring.mark_safe(cal.formatmonth(withyear=True)) , 'form':form})
+
 
 
 @login_required
@@ -134,3 +154,4 @@ def gravatar(request):
 @login_required
 def page(request):
     return render(request, 'page.html')
+

@@ -4,3 +4,6 @@ Faker
 django-widget-tweaks
 libgravatar
 django-guardian
+django-bootstrap-datepicker-plus
+django-bootstrap5
+jquery

@@ -1,11 +1,37 @@
 {% extends 'base_content.html' %}
+{%load static%}
+{% load django_bootstrap5 %}
+{% include 'bootstrap.html' %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+<link href="{% static 'css_style/calendar.css' %}"rel="stylesheet" type="text/css" >
 {% block content %}
     <div class="white-box">
         <div class="header">
             <h1>Calendar</h1>
         </div>
-        <div class="description">
-            <p>xxx</p>
-        </div>
-    </div>
+            {{calendar}}
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                Add New Event
+            </button>
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">New Event</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        {{ form.media }}
+                        <form action="{% url 'calendar_tab' %}" method="post">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                        </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <input type="submit" value ="Create event" class="btn btn-primary"></form>
+                    </div>
+                  </div>
+                </div>
+            </div>
 {% endblock %}
