@@ -6,6 +6,16 @@ const initCanvas = (id) => {
         });
 
 }
+
+function clearCanvas(canvas) {
+    canvas.getObjects().forEach((obj) => {
+        if(obj !== canvas.backgroundImage) {
+            canvas.remove(obj)
+        }
+    })
+}
+
+
 const modes = ['select', 'draw', 'text'];
 let currentMode;
 
