@@ -19,11 +19,6 @@
          <button class="toolbox" id="draw" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePen" aria-expanded="false" aria-controls="collapsePen" onclick="toggleDraw(this)"></button>
         </li>
         <li class="nav-item">
-            <button class="toolbox" id="text" onclick="toggleText(this)">
-                <span class="bi bi-journal-text"></span>
-            </button>
-        </li>
-        <li class="nav-item">
             <div style="min-height: 120px;">
                 <div class="collapse collapse-horizontal" id="collapsePen">
                 <div class="card card-body" style="width: 300px;">
@@ -44,9 +39,24 @@
 
                     </select>
                     <label>Pen Colour</label>
-                    <input id='chooseColor' value="#000000" data-jscolor="">
+                    <input id='choosePenColor' value="#000000" data-jscolor="">
                     <label>Pen Width</label>
                     <input id='chooseWidth' value='1' type=range min='1' max='20'>
+                </div>
+                </div>
+            </div>
+        </li>
+        <li class="nav-item">
+            <button class="toolbox" id="text" type="button" data-bs-toggle="collapse" data-bs-target="#collapseText" aria-expanded="false" aria-controls="collapseText" onclick="toggleText(this)">
+                <span class="bi bi-journal-text"></span>
+            </button>
+        </li>
+        <li class="nav-item">
+            <div style="min-height: 120px;">
+                <div class="collapse collapse-horizontal" id="collapseText">
+                <div class="card card-body" style="width: 300px;">
+                    <label>Text Colour</label>
+                    <input id='chooseTextColor' value="#000000" data-jscolor="">
                 </div>
                 </div>
             </div>
