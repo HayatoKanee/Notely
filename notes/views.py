@@ -69,7 +69,6 @@ def folders_tab(request):
     notebooks = get_objects_for_user(user, 'dg_view_notebook', klass=Notebook)
     notebooks = notebooks.filter(folder=None)
     items = sort_items_by_created_time(folders, notebooks)
-
     return render(request, 'folders_tab.html',
                   {'items': items, 'folder_form': folder_form,
                    'notebook_form': notebook_form})
@@ -162,4 +161,3 @@ def save_page(request, page_id):
         page.save()
         return JsonResponse({'status': 'success'})
     return JsonResponse({'status': 'fail'})
-

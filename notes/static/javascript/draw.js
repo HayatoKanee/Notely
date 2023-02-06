@@ -99,4 +99,3 @@ window.setInterval(function (){
         }
     });
 }, 3000);
-
