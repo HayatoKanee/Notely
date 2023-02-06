@@ -24,3 +24,16 @@
 .toolbox{
     margin: 20px;
 }
+#upload{
+    background: url("images/upload.png") no-repeat;
+    background-size: contain;
+    width: 30px;
+    height: 30px;
+    border: none;
+}
+#upload.active{
+    background-color: blue;
+}
+#navbarcontainer{
+    background-color: rgb(150, 150, 192);
+}

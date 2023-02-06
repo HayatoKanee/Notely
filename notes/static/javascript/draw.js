@@ -6,6 +6,16 @@ const initCanvas = (id) => {
         });
 
 }
+
+function clearCanvas(canvas) {
+    canvas.getObjects().forEach((obj) => {
+        if(obj !== canvas.backgroundImage) {
+            canvas.remove(obj)
+        }
+    })
+}
+
+
 const modes = ['select', 'draw', 'text'];
 let currentMode;
 
@@ -51,12 +61,132 @@ function chooseColor() {
     })
 }
 
+function chooseWidth() {
+    const slider = document.getElementById('chooseWidth')
+    slider.addEventListener('change', (e) => {
+        width = e.target.value
+        canvas.freeDrawingBrush.width = width
+        canvas.requestRenderAll()
+    })
+}
+
+// reference: https://github.com/av01d/fabric-brushes
+function chooseMode() {
+    const chooser = document.getElementById('chooseMode')
+    chooser.addEventListener('change', (e) => {
+        mode = e.target.value
+        if (mode=="crayon"){
+            canvas.freeDrawingBrush = new fabric.CrayonBrush(canvas,
+                {
+                    width: 30, // Width of brush
+                    color: '#000', // Color of brush
+                    opacity: 0.6 // Opacity of brush
+                });
+        } else if (mode=="fur"){
+            canvas.freeDrawingBrush = new fabric.FurBrush(canvas,
+                {
+                    width: 1, // Width of brush
+                    color: '#000', // Color of brush
+                    opacity: 1 // Opacity of brush
+                });
+        }
+        else if (mode=="ink"){
+            canvas.freeDrawingBrush = new fabric.InkBrush(canvas,
+                {
+                    width: 30, // Width of brush
+                    color: '#000', // Color of brush
+                    opacity: 1 // Opacity of brush
+                });
+        }
+        else if (mode=="longfur"){
+            canvas.freeDrawingBrush = new fabric.LongfurBrush(canvas,
+                {
+                    width: 1, // Width of brush
+                    color: '#000', // Color of brush
+                    opacity: 1 // Opacity of brush
+                });
+        }
+        else if (mode=="circle"){
+            canvas.freeDrawingBrush = new fabric.CircleBrush(canvas,
+                {
+                    width: 1, // Width of brush
+                    color: '#000', // Color of brush
+                    opacity: 1 // Opacity of brush
+                });
+        }
+        else if (mode=="marker"){
+            canvas.freeDrawingBrush = new fabric.MarkerBrush(canvas,
+                {
+                    width: 1, // Width of brush
+                    color: '#000', // Color of brush
+                    opacity: 1 // Opacity of brush
+                });
+        }
+        else if (mode=="ribbon"){
+            canvas.freeDrawingBrush = new fabric.RibbonBrush(canvas,
+                {
+                    width: 1, // Width of brush
+                    color: '#000', // Color of brush
+                    opacity: 1 // Opacity of brush
+                });
+        }
+        else if (mode=="shaded"){
+            canvas.freeDrawingBrush = new fabric.ShadedBrush(canvas,
+                {
+                    width: 1, // Width of brush
+                    color: '#000', // Color of brush,
+                    shadeDistance: 1000, // Shade distance
+                    opacity: 1 // Opacity of brush
+                });
+        }
+        else if (mode=="sketchy"){
+            canvas.freeDrawingBrush = new fabric.SketchyBrush(canvas,
+                {
+                    width: 1, // Width of brush
+                    color: '#000', // Color of brush
+                    opacity: 1 // Opacity of brush
+                });
+        }
+        else if (mode=="spraypaint"){
+            canvas.freeDrawingBrush = new fabric.SpraypaintBrush(canvas,
+                {
+                    width: 30, // Width of brush
+                    color: '#000', // Color of brush
+                    opacity: 1 // Opacity of brush
+                });
+        }
+        else if (mode=="square"){
+            canvas.freeDrawingBrush = new fabric.SquaresBrush(canvas,
+                {
+                    width: 1, // Stroke width of squares
+                    color: '#000', // Stroke color of squares
+                    bgColor: '#fff', // Background color of squares
+                    opacity: 1 // Opacity of brush
+                });
+        }
+        else if (mode=="web"){
+            canvas.freeDrawingBrush = new fabric.WebBrush(canvas,
+                {
+                    width: 1, // Width of brush
+                    color: '#000', // Color of brush
+                    opacity: 1 // Opacity of brush
+                });
+        }
+        canvas.requestRenderAll()
+    })
+}
+
 const canvas = initCanvas('canvas');
 canvas.loadFromJSON(drawing);
 canvas.renderAll();
 
 let color = '#000000'
 chooseColor()
+
+let width = '30'
+chooseWidth()
+
+chooseMode()
 
 let reader = new FileReader()
 
