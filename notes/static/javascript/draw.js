@@ -35,7 +35,7 @@ function toggleText(btn) {
 
 function toggleDraw(btn) {
   selectBtn(btn);
-  canvas.freeDrawingBrush.color = color
+  canvas.freeDrawingBrush.color = penColor
   canvas.isDrawingMode = true;
   currentMode = "draw";
 }
@@ -52,20 +52,30 @@ function addImage(e) {
     reader.readAsDataURL(image);
 }
 
-function chooseColor() {
-    const chooser = document.getElementById('chooseColor')
+function choosePenColor() {
+    const chooser = document.getElementById('choosePenColor')
     chooser.addEventListener('change', (e) => {
-        color = '#' + e.target.value
-        canvas.freeDrawingBrush.color = color
+        penColor = '#' + e.target.value
+        canvas.freeDrawingBrush.color = penColor
         canvas.requestRenderAll()
     })
 }
+
 
 function chooseWidth() {
     const slider = document.getElementById('chooseWidth')
     slider.addEventListener('change', (e) => {
         width = e.target.value
         canvas.freeDrawingBrush.width = width
+        canvas.requestRenderAll()
+    })
+}
+
+function chooseTextColor() {
+    const chooser = document.getElementById('chooseTextColor')
+    chooser.addEventListener('change', (e) => {
+        textColor = '#' + e.target.value
+        canvas.freeDrawingBrush.color = textColor
         canvas.requestRenderAll()
     })
 }
@@ -180,8 +190,12 @@ const canvas = initCanvas('canvas');
 canvas.loadFromJSON(drawing);
 canvas.renderAll();
 
-let color = '#000000'
-chooseColor()
+let penColor = '#000000'
+let textColor = '#000000'
+choosePenColor()
+chooseTextColor()
+
+
 
 let width = '30'
 chooseWidth()
@@ -209,7 +223,7 @@ canvas.on('mouse:down', function(options) {
           top: pointer.y,
           fontSize: 20,
           fontFamily: 'Arial',
-          fill: color
+          fill: textColor
         });
             canvas.add(textbox);
         }
