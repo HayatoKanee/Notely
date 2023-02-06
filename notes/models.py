@@ -73,6 +73,14 @@ class Folder(models.Model):
     def get_type(self):
         return 'Folder'
 
+    def get_path(self):
+        path = [self]
+        current = self.parent
+        while current != None:
+            path.insert(0,current)
+            current = current.parent
+        return path
+
 
 class Notebook(models.Model):
     user = models.ForeignKey(User, related_name="notebooks", on_delete=models.CASCADE)

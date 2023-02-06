@@ -1,21 +1,24 @@
 <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="sidebar" aria-labelledby="sidebarLabel">
-  <div class="offcanvas-header">
-    <h5 class="offcanvas-title" id="sidebarLabel">Backdrop with scrolling</h5>
+  <div class="offcanvas-header" style="font-size: 22px;color: white;text-align: center;line-height: 70px;background: #063146;user-select: none;">
+    <h5 class="offcanvas-title" id="sidebarLabel">Notely</h5>
     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
   </div>
-  <div class="offcanvas-body">
-    <div>
+  <div class="offcanvas-body" style="background-color: #042331; transition: all .5s ease;">
+    <div style="color: white;">
       Some text as placeholder. In real life you can have the elements you have chosen. Like, text, images, lists, etc.
     </div>
-    <div class="dropdown mt-3">
-      <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-        Dropdown button
-      </button>
-      <ul class="dropdown-menu">
-        <li><a class="dropdown-item" href="#">Action</a></li>
-        <li><a class="dropdown-item" href="#">Another action</a></li>
-        <li><a class="dropdown-item" href="#">Something else here</a></li>
-      </ul>
+    <div class="dropdown mt-3" style="display: block;height: 100%;width: 100%;line-height: 65px;font-size: 20px;color: white;padding-left: 40px;box-sizing: border-box;border-top: 1px solid rgba(255, 255, 255, .1);border-bottom: 1px solid black;transition: .4s">
+            <ul style="padding-left:0;">
+                <!--<li><a href="#"><i class="fas fa-qrcode"></i> type the barName </a></li>-->
+                <li><a href="#"><i class="far fa-question-circle"></i>About</a></li>
+                <li><a href="{% url 'calendar_tab'%}"><i class="fas fa-calendar"></i>Calendar</a></li>
+                <li><a href="{% url 'folders_tab' %}"><i class="fas fa-note"></i>Notes</a></li>
+                <li><a href="#"><i class="fas fa-link"></i></a></li>
+                <li><a href="#"><i class="fas fa-stream"></i></a></li>
+                <li><a href="{% url 'profile_tab' %}"><i class="fas fa-sliders-h"></i>Profile</a></li>
+                <li><a href="#"><i class="far fa-share"></i>Contact</a></li>
+                <!-- <li><a href="#"><i class="fas fa-qrcode"></i></a></li> -->
+            </ul>
     </div>
   </div>
 </div>
