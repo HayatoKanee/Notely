@@ -228,4 +228,4 @@ window.setInterval(function (){
             csrfmiddlewaretoken: csrf
         }
     });
-}, 3000);
+}, 30000);

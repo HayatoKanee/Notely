@@ -33,7 +33,7 @@
           <div class="col" style="margin-left:-90px">
                 {% if item.get_type == "Folder" %}
                 <form action="{% url 'sub_folders_tab' item.id %}" method="get">
-                    <button id = "folder_img" style="text-align: left;"><span style="margin-left:40px">{{ item.folder_name }}▼</button></span></form>
+                    <button id = "folder_img" style="text-align: left;"><span style="margin-left:40px">{{ item.folder_name }}▼</span></button></form>
                 {% else %}
                  <form action="{% url 'page' item.last_page.id %}" method="get">
                     <button id="notebook_img" style="text-align: left; "><span style="margin-left:40px">{{ item.notebook_name }}▼</span></button></form>
