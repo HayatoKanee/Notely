@@ -84,41 +84,41 @@
     </nav>
     {% include 'partials/codeEditor.html' %}
     {% include 'partials/symbols.html' %}
-    {% block scripts %}
-        {% load static %}
-        <script src="{%static 'javascript/fabric.min.js'%}"></script>
-        <script>
-        const page_id = "{{ page.id }}";
-        const drawing = '{{ page.drawing|safe}}';
-        function getCookie(name) {
-            var cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                var cookies = document.cookie.split(';');
-                for (var i = 0; i < cookies.length; i++) {
-                    var cookie = cookies[i].trim();
-                    // Does this cookie string begin with the name we want?
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
+{% endblock %}
+{% block scripts %}
+    {% load static %}
+    <script src="{%static 'javascript/fabric.min.js'%}"></script>
+    <script>
+    const page_id = "{{ page.id }}";
+    const drawing = '{{ page.drawing|safe}}';
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
                 }
             }
-            return cookieValue;
         }
-        const csrf = getCookie('csrftoken');
-        </script>
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
-            <script src="{%static 'javascript/draw.js'%}"></script>
-            <script src="{%static 'javascript/jscolor.js'%}"></script>
-            <script src="{%static 'javascript/codemirror.js'%}"></script>
-            <link rel="stylesheet" href="{%static 'css_style/codemirror.css'%}">
-            <script src="{%static 'javascript/mode/python.js'%}"></script>
-            <script src="{%static 'javascript/mode/javascript.js'%}"></script>
-            <script src="{%static 'javascript/mode/django.js'%}"></script>
-            <script src="{%static 'javascript/codeEditor.js'%}"></script>
-            <script src="{%static 'javascript/symbols.js'%}"></script>
-            {% comment %} <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.4.0/fabric.min.js"></script> {% endcomment %}
-            <script src="{%static 'javascript/fabric.brushes.min.js'%}"></script>
-    {% endblock %}
+        return cookieValue;
+    }
+    const csrf = getCookie('csrftoken');
+    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
+        <script src="{%static 'javascript/draw.js'%}"></script>
+        <script src="{%static 'javascript/jscolor.js'%}"></script>
+        <script src="{%static 'javascript/codemirror.js'%}"></script>
+        <link rel="stylesheet" href="{%static 'css_style/codemirror.css'%}">
+        <script src="{%static 'javascript/mode/python.js'%}"></script>
+        <script src="{%static 'javascript/mode/javascript.js'%}"></script>
+        <script src="{%static 'javascript/mode/django.js'%}"></script>
+        <script src="{%static 'javascript/codeEditor.js'%}"></script>
+        <script src="{%static 'javascript/symbols.js'%}"></script>
+        {% comment %} <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.4.0/fabric.min.js"></script> {% endcomment %}
+        <script src="{%static 'javascript/fabric.brushes.min.js'%}"></script>
 {% endblock %}
