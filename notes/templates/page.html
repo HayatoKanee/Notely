@@ -76,10 +76,14 @@
             <li class="nav-item">
                 <button class="toolbox" id="showCodeEditor"  data-bs-toggle="modal" data-bs-target="#codeEditor"> Code</button>
             </li>
+            <li class="nav-item">
+                <button class="toolbox" id="showSymbols"  data-bs-toggle="modal" data-bs-target="#symbols"> Symbols</button>
+            </li>
     </ul>
         </div>
     </nav>
     {% include 'partials/codeEditor.html' %}
+    {% include 'partials/symbols.html' %}
     {% block scripts %}
         {% load static %}
         <script src="{%static 'javascript/fabric.min.js'%}"></script>
@@ -113,6 +117,7 @@
             <script src="{%static 'javascript/mode/javascript.js'%}"></script>
             <script src="{%static 'javascript/mode/django.js'%}"></script>
             <script src="{%static 'javascript/codeEditor.js'%}"></script>
+            <script src="{%static 'javascript/symbols.js'%}"></script>
             {% comment %} <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.4.0/fabric.min.js"></script> {% endcomment %}
             <script src="{%static 'javascript/fabric.brushes.min.js'%}"></script>
     {% endblock %}
