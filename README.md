@@ -52,7 +52,7 @@ $ python3 manage.py test
 The packages used by this application are specified in `requirements.txt`
 
 ### JavaScript Liabary
-- [Fabric](http://www.fabfile.org/)
+- [Fabric](http://fabricjs.com/)
 - [CodeMirror](https://codemirror.net/)
 - [Bootstrap](https://getbootstrap.com/)
 - [jQuery](https://jquery.com/)
