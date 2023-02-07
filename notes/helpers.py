@@ -31,10 +31,9 @@ def validate_date(date):
 
 def check_perm(perm, obj_type):
     def decorator(view_function):
-        @wraps(view_function)
         def modified_view_function(request, *args, **kwargs):
-            for arg in args:
-                obj = get_object_or_404(obj_type, id=arg)
+            for k, v in kwargs.items():
+                obj = get_object_or_404(obj_type, id=v)
                 if not request.user.has_perm(perm, obj):
                     raise PermissionDenied
             result = view_function(request, *args, **kwargs)
@@ -43,5 +42,3 @@ def check_perm(perm, obj_type):
         return modified_view_function
 
     return decorator
-
-
