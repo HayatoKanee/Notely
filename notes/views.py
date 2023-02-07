@@ -9,7 +9,7 @@ from .models import User, Folder, Notebook, Page
 from django.contrib.auth.decorators import login_required
 from .helpers import login_prohibited, check_perm
 from django.contrib.auth.hashers import check_password
-from guardian.shortcuts import get_objects_for_user
+from guardian.shortcuts import get_objects_for_user, assign_perm
 from .view_helper import sort_items_by_created_time, save_folder_notebook_forms
 
 
@@ -144,6 +144,9 @@ def page(request, page_id):
     page = Page.objects.get(id=page_id)
     if request.method == 'POST':
         new_page = Page.objects.create(notebook=page.notebook)
+        assign_perm('dg_view_page', request.user, new_page)
+        assign_perm('dg_edit_page', request.user, new_page)
+        assign_perm('dg_delete_page', request.user, new_page)
         return redirect('page', new_page.id)
     return render(request, 'page.html', {'page': page})
 
