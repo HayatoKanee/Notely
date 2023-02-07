@@ -79,6 +79,9 @@
             <li class="nav-item">
                 <button class="toolbox" id="showSymbols"  data-bs-toggle="modal" data-bs-target="#symbols"> Symbols</button>
             </li>
+            <li class="nav-item">
+                <button class="toolbox" id="linkPage"  data-bs-toggle="offcanvas" href="#sidebar" aria-controls="sidebar"> Link Page</button>
+            </li>
     </ul>
         </div>
     </nav>
@@ -119,9 +122,7 @@
         <script src="{%static 'javascript/mode/django.js'%}"></script>
         <script src="{%static 'javascript/codeEditor.js'%}"></script>
         <script src="{%static 'javascript/symbols.js'%}"></script>
+        <script src="{% static 'javascript/linkPage.js'%}"></script>
         {% comment %} <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.4.0/fabric.min.js"></script> {% endcomment %}
         <script src="{%static 'javascript/fabric.brushes.min.js'%}"></script>
-    <script>
-
-    </script>
 {% endblock %}
