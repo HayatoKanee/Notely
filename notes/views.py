@@ -139,6 +139,7 @@ def gravatar(request):
 
 
 @login_required
+@check_perm('dg_view_page', Page)
 def page(request, page_id):
     page = Page.objects.get(id=page_id)
     if request.method == 'POST':
