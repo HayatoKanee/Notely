@@ -150,6 +150,7 @@ def page(request, page_id):
 def save_page(request, page_id):
     if request.method == 'POST':
         data = request.POST.get('data')
+        code = request.POST.get('code')
         page = Page.objects.get(id=page_id)
         notebook = page.notebook
         last_page = notebook.last_page
@@ -158,6 +159,7 @@ def save_page(request, page_id):
         notebook.last_page = page
         notebook.save()
         page.drawing = data
+        page.code = code
         page.save()
         return JsonResponse({'status': 'success'})
     return JsonResponse({'status': 'fail'})

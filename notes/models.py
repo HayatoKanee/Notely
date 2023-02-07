@@ -104,6 +104,7 @@ class Page(models.Model):
     drawing = models.TextField(blank=True)
     last_page_of = models.OneToOneField(Notebook, related_name="last_page", on_delete=models.CASCADE, null=True,
                                         blank=True)
+    code = models.TextField(blank=True)
 
     class Meta:
         permissions = [

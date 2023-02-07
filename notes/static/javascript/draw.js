@@ -239,6 +239,7 @@ window.setInterval(function (){
         url: "/save_page/"+page_id,
         data: {
             data: JSON.stringify(canvas.toDatalessJSON()),
+            code: editor.getValue(),
             csrfmiddlewaretoken: csrf
         }
     });
