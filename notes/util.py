@@ -4,6 +4,7 @@ from calendar import HTMLCalendar
 from .models import Event
 from datetime import date
 
+#  reference: https://www.huiwenteo.com/normal/2018/07/24/django-calendar.html by Hui Wen ---Ryan
 class EventCalendar(HTMLCalendar):
     def __init__(self,year,month,events):
         self.year = year
