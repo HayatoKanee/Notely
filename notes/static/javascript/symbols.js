@@ -5,5 +5,10 @@ $("#showSymbols").click(function (){
 });
 
 $('.key').click(function (){
-    canvas.add(new fabric.Text($(this).text()));
+    t = new fabric.Text($(this).text());
+    t.set({
+        left: canvas.width/2,
+        top: canvas.height/2
+    })
+    canvas.add(t);
 });

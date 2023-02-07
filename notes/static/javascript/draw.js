@@ -233,6 +233,20 @@ canvas.on('mouse:down', function(options) {
     canvas.renderAll();
 });
 
+document.onkeydown = function (e){
+    if(e.keyCode == 46){
+        const selection = canvas.getActiveObject();
+        if (selection.type === 'activeSelection') {
+            selection.forEachObject(function(element) {
+                canvas.remove(element);
+            });
+        }
+        else{
+            canvas.remove(selection);
+        }
+        canvas.discardActiveObject();
+    }
+}
 window.setInterval(function (){
     $.ajax({
         type:"POST",
