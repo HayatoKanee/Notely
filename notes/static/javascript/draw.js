@@ -16,6 +16,21 @@ function clearCanvas(canvas) {
     })
 }
 
+function undo(btn){
+    selectBtn(btn);
+    if(canvas._objects.length>0){
+        canvasObj.push(canvas._objects.pop());
+     canvas.renderAll();
+    }
+}
+  
+function redo(btn){ 
+    selectBtn(btn);
+    if(canvasObj.length>0){
+      _redo = true;
+     canvas.add(canvasObj.pop());
+    }
+}
 
 const modes = ['select', 'draw', 'text', 'erase'];
 let currentMode;
@@ -211,6 +226,10 @@ chooseWidth()
 
 chooseMode()
 
+  
+let _redo = false;
+let canvasObj = [];
+
 let reader = new FileReader()
 
 let inputImage = document.getElementById('img');
@@ -221,6 +240,13 @@ reader.addEventListener("load", () => {
         canvas.add(img)
         canvas.requestRenderAll()
     })
+});
+
+canvas.on('object:added',function(){
+    if(!_redo){
+        canvasObj = [];
+    }
+    _redo = false;
 });
 
 canvas.on('mouse:down', function(options) {
