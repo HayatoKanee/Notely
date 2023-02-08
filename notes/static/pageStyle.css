@@ -51,7 +51,7 @@
 }
 
 #navbarcontainer {
-    background-color: rgb(150, 150, 192);
+    background-color: rgb(255, 174, 159, 0.6);
 }
 
 #erase{
@@ -76,6 +76,22 @@
 
 #redo{
     background: url("images/redo.png") no-repeat;
+    background-size: contain;
+    width: 30px;
+    height: 30px;
+    border: none;
+}
+
+#showCodeEditor{
+    background: url("images/code.png") no-repeat;
+    background-size: contain;
+    width: 30px;
+    height: 30px;
+    border: none;
+}
+
+#showSymbols{
+    background: url("images/symbol.png") no-repeat;
     background-size: contain;
     width: 30px;
     height: 30px;
