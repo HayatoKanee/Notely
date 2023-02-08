@@ -84,6 +84,21 @@
                 </div>
             </div>
         </li>
+        <li class="nav-item">
+            <button id="insert-table-button">Insert Table</button>
+                <div id="myModal" class="modal">
+                <div class="modal-content">
+                <span class="close">&times;</span>
+                <form>
+                    <label for="rows">Rows:</label>
+                    <input type="number" id="rows" name="rows" value="2" min="1"><br><br>
+                    <label for="columns">Columns:</label>
+                    <input type="number" id="columns" name="columns" value="2" min="1"><br><br>
+                    <input type="button" value="Submit" id="submit-button">
+                </form>
+                </div>
+                </div>
+            </li>
             <li class="nav-item">
                 <button class="toolbox" id="showCodeEditor"  data-bs-toggle="modal" data-bs-target="#codeEditor" style="color: rgb(245, 93, 66);"></button>
             </li>
@@ -134,6 +149,7 @@
         <script src="{%static 'javascript/codeEditor.js'%}"></script>
         <script src="{%static 'javascript/symbols.js'%}"></script>
         <script src="{% static 'javascript/linkPage.js'%}"></script>
+        <script src="{% static 'javascript/table.js'%}"></script>
         {% comment %} <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.4.0/fabric.min.js"></script> {% endcomment %}
         <script src="{%static 'javascript/fabric.brushes.min.js'%}"></script>
 {% endblock %}
