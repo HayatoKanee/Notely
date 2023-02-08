@@ -7,7 +7,7 @@
 }
 
 #select.active {
-    background-color: rgb(245, 93, 66);
+    background-color: rgb(245, 93, 66, 0.2);
 }
 
 #select {
@@ -19,10 +19,10 @@
 }
 
 #draw.active {
-    background-color: rgb(245, 93, 66);
+    background-color: rgb(245, 93, 66, 0.2);
 }
 #text.active {
-    background-color: rgb(245, 93, 66);
+    background-color: rgb(245, 93, 66, 0.2);
 }
 
 .toolbox {
@@ -38,7 +38,7 @@
 }
 
 #upload.active {
-    background-color: rgb(245, 93, 66);
+    background-color: rgb(245, 93, 66, 0.2);
 }
 
 #navbarcontainer {
