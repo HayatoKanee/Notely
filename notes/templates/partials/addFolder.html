@@ -6,14 +6,14 @@
         <h1 class="modal-title fs-5" id="addFolderLabel">New Folder</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-        {% if folder_id %}
-         <form action="{% url 'sub_folders_tab' folder_id%}" method="post">
+        {% if folder %}
+         <form action="{% url 'sub_folders_tab' folder.id %}" method="post">
             {% else %}
             <form action="{% url 'folders_tab' %}" method="post">
         {% endif %}
       <div class="modal-body">
                 {% csrf_token %}
-                {% include 'partials/bootstrap_form.html' with form=form %}
+                {% include 'partials/bootstrap_form.html' with form=folder_form %}
       </div>
       <div class="modal-footer">
         <button class="btn btn-secondary" data-bs-target="#add" data-bs-toggle="modal" data-bs-dismiss="modal">Back</button>

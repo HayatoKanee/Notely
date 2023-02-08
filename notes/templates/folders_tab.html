@@ -1,41 +1,49 @@
 {% extends 'base_content.html' %}
-{% include 'bootstrap.html' %}
 {% block content %}
-  <section class="py-5 text-center container">
-    <div class="row py-lg-5">
-      <div class="col-lg-6 col-md-8 mx-auto">
-        <h1 class="fw-light">Notes</h1>
-        <p class="lead text-muted">Manage your notes here.</p>
-      </div>
-    </div>
-  </section>
+    {% if folder %}
+        {% if folder.parent %}
+            <a href="{% url 'sub_folders_tab'  folder.parent.id%}" style="color:#1b1b1b;margin-left:20px"> <button id="goback-button"><span style="margin-right:1200px">Go Back</span></button> Go back</a>
+        {% else %}
+            <a href="{% url 'folders_tab'%}" style="color:#1b1b1b;margin-left:20px"> <button id="goback-button"><span style="margin-right:1200px">Go Back</span></button></a>
+        {% endif %}
+    {% endif %}
 
-  <div class="album py-5 bg-light">
+    <ul class="folder-nav">
+      <li style="background-color: white;font-size:23px; font-style: bold;">
+          Name
+      </li>
+      <li>
+        <button id="addChoice" data-bs-toggle="modal" data-bs-target="#add" style="margin-right: 20px">
+          <span style="margin-left:30px">New</span>
+        </button>
+      </li>
+    </ul>
+<div>
+<div class="folder-path">
+{% if folder %}
+{% for item in folder.get_path %}
+  ><a href="{% url 'sub_folders_tab' item.id%}" style="color:#1b1b1b;margin-left:20px"><button class="folder-button" style="font-size:20px; background-color:white;">{{item.folder_name}}</button></a>
+{% endfor %}
+{% endif %}
+</div>
+  </div>
+  <div class="folder-container">
     <div class="container">
-      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-      <div class="col">
-          <div class="card shadow-sm">
-          <button id="addChoice" data-bs-toggle="modal" data-bs-target="#add">
-          </button>
-                  <button class="add mx-auto" data-bs-toggle="modal" data-bs-target="#add">New</button>
-            </div>
-      </div>
-          {% for folder in folders %}
-          <div class="col">
-          <div class="card shadow-sm">
-            <div class="card-body">
-                <form action="{% url 'sub_folders_tab' folder.id %}" method="get">
-                    <button id = "folder"></button></form>
-              <div class="d-flex justify-content-between align-items-center">
-                  <button class="add mx-auto" >{{ folder.name }}▼</button>
-              </div>
-            </div>
-          </div>
+          {% for item in items %}
+          <div class="col" style="margin-left:-90px">
+                {% if item.get_type == "Folder" %}
+                <form action="{% url 'sub_folders_tab' item.id %}" method="get">
+                    <button id = "folder_img" style="text-align: left;"><span style="margin-left:40px">{{ item.folder_name }}▼</span></button></form>
+                {% else %}
+                 <form action="{% url 'page' item.last_page.id %}" method="get">
+                    <button id="notebook_img" style="text-align: left; "><span style="margin-left:40px">{{ item.notebook_name }}▼</span></button></form>
+                {% endif %}
         </div>
           {% endfor %}
-      </div>
     </div>
   </div>
+<br>
+
 {% include 'partials/addChoice.html' %}
 
 

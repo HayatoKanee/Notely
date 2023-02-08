@@ -3,7 +3,6 @@ import datetime
 from django.conf import settings
 from django.shortcuts import redirect, get_object_or_404
 from django.core.exceptions import ValidationError, PermissionDenied
-from django.contrib import messages
 from functools import wraps
 
 
@@ -32,13 +31,14 @@ def validate_date(date):
 
 def check_perm(perm, obj_type):
     def decorator(view_function):
-        @wraps(view_function)
         def modified_view_function(request, *args, **kwargs):
-            for arg in args:
-                obj = get_object_or_404(obj_type, id=arg)
+            for k, v in kwargs.items():
+                obj = get_object_or_404(obj_type, id=v)
                 if not request.user.has_perm(perm, obj):
                     raise PermissionDenied
             result = view_function(request, *args, **kwargs)
             return result
+
         return modified_view_function
+
     return decorator

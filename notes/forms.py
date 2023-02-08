@@ -1,6 +1,6 @@
 from django import forms
 from django.core.validators import RegexValidator
-from .models import User, Profile, Folder , Event ,Tag
+from .models import User, Profile, Folder, Event, Tag, Notebook
 from guardian.shortcuts import assign_perm
 from bootstrap_datepicker_plus.widgets import DateTimePickerInput
 from colorfield.fields import ColorField
@@ -96,32 +96,50 @@ class PasswordForm(forms.Form):
 class FolderForm(forms.ModelForm):
     class Meta:
         model = Folder
-        fields = ['name']
+        fields = ['folder_name']
 
     def save(self, user, parent=None):
         super().save(commit=False)
         folder = Folder.objects.create(
             user=user,
             parent=parent,
-            name=self.cleaned_data.get('name'),
+            folder_name=self.cleaned_data.get('folder_name'),
         )
         assign_perm('dg_view_folder', user, folder)
         assign_perm('dg_edit_folder', user, folder)
         assign_perm('dg_delete_folder', user, folder)
         return folder
 
+
 class EventForm(forms.ModelForm):
-    class Meta : 
+    class Meta:
         model = Event
-        fields =['title','description','start_time','end_time']
+        fields = ['title', 'description', 'start_time', 'end_time']
         widgets = {
             "start_time": DateTimePickerInput(),
             "end_time": DateTimePickerInput(),
         }
 
-class TagForm(forms.ModelForm):
-    class Meta : 
-        model = Tag
-        fields =['name','color']
 
-    
+class TagForm(forms.ModelForm):
+    class Meta:
+        model = Tag
+        fields = ['name', 'color']
+
+
+class NotebookForm(forms.ModelForm):
+    class Meta:
+        model = Notebook
+        fields = ['notebook_name']
+
+    def save(self, user, folder=None):
+        super().save(commit=False)
+        notebook = Notebook.objects.create(
+            user=user,
+            folder=folder,
+            notebook_name=self.cleaned_data.get('notebook_name'),
+        )
+        assign_perm('dg_view_notebook', user, notebook)
+        assign_perm('dg_edit_notebook', user, notebook)
+        assign_perm('dg_delete_notebook', user, notebook)
+        return notebook

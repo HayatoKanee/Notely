@@ -50,8 +50,22 @@ $ python3 manage.py test
 
 ## Sources
 The packages used by this application are specified in `requirements.txt`
+
+### JavaScript Liabary
+- [Fabric](http://fabricjs.com/)
+- [CodeMirror](https://codemirror.net/)
+- [Bootstrap](https://getbootstrap.com/)
+- [jQuery](https://jquery.com/)
+- [jQuery UI](https://jqueryui.com/)
+### Images
 The image "signup_login.jpg" in https://www.wikihow.com/Take-Better-Notes
+
 select.png:https://www.flaticon.com/free-icon/click_2767163?term=select&page=1&position=12&origin=search&related_id=2767163
+
 pen.png:https://www.flaticon.com/free-icon/pen_1860115
+
 addFolder.png:https://www.flaticon.com/free-icon/new-folder_9517944?term=add&page=1&position=8&origin=search&related_id=9517944
+
 folder.png:https://www.flaticon.com/free-icon/folder_1383970?term=folder&page=1&position=2&origin=search&related_id=1383970
+
+notebook.png:https://www.flaticon.com/free-icon/notebook_2904859?term=notebook&page=1&position=2&origin=search&related_id=2904859

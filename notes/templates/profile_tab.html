@@ -1,16 +1,16 @@
 {%extends 'base_content.html'%}
 {%block content%}
 <br>
-    <div class="container" style="margin-left: 10px; color: rgb(245, 93, 66)">
+    <div class="container" style="margin-left: 10px; color: rgb(245, 93, 66);">
     <div class ="row align-items-center g-lg-5 py-5">
     <div class="col-md-5 text-center" style="border-right: 5px solid rgb(245, 93, 66);">
     <img src="{{ user.profile.gravatar }}" alt="Gravatar of {{ user.username }}" class="rounded-circle">
             <p class=" h1 fw-bold">
               {{user.username|upper}}
             </p>
-            <p class="profile-email h6" style="font-size: 20px;">
+            <p class="profile-email h6" style="font-size: 18px;">
                 <em>Email: {{user.email}}</em></p>
-            <p class="profile-email h6" style="font-size: 20px;">
+            <p class="profile-email h6" style="font-size: 18px;">
                 <em>Last log in: {{user.last_login}}</em></p>
                 <a class="nav-link px-2" style="font-size: 20px; color: rgb(245, 93, 66)"
                         href="{% url 'password_tab' %}" id="reg">Change Password</a>

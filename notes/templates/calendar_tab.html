@@ -1,12 +1,7 @@
 {% extends 'base_content.html' %}
 {%load static%}
-{% load django_bootstrap5 %}
-{% include 'bootstrap.html' %}
-{% bootstrap_css %}
-<link href="{% static 'css_style/calendar.css' %}"rel="stylesheet" type="text/css" >
-
 {% block content %}
-    <div class="white-box">
+    <div class="container">
         <div class="header">
             <h1>Calendar</h1>
         </div>
@@ -26,12 +21,18 @@
                         <form action="{% url 'calendar_tab' %}" method="post">
                             {% csrf_token %}
                             {{ form.as_p }}
+                            </form>
                         </div>
                     <div class="modal-footer">
                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                      <input type="submit" value ="Create event" class="btn btn-primary"></form>
+                      <input type="submit" value ="Create event" class="btn btn-primary">
                     </div>
                   </div>
                 </div>
             </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+    <link href="{% static 'css_style/calendar.css' %}"rel="stylesheet" type="text/css" >
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 {% endblock %}
