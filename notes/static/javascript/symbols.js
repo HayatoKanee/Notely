@@ -28,8 +28,9 @@ canvas.on('selection:cleared', function (){
 
 $('.key').click(function (){
     let itext =  canvas.getActiveObject()
-    itext.insertChars($(this).text(), [{fill: "green",
-        fontStyle: "bold"}], itext.selectionStart);
+    itext.insertChars($(this).text(), 
+    [{fill: "black",}],
+         itext.selectionStart);
     canvas.renderAll()
     
 });
