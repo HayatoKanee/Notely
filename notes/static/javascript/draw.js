@@ -247,9 +247,21 @@ document.onkeydown = function (e){
         canvas.discardActiveObject();
     }
 }
-window.setInterval(function (){
-    $.ajax({
+// window.setInterval(function (){
+//     $.ajax({
+//         type:"POST",
+//         url: "/save_page/"+page_id,
+//         data: {
+//             data: JSON.stringify(canvas.toDatalessJSON()),
+//             code: editor.getValue(),
+//             csrfmiddlewaretoken: csrf
+//         }
+//     });
+// }, 30000);
+window.onbeforeunload= function(event) {
+     $.ajax({
         type:"POST",
+         async:false,
         url: "/save_page/"+page_id,
         data: {
             data: JSON.stringify(canvas.toDatalessJSON()),
@@ -257,4 +269,4 @@ window.setInterval(function (){
             csrfmiddlewaretoken: csrf
         }
     });
-}, 30000);
+  };
