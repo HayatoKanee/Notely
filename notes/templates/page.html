@@ -13,10 +13,10 @@
             <button class="toolbox" id="clearAll" onclick="clearCanvas(canvas)" style="color: rgb(245, 93, 66);">Clear All</button>
         </li>
         <li class="nav-item">
-            <button class="toolbox" id="undo" onclick="undo(this)">undo</button>
+            <button class="toolbox" id="undo" onclick="undo(this)" style="color: rgb(245, 93, 66);"></button>
         </li>
         <li class="nav-item">
-            <button class="toolbox" id="redo" onclick="redo(this)">redo</button>
+            <button class="toolbox" id="redo" onclick="redo(this)" style="color: rgb(245, 93, 66);"></button>
         </li>
         <li class="nav-item">
             <button class="toolbox" id="select" onclick="toggleSelect(this)"></button>
@@ -24,11 +24,6 @@
         <li class="nav-item">
          <button class="toolbox" id="draw" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePen" aria-expanded="false"
                  aria-controls="collapsePen" onclick="toggleDraw(this)"></button>
-        </li>
-            <li class="nav-item">
-         <button class="toolbox" id="erase" type="button" onclick="toggleErase(this)">
-             <span class="bi bi-eraser"></span>
-         </button>
         </li>
         <li class="nav-item">
             <div style="min-height: 120px;">
@@ -60,7 +55,6 @@
         <li class="nav-item">
             <button class="toolbox" id="text" type="button" data-bs-toggle="collapse" data-bs-target="#collapseText" aria-expanded="false"
                     aria-controls="collapseText" onclick="toggleText(this)" style="color: rgb(245, 93, 66);">
-                <span class="bi bi-journal-text"></span>
             </button>
         </li>
         <li class="nav-item">
@@ -72,6 +66,10 @@
                 </div>
                 </div>
             </div>
+        </li>
+        <li class="nav-item">
+         <button class="toolbox" id="erase" type="button" onclick="toggleErase(this)" style="color: rgb(245, 93, 66);">
+         </button>
         </li>
         <li class="nav-item">
             <button class="toolbox" id="upload" type="button" data-bs-toggle="collapse" data-bs-target="#collapseUpload" aria-expanded="false"

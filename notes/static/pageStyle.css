@@ -21,6 +21,15 @@
 #draw.active {
     background-color: rgb(245, 93, 66, 0.2);
 }
+
+#text{
+    background: url("images/text.png") no-repeat;
+    background-size: contain;
+    width: 30px;
+    height: 30px;
+    border: none;
+}
+
 #text.active {
     background-color: rgb(245, 93, 66, 0.2);
 }
@@ -45,6 +54,30 @@
     background-color: rgb(150, 150, 192);
 }
 
+#erase{
+    background: url("images/erase.png") no-repeat;
+    background-size: contain;
+    width: 30px;
+    height: 30px;
+    border: none;
+}
+
 #erase.active{
-    background-color: blue;
+    background-color: rgb(245, 93, 66, 0.2);
+}
+
+#undo{
+    background: url("images/undo.png") no-repeat;
+    background-size: contain;
+    width: 30px;
+    height: 30px;
+    border: none;
+}
+
+#redo{
+    background: url("images/redo.png") no-repeat;
+    background-size: contain;
+    width: 30px;
+    height: 30px;
+    border: none;
 }
