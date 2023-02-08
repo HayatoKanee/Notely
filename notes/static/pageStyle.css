@@ -1,40 +1,47 @@
-#draw{
+#draw {
     background: url("images/pen.png") no-repeat;
     background-size: contain;
     width: 30px;
     height: 30px;
     border: none;
 }
-#select.active{
-    background-color: blue;
+
+#select.active {
+    background-color: rgb(245, 93, 66, 0.2);
 }
-#select{
+
+#select {
     background: url("images/select.png") no-repeat;
     background-size: contain;
     width: 30px;
     height: 30px;
     border: none;
 }
-#draw.active{
-    background-color: blue;
+
+#draw.active {
+    background-color: rgb(245, 93, 66, 0.2);
 }
-#text.active{
-    background-color: blue;
+#text.active {
+    background-color: rgb(245, 93, 66, 0.2);
 }
-.toolbox{
+
+.toolbox {
     margin: 20px;
 }
-#upload{
+
+#upload {
     background: url("images/upload.png") no-repeat;
     background-size: contain;
     width: 30px;
     height: 30px;
     border: none;
 }
-#upload.active{
-    background-color: blue;
+
+#upload.active {
+    background-color: rgb(245, 93, 66, 0.2);
 }
-#navbarcontainer{
+
+#navbarcontainer {
     background-color: rgb(150, 150, 192);
 }
 
