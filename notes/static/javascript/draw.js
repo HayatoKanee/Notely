@@ -1,3 +1,4 @@
+
 const initCanvas = (id) => {
     return new fabric.Canvas(id, {
     width: window.innerWidth,
@@ -16,7 +17,7 @@ function clearCanvas(canvas) {
 }
 
 
-const modes = ['select', 'draw', 'text'];
+const modes = ['select', 'draw', 'text', 'erase'];
 let currentMode;
 
 function selectBtn(btn){
@@ -35,6 +36,7 @@ function toggleText(btn) {
 
 function toggleDraw(btn) {
   selectBtn(btn);
+  canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
   canvas.freeDrawingBrush.color = penColor
   canvas.isDrawingMode = true;
   currentMode = "draw";
@@ -45,6 +47,13 @@ function toggleSelect(btn) {
   currentMode = "select";
 }
 
+function toggleErase(btn){
+    selectBtn(btn);
+    currentMode = "erase";
+    canvas.freeDrawingBrush = new fabric.EraserBrush(canvas);
+    canvas.freeDrawingBrush.width = 10;
+    canvas.isDrawingMode = true;
+}
 
 function addImage(e) {
     const input = document.getElementById('img')
@@ -247,17 +256,18 @@ document.onkeydown = function (e){
         canvas.discardActiveObject();
     }
 }
-// window.setInterval(function (){
-//     $.ajax({
-//         type:"POST",
-//         url: "/save_page/"+page_id,
-//         data: {
-//             data: JSON.stringify(canvas.toDatalessJSON()),
-//             code: editor.getValue(),
-//             csrfmiddlewaretoken: csrf
-//         }
-//     });
-// }, 30000);
+window.setInterval(function (){
+    $.ajax({
+        type:"POST",
+        url: "/save_page/"+page_id,
+        data: {
+            data: JSON.stringify(canvas.toDatalessJSON()),
+            code: editor.getValue(),
+            csrfmiddlewaretoken: csrf
+        }
+    });
+}, 50000);
+
 window.onbeforeunload= function(event) {
      $.ajax({
         type:"POST",

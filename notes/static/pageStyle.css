@@ -37,3 +37,7 @@
 #navbarcontainer{
     background-color: rgb(150, 150, 192);
 }
+
+#erase.active{
+    background-color: blue;
+}
