@@ -85,7 +85,7 @@
             </div>
         </li>
         <li class="nav-item">
-            <button id="insert-table-button">Insert Table</button>
+            <button class="toolbox" id="table" type="button"></button>
                 <div id="myModal" class="modal">
                 <div class="modal-content">
                 <span class="close">&times;</span>
@@ -107,6 +107,9 @@
             </li>
             <li class="nav-item">
                 <button class="toolbox" id="linkPage"  data-bs-toggle="offcanvas" href="#sidebar" aria-controls="sidebar" style="color: rgb(245, 93, 66);"> Link Page</button>
+            </li>
+            <li class="nav-item">
+                <button class="toolbox" id="download" type="button" ></button>
             </li>
     </ul>
         </div>
@@ -150,6 +153,9 @@
         <script src="{%static 'javascript/symbols.js'%}"></script>
         <script src="{% static 'javascript/linkPage.js'%}"></script>
         <script src="{% static 'javascript/table.js'%}"></script>
+        <script src="{% static 'javascript/download.js'%}"></script>
+        <script src="{% static 'javascript/fileSaver.min.js'%}"></script>
+        <script src="{% static 'javascript/canvas-toBlob.js'%}"></script>
         {% comment %} <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.4.0/fabric.min.js"></script> {% endcomment %}
         <script src="{%static 'javascript/fabric.brushes.min.js'%}"></script>
 {% endblock %}
