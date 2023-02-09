@@ -282,9 +282,10 @@ document.onkeydown = function (e){
         canvas.discardActiveObject();
     }
 }
-window.setInterval(function (){
+function save(sync){
     $.ajax({
         type:"POST",
+        async:sync,
         url: "/save_page/"+page_id,
         data: {
             data: JSON.stringify(canvas.toDatalessJSON()),
@@ -292,17 +293,11 @@ window.setInterval(function (){
             csrfmiddlewaretoken: csrf
         }
     });
+}
+window.setInterval(function (){
+    save(true)
 }, 50000);
 
 window.onbeforeunload= function(event) {
-     $.ajax({
-        type:"POST",
-         async:false,
-        url: "/save_page/"+page_id,
-        data: {
-            data: JSON.stringify(canvas.toDatalessJSON()),
-            code: editor.getValue(),
-            csrfmiddlewaretoken: csrf
-        }
-    });
+     save(false)
   };
