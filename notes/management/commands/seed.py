@@ -12,3 +12,8 @@ class Command(BaseCommand):
             email='john.doe@example.org',
             password=DEFAULT_PASSWORD
         )
+        user = User.objects.create_user(
+            username='janedoe',
+            email='jane.doe@example.org',
+            password=DEFAULT_PASSWORD
+        )

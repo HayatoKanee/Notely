@@ -1,3 +1,4 @@
+
 const initCanvas = (id) => {
     return new fabric.Canvas(id, {
     width: window.innerWidth,
@@ -15,8 +16,23 @@ function clearCanvas(canvas) {
     })
 }
 
+function undo(btn){
+    selectBtn(btn);
+    if(canvas._objects.length>0){
+        canvasObj.push(canvas._objects.pop());
+     canvas.renderAll();
+    }
+}
+  
+function redo(btn){ 
+    selectBtn(btn);
+    if(canvasObj.length>0){
+      _redo = true;
+     canvas.add(canvasObj.pop());
+    }
+}
 
-const modes = ['select', 'draw', 'text'];
+const modes = ['select', 'draw', 'text', 'erase'];
 let currentMode;
 
 function selectBtn(btn){
@@ -35,7 +51,8 @@ function toggleText(btn) {
 
 function toggleDraw(btn) {
   selectBtn(btn);
-  canvas.freeDrawingBrush.color = color
+  canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
+  canvas.freeDrawingBrush.color = penColor
   canvas.isDrawingMode = true;
   currentMode = "draw";
 }
@@ -45,6 +62,13 @@ function toggleSelect(btn) {
   currentMode = "select";
 }
 
+function toggleErase(btn){
+    selectBtn(btn);
+    currentMode = "erase";
+    canvas.freeDrawingBrush = new fabric.EraserBrush(canvas);
+    canvas.freeDrawingBrush.width = 10;
+    canvas.isDrawingMode = true;
+}
 
 function addImage(e) {
     const input = document.getElementById('img')
@@ -52,20 +76,30 @@ function addImage(e) {
     reader.readAsDataURL(image);
 }
 
-function chooseColor() {
-    const chooser = document.getElementById('chooseColor')
+function choosePenColor() {
+    const chooser = document.getElementById('choosePenColor')
     chooser.addEventListener('change', (e) => {
-        color = '#' + e.target.value
-        canvas.freeDrawingBrush.color = color
+        penColor = '#' + e.target.value
+        canvas.freeDrawingBrush.color = penColor
         canvas.requestRenderAll()
     })
 }
+
 
 function chooseWidth() {
     const slider = document.getElementById('chooseWidth')
     slider.addEventListener('change', (e) => {
         width = e.target.value
         canvas.freeDrawingBrush.width = width
+        canvas.requestRenderAll()
+    })
+}
+
+function chooseTextColor() {
+    const chooser = document.getElementById('chooseTextColor')
+    chooser.addEventListener('change', (e) => {
+        textColor = '#' + e.target.value
+        canvas.freeDrawingBrush.color = textColor
         canvas.requestRenderAll()
     })
 }
@@ -180,13 +214,21 @@ const canvas = initCanvas('canvas');
 canvas.loadFromJSON(drawing);
 canvas.renderAll();
 
-let color = '#000000'
-chooseColor()
+let penColor = '#000000'
+let textColor = '#000000'
+choosePenColor()
+chooseTextColor()
+
+
 
 let width = '30'
 chooseWidth()
 
 chooseMode()
+
+  
+let _redo = false;
+let canvasObj = [];
 
 let reader = new FileReader()
 
@@ -200,6 +242,13 @@ reader.addEventListener("load", () => {
     })
 });
 
+canvas.on('object:added',function(){
+    if(!_redo){
+        canvasObj = [];
+    }
+    _redo = false;
+});
+
 canvas.on('mouse:down', function(options) {
     if(currentMode==='text'){
         let pointer = canvas.getPointer(options.e);
@@ -209,7 +258,7 @@ canvas.on('mouse:down', function(options) {
           top: pointer.y,
           fontSize: 20,
           fontFamily: 'Arial',
-          fill: color
+          fill: textColor
         });
             canvas.add(textbox);
         }
@@ -219,13 +268,41 @@ canvas.on('mouse:down', function(options) {
     canvas.renderAll();
 });
 
+document.onkeydown = function (e){
+    if(e.keyCode == 46){
+        const selection = canvas.getActiveObject();
+        if (selection.type === 'activeSelection') {
+            selection.forEachObject(function(element) {
+                canvas.remove(element);
+            });
+        }
+        else{
+            canvas.remove(selection);
+        }
+        canvas.discardActiveObject();
+    }
+}
 window.setInterval(function (){
     $.ajax({
         type:"POST",
         url: "/save_page/"+page_id,
         data: {
             data: JSON.stringify(canvas.toDatalessJSON()),
+            code: editor.getValue(),
             csrfmiddlewaretoken: csrf
         }
     });
-}, 3000);
+}, 50000);
+
+window.onbeforeunload= function(event) {
+     $.ajax({
+        type:"POST",
+         async:false,
+        url: "/save_page/"+page_id,
+        data: {
+            data: JSON.stringify(canvas.toDatalessJSON()),
+            code: editor.getValue(),
+            csrfmiddlewaretoken: csrf
+        }
+    });
+  };

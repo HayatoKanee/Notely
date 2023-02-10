@@ -2,14 +2,15 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
-
-from notely import settings
-from .forms import SignUpForm, LogInForm, UserForm, ProfileForm, PasswordForm, FolderForm, NotebookForm
+from datetime import datetime, timedelta
+from .util import EventCalendar
+from django.utils import safestring
+from .forms import SignUpForm, LogInForm, UserForm, ProfileForm, PasswordForm, FolderForm, NotebookForm, EventForm
 from .models import User, Folder, Notebook, Page
 from django.contrib.auth.decorators import login_required
 from .helpers import login_prohibited, check_perm
 from django.contrib.auth.hashers import check_password
-from guardian.shortcuts import get_objects_for_user
+from guardian.shortcuts import get_objects_for_user, assign_perm
 from .view_helper import sort_items_by_created_time, save_folder_notebook_forms
 
 
@@ -94,7 +95,23 @@ def sub_folders_tab(request, folder_id):
 
 @login_required
 def calendar_tab(request):
-    return render(request, 'calendar_tab.html')
+    events = request.user.events.all()
+    currentMonth = datetime.now().month
+    currentYear = datetime.now().year
+    cal = EventCalendar(currentYear,currentMonth,events)
+    form = EventForm()
+    if request.method == "POST":
+        form = EventForm(request.POST)
+        if form.is_valid():
+            event = form.save(commit=False)
+            event.user = request.user
+            event.save()
+            return redirect('calendar_tab')
+        else:
+            return redirect('calendar_tab')
+    else:
+        return render(request, 'calendar_tab.html' , {'calendar' : safestring.mark_safe(cal.formatmonth(withyear=True)) , 'form':form})
+
 
 
 @login_required
@@ -139,10 +156,14 @@ def gravatar(request):
 
 
 @login_required
+@check_perm('dg_view_page', Page)
 def page(request, page_id):
     page = Page.objects.get(id=page_id)
     if request.method == 'POST':
         new_page = Page.objects.create(notebook=page.notebook)
+        assign_perm('dg_view_page', request.user, new_page)
+        assign_perm('dg_edit_page', request.user, new_page)
+        assign_perm('dg_delete_page', request.user, new_page)
         return redirect('page', new_page.id)
     return render(request, 'page.html', {'page': page})
 
@@ -150,6 +171,7 @@ def page(request, page_id):
 def save_page(request, page_id):
     if request.method == 'POST':
         data = request.POST.get('data')
+        code = request.POST.get('code')
         page = Page.objects.get(id=page_id)
         notebook = page.notebook
         last_page = notebook.last_page
@@ -158,6 +180,7 @@ def save_page(request, page_id):
         notebook.last_page = page
         notebook.save()
         page.drawing = data
+        page.code = code
         page.save()
         return JsonResponse({'status': 'success'})
     return JsonResponse({'status': 'fail'})

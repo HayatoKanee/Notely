@@ -1,7 +1,9 @@
 from django import forms
 from django.core.validators import RegexValidator
-from .models import User, Profile, Folder, Notebook
+from .models import User, Profile, Folder, Event, Tag, Notebook
 from guardian.shortcuts import assign_perm
+from bootstrap_datepicker_plus.widgets import DateTimePickerInput
+from colorfield.fields import ColorField
 
 
 class LogInForm(forms.Form):
@@ -107,6 +109,22 @@ class FolderForm(forms.ModelForm):
         assign_perm('dg_edit_folder', user, folder)
         assign_perm('dg_delete_folder', user, folder)
         return folder
+
+
+class EventForm(forms.ModelForm):
+    class Meta:
+        model = Event
+        fields = ['title', 'description', 'start_time', 'end_time']
+        widgets = {
+            "start_time": DateTimePickerInput(),
+            "end_time": DateTimePickerInput(),
+        }
+
+
+class TagForm(forms.ModelForm):
+    class Meta:
+        model = Tag
+        fields = ['name', 'color']
 
 
 class NotebookForm(forms.ModelForm):

@@ -1,34 +1,36 @@
 {% extends 'base_content_without_footer.html' %}
 {% block content %}
     {% if page.notebook.folder %}
-     <a href={% url 'sub_folders_tab' page.notebook.folder.id %} style="color:#1b1b1b;margin-left:20px"> <i class="bi bi-arrow-left"></i> Go back</a>
+     <a href={% url 'sub_folders_tab' page.notebook.folder.id %} style="color:#1b1b1b;margin-left:20px"> <i class="bi bi-arrow-left" style="color: rgb(245, 93, 66);"></i> Go back</a>
     {% else %}
-         <a href={% url 'folders_tab'%} style="color:#1b1b1b;margin-left:20px"> <i class="bi bi-arrow-left"></i> Go back</a>
+         <a href={% url 'folders_tab'%} style="color:rgb(245,93,66);margin-left:20px;font-size:20px;"> <i class="bi bi-arrow-left"></i> Go back</a>
     {% endif %}
-    <canvas id="canvas"> </canvas>
+    <canvas id="canvas"></canvas>
     <nav class="navbar navbar-expand-lg fixed-bottom navbar-light bg-light">
     <div class="container-fluid">
         <ul class="navbar-nav mx-auto mt-2 mt-lg-0">
         <li class="nav-item">
-            <button class="toolbox" id="clearAll" onclick="clearCanvas(canvas)">Clear All</button>
+            <button class="toolbox" id="clearAll" onclick="clearCanvas(canvas)" style="color: rgb(245, 93, 66);">Clear All</button>
+        </li>
+        <li class="nav-item">
+            <button class="toolbox" id="undo" onclick="undo(this)" style="color: rgb(245, 93, 66);"></button>
+        </li>
+        <li class="nav-item">
+            <button class="toolbox" id="redo" onclick="redo(this)" style="color: rgb(245, 93, 66);"></button>
         </li>
         <li class="nav-item">
             <button class="toolbox" id="select" onclick="toggleSelect(this)"></button>
          </li>
         <li class="nav-item">
-         <button class="toolbox" id="draw" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePen" aria-expanded="false" aria-controls="collapsePen" onclick="toggleDraw(this)"></button>
-        </li>
-        <li class="nav-item">
-            <button class="toolbox" id="text" onclick="toggleText(this)">
-                <span class="bi bi-journal-text"></span>
-            </button>
+         <button class="toolbox" id="draw" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePen" aria-expanded="false"
+                 aria-controls="collapsePen" onclick="toggleDraw(this)"></button>
         </li>
         <li class="nav-item">
             <div style="min-height: 120px;">
-                <div class="collapse collapse-horizontal" id="collapsePen">
+                <div class="collapse collapse-horizontal" id="collapsePen" style="color: rgb(245, 93, 66);">
                 <div class="card card-body" style="width: 300px;">
                     <label>Pen Mode</label>
-                    <select id="chooseMode">
+                    <select id="chooseMode" style="color: rgb(245, 93, 66);">
                         <option value="circle">Circle Brush</option>
                         <option value="crayon">Crayon</option>
                         <option value="ink">Ink Pen</option>
@@ -41,10 +43,9 @@
                         <option value="spraypaint">Spray Paint</option>
                         <option value="square">Square brush</option>
                         <option value="web">Web Brush</option>
-
                     </select>
                     <label>Pen Colour</label>
-                    <input id='chooseColor' value="#000000" data-jscolor="">
+                    <input id='choosePenColor' value="#000000" data-jscolor="" style="color: rgb(245, 93, 66);">
                     <label>Pen Width</label>
                     <input id='chooseWidth' value='1' type=range min='1' max='20'>
                 </div>
@@ -52,47 +53,103 @@
             </div>
         </li>
         <li class="nav-item">
-            <button class="toolbox" id="upload" type="button" data-bs-toggle="collapse" data-bs-target="#collapseUpload" aria-expanded="false" aria-controls="collapseUpload"></button>
+            <button class="toolbox" id="text" type="button" data-bs-toggle="collapse" data-bs-target="#collapseText" aria-expanded="false"
+                    aria-controls="collapseText" onclick="toggleText(this)" style="color: rgb(245, 93, 66);">
+            </button>
         </li>
         <li class="nav-item">
             <div style="min-height: 120px;">
-                <div class="collapse collapse-horizontal" id="collapseUpload">
-                <div class="card card-body" style="width: 300px;">
+                <div class="collapse collapse-horizontal" id="collapseText">
+                <div class="card card-body" style="width: 300px; color: rgb(245, 93, 66);">
+                    <label>Text Colour</label>
+                    <input id='chooseTextColor' value="#000000" data-jscolor="" style="color: rgb(245, 93, 66);">
+                </div>
+                </div>
+            </div>
+        </li>
+        <li class="nav-item">
+         <button class="toolbox" id="erase" type="button" onclick="toggleErase(this)" style="color: rgb(245, 93, 66);">
+         </button>
+        </li>
+        <li class="nav-item">
+            <button class="toolbox" id="upload" type="button" data-bs-toggle="collapse" data-bs-target="#collapseUpload" aria-expanded="false"
+                    aria-controls="collapseUpload" style="color: rgb(245, 93, 66);"></button>
+        </li>
+        <li class="nav-item">
+            <div style="min-height: 120px;">
+                <div class="collapse collapse-horizontal" id="collapseUpload" style="color: rgb(245, 93, 66);">
+                <div class="card card-body" style="width: 300px; color: rgb(245, 93, 66);">
                     <input id="img" class="toolbox" type="file" accept="image/*">
                 </div>
                 </div>
             </div>
         </li>
+        <li class="nav-item">
+            <button id="insert-table-button">Insert Table</button>
+                <div id="myModal" class="modal">
+                <div class="modal-content">
+                <span class="close">&times;</span>
+                <form>
+                    <label for="rows">Rows:</label>
+                    <input type="number" id="rows" name="rows" value="2" min="1"><br><br>
+                    <label for="columns">Columns:</label>
+                    <input type="number" id="columns" name="columns" value="2" min="1"><br><br>
+                    <input type="button" value="Submit" id="submit-button">
+                </form>
+                </div>
+                </div>
+            </li>
+            <li class="nav-item">
+                <button class="toolbox" id="showCodeEditor"  data-bs-toggle="modal" data-bs-target="#codeEditor" style="color: rgb(245, 93, 66);"></button>
+            </li>
+            <li class="nav-item">
+                <button class="toolbox" id="showSymbols"  data-bs-toggle="modal" data-bs-target="#symbols" style="color: rgb(245, 93, 66);"></button>
+            </li>
+            <li class="nav-item">
+                <button class="toolbox" id="linkPage"  data-bs-toggle="offcanvas" href="#sidebar" aria-controls="sidebar" style="color: rgb(245, 93, 66);"> Link Page</button>
+            </li>
     </ul>
         </div>
     </nav>
-    {% block scripts %}
-        {% load static %}
-        <script src="{%static 'javascript/fabric.min.js'%}"></script>
-        <script>
-        const page_id = "{{ page.id }}";
-        const drawing = '{{ page.drawing|safe}}';
-        function getCookie(name) {
-            var cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                var cookies = document.cookie.split(';');
-                for (var i = 0; i < cookies.length; i++) {
-                    var cookie = cookies[i].trim();
-                    // Does this cookie string begin with the name we want?
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
+    {% include 'partials/codeEditor.html' %}
+    {% include 'partials/symbols.html' %}
+{% endblock %}
+{% block scripts %}
+    {% load static %}
+    <script src="{%static 'javascript/fabric.min.js'%}"></script>
+    <script>
+    const page_id = "{{ page.id }}";
+    const drawing = '{{ page.drawing|safe}}';
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
                 }
             }
-            return cookieValue;
         }
-        const csrf = getCookie('csrftoken');
-        </script>
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-            <script src="{%static 'javascript/draw.js'%}"></script>
-            <script src="{%static 'javascript/jscolor.js'%}"></script>
-            {% comment %} <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.4.0/fabric.min.js"></script> {% endcomment %}
-            <script src="{%static 'javascript/fabric.brushes.min.js'%}"></script>
-    {% endblock %}
+        return cookieValue;
+    }
+    const csrf = getCookie('csrftoken');
+    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
+        <script src="{%static 'javascript/draw.js'%}"></script>
+        <script src="{%static 'javascript/jscolor.js'%}"></script>
+        <script src="{%static 'javascript/codemirror.js'%}"></script>
+        <link rel="stylesheet" href="{%static 'css_style/codemirror.css'%}">
+        <script src="{%static 'javascript/mode/python.js'%}"></script>
+        <script src="{%static 'javascript/mode/javascript.js'%}"></script>
+        <script src="{%static 'javascript/mode/django.js'%}"></script>
+        <script src="{%static 'javascript/codeEditor.js'%}"></script>
+        <script src="{%static 'javascript/symbols.js'%}"></script>
+        <script src="{% static 'javascript/linkPage.js'%}"></script>
+        <script src="{% static 'javascript/table.js'%}"></script>
+        {% comment %} <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.4.0/fabric.min.js"></script> {% endcomment %}
+        <script src="{%static 'javascript/fabric.brushes.min.js'%}"></script>
 {% endblock %}

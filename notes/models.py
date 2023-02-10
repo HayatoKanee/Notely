@@ -2,8 +2,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator, MinValueValidator, MaxValueValidator
 from libgravatar import Gravatar
-
 from notes.helpers import validate_date
+from colorfield.fields import ColorField
 
 
 class User(AbstractUser):
@@ -76,7 +76,7 @@ class Folder(models.Model):
     def get_path(self):
         path = [self]
         current = self.parent
-        while current != None:
+        while current:
             path.insert(0,current)
             current = current.parent
         return path
@@ -104,6 +104,7 @@ class Page(models.Model):
     drawing = models.TextField(blank=True)
     last_page_of = models.OneToOneField(Notebook, related_name="last_page", on_delete=models.CASCADE, null=True,
                                         blank=True)
+    code = models.TextField(blank=True)
 
     class Meta:
         permissions = [
@@ -120,3 +121,43 @@ class Page(models.Model):
             notebook.last_page = pages.last()
         else:
             notebook.last_page = Page.objects.create(notebook=notebook, last_page_of=notebook)
+    
+class Tag(models.Model):
+    user = models.ForeignKey(User, related_name="tags", on_delete=models.CASCADE)
+    name = models.CharField(max_length=30)
+    COLOR_PALETTE = [
+        ("#FFFFFF", "white", ),
+        ("#000000", "black", ),
+        ("#34eb67", "green", ),
+    ]
+    image = models.ImageField(upload_to="images",default=None)
+    color = ColorField(image_field="image",samples=COLOR_PALETTE)
+
+
+class Event(models.Model):
+    user = models.ForeignKey(User, related_name="events", on_delete=models.CASCADE)
+    title = models.CharField(max_length=200)
+    description = models.TextField(default="")
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
+    routine_choice =[
+        ("0","No Repeat"),
+        ("1","every Day" ),
+        ("2","every Week"),
+        ("3","every 2 Weeks"),
+        ("4","every Month"),
+        ("5","every Year"),
+        ("Custom","Custom")
+    ]
+    week_choice =[
+        ("Monday","Monday" ),
+        ("Tuesday","Tuesday"),
+        ("Wednesday","Wednesday"),
+        ("Thursday","Thursday"),
+        ("Friday","Friday"),
+        ("Saturday","Saturday"),
+        ("Sunday","Sunday"),
+    ]
+    routine = models.CharField(choices=routine_choice , max_length=10)
+    tag = models.OneToOneField(Tag , related_name='tag',on_delete=models.CASCADE,null=True)
+
