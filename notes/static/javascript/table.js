@@ -17,7 +17,7 @@ function insertTable(rows, columns) {
           strokeWidth: 1
         });
         
-        var text = new fabric.IText("test", {
+        var text = new fabric.IText("", {
           left: c * cellWidth + 5,
           top: r * cellHeight + 5,
           width: cellWidth - 10,
@@ -51,10 +51,10 @@ function insertTable(rows, columns) {
 
   }
 
-var modal = document.getElementById("myModal");
+var modal = document.getElementById("tableModal");
 var btn = document.getElementById("table");
 var span = document.getElementsByClassName("close")[0];
-var submitBtn = document.getElementById("submit-button");
+var submitBtn = document.getElementById("submitTable");
 
 
 
