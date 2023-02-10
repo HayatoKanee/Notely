@@ -14,6 +14,7 @@ from guardian.shortcuts import get_objects_for_user, assign_perm
 from .view_helper import sort_items_by_created_time, save_folder_notebook_forms
 
 
+
 @login_prohibited
 def sign_up(request):
     if request.method == 'POST':
