@@ -28,7 +28,7 @@
           <div class="col" style="margin-left:-90px; width:60%;">
                 {% if item.get_type == "Folder" %}
                 <form action="{% url 'sub_folders_tab' item.id %}" method="get">
-                    <button id = "folder_img" style="text-align: left; ">
+                    <button id = "folder_img" >
                         <span style="margin-left:40px">{{ item.folder_name }}</span>
 
                     </button>
@@ -42,17 +42,16 @@
                  </form>
                 {% endif %}
         </div>
-              <select>
 
                     {% if item.get_type == "Folder" %}
-                        <option name="▼">
-                            <button>▼</button>
-                        </option>
-                        <option>
-                        <form action="{% url 'delete_folder_tab' item.id %}" method="get">
-                            <button>Delete</button>
-                        </form>
-                        </option>
+                        <div class="dropdown">
+                          <button class="dropdown">Dropdown</button>
+                          <div class="dropdown-content">
+
+                            <a href="#">Link 2</a>
+                            <a href="#">Link 3</a>
+                          </div>
+                        </div>
                     {% else %}
                         <option name="▼">
                         <form action="{% url 'delete_notebook_tab' item.id %}" method="get">
@@ -61,7 +60,6 @@
                         </option>
                     {% endif %}
 
-              </select>
               </div>
           {% endfor %}
 
