@@ -295,9 +295,10 @@ function save(sync){
     });
 }
 window.setInterval(function (){
-    save(true)
+    save(true);
 }, 50000);
 
 window.onbeforeunload= function(event) {
-     save(false)
+     save(true);
+     return "";
   };
