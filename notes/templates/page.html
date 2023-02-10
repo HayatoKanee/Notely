@@ -10,7 +10,7 @@
     <div class="container-fluid">
         <ul class="navbar-nav mx-auto mt-2 mt-lg-0">
         <li class="nav-item">
-            <button class="toolbox" id="clearAll" onclick="clearCanvas(canvas)" style="color: rgb(245, 93, 66);">Clear All</button>
+            <button class="toolbox" id="clearAll" onclick="clearCanvas(canvas)" style="color: rgb(245, 93, 66);"></button>
         </li>
         <li class="nav-item">
             <button class="toolbox" id="undo" onclick="undo(this)" style="color: rgb(245, 93, 66);"></button>
@@ -109,7 +109,17 @@
                 <button class="toolbox" id="linkPage"  data-bs-toggle="offcanvas" href="#sidebar" aria-controls="sidebar" style="color: rgb(245, 93, 66);"> Link Page</button>
             </li>
             <li class="nav-item">
-                <button class="toolbox" id="download" type="button" ></button>
+                <button class="toolbox" id="download" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDownload" aria-expanded="false"
+                        aria-controls="collapseDownload" style="color: rgb(245, 93, 66);"></button>
+            </li>
+            <li class="nav-item">
+                <div style="min-height: 120px;">
+                    <div class="collapse collapse-horizontal" id="collapseDownload" style="color: rgb(245, 93, 66);">
+                    <div class="card card-body" style="width: 300px; color: rgb(245, 93, 66);">
+                        <button id="downloadAsPic" type="button" >Download as PNG</button>
+                    </div>
+                    </div>
+                </div>
             </li>
     </ul>
         </div>

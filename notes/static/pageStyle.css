@@ -6,6 +6,14 @@
     border: none;
 }
 
+#clearAll{
+    background: url("images/clearAll.png") no-repeat;
+    background-size: contain;
+    width: 30px;
+    height: 30px;
+    border: none;
+}
+
 #select.active {
     background-color: rgb(245, 93, 66, 0.2);
 }
