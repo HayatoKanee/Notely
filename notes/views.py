@@ -109,7 +109,7 @@ def calendar_tab(request):
             event.save()
             messages.add_message(request, messages.SUCCESS, "Event Created!")
             return redirect('calendar_tab')
-    return render(request, 'calendar_tab.html' , {'calendar' : safestring.mark_safe(cal.formatmonth(withyear=True)) , 'form':form, 'valid':valid})
+    return render(request, 'calendar_tab.html' , {'calendar' : safestring.mark_safe(cal.formatmonth(withyear=True)) , 'form':form})
 
     
 
