@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 from .util import EventCalendar
 from django.utils import safestring
 from .forms import SignUpForm, LogInForm, UserForm, ProfileForm, PasswordForm, FolderForm, NotebookForm, EventForm
-from .models import User, Folder, Notebook, Page
+from .models import User, Folder, Notebook, Page, Event
 from django.contrib.auth.decorators import login_required
 from .helpers import login_prohibited, check_perm
 from django.contrib.auth.hashers import check_password
@@ -185,3 +185,9 @@ def save_page(request, page_id):
         page.save()
         return JsonResponse({'status': 'success'})
     return JsonResponse({'status': 'fail'})
+
+
+def delete_event(request, event_id):
+    event = Event.objects.get(id=event_id)
+    event.delete()
+    return redirect('calendar_tab')
