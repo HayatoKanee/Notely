@@ -87,6 +87,7 @@
   height: 40px;
   display: block;
 }
+<<<<<<< HEAD
 .dropbtn {
   background-color: #04AA6D;
   color: white;
@@ -120,6 +121,7 @@
 .dropdown-content a:hover {background-color: #ddd;}
 
 .dropdown:hover .dropdown-content {display: block;}
+=======
+>>>>>>> 624156d7922875f9456c091bdd6f185553b84f22
 
-.dropdown:hover .dropbtn {background-color: #3e8e41;}
 
