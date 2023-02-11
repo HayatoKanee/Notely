@@ -184,3 +184,23 @@ def save_page(request, page_id):
         page.save()
         return JsonResponse({'status': 'success'})
     return JsonResponse({'status': 'fail'})
+
+
+@login_required
+@check_perm('dg_view_folder', Folder)
+def delete_folder(request, folder_id):
+    user = request.user
+    if request.method == 'GET':
+        folder = Folder.objects.get(id=folder_id)
+        folder.delete()
+    return redirect('/folders_tab/')
+
+
+@login_required
+@check_perm('dg_view_folder', Folder)
+def delete_notebook(request, folder_id):
+    user = request.user
+    if request.method == 'GET':
+        notebook = Notebook.objects.get(id=folder_id)
+        notebook.delete()
+    return redirect('/folders_tab/')
