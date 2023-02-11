@@ -116,7 +116,7 @@
 {% endblock %}
 {% block scripts %}
     {% load static %}
-    <script src="{%static 'javascript/fabric.min.js'%}"></script>
+    <script src="{%static 'javascript/note-taking/fabric.min.js'%}"></script>
     <script>
     const page_id = "{{ page.id }}";
     const drawing = '{{ page.drawing|safe}}';
