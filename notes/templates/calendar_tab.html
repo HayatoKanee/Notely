@@ -24,6 +24,8 @@
                 </div>
             </div>
             <button id="login-google"></button>
+
+    {% include 'partials/eventDetail.html' %}
  {% endblock %}
  {% block scripts %}
 {% load static%}
@@ -59,8 +61,6 @@
 
     <link href="{% static 'css_style/calendar.css' %}"rel="stylesheet" type="text/css" >
     <link rel="stylesheet" href="{%static 'calendarTabStyle.css'%}"/>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.3.2/main.min.css" />
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.3.2/main.min.js"></script>
     <script src="https://apis.google.com/js/api.js"></script>
     <script src="{%static 'javascript/calendar/syncGoogleCalendar.js'%}"></script>
 {% endblock %}
