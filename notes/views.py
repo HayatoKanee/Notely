@@ -13,6 +13,7 @@ from guardian.shortcuts import get_objects_for_user, assign_perm
 from .view_helper import sort_items_by_created_time, save_folder_notebook_forms
 
 
+
 @login_prohibited
 def sign_up(request):
     if request.method == 'POST':
@@ -94,7 +95,23 @@ def sub_folders_tab(request, folder_id):
 
 @login_required
 def calendar_tab(request):
-    return render(request, 'calendar_tab.html')
+    events = request.user.events.all()
+    # currentMonth = datetime.now().month
+    # currentYear = datetime.now().year
+    # cal = EventCalendar(currentYear,currentMonth,events)
+    # form = EventForm()
+    # if request.method == "POST":
+    #     form = EventForm(request.POST)
+    #     if form.is_valid():
+    #         event = form.save(commit=False)
+    #         event.user = request.user
+    #         event.save()
+    #         messages.add_message(request, messages.SUCCESS, "Event Created!")
+    #         return redirect('calendar_tab')
+    # return render(request, 'calendar_tab.html' , {'calendar' : safestring.mark_safe(cal.formatmonth(withyear=True)) , 'form':form})
+    return None
+
+
 
 
 @login_required
@@ -167,3 +184,23 @@ def save_page(request, page_id):
         page.save()
         return JsonResponse({'status': 'success'})
     return JsonResponse({'status': 'fail'})
+
+
+@login_required
+@check_perm('dg_view_folder', Folder)
+def delete_folder(request, folder_id):
+    user = request.user
+    if request.method == 'GET':
+        folder = Folder.objects.get(id=folder_id)
+        folder.delete()
+    return redirect('/folders_tab/')
+
+
+@login_required
+@check_perm('dg_view_folder', Folder)
+def delete_notebook(request, folder_id):
+    user = request.user
+    if request.method == 'GET':
+        notebook = Notebook.objects.get(id=folder_id)
+        notebook.delete()
+    return redirect('/folders_tab/')

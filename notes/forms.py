@@ -1,6 +1,7 @@
+from bootstrap_datepicker_plus.widgets import DateTimePickerInput
 from django import forms
 from django.core.validators import RegexValidator
-from .models import User, Profile, Folder, Notebook
+from .models import User, Profile, Folder, Notebook, Event, Tag
 from guardian.shortcuts import assign_perm
 
 
@@ -107,6 +108,29 @@ class FolderForm(forms.ModelForm):
         assign_perm('dg_edit_folder', user, folder)
         assign_perm('dg_delete_folder', user, folder)
         return folder
+
+
+class EventForm(forms.ModelForm):
+    class Meta:
+        model = Event
+        fields = ['title', 'description', 'start_time', 'end_time']
+        widgets = {
+            "start_time": DateTimePickerInput(),
+            "end_time": DateTimePickerInput(),
+        }
+
+    def clean(self):
+        super().clean()
+        start_time = self.cleaned_data.get('start_time')
+        end_time = self.cleaned_data.get('end_time')
+        if end_time < start_time:
+            self.add_error('end_time', 'End Time cannot be less that Start Time')
+
+
+class TagForm(forms.ModelForm):
+    class Meta:
+        model = Tag
+        fields = ['name', 'color']
 
 
 class NotebookForm(forms.ModelForm):
