@@ -211,8 +211,16 @@ function chooseMode() {
 }
 
 const canvas = initCanvas('canvas');
-canvas.loadFromJSON(drawing);
-canvas.renderAll();
+canvas.loadFromJSON(drawing, function(){
+    canvas.getObjects().forEach(function(obj) {
+    if (obj.link) {
+      obj.on('selected', function() {
+        window.location.href = this.link;
+      });
+    }
+  });
+    canvas.renderAll();
+});
 
 let penColor = '#000000'
 let textColor = '#000000'
@@ -288,14 +296,14 @@ function save(sync){
         async:sync,
         url: "/save_page/"+page_id,
         data: {
-            data: JSON.stringify(canvas.toDatalessJSON()),
+            data: JSON.stringify(canvas.toJSON(['link'])),
             code: editor.getValue(),
             csrfmiddlewaretoken: csrf
         }
     });
 }
 window.setInterval(function (){
-    save(true);
+    save(false);
 }, 50000);
 
 window.onbeforeunload= function(event) {
