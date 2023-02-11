@@ -30,5 +30,6 @@ urlpatterns = [
     path('password_tab/', views.password_tab, name='password_tab'),
     path('gravatar/', views.gravatar, name='gravatar'),
     path('page/<page_id>', views.page, name='page'),
-    path('save_page/<page_id>', views.save_page, name='save_page')
+    path('save_page/<page_id>', views.save_page, name='save_page'),
+    path('delete_event/<event_id>', views.delete_event, name='delete_event'),
 ]

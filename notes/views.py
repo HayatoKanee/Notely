@@ -180,6 +180,7 @@ def save_page(request, page_id):
     return JsonResponse({'status': 'fail'})
 
 
+@login_required
 def delete_event(request, event_id):
     event = Event.objects.get(id=event_id)
     event.delete()
