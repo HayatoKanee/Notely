@@ -3,7 +3,6 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from datetime import datetime, timedelta
-from .util import EventCalendar
 from django.utils import safestring
 from .forms import SignUpForm, LogInForm, UserForm, ProfileForm, PasswordForm, FolderForm, NotebookForm, EventForm
 from .models import User, Folder, Notebook, Page, Event
@@ -12,7 +11,6 @@ from .helpers import login_prohibited, check_perm
 from django.contrib.auth.hashers import check_password
 from guardian.shortcuts import get_objects_for_user, assign_perm
 from .view_helper import sort_items_by_created_time, save_folder_notebook_forms
-
 
 
 @login_prohibited
@@ -97,9 +95,6 @@ def sub_folders_tab(request, folder_id):
 @login_required
 def calendar_tab(request):
     events = request.user.events.all()
-    currentMonth = datetime.now().month
-    currentYear = datetime.now().year
-    cal = EventCalendar(currentYear,currentMonth,events)
     form = EventForm()
     if request.method == "POST":
         form = EventForm(request.POST)
@@ -109,10 +104,8 @@ def calendar_tab(request):
             event.save()
             messages.add_message(request, messages.SUCCESS, "Event Created!")
             return redirect('calendar_tab')
-    return render(request, 'calendar_tab.html' , {'calendar' : safestring.mark_safe(cal.formatmonth(withyear=True)) , 'form':form})
-
-    
-
+    return render(request, 'calendar_tab.html',
+                  {'form': form, 'events': events})
 
 
 @login_required
