@@ -51,11 +51,13 @@
                    let link = "{% url 'delete_event' 1%}";
                    let index = link.lastIndexOf('/');
                     let newStr = link.substring(0, index+1);
+                    let title = e.event.title;
+                    $('#title').html('Title: '+title);
                    $('#delete_link').attr('href', newStr + e.event.id)
                 },
                 editable: true
         });
-        
+
     calendar.render();
 
     </script>
