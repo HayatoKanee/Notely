@@ -23,21 +23,22 @@
     background-color: transparent;
     border: none;
     width: 100%;
-    height: 40px;
+    height: 50px;
     display: block;
     text-align: left; margin-right:50px;
 }
 #folder_img{
-    margin: 10px;
+    margin: 5px;
     background: url("images/bluefolder.png") no-repeat;
     background-size: contain;
     background-position: left;
     background-color: transparent;
     border: none;
     width: 100%;
-    height: 40px;
+    height: 50px;
     display: block;
-    text-align: left; margin-right:50px;
+    text-align: left;
+    margin-right:50px;
 }
 .element {
   width: 10%;
@@ -52,13 +53,9 @@
   box-shadow: None!important;
 }
 .folder-container {
-  position: absolute;
-  top: 380px;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  margin-top: 100px;
   width: 100%;
-  padding: 30px;
-  height: 450px;
+  height: 800px;
   overflow: scroll;
 }
 .folder-nav {
