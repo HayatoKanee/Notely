@@ -45,5 +45,25 @@
             "notebook_id": 1,
             "drawing": "Some JSON data"
         }
+    },
+    {
+        "model": "notes.Event",
+        "pk": 1,
+        "fields": {
+            "user_id": 1,
+            "title": "Event1",
+            "description":  "Some description",
+            "start_time": "2022-10-25 13:45:20",
+            "end_time": "2022-10-27 13:45:20"
+        }
+    },
+    {
+        "model": "notes.Reminder",
+        "pk": 1,
+        "fields": {
+            "event_id": 1,
+            "reminder_name": "Reminder1",
+            "alert_time": "2022-10-25 13:45:20"
+        }
     }
 ]
