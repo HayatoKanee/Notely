@@ -2,7 +2,8 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
-from .forms import SignUpForm, LogInForm, UserForm, ProfileForm, PasswordForm, FolderForm, NotebookForm, EventForm , TagForm
+from .forms import SignUpForm, LogInForm, UserForm, ProfileForm, PasswordForm, FolderForm, NotebookForm, EventForm, \
+    TagForm
 from .models import User, Folder, Notebook, Page, Event
 from django.contrib.auth.decorators import login_required
 from .helpers import login_prohibited, check_perm
@@ -94,14 +95,12 @@ def sub_folders_tab(request, folder_id):
 @login_required
 def calendar_tab(request):
     events = request.user.events.all()
-    currentMonth = datetime.now().month
-    currentYear = datetime.now().year
     event_form = EventForm(request.user)
     tag_form = TagForm()
-    
+
     if request.method == "POST":
         if 'event_submit' in request.POST:
-            event_form = EventForm(request.user,request.POST)
+            event_form = EventForm(request.user, request.POST)
             if event_form.is_valid():
                 event = event_form.save(commit=False)
                 event.user = request.user
@@ -111,17 +110,14 @@ def calendar_tab(request):
 
         if 'tag_submit' in request.POST:
             tag_form = TagForm(request.POST)
-            if tag_form.is_valid(): 
-                tag = tag_form.save(commit = False)
+            if tag_form.is_valid():
+                tag = tag_form.save(commit=False)
                 tag.user = request.user
                 tag.save()
                 messages.add_message(request, messages.SUCCESS, "Tag Created!")
                 return redirect('calendar_tab')
-    
-    return render(request, 'calendar_tab.html' , { 'event_form':event_form,'tag_form':tag_form})
 
-    
-
+    return render(request, 'calendar_tab.html', {'event_form': event_form, 'tag_form': tag_form, 'events': events})
 
 
 @login_required
