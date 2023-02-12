@@ -1,8 +1,10 @@
 {% extends 'base_content.html' %}
 {% block content %}
 
+
+<div style="height: 600px">
     <ul class="folder-nav">
-      <li style="background-color: white;font-size:23px; font-style: bold;">
+      <li style="background-color: white;font-size:23px; ">
           Name
       </li>
       <li>
@@ -11,7 +13,6 @@
         </button>
       </li>
     </ul>
-<div>
 <div class="folder-path">
 ><a href="{%url 'folders_tab' %}" style="color:#1b1b1b;margin-left:20px"><button class="folder-button" style="font-size:20px; background-color:white;">Home</button></a>
 {% if folder %}
@@ -20,16 +21,15 @@
 {% endfor %}
 {% endif %}
 </div>
-  </div>
   <div class="folder-container">
     <div class="container">
           {% for item in items %}
               <div class="col" style="margin-left:-60px; width:100%; display: flex; justify-content: space-between; padding: 20px;">
-          <div class="col" style="margin-left:-90px; width:60%;">
+          <div class="col" style="margin-left:-90px; width:60%; height: 50px;">
                 {% if item.get_type == "Folder" %}
                 <form action="{% url 'sub_folders_tab' item.id %}" method="get">
 
-                    <button id = "folder_img" >
+                    <button id = "folder_img" style="text-align: left;">
                         <span style="margin-left:50px">{{ item.folder_name }}</span>
                     </button>
                 </form>
@@ -42,7 +42,7 @@
                  </form>
                 {% endif %}
         </div>
-
+        <div>
                     {% if item.get_type == "Folder" %}
                         <div class="dropdown">
                           <button class="dropbtn">Options</button>
@@ -62,7 +62,7 @@
                       </div>
                     </div>
                     {% endif %}
-
+        </div>
               </div>
           {% endfor %}
 
@@ -70,6 +70,7 @@
     </div>
   </div>
 <br>
+
 <style>
   .dropbtn {
     background-color: white;
@@ -106,6 +107,8 @@
   
   .dropdown:hover .dropbtn {background-color: gray;}
   </style>
+      </div>
+
 {% include 'partials/addChoice.html' %}
 
 

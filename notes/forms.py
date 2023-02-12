@@ -1,8 +1,8 @@
+from bootstrap_datepicker_plus.widgets import DateTimePickerInput
 from django import forms
 from django.core.validators import RegexValidator
-from .models import User, Profile, Folder, Event, Tag, Notebook
+from .models import User, Profile, Folder, Notebook, Event, Tag
 from guardian.shortcuts import assign_perm
-from bootstrap_datepicker_plus.widgets import DateTimePickerInput
 from colorfield.fields import ColorField
 
 
@@ -116,9 +116,16 @@ class EventForm(forms.ModelForm):
         model = Event
         fields = ['title', 'description', 'start_time', 'end_time']
         widgets = {
-            "start_time": DateTimePickerInput(),
-            "end_time": DateTimePickerInput(),
+            "start_time": DateTimePickerInput(attrs={"class": "form-control"}),
+            "end_time": DateTimePickerInput(attrs={"class": "form-control"})
         }
+
+    def clean(self):
+        super().clean()
+        start_time = self.cleaned_data.get('start_time')
+        end_time = self.cleaned_data.get('end_time')
+        if end_time < start_time:
+            self.add_error('end_time', 'End Time cannot be less that Start Time')
 
 
 class TagForm(forms.ModelForm):
@@ -143,3 +150,7 @@ class NotebookForm(forms.ModelForm):
         assign_perm('dg_edit_notebook', user, notebook)
         assign_perm('dg_delete_notebook', user, notebook)
         return notebook
+
+
+class NotebookTagColorForm(forms.ModelForm):
+    color = ColorField()
