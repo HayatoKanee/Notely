@@ -57,6 +57,7 @@ class Profile(models.Model):
         """Return a URL to a miniature version of the user's gravatar."""
         return self.gravatar(size=30)
 
+
 class Folder(models.Model):
     user = models.ForeignKey(User, related_name="folders", on_delete=models.CASCADE)
     parent = models.ForeignKey('self', related_name="sub_folders", on_delete=models.CASCADE, null=True, blank=True)
@@ -127,14 +128,19 @@ class Tag(models.Model):
     user = models.ForeignKey(User, related_name="tags", on_delete=models.CASCADE)
     title = models.CharField(max_length=30)
     COLOR_PALETTE = [
-        ("#FFFFFF", "white",),
-        ("#000000", "black",),
-        ("#34eb67", "green",),
+        ('#000000', 'black'),
+        ('#0000FF', 'Blue'),
+        ('#C12FFF', 'Purple'),
+        ('#34eb67', 'green'),
+        ('#FF5B09', 'orange'),
+        ('#FC1501', 'red'),
+        ('#FFFF00', 'Yellow'),
+        ('#FFA3EE', 'Pink'), 
     ]
     image = models.ImageField(upload_to="images")
     color = ColorField(image_field="image",samples=COLOR_PALETTE)
     def __str__(self):
-        return self.title
+        return self.title 
  
 class Event(models.Model):
     user = models.ForeignKey(User, related_name="events", on_delete=models.CASCADE)
@@ -161,10 +167,11 @@ class Event(models.Model):
         ("Sunday", "Sunday"),
     ]
     routine = models.CharField(choices=routine_choice, max_length=10, blank=True)
-    tag = models.OneToOneField(Tag, related_name='tag', on_delete=models.CASCADE, null=True, blank=True)
+    tag = models.ForeignKey(Tag, related_name='tag', on_delete=models.CASCADE, null=True, blank=True)
 
 
 class Reminder(models.Model):
     event = models.ForeignKey(Event, related_name="reminders", on_delete=models.CASCADE)
     reminder_name = models.CharField(max_length=50, blank=False)
     alert_time = models.DateTimeField()
+
