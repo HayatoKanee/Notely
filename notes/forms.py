@@ -4,7 +4,9 @@ from .models import User, Profile, Folder, Event, Tag, Notebook
 from guardian.shortcuts import assign_perm
 from bootstrap_datepicker_plus.widgets import DateTimePickerInput
 from colorfield.fields import ColorField
-
+from django.forms import ModelChoiceField, widgets
+from django.utils.html import format_html
+from django.forms.widgets import Select
 
 class LogInForm(forms.Form):
     username = forms.CharField(label="Username")
@@ -111,14 +113,26 @@ class FolderForm(forms.ModelForm):
         return folder
 
 
+from django.utils.safestring import mark_safe
+
+class TagImageChoiceField(ModelChoiceField):
+    def label_from_instance(self, obj):
+        dot_html = '<span style="color:{}">&#x25CF;</span>'.format(obj.color)
+        return mark_safe('{} {}'.format(dot_html, obj.title))
+
 class EventForm(forms.ModelForm):
-    class Meta:
+    tag = TagImageChoiceField(queryset=None, empty_label="--Select tag--", label="Tag")  
+    class Meta:     
         model = Event
-        fields = ['title', 'description', 'start_time', 'end_time']
+        fields = ['title', 'description', 'start_time', 'end_time' , 'tag']
         widgets = {
             "start_time": DateTimePickerInput(),
             "end_time": DateTimePickerInput(),
         }
+    
+    def __init__(self, user, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['tag'].queryset = Tag.objects.filter(user=user)
 
     def clean(self):
         super().clean()
@@ -127,12 +141,13 @@ class EventForm(forms.ModelForm):
         if end_time < start_time:
             self.add_error('end_time', 'End Time cannot be less that Start Time')
 
+
     
     
 class TagForm(forms.ModelForm):
     class Meta:
         model = Tag
-        fields = ['name', 'color']
+        fields = ['title', 'color']
 
 
 class NotebookForm(forms.ModelForm):

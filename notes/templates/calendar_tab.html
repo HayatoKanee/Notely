@@ -6,29 +6,62 @@
              <h1>Calendar</h1>
          </div>
             {{calendar}}
-            <button id="addEvent" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+          </div>
+          <button id="addEvent" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#eventModal">
                 Add New Event
-            </button>
-            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="exampleModalLabel">New Event</h5>
-                      <button id="closeEventModal" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        {{ form.media }}
+          </button>
+          <div class="modal fade" id="eventModal" tabindex="-1">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Event Modal</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                        {{ event_form.media }}
                         <form action="{% url 'calendar_tab' %}" method="post">
                             {% csrf_token %}
-                            {% include 'partials/bootstrap_form.html' with form=form %}
+                            {% include 'partials/bootstrap_form.html' with form=event_form %}
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <input type="submit" value ="Create event" class="btn btn-primary">
+                            <input type="submit" name="event_submit" value ="Create event" class="btn btn-primary">
                         </form>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tagModal" data-bs-dismiss="modal">
+                          New tag
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
-            </div>
+          </div>
+                
+          <div class="modal fade" id="tagModal" tabindex="-1">
+                  <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title">New Tag</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        {{ tag_form.media }}
+                        <form action="{% url 'calendar_tab' %}" method="post">
+                            {% csrf_token %}
+                            {% include 'partials/bootstrap_form.html' with form=tag_form %}
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <input type="submit" name="tag_submit" value ="Create tag" class="btn btn-primary">
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+          </div>
+                
  {% endblock %}
  {% block scripts %}
-    <link href="{% static 'css_style/calendar.css' %}"rel="stylesheet" type="text/css" >
+  <script>
+  var tagModal = document.getElementById('tagModal')
+  tagModal.addEventListener('hidden.bs.modal', function (event) {
+    var eventModal = document.getElementById('eventModal')
+    var bsModal = bootstrap.Modal.getInstance(eventModal)
+    bsModal.show()
+  })
+  </script>
+  <link href="{% static 'css_style/calendar.css' %}"rel="stylesheet" type="text/css" >
 {% endblock %}

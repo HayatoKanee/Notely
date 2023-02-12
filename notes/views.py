@@ -5,7 +5,7 @@ from django.contrib import messages
 from datetime import datetime, timedelta
 from .util import EventCalendar
 from django.utils import safestring
-from .forms import SignUpForm, LogInForm, UserForm, ProfileForm, PasswordForm, FolderForm, NotebookForm, EventForm
+from .forms import SignUpForm, LogInForm, UserForm, ProfileForm, PasswordForm, FolderForm, NotebookForm, EventForm , TagForm
 from .models import User, Folder, Notebook, Page
 from django.contrib.auth.decorators import login_required
 from .helpers import login_prohibited, check_perm
@@ -100,16 +100,29 @@ def calendar_tab(request):
     currentMonth = datetime.now().month
     currentYear = datetime.now().year
     cal = EventCalendar(currentYear,currentMonth,events)
-    form = EventForm()
+    event_form = EventForm(request.user)
+    tag_form = TagForm()
+    
     if request.method == "POST":
-        form = EventForm(request.POST)
-        if form.is_valid():
-            event = form.save(commit=False)
-            event.user = request.user
-            event.save()
-            messages.add_message(request, messages.SUCCESS, "Event Created!")
-            return redirect('calendar_tab')
-    return render(request, 'calendar_tab.html' , {'calendar' : safestring.mark_safe(cal.formatmonth(withyear=True)) , 'form':form})
+        if 'event_submit' in request.POST:
+            event_form = EventForm(request.user,request.POST)
+            if event_form.is_valid():
+                event = event_form.save(commit=False)
+                event.user = request.user
+                event.save()
+                messages.add_message(request, messages.SUCCESS, "Event Created!")
+                return redirect('calendar_tab')
+
+        if 'tag_submit' in request.POST:
+            tag_form = TagForm(request.POST)
+            if tag_form.is_valid(): 
+                tag = tag_form.save(commit = False)
+                tag.user = request.user
+                tag.save()
+                messages.add_message(request, messages.SUCCESS, "Tag Created!")
+                return redirect('calendar_tab')
+    
+    return render(request, 'calendar_tab.html' , {'calendar' : safestring.mark_safe(cal.formatmonth(withyear=True)) , 'event_form':event_form,'tag_form':tag_form})
 
     
 

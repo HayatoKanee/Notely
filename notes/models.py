@@ -56,7 +56,6 @@ class Profile(models.Model):
         """Return a URL to a miniature version of the user's gravatar."""
         return self.gravatar(size=30)
 
-
 class Folder(models.Model):
     user = models.ForeignKey(User, related_name="folders", on_delete=models.CASCADE)
     parent = models.ForeignKey('self', related_name="sub_folders", on_delete=models.CASCADE, null=True, blank=True)
@@ -124,16 +123,17 @@ class Page(models.Model):
     
 class Tag(models.Model):
     user = models.ForeignKey(User, related_name="tags", on_delete=models.CASCADE)
-    name = models.CharField(max_length=30)
+    title = models.CharField(max_length=30)
     COLOR_PALETTE = [
         ("#FFFFFF", "white", ),
         ("#000000", "black", ),
         ("#34eb67", "green", ),
     ]
-    image = models.ImageField(upload_to="images",default=None)
+    image = models.ImageField(upload_to="images")
     color = ColorField(image_field="image",samples=COLOR_PALETTE)
-
-
+    def __str__(self):
+        return self.title
+ 
 class Event(models.Model):
     user = models.ForeignKey(User, related_name="events", on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
