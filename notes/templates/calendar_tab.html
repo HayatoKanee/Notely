@@ -80,6 +80,10 @@
   <script src="https://apis.google.com/js/platform.js" async defer></script>
     <meta name="google-signin-client_id" content="588566071525-5p0gps8skl9gr5j9919r8gob501jqa01.apps.googleusercontent.com">
 <script>
+    $('#id_tag').on('change', function (){
+        let color = $(this).find(':selected').attr('style')
+        $(this).attr('style', color);
+    });
     const calendarEl = document.getElementById('calendar');
     const calendar = new FullCalendar.Calendar(calendarEl, {
         headerToolbar: {

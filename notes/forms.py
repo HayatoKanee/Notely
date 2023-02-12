@@ -9,6 +9,7 @@ from django.forms import ModelChoiceField, widgets
 from django.utils.html import format_html
 from django.forms.widgets import Select
 
+
 class LogInForm(forms.Form):
     username = forms.CharField(label="Username")
     password = forms.CharField(label="Password", widget=forms.PasswordInput())
@@ -116,28 +117,39 @@ class FolderForm(forms.ModelForm):
 
 from django.utils.safestring import mark_safe
 
+
 class TagImageChoiceField(ModelChoiceField):
     def label_from_instance(self, obj):
-        dot_html = '<span style="color:{}">&#x25CF;</span>'.format(obj.color)
-        return mark_safe('{} {}'.format(dot_html, obj.title))
+        return mark_safe('{} {}'.format('&#x25CF', obj.title))
+
+
+class TagSelectWidget(Select):
+    def create_option(self, name, value, label, selected, index, subindex=None, attrs=None):
+        option = super().create_option(name, value, label, selected, index, subindex, attrs)
+        try:
+            tag = Tag.objects.get(id=index)
+            option['attrs']['style'] = f'color: {tag.color}'
+        except Tag.DoesNotExist:
+            pass
+        return option
+
 
 class EventForm(forms.ModelForm):
-
-
     # check if can access other user pages + implement choose notebook and which page
     page = forms.ModelChoiceField(queryset=Page.objects.all(), required=False)
+    tag = TagImageChoiceField(queryset=None, empty_label="--Select tag--", label="Tag")
 
-    tag = TagImageChoiceField(queryset=None, empty_label="--Select tag--", label="Tag")  
-    class Meta:     
+    class Meta:
         model = Event
-        fields = ['title', 'description', 'start_time', 'end_time' , 'tag']
+        fields = ['title', 'description', 'start_time', 'end_time', 'tag']
         widgets = {
             "start_time": DateTimePickerInput(attrs={"class": "form-control"}),
             "end_time": DateTimePickerInput(attrs={"class": "form-control"})
         }
-    
+
     def __init__(self, user, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['tag'].widget = TagSelectWidget()
         self.fields['tag'].queryset = Tag.objects.filter(user=user)
 
     def clean(self):
@@ -146,7 +158,6 @@ class EventForm(forms.ModelForm):
         end_time = self.cleaned_data.get('end_time')
         if end_time < start_time:
             self.add_error('end_time', 'End Time cannot be less that Start Time')
-
 
 
 class TagForm(forms.ModelForm):
