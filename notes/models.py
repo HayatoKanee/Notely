@@ -160,8 +160,8 @@ class Event(models.Model):
         ("Saturday", "Saturday"),
         ("Sunday", "Sunday"),
     ]
-    routine = models.CharField(choices=routine_choice, max_length=10)
-    tag = models.OneToOneField(Tag, related_name='tag', on_delete=models.CASCADE, null=True)
+    routine = models.CharField(choices=routine_choice, max_length=10, blank=True)
+    tag = models.OneToOneField(Tag, related_name='tag', on_delete=models.CASCADE, null=True, blank=True)
 
 
 class Reminder(models.Model):
