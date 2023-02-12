@@ -1,7 +1,7 @@
 from bootstrap_datepicker_plus.widgets import DateTimePickerInput
 from django import forms
 from django.core.validators import RegexValidator
-from .models import User, Profile, Folder, Notebook, Event, Tag
+from .models import User, Profile, Folder, Notebook, Event, Tag, Page
 from guardian.shortcuts import assign_perm
 
 
@@ -111,6 +111,11 @@ class FolderForm(forms.ModelForm):
 
 
 class EventForm(forms.ModelForm):
+
+
+    # check if can access other user pages + implement choose notebook and which page
+    page = forms.ModelChoiceField(queryset=Page.objects.all(), required=False)
+
     class Meta:
         model = Event
         fields = ['title', 'description', 'start_time', 'end_time']
@@ -118,7 +123,7 @@ class EventForm(forms.ModelForm):
             "start_time": DateTimePickerInput(),
             "end_time": DateTimePickerInput(),
         }
-
+       
     def clean(self):
         super().clean()
         start_time = self.cleaned_data.get('start_time')
