@@ -2,17 +2,14 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
-from datetime import datetime, timedelta
-from .util import EventCalendar
-from django.utils import safestring
 from .forms import SignUpForm, LogInForm, UserForm, ProfileForm, PasswordForm, FolderForm, NotebookForm, EventForm , TagForm
-from .models import User, Folder, Notebook, Page
+from .models import User, Folder, Notebook, Page, Event
 from django.contrib.auth.decorators import login_required
 from .helpers import login_prohibited, check_perm
 from django.contrib.auth.hashers import check_password
 from guardian.shortcuts import get_objects_for_user, assign_perm
 from .view_helper import sort_items_by_created_time, save_folder_notebook_forms
-
+from datetime import datetime
 
 
 @login_prohibited
@@ -99,7 +96,6 @@ def calendar_tab(request):
     events = request.user.events.all()
     currentMonth = datetime.now().month
     currentYear = datetime.now().year
-    cal = EventCalendar(currentYear,currentMonth,events)
     event_form = EventForm(request.user)
     tag_form = TagForm()
     
@@ -122,7 +118,7 @@ def calendar_tab(request):
                 messages.add_message(request, messages.SUCCESS, "Tag Created!")
                 return redirect('calendar_tab')
     
-    return render(request, 'calendar_tab.html' , {'calendar' : safestring.mark_safe(cal.formatmonth(withyear=True)) , 'event_form':event_form,'tag_form':tag_form})
+    return render(request, 'calendar_tab.html' , { 'event_form':event_form,'tag_form':tag_form})
 
     
 
@@ -196,5 +192,45 @@ def save_page(request, page_id):
         page.drawing = data
         page.code = code
         page.save()
+        return JsonResponse({'status': 'success'})
+    return JsonResponse({'status': 'fail'})
+
+
+@login_required
+@check_perm('dg_delete_folder', Folder)
+def delete_folder(request, folder_id):
+    user = request.user
+    if request.method == 'GET':
+        folder = Folder.objects.get(id=folder_id)
+        folder.delete()
+    return redirect('folders_tab')
+
+
+@login_required
+@check_perm('dg_delete_notebook', Notebook)
+def delete_notebook(request, folder_id):
+    user = request.user
+    if request.method == 'GET':
+        notebook = Notebook.objects.get(id=folder_id)
+        notebook.delete()
+    return redirect('folders_tab')
+
+
+@login_required
+def delete_event(request, event_id):
+    event = Event.objects.get(id=event_id)
+    event.delete()
+    return redirect('calendar_tab')
+
+
+@login_required
+def update_event(request, event_id):
+    if request.method == 'POST':
+        start_time = request.POST.get('start')
+        end_time = request.POST.get('end')
+        event = Event.objects.get(id=event_id)
+        event.start_time = datetime.fromisoformat(start_time[:-1])
+        event.end_time = datetime.fromisoformat(end_time[:-1])
+        event.save()
         return JsonResponse({'status': 'success'})
     return JsonResponse({'status': 'fail'})

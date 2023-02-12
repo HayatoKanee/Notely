@@ -10,7 +10,7 @@
     <div class="container-fluid">
         <ul class="navbar-nav mx-auto mt-2 mt-lg-0">
         <li class="nav-item">
-            <button class="toolbox" id="clearAll" onclick="clearCanvas(canvas)" style="color: rgb(245, 93, 66);">Clear All</button>
+            <button class="toolbox" id="clearAll" onclick="clearCanvas(canvas)" style="color: rgb(245, 93, 66);"></button>
         </li>
         <li class="nav-item">
             <button class="toolbox" id="undo" onclick="undo(this)" style="color: rgb(245, 93, 66);"></button>
@@ -85,8 +85,8 @@
             </div>
         </li>
         <li class="nav-item">
-            <button id="insert-table-button">Insert Table</button>
-                <div id="myModal" class="modal">
+            <button class="toolbox" id="table" type="button"></button>
+                <div id="tableModal" class="modal">
                 <div class="modal-content">
                 <span class="close">&times;</span>
                 <form>
@@ -94,7 +94,7 @@
                     <input type="number" id="rows" name="rows" value="2" min="1"><br><br>
                     <label for="columns">Columns:</label>
                     <input type="number" id="columns" name="columns" value="2" min="1"><br><br>
-                    <input type="button" value="Submit" id="submit-button">
+                    <input type="button" value="Submit" id="submitTable">
                 </form>
                 </div>
                 </div>
@@ -108,6 +108,19 @@
             <li class="nav-item">
                 <button class="toolbox" id="linkPage"  data-bs-toggle="offcanvas" href="#sidebar" aria-controls="sidebar" style="color: rgb(245, 93, 66);"> Link Page</button>
             </li>
+            <li class="nav-item">
+                <button class="toolbox" id="download" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDownload" aria-expanded="false"
+                        aria-controls="collapseDownload" style="color: rgb(245, 93, 66);"></button>
+            </li>
+            <li class="nav-item">
+                <div style="min-height: 120px;">
+                    <div class="collapse collapse-horizontal" id="collapseDownload" style="color: rgb(245, 93, 66);">
+                    <div class="card card-body" style="width: 300px; color: rgb(245, 93, 66);">
+                        <button id="downloadAsPic" type="button" >Download as PNG</button>
+                    </div>
+                    </div>
+                </div>
+            </li>
     </ul>
         </div>
     </nav>
@@ -116,7 +129,7 @@
 {% endblock %}
 {% block scripts %}
     {% load static %}
-    <script src="{%static 'javascript/fabric.min.js'%}"></script>
+    <script src="{%static 'javascript/note-taking/fabric.min.js'%}"></script>
     <script>
     const page_id = "{{ page.id }}";
     const drawing = '{{ page.drawing|safe}}';
@@ -137,19 +150,21 @@
     }
     const csrf = getCookie('csrftoken');
     </script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
-        <script src="{%static 'javascript/draw.js'%}"></script>
-        <script src="{%static 'javascript/jscolor.js'%}"></script>
-        <script src="{%static 'javascript/codemirror.js'%}"></script>
+        <script src="{%static 'javascript/note-taking/draw.js'%}"></script>
+        <script src="{%static 'javascript/note-taking/jscolor.js'%}"></script>
+        <script src="{%static 'javascript/note-taking/codemirror.js'%}"></script>
         <link rel="stylesheet" href="{%static 'css_style/codemirror.css'%}">
         <script src="{%static 'javascript/mode/python.js'%}"></script>
         <script src="{%static 'javascript/mode/javascript.js'%}"></script>
         <script src="{%static 'javascript/mode/django.js'%}"></script>
-        <script src="{%static 'javascript/codeEditor.js'%}"></script>
-        <script src="{%static 'javascript/symbols.js'%}"></script>
-        <script src="{% static 'javascript/linkPage.js'%}"></script>
-        <script src="{% static 'javascript/table.js'%}"></script>
-        {% comment %} <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.4.0/fabric.min.js"></script> {% endcomment %}
-        <script src="{%static 'javascript/fabric.brushes.min.js'%}"></script>
+
+        <script src="{% static 'javascript/download.js'%}"></script>
+        <script src="{% static 'javascript/fileSaver.min.js'%}"></script>
+        <script src="{% static 'javascript/canvas-toBlob.js'%}"></script>
+        <script src="{%static 'javascript/note-taking/codeEditor.js'%}"></script>
+        <script src="{%static 'javascript/note-taking/symbols.js'%}"></script>
+        <script src="{% static 'javascript/note-taking/linkPage.js'%}"></script>
+        <script src="{% static 'javascript/note-taking/table.js'%}"></script>
+        <script src="{%static 'javascript/note-taking/fabric.brushes.min.js'%}"></script>
 {% endblock %}

@@ -10,7 +10,8 @@ $('#linkPage').click(function (){
         });
          selection.set({
              fill:'blue',
-             underline: true
+             underline: true,
+             link:tag.attr('href')
          });
          canvas.discardActiveObject();
          canvas.renderAll();

@@ -1,13 +1,8 @@
 {% extends 'base_content.html' %}
 {% block content %}
-    {% if folder %}
-        {% if folder.parent %}
-            <a href="{% url 'sub_folders_tab'  folder.parent.id%}" style="color:#1b1b1b;margin-left:20px"> <button id="goback-button"><span style="margin-right:1200px">Go Back</span></button> Go back</a>
-        {% else %}
-            <a href="{% url 'folders_tab'%}" style="color:#1b1b1b;margin-left:20px"> <button id="goback-button"><span style="margin-right:1200px">Go Back</span></button></a>
-        {% endif %}
-    {% endif %}
 
+
+<div style="height: 600px">
     <ul class="folder-nav">
       <li style="background-color: white;font-size:23px; font-style: bold;">
           Name
@@ -18,31 +13,100 @@
         </button>
       </li>
     </ul>
-<div>
 <div class="folder-path">
+><a href="{%url 'folders_tab' %}" style="color:#1b1b1b;margin-left:20px"><button class="folder-button" style="font-size:20px; background-color:white;">Home</button></a>
 {% if folder %}
 {% for item in folder.get_path %}
   ><a href="{% url 'sub_folders_tab' item.id%}" style="color:#1b1b1b;margin-left:20px"><button class="folder-button" style="font-size:20px; background-color:white;">{{item.folder_name}}</button></a>
 {% endfor %}
 {% endif %}
 </div>
-  </div>
   <div class="folder-container">
     <div class="container">
           {% for item in items %}
-          <div class="col" style="margin-left:-90px">
+              <div class="col" style="margin-left:-60px; width:100%; display: flex; justify-content: space-between; padding: 20px;">
+          <div class="col" style="margin-left:-90px; width:60%;">
                 {% if item.get_type == "Folder" %}
                 <form action="{% url 'sub_folders_tab' item.id %}" method="get">
-                    <button id = "folder_img" style="text-align: left;"><span style="margin-left:40px">{{ item.folder_name }}▼</span></button></form>
+                    <button id = "folder_img" >
+                        <span style="margin-left:40px">{{ item.folder_name }}</span>
+                    </button>
+                </form>
                 {% else %}
                  <form action="{% url 'page' item.last_page.id %}" method="get">
-                    <button id="notebook_img" style="text-align: left; "><span style="margin-left:40px">{{ item.notebook_name }}▼</span></button></form>
+                    <button id="notebook_img" style="text-align: left; ">
+                        <span style="margin-left:40px">{{ item.notebook_name }}
+                        </span>
+                    </button>
+                 </form>
                 {% endif %}
         </div>
+
+                    {% if item.get_type == "Folder" %}
+                        <div class="dropdown">
+                          <button class="dropbtn">Options</button>
+                          <div class="dropdown-content">
+                            <a href="{% url 'delete_folder_tab' item.id %}">Delete</a>
+                            <a href="#">Link 2</a>
+                            <a href="#">Link 3</a>
+                          </div>
+                        </div>
+                    {% else %}
+                    <div class="dropdown">
+                      <button class="dropbtn">Options</button>
+                      <div class="dropdown-content">
+                        <a href="{% url 'delete_notebook_tab' item.id %}">Delete</a>
+                        <a href="#">Link 2</a>
+                        <a href="#">Link 3</a>
+                      </div>
+                    </div>
+                    {% endif %}
+
+              </div>
           {% endfor %}
+
+
     </div>
   </div>
 <br>
+
+<style>
+  .dropbtn {
+    background-color: white;
+    color: black;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+  }
+  
+  .dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+  }
+  
+  .dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+  }
+  
+  .dropdown-content a:hover {background-color: #ddd;}
+  
+  .dropdown:hover .dropdown-content {display: block;}
+  
+  .dropdown:hover .dropbtn {background-color: gray;}
+  </style>
+      </div>
 
 {% include 'partials/addChoice.html' %}
 

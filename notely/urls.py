@@ -25,10 +25,14 @@ urlpatterns = [
     path('sign_up/', views.sign_up, name='sign_up'),
     path('folders_tab/', views.folders_tab, name='folders_tab'),
     path('folders_tab/<folder_id>', views.sub_folders_tab, name='sub_folders_tab'),
+    path('delete_folder_tab/<folder_id>', views.delete_folder, name='delete_folder_tab'),
+    path('delete_notebook_tab/<folder_id>', views.delete_notebook, name='delete_notebook_tab'),
     path('calendar_tab/', views.calendar_tab, name='calendar_tab'),
     path('profile_tab/', views.profile_tab, name='profile_tab'),
     path('password_tab/', views.password_tab, name='password_tab'),
     path('gravatar/', views.gravatar, name='gravatar'),
     path('page/<page_id>', views.page, name='page'),
-    path('save_page/<page_id>', views.save_page, name='save_page')
+    path('save_page/<page_id>', views.save_page, name='save_page'),
+    path('delete_event/<event_id>', views.delete_event, name='delete_event'),
+    path('update_event/<event_id>', views.update_event, name='update_event'),
 ]

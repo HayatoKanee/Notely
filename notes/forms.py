@@ -1,6 +1,7 @@
+from bootstrap_datepicker_plus.widgets import DateTimePickerInput
 from django import forms
 from django.core.validators import RegexValidator
-from .models import User, Profile, Folder, Event, Tag, Notebook
+from .models import User, Profile, Folder, Notebook, Event, Tag, Page
 from guardian.shortcuts import assign_perm
 from bootstrap_datepicker_plus.widgets import DateTimePickerInput
 from colorfield.fields import ColorField
@@ -121,13 +122,18 @@ class TagImageChoiceField(ModelChoiceField):
         return mark_safe('{} {}'.format(dot_html, obj.title))
 
 class EventForm(forms.ModelForm):
+
+
+    # check if can access other user pages + implement choose notebook and which page
+    page = forms.ModelChoiceField(queryset=Page.objects.all(), required=False)
+
     tag = TagImageChoiceField(queryset=None, empty_label="--Select tag--", label="Tag")  
     class Meta:     
         model = Event
         fields = ['title', 'description', 'start_time', 'end_time' , 'tag']
         widgets = {
-            "start_time": DateTimePickerInput(),
-            "end_time": DateTimePickerInput(),
+            "start_time": DateTimePickerInput(attrs={"class": "form-control"}),
+            "end_time": DateTimePickerInput(attrs={"class": "form-control"})
         }
     
     def __init__(self, user, *args, **kwargs):
@@ -142,8 +148,7 @@ class EventForm(forms.ModelForm):
             self.add_error('end_time', 'End Time cannot be less that Start Time')
 
 
-    
-    
+
 class TagForm(forms.ModelForm):
     class Meta:
         model = Tag
