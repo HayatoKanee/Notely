@@ -115,8 +115,8 @@ class EventForm(forms.ModelForm):
         model = Event
         fields = ['title', 'description', 'start_time', 'end_time']
         widgets = {
-            "start_time": DateTimePickerInput(),
-            "end_time": DateTimePickerInput(),
+            "start_time": DateTimePickerInput(attrs={"class": "form-control"}),
+            "end_time": DateTimePickerInput(attrs={"class": "form-control"})
         }
 
     def clean(self):

@@ -57,6 +57,8 @@ The packages used by this application are specified in `requirements.txt`
 - [Bootstrap](https://getbootstrap.com/)
 - [jQuery](https://jquery.com/)
 - [jQuery UI](https://jqueryui.com/)
+- [FullCalendar](https://fullcalendar.io/)
+
 ### Images
 The image "signup_login.jpg" in https://www.wikihow.com/Take-Better-Notes
 

@@ -1,9 +1,13 @@
 {% extends 'base_content.html' %}
  {% block content %}
+     <div class="container">
       <div id='calendar'></div>
-            <button id="addEvent" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+     <button id="addEvent" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
                 Add New Event
             </button>
+     <button id="login-google"></button>
+     </div>
+
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                   <div class="modal-content">
@@ -23,7 +27,7 @@
                   </div>
                 </div>
             </div>
-            <button id="login-google"></button>
+
 
     {% include 'partials/eventDetail.html' %}
  {% endblock %}
@@ -33,14 +37,19 @@
 <script>
     const calendarEl = document.getElementById('calendar');
     const calendar = new FullCalendar.Calendar(calendarEl, {
+        headerToolbar: {
+        left: 'today prev,next',
+        center: 'title',
+        right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+        },
         initialView: 'dayGridMonth',
         events: [
             {% for i in events %}
             {
                 id: "{{i.id}}",
                 title: "{{ i.title}}",
-                start: '{{ i.start_time|date:"Y-m-d" }}',
-                end: '{{ i.end_time|date:"Y-m-d" }}'
+                start: '{{ i.start_time|date:"Y-m-d H:i:s" }}',
+                end: '{{ i.end_time|date:"Y-m-d H:i:s" }}'
 
             },
             {% endfor %}
@@ -55,7 +64,28 @@
                     $('#title').html('Title: '+title);
                    $('#delete_link').attr('href', newStr + e.event.id)
                 },
-                editable: true
+                editable: true,
+            dateClick: function(info) {
+            calendar.changeView('timeGridDay', info.dateStr);
+          },
+        eventDrop: function(info) {
+            const event = info.event;
+            const start = event.start.toISOString();
+            const end = event.end.toISOString();
+            // send updated start and end times to server to update database
+            let link = "{% url 'update_event' 1%}";
+            let index = link.lastIndexOf('/');
+            let newStr = link.substring(0, index+1);
+            $.ajax({
+              url: newStr+event.id,
+              type: 'POST',
+              data: {
+                start: start,
+                end: end,
+                  csrfmiddlewaretoken: '{{ csrf_token }}'
+              }
+            });
+          },
         });
 
     calendar.render();
