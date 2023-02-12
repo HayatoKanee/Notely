@@ -93,8 +93,9 @@
             {
                 id: "{{i.id}}",
                 title: "{{ i.title}}",
+                description: "{{ i.description}}",
                 start: '{{ i.start_time|date:"Y-m-d H:i:s" }}',
-                end: '{{ i.end_time|date:"Y-m-d H:i:s" }}'
+                end: '{{ i.end_time|date:"Y-m-d H:i:s" }}',
 
             },
             {% endfor %}
@@ -106,7 +107,17 @@
                    let index = link.lastIndexOf('/');
                     let newStr = link.substring(0, index+1);
                     let title = e.event.title;
+                    let description = e.event.extendedProps.description;
+                    {% comment %} let start_time = e.event.extendedProps.start_time.strftime("%Y-%m-%d %H:%M:%S");
+                    let end_time = e.event.extendedProps.end_time.strftime("%Y-%m-%d %H:%M:%S");
+                    let tag = e.event.extendedProps.tag;
+                    let page = e.event.extendedProps.page; {% endcomment %}
                     $('#title').html('Title: '+title);
+                    $('#description').html('Description: '+ description);
+                    $('#start_time').html('Start Time: '+ start_time);
+                    $('#end_time').html('End Time: '+ end_time);
+                    $('#tag').html('Tag: '+ tag);
+                    $('#page').html('Page: '+ page);
                    $('#delete_link').attr('href', newStr + e.event.id)
                 },
                 editable: true,
