@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'notes',
     'widget_tweaks',
     'guardian',
+    'bootstrap_datepicker_plus'
 ]
 
 MIDDLEWARE = [

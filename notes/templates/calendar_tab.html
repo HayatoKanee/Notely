@@ -1,14 +1,10 @@
 {% extends 'base_content.html' %}
  {% block content %}
-     <div class="white-box">
-         <div class="header">
-             <h1>Calendar</h1>
-         </div>
-            {{calendar}}
+      <div id='calendar'></div>
             <button id="addEvent" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
                 Add New Event
             </button>
-            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                   <div class="modal-content">
                     <div class="modal-header">
@@ -27,8 +23,45 @@
                   </div>
                 </div>
             </div>
-     </div>
+            <button id="login-google"></button>
+
+    {% include 'partials/eventDetail.html' %}
  {% endblock %}
  {% block scripts %}
-    <link href="{% static 'css_style/calendar.css' %}"rel="stylesheet" type="text/css" >
-    {% endblock %}
+{% load static%}
+  <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.4/index.global.min.js'></script>
+<script>
+    const calendarEl = document.getElementById('calendar');
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        events: [
+            {% for i in events %}
+            {
+                id: "{{i.id}}",
+                title: "{{ i.title}}",
+                start: '{{ i.start_time|date:"Y-m-d" }}',
+                end: '{{ i.end_time|date:"Y-m-d" }}'
+
+            },
+            {% endfor %}
+
+        ],
+        eventClick:  function(e) {
+                   $('#eventDetail').modal('show');
+                   let link = "{% url 'delete_event' 1%}";
+                   let index = link.lastIndexOf('/');
+                    let newStr = link.substring(0, index+1);
+                    let title = e.event.title;
+                    $('#title').html('Title: '+title);
+                   $('#delete_link').attr('href', newStr + e.event.id)
+                },
+                editable: true
+        });
+
+    calendar.render();
+
+    </script>
+    <link rel="stylesheet" href="{%static 'css_style/calendarTabStyle.css' %}"/>
+    <script src="https://apis.google.com/js/api.js"></script>
+    <script src="{%static 'javascript/calendar/syncGoogleCalendar.js'%}"></script>
+{% endblock %}

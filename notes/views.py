@@ -2,16 +2,13 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
-
-from notely import settings
-from .forms import SignUpForm, LogInForm, UserForm, ProfileForm, PasswordForm, FolderForm, NotebookForm
-from .models import User, Folder, Notebook, Page
+from .forms import SignUpForm, LogInForm, UserForm, ProfileForm, PasswordForm, FolderForm, NotebookForm, EventForm
+from .models import User, Folder, Notebook, Page, Event
 from django.contrib.auth.decorators import login_required
 from .helpers import login_prohibited, check_perm
 from django.contrib.auth.hashers import check_password
 from guardian.shortcuts import get_objects_for_user, assign_perm
 from .view_helper import sort_items_by_created_time, save_folder_notebook_forms
-
 
 
 @login_prohibited
@@ -96,22 +93,17 @@ def sub_folders_tab(request, folder_id):
 @login_required
 def calendar_tab(request):
     events = request.user.events.all()
-    # currentMonth = datetime.now().month
-    # currentYear = datetime.now().year
-    # cal = EventCalendar(currentYear,currentMonth,events)
-    # form = EventForm()
-    # if request.method == "POST":
-    #     form = EventForm(request.POST)
-    #     if form.is_valid():
-    #         event = form.save(commit=False)
-    #         event.user = request.user
-    #         event.save()
-    #         messages.add_message(request, messages.SUCCESS, "Event Created!")
-    #         return redirect('calendar_tab')
-    # return render(request, 'calendar_tab.html' , {'calendar' : safestring.mark_safe(cal.formatmonth(withyear=True)) , 'form':form})
-    return None
-
-
+    form = EventForm()
+    if request.method == "POST":
+        form = EventForm(request.POST)
+        if form.is_valid():
+            event = form.save(commit=False)
+            event.user = request.user
+            event.save()
+            messages.add_message(request, messages.SUCCESS, "Event Created!")
+            return redirect('calendar_tab')
+    return render(request, 'calendar_tab.html',
+                  {'form': form, 'events': events})
 
 
 @login_required
@@ -187,20 +179,27 @@ def save_page(request, page_id):
 
 
 @login_required
-@check_perm('dg_view_folder', Folder)
+@check_perm('dg_delete_folder', Folder)
 def delete_folder(request, folder_id):
     user = request.user
     if request.method == 'GET':
         folder = Folder.objects.get(id=folder_id)
         folder.delete()
-    return redirect('/folders_tab/')
+    return redirect('folders_tab')
 
 
 @login_required
-@check_perm('dg_view_folder', Folder)
+@check_perm('dg_delete_notebook', Notebook)
 def delete_notebook(request, folder_id):
     user = request.user
     if request.method == 'GET':
         notebook = Notebook.objects.get(id=folder_id)
         notebook.delete()
-    return redirect('/folders_tab/')
+    return redirect('folders_tab')
+
+
+@login_required
+def delete_event(request, event_id):
+    event = Event.objects.get(id=event_id)
+    event.delete()
+    return redirect('calendar_tab')
