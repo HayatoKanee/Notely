@@ -9,6 +9,7 @@ from .helpers import login_prohibited, check_perm
 from django.contrib.auth.hashers import check_password
 from guardian.shortcuts import get_objects_for_user, assign_perm
 from .view_helper import sort_items_by_created_time, save_folder_notebook_forms
+from datetime import datetime
 
 
 @login_prohibited
@@ -102,6 +103,8 @@ def calendar_tab(request):
             event.save()
             messages.add_message(request, messages.SUCCESS, "Event Created!")
             return redirect('calendar_tab')
+        else:
+            messages.add_message(request, messages.ERROR, "Form is not valid. Please correct the errors and try again.")
     return render(request, 'calendar_tab.html',
                   {'form': form, 'events': events})
 
@@ -203,3 +206,16 @@ def delete_event(request, event_id):
     event = Event.objects.get(id=event_id)
     event.delete()
     return redirect('calendar_tab')
+
+
+@login_required
+def update_event(request, event_id):
+    if request.method == 'POST':
+        start_time = request.POST.get('start')
+        end_time = request.POST.get('end')
+        event = Event.objects.get(id=event_id)
+        event.start_time = datetime.fromisoformat(start_time[:-1])
+        event.end_time = datetime.fromisoformat(end_time[:-1])
+        event.save()
+        return JsonResponse({'status': 'success'})
+    return JsonResponse({'status': 'fail'})
