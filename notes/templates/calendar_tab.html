@@ -99,18 +99,24 @@
                 title: "{{ i.title}}",
                 start: '{{ i.start_time|date:"Y-m-d H:i:s" }}',
                 end: '{{ i.end_time|date:"Y-m-d H:i:s" }}'
-
             },
             {% endfor %}
-
         ],
         eventClick:  function(e) {
-                   $('#eventDetail').modal('show');
-                   let link = "{% url 'delete_event' 1%}";
-                   let index = link.lastIndexOf('/');
+                    $('#eventDetail').modal('show');
+                    let link = "{% url 'delete_event' 1%}";
+                    let index = link.lastIndexOf('/');
                     let newStr = link.substring(0, index+1);
                     let title = e.event.title;
                     $('#title').html('Title: '+title);
+                    let description = e.event.description;
+                    $('#description').html('Description: '+description);
+                    let tag = e.event.tag;
+                    $('#tag').html('Tag: '+tag);
+                    let start_time = e.event.start;
+                    $('#start_time').html('Start_time: '+start_time);
+                    let end_time = e.event.end
+                    $('#end_time').html('End_time: '+end_time);
                    $('#delete_link').attr('href', newStr + e.event.id)
                 },
                 editable: true,
@@ -126,12 +132,12 @@
             let index = link.lastIndexOf('/');
             let newStr = link.substring(0, index+1);
             $.ajax({
-              url: newStr+event.id,
-              type: 'POST',
-              data: {
-                start: start,
-                end: end,
-                  csrfmiddlewaretoken: '{{ csrf_token }}'
+                url: newStr+event.id,
+                type: 'POST',
+                data: {
+                    start: start,
+                    end: end,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
               }
             });
           },
