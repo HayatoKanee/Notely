@@ -23,6 +23,10 @@ function insertTable(rows, columns) {
           width: cellWidth - 10,
           height: cellHeight - 10,
           fontSize: 16,
+          editable: true,
+          selectable:true,
+          evented: true,
+          pointerEvents: 'auto',
         });
         
         var group = new fabric.Group([rect, text], {
@@ -42,12 +46,17 @@ function insertTable(rows, columns) {
     });
 
     canvas.add(table);
+
+    text.bringToFront();
+
   }
 
-var modal = document.getElementById("myModal");
-var btn = document.getElementById("insert-table-button");
+var modal = document.getElementById("tableModal");
+var btn = document.getElementById("table");
 var span = document.getElementsByClassName("close")[0];
-var submitBtn = document.getElementById("submit-button");
+var submitBtn = document.getElementById("submitTable");
+
+
 
 btn.onclick = function() {
   modal.style.display = "block";

@@ -39,10 +39,8 @@ INSTALLED_APPS = [
     'notes',
     'widget_tweaks',
     'guardian',
-    "bootstrap_datepicker_plus",
-    "django_bootstrap5",
-    'jquery',
-    'colorfield',
+    'bootstrap_datepicker_plus',
+    'colorfield'
 ]
 
 MIDDLEWARE = [

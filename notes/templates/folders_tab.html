@@ -1,6 +1,8 @@
 {% extends 'base_content.html' %}
 {% block content %}
 
+
+<div style="height: 600px">
     <ul class="folder-nav">
       <li style="background-color: white;font-size:23px; ">
           Name
@@ -11,7 +13,6 @@
         </button>
       </li>
     </ul>
-<div>
 <div class="folder-path">
 ><a href="{%url 'folders_tab' %}" style="color:#1b1b1b;margin-left:20px"><button class="folder-button" style="font-size:20px; background-color:white;">Home</button></a>
 {% if folder %}
@@ -20,7 +21,6 @@
 {% endfor %}
 {% endif %}
 </div>
-  </div>
   <div class="folder-container">
     <div class="container">
           {% for item in items %}
@@ -29,7 +29,7 @@
                 {% if item.get_type == "Folder" %}
                 <form action="{% url 'sub_folders_tab' item.id %}" method="get">
                     <button id = "folder_img" style="text-align: left;">
-                        <span style="margin-left:40px">{{ item.folder_name }}</span>
+                        <span style="margin-left:50px">{{ item.folder_name }}</span>
                     </button>
                 </form>
                 {% else %}
@@ -69,6 +69,7 @@
     </div>
   </div>
 <br>
+
 <style>
   .dropbtn {
     background-color: white;
@@ -105,6 +106,8 @@
   
   .dropdown:hover .dropbtn {background-color: gray;}
   </style>
+      </div>
+
 {% include 'partials/addChoice.html' %}
 
 

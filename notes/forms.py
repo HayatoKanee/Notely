@@ -1,9 +1,8 @@
+from bootstrap_datepicker_plus.widgets import DateTimePickerInput
 from django import forms
 from django.core.validators import RegexValidator
-from .models import User, Profile, Folder, Event, Tag, Notebook
+from .models import User, Profile, Folder, Notebook, Event, Tag
 from guardian.shortcuts import assign_perm
-from bootstrap_datepicker_plus.widgets import DateTimePickerInput
-from colorfield.fields import ColorField
 
 
 class LogInForm(forms.Form):
@@ -116,8 +115,8 @@ class EventForm(forms.ModelForm):
         model = Event
         fields = ['title', 'description', 'start_time', 'end_time']
         widgets = {
-            "start_time": DateTimePickerInput(),
-            "end_time": DateTimePickerInput(),
+            "start_time": DateTimePickerInput(attrs={"class": "form-control"}),
+            "end_time": DateTimePickerInput(attrs={"class": "form-control"})
         }
 
     def clean(self):
@@ -127,8 +126,7 @@ class EventForm(forms.ModelForm):
         if end_time < start_time:
             self.add_error('end_time', 'End Time cannot be less that Start Time')
 
-    
-    
+
 class TagForm(forms.ModelForm):
     class Meta:
         model = Tag
