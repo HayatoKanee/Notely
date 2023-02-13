@@ -2,7 +2,8 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
-from .forms import SignUpForm, LogInForm, UserForm, ProfileForm, PasswordForm, FolderForm, NotebookForm, EventForm, NotebookTagColorForm
+from .forms import SignUpForm, LogInForm, UserForm, ProfileForm, PasswordForm, FolderForm, NotebookForm, EventForm, \
+    NotebookTagColorForm, TagForm
 from .models import User, Folder, Notebook, Page, Event
 from django.contrib.auth.decorators import login_required
 from .helpers import login_prohibited, check_perm
@@ -94,19 +95,29 @@ def sub_folders_tab(request, folder_id):
 @login_required
 def calendar_tab(request):
     events = request.user.events.all()
-    form = EventForm()
+    event_form = EventForm(request.user)
+    tag_form = TagForm()
+
     if request.method == "POST":
-        form = EventForm(request.POST)
-        if form.is_valid():
-            event = form.save(commit=False)
-            event.user = request.user
-            event.save()
-            messages.add_message(request, messages.SUCCESS, "Event Created!")
-            return redirect('calendar_tab')
-        else:
-            messages.add_message(request, messages.ERROR, "Form is not valid. Please correct the errors and try again.")
-    return render(request, 'calendar_tab.html',
-                  {'form': form, 'events': events})
+        if 'event_submit' in request.POST:
+            event_form = EventForm(request.user, request.POST)
+            if event_form.is_valid():
+                event = event_form.save(commit=False)
+                event.user = request.user
+                event.save()
+                messages.add_message(request, messages.SUCCESS, "Event Created!")
+                return redirect('calendar_tab')
+
+        if 'tag_submit' in request.POST:
+            tag_form = TagForm(request.POST)
+            if tag_form.is_valid():
+                tag = tag_form.save(commit=False)
+                tag.user = request.user
+                tag.save()
+                messages.add_message(request, messages.SUCCESS, "Tag Created!")
+                return redirect('calendar_tab')
+
+    return render(request, 'calendar_tab.html', {'event_form': event_form, 'tag_form': tag_form, 'events': events})
 
 
 @login_required
@@ -155,6 +166,14 @@ def gravatar(request):
 def page(request, page_id):
     page = Page.objects.get(id=page_id)
     if request.method == 'POST':
+        if 'tag_submit' in request.POST:
+            tag_form = TagForm(request.POST)
+            if tag_form.is_valid():
+                tag = tag_form.save(commit=False)
+                tag.user = request.user
+                tag.save()
+                messages.add_message(request, messages.SUCCESS, "Tag Created!")
+                return redirect('notebook_sidebar')
         new_page = Page.objects.create(notebook=page.notebook)
         assign_perm('dg_view_page', request.user, new_page)
         assign_perm('dg_edit_page', request.user, new_page)
@@ -220,11 +239,10 @@ def update_event(request, event_id):
         return JsonResponse({'status': 'success'})
     return JsonResponse({'status': 'fail'})
 
-def notebook_tag_color(request):
-    if request.method == 'POST':
-        form = NotebookTagColorForm(request.POST)
-        if form.is_valid():
-            messages.add_message(request, messages.ERROR, "Wrong Color!")
-    else:
-        form = NotebookTagColorForm()
-    return render(request, 'partials/notebook_sidebar.html', {'form': form})
+
+# def notebook_tag_color(request, page_id):
+#     tag_form = TagForm()
+#     page = Page.objects.get(id=page_id)
+#     if request.method == "POST":
+#
+#     return render(request, 'partials/notebook_sidebar.html', {'tag_form': tag_form})

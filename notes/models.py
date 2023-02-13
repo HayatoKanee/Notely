@@ -126,14 +126,17 @@ class Page(models.Model):
 
 class Tag(models.Model):
     user = models.ForeignKey(User, related_name="tags", on_delete=models.CASCADE)
-    name = models.CharField(max_length=30)
+    title = models.CharField(max_length=30)
     COLOR_PALETTE = [
         ("#FFFFFF", "white",),
         ("#000000", "black",),
         ("#34eb67", "green",),
     ]
-    image = models.ImageField(upload_to="images", default=None)
+    image = models.ImageField(upload_to="images")
     color = ColorField(image_field="image", samples=COLOR_PALETTE)
+
+    def __str__(self):
+        return self.title
 
 
 class Event(models.Model):
@@ -160,8 +163,8 @@ class Event(models.Model):
         ("Saturday", "Saturday"),
         ("Sunday", "Sunday"),
     ]
-    routine = models.CharField(choices=routine_choice, max_length=10)
-    tag = models.OneToOneField(Tag, related_name='tag', on_delete=models.CASCADE, null=True)
+    routine = models.CharField(choices=routine_choice, max_length=10, blank=True)
+    tag = models.OneToOneField(Tag, related_name='tag', on_delete=models.CASCADE, null=True, blank=True)
 
 
 class Reminder(models.Model):
@@ -170,5 +173,3 @@ class Reminder(models.Model):
     alert_time = models.DateTimeField()
 
 
-class Note_tag_color(models.Model):
-    color = ColorField(default='#FF0000')

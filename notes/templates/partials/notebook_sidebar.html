@@ -20,7 +20,7 @@
       </div>
           {% for p in page.notebook.pages.all %}
               <div class="col">
-                  <a href={% url 'page' p.id %}> <button id="page-button">page {{ forloop.counter }}</button></a>
+                  <a href={% url 'page' page.id %}> <button id="page-button">page {{ forloop.counter }}</button></a>
               </div>
           {% endfor %}
       </div>
@@ -37,12 +37,16 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        ...
+        {{ tag_form.media }}
+                        <form action="{% url 'page' page.id %}" method="post">
+                            {% csrf_token %}
+                            {% include 'partials/bootstrap_form.html' with form=tag_form %}
+                            <input type="submit" name="tag_submit" value ="Create tag" class="btn btn-primary">
+                        </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
