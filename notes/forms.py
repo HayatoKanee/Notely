@@ -141,11 +141,17 @@ class EventForm(forms.ModelForm):
 
     class Meta:
         model = Event
+
         fields = ['title', 'description', 'start_time', 'end_time', 'tag']
+
         widgets = {
             "start_time": DateTimePickerInput(attrs={"class": "form-control"}),
-            "end_time": DateTimePickerInput(attrs={"class": "form-control"})
+            "end_time": DateTimePickerInput(attrs={"class": "form-control"}),
+           
         }
+
+
+
 
     def __init__(self, user, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -158,6 +164,8 @@ class EventForm(forms.ModelForm):
         end_time = self.cleaned_data.get('end_time')
         if end_time < start_time:
             self.add_error('end_time', 'End Time cannot be less that Start Time')
+
+
 
 
 class TagForm(forms.ModelForm):
