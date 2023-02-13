@@ -102,8 +102,7 @@ def calendar_tab(request):
         if 'event_submit' in request.POST:
             event_form = EventForm(request.user, request.POST)
             if event_form.is_valid():
-                event = event_form.save()
-                print(event.tags)
+                event_form.save()
                 messages.add_message(request, messages.SUCCESS, "Event Created!")
                 return redirect('calendar_tab')
 

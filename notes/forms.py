@@ -134,7 +134,7 @@ class TagSelectWidget(SelectMultiple):
 
 
 class EventForm(forms.ModelForm):
-    tag = TagImageChoiceField(queryset=None, label="Tags", required=False)
+    tag = TagImageChoiceField(queryset=None, label="tags", required=False)
     page = forms.ModelChoiceField(queryset=Page.objects.all(), required=False)
 
     class Meta:
@@ -164,8 +164,9 @@ class EventForm(forms.ModelForm):
     def save(self):
         event = super().save(commit=False)
         event.user = self.user
-        if self.cleaned_data.get('tags'):
-            event.tags.set(self.cleaned_data['tags'])
+        event.save()
+        if self.cleaned_data.get('tag'):
+            event.tags.set(self.cleaned_data['tag'])
         event.save()
         return event
 
