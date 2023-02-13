@@ -103,7 +103,7 @@
             },
             {% endfor %}
         ],
-        eventClick:  function(e) {
+        eventClick: function(e) {
                     $('#eventDetail').modal('show');
                     let link = "{% url 'delete_event' 1%}";
                     let index = link.lastIndexOf('/');
