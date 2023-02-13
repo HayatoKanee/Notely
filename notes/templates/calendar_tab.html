@@ -2,12 +2,13 @@
  {% block content %}
      <div class="container">
       <div id='calendar' style="color: rgb(245, 93, 66)"></div>
-   </div>
-          <button id="addEvent" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#eventModal">
+              <button id="addEvent" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#eventModal">
                 Add New Event
           </button>
-          <div class="g-signin2" data-onsuccess="googleSignIn"></div>
-        </div>   
+             <div class="g-signin2" data-onsuccess="googleSignIn"></div>
+
+
+   </div>
           <div class="modal fade" id="eventModal" tabindex="-1">
             <div class="modal-dialog">
                 <div class="modal-content" style="color: rgb(245, 93, 66)">
@@ -80,10 +81,6 @@
   <script src="https://apis.google.com/js/platform.js" async defer></script>
     <meta name="google-signin-client_id" content="588566071525-5p0gps8skl9gr5j9919r8gob501jqa01.apps.googleusercontent.com">
 <script>
-    $('#id_tag').on('change', function (){
-        let color = $(this).find(':selected').attr('style')
-        $(this).attr('style', color);
-    });
     const calendarEl = document.getElementById('calendar');
     const calendar = new FullCalendar.Calendar(calendarEl, {
         headerToolbar: {

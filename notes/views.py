@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from .forms import SignUpForm, LogInForm, UserForm, ProfileForm, PasswordForm, FolderForm, NotebookForm, EventForm, \
-TagForm
+    TagForm
 from .models import User, Folder, Notebook, Page, Event
 from django.contrib.auth.decorators import login_required
 from .helpers import login_prohibited, check_perm
@@ -11,7 +11,6 @@ from django.contrib.auth.hashers import check_password
 from guardian.shortcuts import get_objects_for_user, assign_perm
 from .view_helper import sort_items_by_created_time, save_folder_notebook_forms
 from datetime import datetime
-
 
 
 @login_prohibited
@@ -103,9 +102,8 @@ def calendar_tab(request):
         if 'event_submit' in request.POST:
             event_form = EventForm(request.user, request.POST)
             if event_form.is_valid():
-                event = event_form.save(commit=False)
-                event.user = request.user
-                event.save()
+                event = event_form.save()
+                print(event.tags)
                 messages.add_message(request, messages.SUCCESS, "Event Created!")
                 return redirect('calendar_tab')
 
@@ -119,7 +117,6 @@ def calendar_tab(request):
                 return redirect('calendar_tab')
 
     return render(request, 'calendar_tab.html', {'event_form': event_form, 'tag_form': tag_form, 'events': events})
-
 
 
 @login_required
@@ -197,20 +194,16 @@ def save_page(request, page_id):
 @login_required
 @check_perm('dg_delete_folder', Folder)
 def delete_folder(request, folder_id):
-    user = request.user
-    if request.method == 'GET':
-        folder = Folder.objects.get(id=folder_id)
-        folder.delete()
+    folder = Folder.objects.get(id=folder_id)
+    folder.delete()
     return redirect('folders_tab')
 
 
 @login_required
 @check_perm('dg_delete_notebook', Notebook)
 def delete_notebook(request, folder_id):
-    user = request.user
-    if request.method == 'GET':
-        notebook = Notebook.objects.get(id=folder_id)
-        notebook.delete()
+    notebook = Notebook.objects.get(id=folder_id)
+    notebook.delete()
     return redirect('folders_tab')
 
 

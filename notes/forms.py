@@ -1,13 +1,15 @@
 from bootstrap_datepicker_plus.widgets import DateTimePickerInput
 from django import forms
 from django.core.validators import RegexValidator
+from django.utils.safestring import mark_safe
+
 from .models import User, Profile, Folder, Notebook, Event, Tag, Page
 from guardian.shortcuts import assign_perm
 from bootstrap_datepicker_plus.widgets import DateTimePickerInput
 from colorfield.fields import ColorField
-from django.forms import ModelChoiceField, widgets
+from django.forms import ModelChoiceField, widgets, ModelMultipleChoiceField
 from django.utils.html import format_html
-from django.forms.widgets import Select
+from django.forms.widgets import Select, SelectMultiple
 
 
 class LogInForm(forms.Form):
@@ -115,15 +117,12 @@ class FolderForm(forms.ModelForm):
         return folder
 
 
-from django.utils.safestring import mark_safe
-
-
-class TagImageChoiceField(ModelChoiceField):
+class TagImageChoiceField(ModelMultipleChoiceField):
     def label_from_instance(self, obj):
         return mark_safe('{} {}'.format('&#x25CF', obj.title))
 
 
-class TagSelectWidget(Select):
+class TagSelectWidget(SelectMultiple):
     def create_option(self, name, value, label, selected, index, subindex=None, attrs=None):
         option = super().create_option(name, value, label, selected, index, subindex, attrs)
         try:
@@ -135,26 +134,23 @@ class TagSelectWidget(Select):
 
 
 class EventForm(forms.ModelForm):
-    # check if can access other user pages + implement choose notebook and which page
+    tag = TagImageChoiceField(queryset=None, label="Tags", required=False)
     page = forms.ModelChoiceField(queryset=Page.objects.all(), required=False)
-    tag = TagImageChoiceField(queryset=None, empty_label="--Select tag--", label="Tag")
 
     class Meta:
         model = Event
 
-        fields = ['title', 'description', 'start_time', 'end_time', 'tag']
+        fields = ['title', 'description', 'start_time', 'end_time']
 
         widgets = {
             "start_time": DateTimePickerInput(attrs={"class": "form-control"}),
             "end_time": DateTimePickerInput(attrs={"class": "form-control"}),
-           
+
         }
-
-
-
 
     def __init__(self, user, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.user = user
         self.fields['tag'].widget = TagSelectWidget()
         self.fields['tag'].queryset = Tag.objects.filter(user=user)
 
@@ -165,7 +161,13 @@ class EventForm(forms.ModelForm):
         if end_time < start_time:
             self.add_error('end_time', 'End Time cannot be less that Start Time')
 
-
+    def save(self):
+        event = super().save(commit=False)
+        event.user = self.user
+        if self.cleaned_data.get('tags'):
+            event.tags.set(self.cleaned_data['tags'])
+        event.save()
+        return event
 
 
 class TagForm(forms.ModelForm):
