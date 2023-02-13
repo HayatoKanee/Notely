@@ -3,14 +3,20 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from .forms import SignUpForm, LogInForm, UserForm, ProfileForm, PasswordForm, FolderForm, NotebookForm, EventForm, \
+<<<<<<< HEAD
     TagForm
 from .models import User, Folder, Notebook, Page, Event
+=======
+    TagForm, AddMemberForm
+from .models import User, Folder, Notebook, Page, Event, EventMember
+>>>>>>> 0148a9bba0946dacfd26163120d52af017ba8ec4
 from django.contrib.auth.decorators import login_required
 from .helpers import login_prohibited, check_perm
 from django.contrib.auth.hashers import check_password
 from guardian.shortcuts import get_objects_for_user, assign_perm
 from .view_helper import sort_items_by_created_time, save_folder_notebook_forms
 from datetime import datetime
+from django.views import generic
 
 
 @login_prohibited
@@ -118,6 +124,34 @@ def calendar_tab(request):
                 return redirect('calendar_tab')
 
     return render(request, 'calendar_tab.html', {'event_form': event_form, 'tag_form': tag_form, 'events': events})
+<<<<<<< HEAD
+=======
+
+
+class EventEdit(generic.UpdateView):
+    model = Event
+    fields = ["title", "description", "start_time", "end_time"]
+    template_name = "event.html"
+
+
+@login_required
+def event_details(request, event_id):
+    event = Event.objects.get(id=event_id)
+    event_member = EventMember.objects.filter(event=event)
+    return render(request, 'event_details.html', {'event': event, 'event_member': event_member})
+
+
+def event_add_member(request, event_id):
+    if request.method == 'POST':
+        forms = AddMemberForm(request.POST)
+        if forms.is_valid():
+            event = Event.objects.get(id=event_id)
+            user = forms.cleaned_data['user']
+            EventMember.objects.create(event=event, user=user)
+            return redirect('calendar_tab')
+    forms = AddMemberForm()
+    return render(request, 'event_add_member.html', {'form': forms})
+>>>>>>> 0148a9bba0946dacfd26163120d52af017ba8ec4
 
 
 @login_required

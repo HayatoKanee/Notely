@@ -3,6 +3,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator, MinValueValidator, MaxValueValidator
 from libgravatar import Gravatar
+from datetime import datetime
+from django.urls import reverse
 
 from notes.helpers import validate_date
 
@@ -138,15 +140,47 @@ class Tag(models.Model):
     ]
     image = models.ImageField(upload_to="images")
     color = ColorField(image_field="image",samples=COLOR_PALETTE)
+<<<<<<< HEAD
     def __str__(self):
         return self.title
  
+=======
+
+    def __str__(self):
+        return self.title
+
+
+>>>>>>> 0148a9bba0946dacfd26163120d52af017ba8ec4
 class Event(models.Model):
-    user = models.ForeignKey(User, related_name="events", on_delete=models.CASCADE)
-    title = models.CharField(max_length=200)
-    description = models.TextField(default="")
-    start_time = models.DateTimeField()
-    end_time = models.DateTimeField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='events')
+    title = models.CharField(max_length=200, unique=True)
+    start_time = models.DateTimeField(blank=False)
+    end_time = models.DateTimeField(blank=False)
+    description = models.TextField(blank=True)
+
+    is_active = models.BooleanField(default=True)
+    is_deleted = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    @property
+    def get_html_url(self):
+        url = reverse('notes:event_detail', args=(self.id,))
+        return f'<a href="{url}"> {self.title} </a>'
+
+    def get_all_events(self, user):
+        events = Event.objects.filter(user=user, is_active=True, is_deleted=False)
+        return events
+
+    def get_running_events(self, user):
+        running_events = Event.objects.filter(
+            user=user,
+            is_active=True,
+            is_deleted=False,
+            end_time__gte=datetime.now().date(),
+        ).order_by("start_time")
+        return running_events
+
     routine_choice = [
         ("0", "No Repeat"),
         ("1", "every Day"),
@@ -167,6 +201,22 @@ class Event(models.Model):
     ]
     routine = models.CharField(choices=routine_choice, max_length=10, blank=True)
     tag = models.ForeignKey(Tag, related_name='tag', on_delete=models.CASCADE, null=True, blank=True)
+<<<<<<< HEAD
+=======
+
+
+class EventMember(models.Model):
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='events')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='event_members')
+
+    is_active = models.BooleanField(default=True)
+    is_deleted = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return str(self.user)
+>>>>>>> 0148a9bba0946dacfd26163120d52af017ba8ec4
 
 
 class Reminder(models.Model):
