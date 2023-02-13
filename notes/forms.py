@@ -1,7 +1,11 @@
 from bootstrap_datepicker_plus.widgets import DateTimePickerInput
 from django import forms
 from django.core.validators import RegexValidator
+<<<<<<< HEAD
 from .models import User, Profile, Folder, Notebook, Event, Tag, Page
+=======
+from .models import User, Profile, Folder, Notebook, Event, Tag, Page, EventMember
+>>>>>>> 0148a9bba0946dacfd26163120d52af017ba8ec4
 from guardian.shortcuts import assign_perm
 from bootstrap_datepicker_plus.widgets import DateTimePickerInput
 from colorfield.fields import ColorField
@@ -141,11 +145,30 @@ class EventForm(forms.ModelForm):
 
     class Meta:
         model = Event
+<<<<<<< HEAD
         fields = ['title', 'description', 'start_time', 'end_time', 'tag']
+=======
+        fields = ["title", "start_time", "end_time", "description"]
+>>>>>>> 0148a9bba0946dacfd26163120d52af017ba8ec4
         widgets = {
+            "title": forms.TextInput(
+                attrs={"class": "form-control", "placeholder": "Enter event title"}
+            ),
             "start_time": DateTimePickerInput(attrs={"class": "form-control"}),
-            "end_time": DateTimePickerInput(attrs={"class": "form-control"})
+            "end_time": DateTimePickerInput(attrs={"class": "form-control"}),
+            "description": forms.Textarea(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Enter event description",
+                }
+            ),
         }
+        exclude = ["user"]
+
+    def __init__(self, user, *args, **kwargs):
+        super(EventForm, self).__init__(*args, **kwargs)
+        self.fields['tag'].widget = TagSelectWidget()
+        self.fields['tag'].queryset = Tag.objects.filter(user=user)
 
     def __init__(self, user, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -158,6 +181,12 @@ class EventForm(forms.ModelForm):
         end_time = self.cleaned_data.get('end_time')
         if end_time < start_time:
             self.add_error('end_time', 'End Time cannot be less that Start Time')
+
+
+class AddMemberForm(forms.ModelForm):
+    class Meta:
+        model = EventMember
+        fields = ["user"]
 
 
 class TagForm(forms.ModelForm):

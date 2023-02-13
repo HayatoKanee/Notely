@@ -35,4 +35,7 @@ urlpatterns = [
     path('save_page/<page_id>', views.save_page, name='save_page'),
     path('delete_event/<event_id>', views.delete_event, name='delete_event'),
     path('update_event/<event_id>', views.update_event, name='update_event'),
+    path("event/edit/<int:pk>/", views.EventEdit.as_view(), name="event_edit"),
+    path("event/<int:event_id>/details/", views.event_details, name="event_details"),
+    path("event_add_member/<int:event_id>", views.event_add_member, name="event_add_member"),
 ]
