@@ -73,7 +73,7 @@
                 data-logo_alignment="left">
             </div> {% endcomment %}
 
-    {% include 'partials/eventDetail.html' %}
+    {% include 'partials/eventModal.html' %}
  {% endblock %}
  {% block scripts %}
 {% load static%}
@@ -101,21 +101,37 @@
             {% endfor %}
         ],
         eventClick: function(e) {
+             $.ajax({
+    url: "{% url 'event_detail' 0 %}".replace("0", e.event.id),
+    success: function(data) {
+      $('#detail').html(data.html);
+    },
+    error: function() {
+      alert('Error retrieving event detail');
+    }
+  });
                     $('#eventDetail').modal('show');
+                    {#const event = e.event;#}
+                    {#const id = event.id;#}
+                    {#const title = event.title;#}
+                    {#const description = event.extendedProps.description;#}
+                    {#const start = event.start.toISOString().split('.')[0];#}
+                    {#const end = event.end.toISOString().split('.')[0];#}
+                    {#$('#title').html('Title: '+title);#}
+                    {#$('#description').html('Description: '+description);#}
+                    {#{% comment %} let tag = e.event.tag;#}
+                    {#$('#tag').html('Tag: '+tag); {% endcomment %}#}
+                    {#$('#start_time').html('Start_time: '+start);#}
+                    {#$('#end_time').html('End_time: '+end);#}
                     let link = "{% url 'delete_event' 1%}";
                     let index = link.lastIndexOf('/');
                     let newStr = link.substring(0, index+1);
-                    let title = e.event.title;
-                    $('#title').html('Title: '+title);
-                    let description = e.event.extendedProps.description;
-                    $('#description').html('Description: '+description);
-                    {% comment %} let tag = e.event.tag;
-                    $('#tag').html('Tag: '+tag); {% endcomment %}
-                    let start_time = e.event.start;
-                    $('#start_time').html('Start_time: '+start_time);
-                    let end_time = e.event.end
-                    $('#end_time').html('End_time: '+end_time);
                    $('#delete_link').attr('href', newStr + e.event.id)
+                    {#$('#id_title').val(title);#}
+                    {#  $('#id_description').val(description);#}
+                    {#  $('#id_start_time').val(start);#}
+                    {#  $('#id_end_time').val(end);#}
+
                 },
                 editable: true,
             dateClick: function(info) {
