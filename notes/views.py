@@ -2,14 +2,16 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
-from .forms import SignUpForm, LogInForm, UserForm, ProfileForm, PasswordForm, FolderForm, NotebookForm, EventForm
-from .models import User, Folder, Notebook, Page, Event
+from .forms import SignUpForm, LogInForm, UserForm, ProfileForm, PasswordForm, FolderForm, NotebookForm, EventForm, \
+    TagForm, AddMemberForm
+from .models import User, Folder, Notebook, Page, Event, EventMember
 from django.contrib.auth.decorators import login_required
 from .helpers import login_prohibited, check_perm
 from django.contrib.auth.hashers import check_password
 from guardian.shortcuts import get_objects_for_user, assign_perm
 from .view_helper import sort_items_by_created_time, save_folder_notebook_forms
 from datetime import datetime
+from django.views import generic
 
 
 @login_prohibited
@@ -94,19 +96,54 @@ def sub_folders_tab(request, folder_id):
 @login_required
 def calendar_tab(request):
     events = request.user.events.all()
-    form = EventForm()
+    event_form = EventForm(request.user)
+    tag_form = TagForm()
+
     if request.method == "POST":
-        form = EventForm(request.POST)
-        if form.is_valid():
-            event = form.save(commit=False)
-            event.user = request.user
-            event.save()
-            messages.add_message(request, messages.SUCCESS, "Event Created!")
+        if 'event_submit' in request.POST:
+            event_form = EventForm(request.user, request.POST)
+            if event_form.is_valid():
+                event = event_form.save(commit=False)
+                event.user = request.user
+                event.save()
+                messages.add_message(request, messages.SUCCESS, "Event Created!")
+                return redirect('calendar_tab')
+
+        if 'tag_submit' in request.POST:
+            tag_form = TagForm(request.POST)
+            if tag_form.is_valid():
+                tag = tag_form.save(commit=False)
+                tag.user = request.user
+                tag.save()
+                messages.add_message(request, messages.SUCCESS, "Tag Created!")
+                return redirect('calendar_tab')
+
+    return render(request, 'calendar_tab.html', {'event_form': event_form, 'tag_form': tag_form, 'events': events})
+
+
+class EventEdit(generic.UpdateView):
+    model = Event
+    fields = ["title", "description", "start_time", "end_time"]
+    template_name = "event.html"
+
+
+@login_required
+def event_details(request, event_id):
+    event = Event.objects.get(id=event_id)
+    event_member = EventMember.objects.filter(event=event)
+    return render(request, 'event_details.html', {'event': event, 'event_member': event_member})
+
+
+def event_add_member(request, event_id):
+    if request.method == 'POST':
+        forms = AddMemberForm(request.POST)
+        if forms.is_valid():
+            event = Event.objects.get(id=event_id)
+            user = forms.cleaned_data['user']
+            EventMember.objects.create(event=event, user=user)
             return redirect('calendar_tab')
-        else:
-            messages.add_message(request, messages.ERROR, "Form is not valid. Please correct the errors and try again.")
-    return render(request, 'calendar_tab.html',
-                  {'form': form, 'events': events})
+    forms = AddMemberForm()
+    return render(request, 'event_add_member.html', {'form': forms})
 
 
 @login_required

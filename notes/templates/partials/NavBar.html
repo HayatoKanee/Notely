@@ -6,7 +6,7 @@
            <span class="navbar-toggler-icon"></span>
       </a>
       <div class="container-fluid collapse navbar-collapse" id="navbarSupportedContent">
-           <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+           <ul class="navbar-nav ms-auto mb-2 mb-lg-0" style="margin-right: 13px">
                <li class="nav-item ">
           <a class="nav-link active" href="{% url 'folders_tab' %}">Notes</a>
         </li>
@@ -19,24 +19,20 @@
                 <td>{{user.username}} </td>
               <td>
                 <img src="{{ user.profile.mini_gravatar }}" alt="Gravatar of {{ user.username }}" class="rounded-circle" >
+                  </button>
                   <div class="nav-item dropdown">
-
           <div class="dropdown-menu" aria-labelledby="user-account-dropdown">
             <a class="dropdown-item nav-link nav-link-drop px-2 text-muted" href="{% url 'profile_tab' %}" >Profile</a>
               <a class="dropdown-item nav-link nav-link-drop px-2 text-muted" href="{% url 'gravatar' %}"  target="_blank">Change Gravatar</a>
             <a class="dropdown-item nav-link nav-link-drop px-2 text-muted" href="{% url 'password_tab' %}" >Change Password</a>
             <hr class="dropdown-divider">
               <a class="dropdown-item nav-link nav-link-drop px-2 text-muted" href="{% url 'log_out' %}">Log out</a>
-
-
           </div>
-                       </li>
-        </div>
-            </tr>
-            </button>
+                      </div>
+               </tr>
+                 </li>
         </li>
            </ul>
-
       </div>
   </div>
 </nav>
