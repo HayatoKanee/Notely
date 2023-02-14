@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from .forms import SignUpForm, LogInForm, UserForm, ProfileForm, PasswordForm, FolderForm, NotebookForm, EventForm, NoteBookTagForm, TagForm, NoteBookSideBarForm
+from django.template.loader import render_to_string
 from .models import User, Folder, Notebook, Page, Event
 from django.contrib.auth.decorators import login_required
 from .helpers import login_prohibited, check_perm
@@ -222,6 +223,20 @@ def delete_event(request, event_id):
     event = Event.objects.get(id=event_id)
     event.delete()
     return redirect('calendar_tab')
+
+
+@login_required
+def event_detail(request, event_id):
+    event = Event.objects.get(id=event_id)
+    if request.method == 'POST':
+        form = EventForm(request.user, instance=event, data=request.POST)
+        if form.is_valid():
+            form.save()
+            messages.add_message(request, messages.SUCCESS, "event updated!")
+            return redirect('calendar_tab')
+    form = EventForm(request.user, instance=event)
+    html = render_to_string('partials/event_detail.html', {'form': form, 'event': event}, request=request)
+    return JsonResponse({'html': html})
 
 
 @login_required

@@ -126,7 +126,7 @@ class TagSelectWidget(SelectMultiple):
     def create_option(self, name, value, label, selected, index, subindex=None, attrs=None):
         option = super().create_option(name, value, label, selected, index, subindex, attrs)
         try:
-            tag = Tag.objects.get(id=index)
+            tag = Tag.objects.get(id=index+1)
             option['attrs']['style'] = f'color: {tag.color}'
         except Tag.DoesNotExist:
             pass

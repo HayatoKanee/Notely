@@ -128,7 +128,7 @@ class Page(models.Model):
 
 class Tag(models.Model):
     user = models.ForeignKey(User, related_name="tags", on_delete=models.CASCADE)
-    title = models.CharField(max_length=30)
+    title = models.CharField(max_length=30, unique=True)
     COLOR_PALETTE = [
         ('#000000', 'black'),
         ('#0000FF', 'Blue'),
