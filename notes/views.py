@@ -2,7 +2,10 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
-from .forms import SignUpForm, LogInForm, UserForm, ProfileForm, PasswordForm, FolderForm, NotebookForm, EventForm
+from django.template.loader import render_to_string
+
+from .forms import SignUpForm, LogInForm, UserForm, ProfileForm, PasswordForm, FolderForm, NotebookForm, EventForm, \
+    EventTagForm
 from .models import User, Folder, Notebook, Page, Event
 from django.contrib.auth.decorators import login_required
 from .helpers import login_prohibited, check_perm
@@ -94,19 +97,33 @@ def sub_folders_tab(request, folder_id):
 @login_required
 def calendar_tab(request):
     events = request.user.events.all()
-    form = EventForm()
+    event_form = EventForm(request.user)
+    tag_form = EventTagForm()
+    tags = set()
+    for event in events:
+        for tag in event.tags.all():
+            tags.add(tag)
+
+    print(tags)
     if request.method == "POST":
-        form = EventForm(request.POST)
-        if form.is_valid():
-            event = form.save(commit=False)
-            event.user = request.user
-            event.save()
-            messages.add_message(request, messages.SUCCESS, "Event Created!")
-            return redirect('calendar_tab')
-        else:
-            messages.add_message(request, messages.ERROR, "Form is not valid. Please correct the errors and try again.")
-    return render(request, 'calendar_tab.html',
-                  {'form': form, 'events': events})
+        if 'event_submit' in request.POST:
+            event_form = EventForm(request.user, request.POST)
+            if event_form.is_valid():
+                event_form.save()
+                messages.add_message(request, messages.SUCCESS, "Event Created!")
+                return redirect('calendar_tab')
+
+        if 'tag_submit' in request.POST:
+            tag_form = EventTagForm(request.POST)
+            if tag_form.is_valid():
+                tag = tag_form.save(commit=False)
+                tag.user = request.user
+                tag.save()
+                messages.add_message(request, messages.SUCCESS, "Tag Created!")
+                return redirect('calendar_tab')
+
+    return render(request, 'calendar_tab.html', {'event_form': event_form, 'tag_form': tag_form, 'events': events,
+                                                 'tags': tags})
 
 
 @login_required
@@ -184,20 +201,16 @@ def save_page(request, page_id):
 @login_required
 @check_perm('dg_delete_folder', Folder)
 def delete_folder(request, folder_id):
-    user = request.user
-    if request.method == 'GET':
-        folder = Folder.objects.get(id=folder_id)
-        folder.delete()
+    folder = Folder.objects.get(id=folder_id)
+    folder.delete()
     return redirect('folders_tab')
 
 
 @login_required
 @check_perm('dg_delete_notebook', Notebook)
 def delete_notebook(request, folder_id):
-    user = request.user
-    if request.method == 'GET':
-        notebook = Notebook.objects.get(id=folder_id)
-        notebook.delete()
+    notebook = Notebook.objects.get(id=folder_id)
+    notebook.delete()
     return redirect('folders_tab')
 
 
@@ -206,6 +219,20 @@ def delete_event(request, event_id):
     event = Event.objects.get(id=event_id)
     event.delete()
     return redirect('calendar_tab')
+
+
+@login_required
+def event_detail(request, event_id):
+    event = Event.objects.get(id=event_id)
+    if request.method == 'POST':
+        form = EventForm(request.user, instance=event, data=request.POST)
+        if form.is_valid():
+            form.save()
+            messages.add_message(request, messages.SUCCESS, "event updated!")
+            return redirect('calendar_tab')
+    form = EventForm(request.user, instance=event)
+    html = render_to_string('partials/event_detail.html', {'form': form, 'event': event}, request=request)
+    return JsonResponse({'html': html})
 
 
 @login_required
