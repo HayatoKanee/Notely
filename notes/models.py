@@ -3,6 +3,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator, MinValueValidator, MaxValueValidator
 from libgravatar import Gravatar
+from datetime import datetime
+from django.urls import reverse
 
 from notes.helpers import validate_date
 
@@ -126,11 +128,16 @@ class Page(models.Model):
 
 class Tag(models.Model):
     user = models.ForeignKey(User, related_name="tags", on_delete=models.CASCADE)
-    title = models.CharField(max_length=30)
+    title = models.CharField(max_length=30, unique=True)
     COLOR_PALETTE = [
-        ("#FFFFFF", "white",),
-        ("#000000", "black",),
-        ("#34eb67", "green",),
+        ('#000000', 'black'),
+        ('#0000FF', 'Blue'),
+        ('#C12FFF', 'Purple'),
+        ('#34eb67', 'green'),
+        ('#FF5B09', 'orange'),
+        ('#FC1501', 'red'),
+        ('#FFFF00', 'Yellow'),
+        ('#FFA3EE', 'Pink'),
     ]
     image = models.ImageField(upload_to="images")
     color = ColorField(image_field="image", samples=COLOR_PALETTE)
@@ -145,6 +152,7 @@ class Event(models.Model):
     description = models.TextField(default="")
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
+
     routine_choice = [
         ("0", "No Repeat"),
         ("1", "every Day"),
@@ -164,12 +172,10 @@ class Event(models.Model):
         ("Sunday", "Sunday"),
     ]
     routine = models.CharField(choices=routine_choice, max_length=10, blank=True)
-    tag = models.OneToOneField(Tag, related_name='tag', on_delete=models.CASCADE, null=True, blank=True)
+    tags = models.ManyToManyField(Tag, related_name="events", blank=True)
 
 
 class Reminder(models.Model):
     event = models.ForeignKey(Event, related_name="reminders", on_delete=models.CASCADE)
     reminder_name = models.CharField(max_length=50, blank=False)
     alert_time = models.DateTimeField()
-
-

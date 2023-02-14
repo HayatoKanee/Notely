@@ -36,4 +36,5 @@ urlpatterns = [
     path('save_page/<page_id>', views.save_page, name='save_page'),
     path('delete_event/<event_id>', views.delete_event, name='delete_event'),
     path('update_event/<event_id>', views.update_event, name='update_event'),
+    path('event_detail/<event_id>', views.event_detail, name='event_detail'),
 ]
