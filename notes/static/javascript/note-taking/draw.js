@@ -214,8 +214,10 @@ const canvas = initCanvas('canvas');
 canvas.loadFromJSON(drawing, function(){
     canvas.getObjects().forEach(function(obj) {
     if (obj.link) {
-      obj.on('selected', function() {
-        window.location.href = this.link;
+      obj.on('mousedown', function(e) {
+          if(currentMode=='select') {
+              window.location.href = this.link;
+          }
       });
     }
   });

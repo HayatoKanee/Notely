@@ -1,18 +1,29 @@
 const link = document.getElementById("linkPage");
 link.disabled = true;
 $('#linkPage').click(function (){
-    let selection = canvas.getActiveObject();
+    const selection = canvas.getActiveObject();
      $('a').click(function (e){
          e.preventDefault();
-         let tag = $(this);
-        selection.on('selected', function (){
+         const tag = $(this);
+      const underline = new fabric.Path('M' + selection.left + ',' + (selection.top + selection.height) + ' L' + (selection.left + selection.width) + ',' + (selection.top + selection.height));
+underline.set({
+  stroke: 'blue',
+  strokeWidth: 1,
+  selectable: false
+});
+canvas.remove(selection);
+
+// combine the rectangle and underline into a single fabric object
+const obj = new fabric.Group([selection, underline]);
+        obj.on('mousedown', function (e){
+            if(currentMode=='select') {
                 window.location.replace(tag.attr('href'));
+            }
         });
-         selection.set({
-             fill:'blue',
-             underline: true,
+         obj.set({
              link:tag.attr('href')
          });
+canvas.add(obj);
          canvas.discardActiveObject();
          canvas.renderAll();
          $('#closeBtn').click();
