@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.template.loader import render_to_string
 
 from .forms import SignUpForm, LogInForm, UserForm, ProfileForm, PasswordForm, FolderForm, NotebookForm, EventForm, \
-    TagForm
+    EventTagForm
 from .models import User, Folder, Notebook, Page, Event
 from django.contrib.auth.decorators import login_required
 from .helpers import login_prohibited, check_perm
@@ -98,8 +98,13 @@ def sub_folders_tab(request, folder_id):
 def calendar_tab(request):
     events = request.user.events.all()
     event_form = EventForm(request.user)
-    tag_form = TagForm()
+    tag_form = EventTagForm()
+    tags = set()
+    for event in events:
+        for tag in event.tags.all():
+            tags.add(tag)
 
+    print(tags)
     if request.method == "POST":
         if 'event_submit' in request.POST:
             event_form = EventForm(request.user, request.POST)
@@ -109,7 +114,7 @@ def calendar_tab(request):
                 return redirect('calendar_tab')
 
         if 'tag_submit' in request.POST:
-            tag_form = TagForm(request.POST)
+            tag_form = EventTagForm(request.POST)
             if tag_form.is_valid():
                 tag = tag_form.save(commit=False)
                 tag.user = request.user
@@ -117,7 +122,8 @@ def calendar_tab(request):
                 messages.add_message(request, messages.SUCCESS, "Tag Created!")
                 return redirect('calendar_tab')
 
-    return render(request, 'calendar_tab.html', {'event_form': event_form, 'tag_form': tag_form, 'events': events})
+    return render(request, 'calendar_tab.html', {'event_form': event_form, 'tag_form': tag_form, 'events': events,
+                                                 'tags': tags})
 
 
 @login_required

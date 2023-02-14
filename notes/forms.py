@@ -3,7 +3,7 @@ from django import forms
 from django.core.validators import RegexValidator
 from django.utils.safestring import mark_safe
 
-from .models import User, Profile, Folder, Notebook, Event, Tag, Page
+from .models import User, Profile, Folder, Notebook, Event, Tag, Page, EventTag
 from guardian.shortcuts import assign_perm
 from bootstrap_datepicker_plus.widgets import DateTimePickerInput
 from colorfield.fields import ColorField
@@ -126,9 +126,9 @@ class TagSelectWidget(SelectMultiple):
     def create_option(self, name, value, label, selected, index, subindex=None, attrs=None):
         option = super().create_option(name, value, label, selected, index, subindex, attrs)
         try:
-            tag = Tag.objects.get(id=index+1)
+            tag = EventTag.objects.get(title=label.replace('&#x25CF ', ''))
             option['attrs']['style'] = f'color: {tag.color}'
-        except Tag.DoesNotExist:
+        except EventTag.DoesNotExist:
             pass
         return option
 
@@ -152,7 +152,7 @@ class EventForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.user = user
         self.fields['tag'].widget = TagSelectWidget()
-        self.fields['tag'].queryset = Tag.objects.filter(user=user)
+        self.fields['tag'].queryset = user.event_tags.all()
 
     def clean(self):
         super().clean()
@@ -171,9 +171,15 @@ class EventForm(forms.ModelForm):
         return event
 
 
-class TagForm(forms.ModelForm):
+class EventTagForm(forms.ModelForm):
     class Meta:
-        model = Tag
+        model = EventTag
+        fields = ['title', 'color']
+
+
+class PageTagForm(forms.ModelForm):
+    class Meta:
+        model = EventTag
         fields = ['title', 'color']
 
 

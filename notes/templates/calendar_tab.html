@@ -143,7 +143,7 @@
                      });
                  }
             },
-    {% for tag in user.tags.all %}
+    {% for tag in tags %}
         {{ forloop.counter }}: {
           text: '•{{ tag }}',
           click: function() {
@@ -163,11 +163,11 @@
             footerToolbar:{
                  start: '',
   center: '',
-  end: "selectAll {% for tag in user.tags.all %}{{ forloop.counter }} {% endfor %}".slice(0, -1)
+  end: "selectAll {% for tag in tags %}{{ forloop.counter }} {% endfor %}".slice(0, -1)
             },
         });
     calendar.render();
-        {% for tag in user.tags.all %}
+        {% for tag in tags %}
         console.log($('.fc-{{ forloop.counter }}-button'));
         $('.fc-{{ forloop.counter }}-button').css('color', '{{ tag.color }}')
 
