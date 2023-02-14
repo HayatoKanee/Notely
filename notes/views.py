@@ -2,8 +2,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
-from .forms import SignUpForm, LogInForm, UserForm, ProfileForm, PasswordForm, FolderForm, NotebookForm, EventForm, \
-    NotebookTagColorForm, TagForm
+from .forms import SignUpForm, LogInForm, UserForm, ProfileForm, PasswordForm, FolderForm, NotebookForm, EventForm, NoteBookTagForm, TagForm, NoteBookSideBarForm
 from .models import User, Folder, Notebook, Page, Event
 from django.contrib.auth.decorators import login_required
 from .helpers import login_prohibited, check_perm
@@ -102,9 +101,7 @@ def calendar_tab(request):
         if 'event_submit' in request.POST:
             event_form = EventForm(request.user, request.POST)
             if event_form.is_valid():
-                event = event_form.save(commit=False)
-                event.user = request.user
-                event.save()
+                event_form.save()
                 messages.add_message(request, messages.SUCCESS, "Event Created!")
                 return redirect('calendar_tab')
 
@@ -165,21 +162,25 @@ def gravatar(request):
 @check_perm('dg_view_page', Page)
 def page(request, page_id):
     page = Page.objects.get(id=page_id)
+    notebook_tag_form = NoteBookTagForm()
+    sidebar_note_tag_form = NoteBookSideBarForm(request.user)
     if request.method == 'POST':
-        if 'tag_submit' in request.POST:
-            tag_form = TagForm(request.POST)
-            if tag_form.is_valid():
-                tag = tag_form.save(commit=False)
-                tag.user = request.user
-                tag.save()
+        if 'notebook_tag_submit' in request.POST:
+            print("hello")
+            notebook_tag_form = NoteBookTagForm(request.POST)
+            if notebook_tag_form.is_valid():
+                note_tag = notebook_tag_form.save(commit=False)
+                note_tag.user = request.user
+                note_tag.save()
                 messages.add_message(request, messages.SUCCESS, "Tag Created!")
-                return redirect('notebook_sidebar')
-        new_page = Page.objects.create(notebook=page.notebook)
-        assign_perm('dg_view_page', request.user, new_page)
-        assign_perm('dg_edit_page', request.user, new_page)
-        assign_perm('dg_delete_page', request.user, new_page)
-        return redirect('page', new_page.id)
-    return render(request, 'page.html', {'page': page})
+                return redirect('page', page.id)
+        if 'add_notebook_submit' in request.POST:
+            new_page = Page.objects.create(notebook=page.notebook)
+            assign_perm('dg_view_page', request.user, new_page)
+            assign_perm('dg_edit_page', request.user, new_page)
+            assign_perm('dg_delete_page', request.user, new_page)
+            return redirect('page', new_page.id)
+    return render(request, 'page.html', {'page': page, 'notebook_tag_form': notebook_tag_form, 'sidebar_note_tag_form':sidebar_note_tag_form})
 
 
 def save_page(request, page_id):
@@ -203,20 +204,16 @@ def save_page(request, page_id):
 @login_required
 @check_perm('dg_delete_folder', Folder)
 def delete_folder(request, folder_id):
-    user = request.user
-    if request.method == 'GET':
-        folder = Folder.objects.get(id=folder_id)
-        folder.delete()
+    folder = Folder.objects.get(id=folder_id)
+    folder.delete()
     return redirect('folders_tab')
 
 
 @login_required
 @check_perm('dg_delete_notebook', Notebook)
 def delete_notebook(request, folder_id):
-    user = request.user
-    if request.method == 'GET':
-        notebook = Notebook.objects.get(id=folder_id)
-        notebook.delete()
+    notebook = Notebook.objects.get(id=folder_id)
+    notebook.delete()
     return redirect('folders_tab')
 
 
@@ -239,10 +236,3 @@ def update_event(request, event_id):
         return JsonResponse({'status': 'success'})
     return JsonResponse({'status': 'fail'})
 
-
-# def notebook_tag_color(request, page_id):
-#     tag_form = TagForm()
-#     page = Page.objects.get(id=page_id)
-#     if request.method == "POST":
-#
-#     return render(request, 'partials/notebook_sidebar.html', {'tag_form': tag_form})

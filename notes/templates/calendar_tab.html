@@ -1,19 +1,20 @@
 {% extends 'base_content.html' %}
  {% block content %}
      <div class="container">
-      <div id='calendar'></div>
-   </div>
-          <button id="addEvent" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#eventModal">
+      <div id='calendar' style="color: rgb(245, 93, 66)"></div>
+              <button id="addEvent" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#eventModal">
                 Add New Event
           </button>
-          <div class="g-signin2" data-onsuccess="googleSignIn"></div>
-        </div>   
+             <div class="g-signin2" data-onsuccess="googleSignIn"></div>
+
+
+   </div>
           <div class="modal fade" id="eventModal" tabindex="-1">
             <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title">Event Modal</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="modal-content" style="color: rgb(245, 93, 66)">
+                    <div class="modal-header">
+                      <h5 class="modal-title" style="color: rgb(245, 93, 66)">Event Modal</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                         {{ event_form.media }}
@@ -80,10 +81,6 @@
   <script src="https://apis.google.com/js/platform.js" async defer></script>
     <meta name="google-signin-client_id" content="588566071525-5p0gps8skl9gr5j9919r8gob501jqa01.apps.googleusercontent.com">
 <script>
-    $('#id_tag').on('change', function (){
-        let color = $(this).find(':selected').attr('style')
-        $(this).attr('style', color);
-    });
     const calendarEl = document.getElementById('calendar');
     const calendar = new FullCalendar.Calendar(calendarEl, {
         headerToolbar: {
@@ -100,15 +97,13 @@
                 description:"{{ i.description }}",
                 start: '{{ i.start_time|date:"Y-m-d H:i:s" }}',
                 end: '{{ i.end_time|date:"Y-m-d H:i:s" }}'
-
             },
             {% endfor %}
-
         ],
-        eventClick:  function(e) {
-                   $('#eventDetail').modal('show');
-                   let link = "{% url 'delete_event' 1%}";
-                   let index = link.lastIndexOf('/');
+        eventClick: function(e) {
+                    $('#eventDetail').modal('show');
+                    let link = "{% url 'delete_event' 1%}";
+                    let index = link.lastIndexOf('/');
                     let newStr = link.substring(0, index+1);
                     let title = e.event.title;
                     let description = e.event.extendedProps.description;
@@ -135,12 +130,12 @@
             let index = link.lastIndexOf('/');
             let newStr = link.substring(0, index+1);
             $.ajax({
-              url: newStr+event.id,
-              type: 'POST',
-              data: {
-                start: start,
-                end: end,
-                  csrfmiddlewaretoken: '{{ csrf_token }}'
+                url: newStr+event.id,
+                type: 'POST',
+                data: {
+                    start: start,
+                    end: end,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
               }
             });
           },
