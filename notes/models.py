@@ -179,6 +179,7 @@ class Reminder(models.Model):
     event = models.ForeignKey(Event, related_name="reminders", on_delete=models.CASCADE)
     reminder_name = models.CharField(max_length=50, blank=False)
     alert_time = models.DateTimeField()
+<<<<<<< HEAD
 
 
 class NoteBookTag(models.Model):
