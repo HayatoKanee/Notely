@@ -96,7 +96,8 @@
                 title: "{{ event.title}}",
                 start: '{{ event.start_time|date:"Y-m-d H:i:s" }}',
                 end: '{{ event.end_time|date:"Y-m-d H:i:s" }}',
-                backgroundColor: '{{ event.tags.first.color }}'
+                backgroundColor: '{{ event.tags.first.color }}',
+                tags: "{% for tag in event.tags.all %}{{ tag.title }},{% endfor %}".slice(0,-1)
             },
             {% endfor %}
         ],
@@ -134,11 +135,27 @@
             });
           },
          customButtons: {
+            selectAll:{
+                text: '•All',
+                 click: function() {
+                     calendar.getEvents().forEach(function(event) {
+                         event.setProp('display', 'auto');
+                     });
+                 }
+            },
     {% for tag in user.tags.all %}
         {{ forloop.counter }}: {
           text: '•{{ tag }}',
           click: function() {
-            alert('clicked the custom button!');
+             const tag = '{{ tag.title }}';
+          calendar.getEvents().forEach(function(event) {
+            if (event.extendedProps.tags.includes(tag)) {
+              event.setProp('display', 'auto');
+            } else {
+              event.setProp('display', 'none');
+            }
+          });
+          calendar.rerenderEvents();
           }
         },
     {% endfor %}
@@ -146,8 +163,8 @@
             footerToolbar:{
                  start: '',
   center: '',
-  end: "{% for tag in user.tags.all %}{{ forloop.counter }} {% endfor %}".slice(0, -1)
-            }
+  end: "selectAll {% for tag in user.tags.all %}{{ forloop.counter }} {% endfor %}".slice(0, -1)
+            },
         });
     calendar.render();
         {% for tag in user.tags.all %}
