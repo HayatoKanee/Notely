@@ -101,14 +101,14 @@
         ],
         eventClick: function(e) {
              $.ajax({
-    url: "{% url 'event_detail' 0 %}".replace("0", e.event.id),
-    success: function(data) {
-      $('#detail').html(data.html);
-    },
-    error: function() {
-      alert('Error retrieving event detail');
-    }
-  });
+                url: "{% url 'event_detail' 0 %}".replace("0", e.event.id),
+                success: function(data) {
+                  $('#detail').html(data.html);
+                },
+                error: function() {
+                  alert('Error retrieving event detail');
+                }
+              });
                     $('#eventDetail').modal('show');
                    $('#delete_link').attr('href', "{% url 'delete_event' 0 %}".replace("0", e.event.id))
 
