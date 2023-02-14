@@ -90,12 +90,13 @@
         },
         initialView: 'dayGridMonth',
         events: [
-            {% for i in events %}
+            {% for event in events %}
             {
-                id: "{{i.id}}",
-                title: "{{ i.title}}",
-                start: '{{ i.start_time|date:"Y-m-d H:i:s" }}',
-                end: '{{ i.end_time|date:"Y-m-d H:i:s" }}'
+                id: "{{event.id}}",
+                title: "{{ event.title}}",
+                start: '{{ event.start_time|date:"Y-m-d H:i:s" }}',
+                end: '{{ event.end_time|date:"Y-m-d H:i:s" }}',
+                backgroundColor: '{{ event.tags.first.color }}'
             },
             {% endfor %}
         ],
@@ -132,9 +133,28 @@
               }
             });
           },
+         customButtons: {
+    {% for tag in user.tags.all %}
+        {{ forloop.counter }}: {
+          text: '•{{ tag }}',
+          click: function() {
+            alert('clicked the custom button!');
+          }
+        },
+    {% endfor %}
+      },
+            footerToolbar:{
+                 start: '',
+  center: '',
+  end: "{% for tag in user.tags.all %}{{ forloop.counter }} {% endfor %}".slice(0, -1)
+            }
         });
-
     calendar.render();
+        {% for tag in user.tags.all %}
+        console.log($('.fc-{{ forloop.counter }}-button'));
+        $('.fc-{{ forloop.counter }}-button').css('color', '{{ tag.color }}')
+
+    {% endfor %}
 
     function googleSignIn(googleUser) {
         // Get the ID token and basic profile information from the Google user object
