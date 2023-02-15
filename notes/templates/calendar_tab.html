@@ -5,8 +5,21 @@
               <button id="addEvent" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#eventModal">
                 Add New Event
           </button>
-             <div class="g-signin2" data-onsuccess="googleSignIn"></div>
+             
 
+          <script src="https://accounts.google.com/gsi/client" async defer></script>
+            <div id="g_id_onload"
+                data-client_id="588566071525-5p0gps8skl9gr5j9919r8gob501jqa01.apps.googleusercontent.com"
+                data-callback="handleCredentialResponse">
+            </div>
+            <div id="googleSignIn" class="g_id_signin" data-type="standard"></div>
+
+            <button id="authorize_button" onclick="handleAuthClick()">Authorize</button>
+    <button id="signout_button" onclick="handleSignoutClick()">Sign Out</button>
+
+    <pre id="content" style="white-space: pre-wrap;"></pre>
+
+   
 
    </div>
           <div class="modal fade" id="eventModal" tabindex="-1">
@@ -53,26 +66,6 @@
           </div>
                 
 
-            {% comment %} <button id="login-google"></button> {% endcomment %}
-
-            {% comment %} <script src="https://accounts.google.com/gsi/client" async defer></script>
-                        <div id="g_id_onload"
-                data-client_id="588566071525-5p0gps8skl9gr5j9919r8gob501jqa01.apps.googleusercontent.com"
-                data-context="signin"
-                data-ux_mode="popup"
-                data-callback="onSignIn"
-                data-itp_support="true">
-            </div>
-
-            <div class="g_id_signin"
-                data-type="standard"
-                data-shape="rectangular"
-                data-theme="outline"
-                data-text="signin_with"
-                data-size="large"
-                data-logo_alignment="left">
-            </div> {% endcomment %}
-
     {% include 'partials/eventModal.html' %}
  {% endblock %}
  {% block scripts %}
@@ -80,6 +73,7 @@
   <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.4/index.global.min.js'></script>
   <script src="https://apis.google.com/js/platform.js" async defer></script>
     <meta name="google-signin-client_id" content="588566071525-5p0gps8skl9gr5j9919r8gob501jqa01.apps.googleusercontent.com">
+    <meta name="referrer" content="no-referrer-when-downgrade">
 <script>
     const calendarEl = document.getElementById('calendar');
     const calendar = new FullCalendar.Calendar(calendarEl, {
@@ -136,15 +130,10 @@
 
     calendar.render();
 
-    function googleSignIn(googleUser) {
-        // Get the ID token and basic profile information from the Google user object
-        var id_token = googleUser.getAuthResponse().id_token;
-        var profile = googleUser.getBasicProfile();
-      
-        console.log(id_token)
-        console.log(profile)
-        console.log("testing")
-      }
+    document.getElementById("googleSignIn").addEventListener("click", function() {
+        console.log("User has signed in");
+      });
+
     var tagModal = document.getElementById('tagModal')
     tagModal.addEventListener('hidden.bs.modal', function (event) {
     var eventModal = document.getElementById('eventModal')
@@ -153,6 +142,7 @@
   })
     </script>
     <link rel="stylesheet" href="{%static 'css_style/calendarTabStyle.css' %}"/>
-    <script src="https://apis.google.com/js/api.js"></script>
     <script src="{%static 'javascript/calendar/syncGoogleCalendar.js'%}"></script>
+    <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
+    <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
 {% endblock %}
