@@ -190,23 +190,3 @@ class Reminder(models.Model):
     event = models.ForeignKey(Event, related_name="reminders", on_delete=models.CASCADE)
     reminder_name = models.CharField(max_length=50, blank=False)
     alert_time = models.DateTimeField()
-
-
-class NoteBookTag(models.Model):
-    user = models.ForeignKey(User, related_name="notebooks_tag", on_delete=models.CASCADE)
-    title = models.CharField(max_length=30)
-    COLOR_PALETTE = [
-        ('#000000', 'black'),
-        ('#0000FF', 'Blue'),
-        ('#C12FFF', 'Purple'),
-        ('#34eb67', 'green'),
-        ('#FF5B09', 'orange'),
-        ('#FC1501', 'red'),
-        ('#FFFF00', 'Yellow'),
-        ('#FFA3EE', 'Pink'),
-    ]
-    image = models.ImageField(upload_to="images")
-    color = ColorField(image_field="image", samples=COLOR_PALETTE)
-
-    def __str__(self):
-        return self.title

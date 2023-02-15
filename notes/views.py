@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from .forms import SignUpForm, LogInForm, UserForm, ProfileForm, PasswordForm, FolderForm, NotebookForm, EventForm, \
-    NoteBookTagForm, NoteBookSideBarForm, EventForm, EventTagForm
+    PageForm, EventForm, EventTagForm, PageTagForm
 from django.template.loader import render_to_string
 from .forms import SignUpForm, LogInForm, UserForm, ProfileForm, PasswordForm, FolderForm, NotebookForm
 from .models import User, Folder, Notebook, Page, Event
@@ -171,25 +171,29 @@ def gravatar(request):
 @check_perm('dg_view_page', Page)
 def page(request, page_id):
     page = Page.objects.get(id=page_id)
-    notebook_tag_form = NoteBookTagForm()
-    sidebar_note_tag_form = NoteBookSideBarForm(request.user, page)
+    page_tag_form = PageTagForm()
     if request.method == 'POST':
-        if 'notebook_tag_submit' in request.POST:
-            notebook_tag_form = NoteBookTagForm(request.POST)
-            if notebook_tag_form.is_valid():
-                note_tag = notebook_tag_form.save(commit=False)
-                note_tag.user = request.user
-                note_tag.save()
+        # if 'page_submit' in request.POST:
+        #     sidebar_note_tag_form = PageForm(request.POST)
+        #     if sidebar_note_tag_form.is_valid():
+        #         sidebar_note_tag_form.save()
+        #         messages.add_message(request, messages.SUCCESS, "Tag Added!")
+        #         return redirect('page', page.id)
+        if 'page_tag_submit' in request.POST:
+            page_tag_form = PageTagForm(request.POST)
+            if page_tag_form.is_valid():
+                tag = page_tag_form.save(commit=False)
+                tag.user = request.user
+                tag.save()
                 messages.add_message(request, messages.SUCCESS, "Tag Created!")
                 return redirect('page', page.id)
-        if 'add_notebook_submit' in request.POST:
+        if 'add_page_submit' in request.POST:
             new_page = Page.objects.create(notebook=page.notebook)
             assign_perm('dg_view_page', request.user, new_page)
             assign_perm('dg_edit_page', request.user, new_page)
             assign_perm('dg_delete_page', request.user, new_page)
             return redirect('page', new_page.id)
-    return render(request, 'page.html', {'page': page, 'notebook_tag_form': notebook_tag_form,
-                                         'sidebar_note_tag_form': sidebar_note_tag_form})
+    return render(request, 'page.html', {'page': page, 'page_tag_form': page_tag_form})
 
 
 def save_page(request, page_id):
@@ -244,6 +248,19 @@ def event_detail(request, event_id):
             return redirect('calendar_tab')
     form = EventForm(request.user, instance=event)
     html = render_to_string('partials/event_detail.html', {'form': form, 'event': event}, request=request)
+    return JsonResponse({'html': html})
+
+@login_required
+def page_detail(request, page_id):
+    page = Page.objects.get(id=page_id)
+    if request.method == 'POST':
+        form = PageForm(instance=page, data=request.POST)
+        if form.is_valid():
+            form.save()
+            messages.add_message(request, messages.SUCCESS, "page updated!")
+            return redirect('calendar_tab')
+    form = PageForm(instance=page)
+    html = render_to_string('partials/page_detail.html', {'form': form, 'page': page}, request=request)
     return JsonResponse({'html': html})
 
 
