@@ -25,7 +25,7 @@
     height: 40px;
     display: block;
     text-align: left;
-    margin: 10px 50px 10px 10px;
+    margin: 5% 0;
 }
 #folder_img{
     background: url("images/bluefolder.png") no-repeat;
@@ -37,7 +37,7 @@
     height: 40px;
     display: block;
     text-align: left;
-    margin: 10px 50px 20px 7px;
+    margin: 5% 0;
 }
 .element {
   width: 10%;
