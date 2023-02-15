@@ -2,8 +2,7 @@ from bootstrap_datepicker_plus.widgets import DateTimePickerInput
 from django import forms
 from django.core.validators import RegexValidator
 from django.utils.safestring import mark_safe
-
-from .models import User, Profile, Folder, Notebook, Event, Tag, Page, EventTag
+from .models import User, Profile, Folder, Notebook, Event, Tag, Page, EventTag, PageTag, NoteBookTag
 from guardian.shortcuts import assign_perm
 from bootstrap_datepicker_plus.widgets import DateTimePickerInput
 from colorfield.fields import ColorField
@@ -199,3 +198,46 @@ class NotebookForm(forms.ModelForm):
         assign_perm('dg_edit_notebook', user, notebook)
         assign_perm('dg_delete_notebook', user, notebook)
         return notebook
+
+
+class NoteBookTagForm(forms.ModelForm):
+    class Meta:
+        model = NoteBookTag
+        fields = ['title', 'color']
+
+
+class NoteBookTagSelectWidget(SelectMultiple):
+    def create_option(self, name, value, label, selected, index, subindex=None, attrs=None):
+        option = super().create_option(name, value, label, selected, index, subindex, attrs)
+        try:
+            notebook_tag = NoteBookTag.objects.get(id=index)
+            option['attrs']['style'] = f'color: {notebook_tag.color}'
+        except NoteBookTag.DoesNotExist:
+            pass
+        return option
+
+
+class NoteBookSideBarForm(forms.ModelForm):
+    tag = TagImageChoiceField(queryset=None, label="notebooks_tag", required=False)
+    page = forms.ModelChoiceField(queryset=Page.objects.all(), required=False)
+
+    class Meta:
+        model = PageTag
+        fields = ['title']
+
+    def __init__(self, user, page, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.user = user
+        self.page = page
+        self.fields['tag'].widget = NoteBookTagSelectWidget()
+        self.fields['tag'].queryset = NoteBookTag.objects.filter(user=user)
+
+    def save(self):
+        notetag = super().save(commit=False)
+        notetag.user = self.user
+        notetag.page = self.page
+        notetag.save()
+        if self.cleaned_data.get('tag'):
+            notetag.tags.set(self.cleaned_data['tag'])
+        notetag.save()
+        return notetag

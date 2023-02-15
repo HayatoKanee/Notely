@@ -1,7 +1,16 @@
-<div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="sidebar" aria-labelledby="sidebarLabel">
-  <div class="offcanvas-header">
+<head>
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/spectrum-colorpicker@1.8.0/spectrum.min.css" />
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/spectrum-colorpicker@1.8.0/spectrum.min.js"></script>
+</head>
+
+<div class="offcanvas offcanvas-start" data-bs-scroll="true" id="sidebar" aria-labelledby="sidebarLabel" data-bs-backdrop="false"
+     data-bs-keyboard="false" aria-hidden="true" aria-labelledby="symbolsLabel" tabindex="-1" >
+  <div style="overflow: scroll; height: 800px;">
+    <div class="offcanvas-header">
     <h5 class="offcanvas-title" id="sidebarLabel">{{ page.notebook.notebook_name}}</h5>
-      <h5 class="offcanvas-title" id="sidebarLabel"><button id="add-tag-button"> Add Tag </button></h5>
+      <h5 class="offcanvas-title" id="sidebarLabel"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" style="position: absolute; bottom: 20px; left:20px;"> New Tag </button></h5>
+        <h5 class="offcanvas-title" id="sidebarLabel"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal2" style="position: absolute; bottom: 20px; left:200px;"> Add Tag </button></h5>
     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close" id="closeBtn"></button>
   </div>
   <div class="offcanvas-body">
@@ -10,22 +19,69 @@
       <div class="col">
            <form action="{% url 'page' page.id %}" method="post">
                {% csrf_token %}
-                    <button class="bi bi-plus-square-dotted"></button></form>
+            <button type="submit" name="add_notebook_submit" class="bi bi-plus-square-dotted"></button>
+           </form>
       </div>
           {% for p in page.notebook.pages.all %}
               <div class="col">
-                  <a href={% url 'page' p.id %}> <button id="page-button">page {{ forloop.counter }}</button></a>
+                  <a href={% url 'page' page.id %}> <button id="page-button">page {{ forloop.counter }}</button></a>
               </div>
           {% endfor %}
       </div>
     </div>
   </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+
+
+<div class="modal fade" id="exampleModal" >
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">New Tag</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                {{ notebook_tag_form.media }}
+                <form action="{% url 'page' page.id %}" method="post">
+                    {% csrf_token %}
+                    {% include 'partials/bootstrap_form.html' with form=notebook_tag_form %}
+                    <input type="submit" name="notebook_tag_submit" value ="Create tag" class="btn btn-primary">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="exampleModal2" >
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Tag To Page</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                {{ sidebar_note_tag_form.media }}
+                <form action="{% url 'page' page.id %}" method="post">
+                    {% csrf_token %}
+                    {% include 'partials/bootstrap_form.html' with form=sidebar_note_tag_form %}
+                    <input type="submit" name="notebook_tag_submit1" value ="Add Tag1" class="btn btn-primary">
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 
 
-<script>
-  $("#add-tag-button").click(function() {
-      const color = prompt('Enter a color');
-    $("#page-button").css("background-color", color);
-  });
-</script>
+
+
+
+
+
+
+
+
