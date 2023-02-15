@@ -2,70 +2,66 @@
 {% block content %}
 
 
-<div style="height: 600px">
-    <ul class="folder-nav">
-      <li style="background-color: white;font-size:23px; font-style: bold;">
+<div style="height: 600px;">
+    <ul class="folder-nav" style="margin-top: 20px;">
+      <li style="background-color: white; font-size: 22px; color: rgb(245, 93, 66);">
           Name
       </li>
       <li>
-        <button id="addChoice" data-bs-toggle="modal" data-bs-target="#add" style="margin-right: 20px">
-          <span style="margin-left:30px">New</span>
+        <button id="addChoice" data-bs-toggle="modal" data-bs-target="#add" style="margin-right: 20px; color: rgb(245, 93, 66);">
+          <span style="margin-left: 28px; color: rgb(245, 93, 66); font-size: 15px;">New</span>
         </button>
       </li>
     </ul>
 <div class="folder-path">
-><a href="{%url 'folders_tab' %}" style="color:#1b1b1b;margin-left:20px"><button class="folder-button" style="font-size:20px; background-color:white;">Home</button></a>
+><a href="{%url 'folders_tab' %}" style="color: #1b1b1b; margin-left: 20px;"><button class="folder-button" style="font-size: 20px; background-color: white; color: rgb(245, 93, 66);">Home</button></a>
 {% if folder %}
 {% for item in folder.get_path %}
-  ><a href="{% url 'sub_folders_tab' item.id%}" style="color:#1b1b1b;margin-left:20px"><button class="folder-button" style="font-size:20px; background-color:white;">{{item.folder_name}}</button></a>
+  ><a href="{% url 'sub_folders_tab' item.id%}" style="color: #1b1b1b; margin-left: 20px;"><button class="folder-button" style="font-size: 20px; background-color: white;">{{item.folder_name}}</button></a>
 {% endfor %}
 {% endif %}
 </div>
   <div class="folder-container">
     <div class="container">
           {% for item in items %}
-              <div class="col" style="margin-left:-60px; width:100%; display: flex; justify-content: space-between; padding: 20px;">
-          <div class="col" style="margin-left:-90px; width:60%;">
+              <div class="col" style="margin-top: 30px; margin-left: -60px; width: 15%; display: flex; justify-content: space-between; padding: 20px;">
+          <div class="col" style="margin-left: -90px; width: 60%;">
                 {% if item.get_type == "Folder" %}
                 <form action="{% url 'sub_folders_tab' item.id %}" method="get">
-                    <button id = "folder_img" >
-                        <span style="margin-left:40px">{{ item.folder_name }}</span>
+                    <button id = "folder_img">
+                        <span style="margin-left: 40px; color: rgb(245, 93, 66); font-size: 20px;">{{ item.folder_name }}</span>
                     </button>
                 </form>
                 {% else %}
                  <form action="{% url 'page' item.last_page.id %}" method="get">
-                    <button id="notebook_img" style="text-align: left; ">
-                        <span style="margin-left:40px">{{ item.notebook_name }}
+                    <button id="notebook_img" style="text-align: left;">
+                        <span style="margin-left: 40px; color: rgb(245, 93, 66); font-size: 20px;">{{ item.notebook_name }}
                         </span>
                     </button>
                  </form>
                 {% endif %}
         </div>
-
                     {% if item.get_type == "Folder" %}
                         <div class="dropdown">
-                          <button class="dropbtn">Options</button>
-                          <div class="dropdown-content">
-                            <a href="{% url 'delete_folder_tab' item.id %}">Delete</a>
-                            <a href="#">Link 2</a>
-                            <a href="#">Link 3</a>
+                          <button class="dropbtn" style="color: rgb(245, 93, 66);">Options</button>
+                          <div class="dropdown-content" style="color: rgb(245, 93, 66);">
+                            <a href="{% url 'delete_folder_tab' item.id %}" style="color: rgb(245, 93, 66);">Delete</a>
+                            <a href="#" style="color: rgb(245, 93, 66);">Link 2</a>
+                            <a href="#" style="color: rgb(245, 93, 66);">Link 3</a>
                           </div>
                         </div>
                     {% else %}
                     <div class="dropdown">
-                      <button class="dropbtn">Options</button>
-                      <div class="dropdown-content">
-                        <a href="{% url 'delete_notebook_tab' item.id %}">Delete</a>
-                        <a href="#">Link 2</a>
-                        <a href="#">Link 3</a>
+                      <button class="dropbtn" style="color: rgb(245, 93, 66);">Options</button>
+                      <div class="dropdown-content" style="color: rgb(245, 93, 66);">
+                        <a href="{% url 'delete_notebook_tab' item.id %}" style="color: rgb(245, 93, 66);">Delete</a>
+                        <a href="#" style="color: rgb(245, 93, 66);">Link 2</a>
+                        <a href="#" style="color: rgb(245, 93, 66);">Link 3</a>
                       </div>
                     </div>
                     {% endif %}
-
               </div>
           {% endfor %}
-
-
     </div>
   </div>
 <br>
@@ -89,7 +85,7 @@
     position: absolute;
     background-color: #f1f1f1;
     min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     z-index: 1;
   }
   
