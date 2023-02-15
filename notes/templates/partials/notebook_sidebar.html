@@ -1,13 +1,12 @@
-<div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="sidebar" aria-labelledby="sidebarLabel">
+<div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="sidebar" aria-labelledby="sidebarLabel" style="color: rgb(245, 93, 66);">
   <div class="offcanvas-header">
-    <h5 class="offcanvas-title" id="sidebarLabel">{{ page.notebook.notebook_name}}</h5>
+    <h5 class="offcanvas-title" id="sidebarLabel" style="color: rgb(245, 93, 66);">{{ page.notebook.notebook_name}}</h5>
     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close" id="closeBtn"></button>
   </div>
   <div class="offcanvas-body">
 <div class="container">
       <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
       <div class="col">
-
            <form action="{% url 'page' page.id %}" method="post">
                {% csrf_token %}
                     <button class="bi bi-plus-square-dotted"></button></form>
