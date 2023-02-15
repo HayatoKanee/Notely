@@ -116,8 +116,6 @@ class FolderForm(forms.ModelForm):
 
 
 from django.utils.safestring import mark_safe
-
-
 class TagImageChoiceField(ModelChoiceField):
     def label_from_instance(self, obj):
         return mark_safe('{} {}'.format('&#x25CF', obj.title))

@@ -103,8 +103,7 @@ class Notebook(models.Model):
 class Page(models.Model):
     notebook = models.ForeignKey(Notebook, related_name="pages", on_delete=models.CASCADE)
     drawing = models.TextField(blank=True)
-    last_page_of = models.OneToOneField(Notebook, related_name="last_page", on_delete=models.CASCADE, null=True,
-                                        blank=True)
+    last_page_of = models.OneToOneField(Notebook, related_name="last_page", on_delete=models.CASCADE, null=True, blank=True)
     code = models.TextField(blank=True)
 
     class Meta:
@@ -173,5 +172,7 @@ class Event(models.Model):
 class Reminder(models.Model):
     event = models.ForeignKey(Event, related_name="reminders", on_delete=models.CASCADE)
     reminder_name = models.CharField(max_length=50, blank=False)
-    alert_time = models.DateTimeField()
-
+    alert_date = models.TimeField(auto_now=False, auto_now_add=False )
+    alert_time = models.DateField(auto_now=False, auto_now_add=False )
+    pages = models.ForeignKey(Page, related_name="pages" , on_delete = models.CASCADE)
+    
