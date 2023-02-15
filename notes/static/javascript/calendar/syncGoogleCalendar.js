@@ -1,67 +1,135 @@
-gapi.load('client:auth2', function() {
-    console.log("test1")
-  gapi.client.init({
-    apiKey: 'AIzaSyDOfaJ3As7QXgrdKUrOv541oFDZutYE0q8',
-    clientId: '588566071525-5p0gps8skl9gr5j9919r8gob501jqa01.apps.googleusercontent.com',
-    scope: 'https://www.googleapis.com/auth/calendar'
-  }).then(function() {
-    console.log("test2")
-    if (gapi.auth2.getAuthInstance().isSignedIn.get()) {
-        console.log("User is signed in");
-      } else {
-        console.log("User is not signed in");
-      }
-    gapi.auth2.getAuthInstance().signIn();
-    if (gapi.auth2.getAuthInstance().isSignedIn.get()) {
-        console.log("User is signed in");
-      } else {
-        console.log("User is not signed in");
-      }
-    gapi.client.load('calendar', 'v3', function() {
-        gapi.client.calendar.events.list({
-          calendarId: 'primary',
-          timeMin: (new Date()).toISOString(),
-          maxResults: 100,
-          singleEvents: true,
-          orderBy: 'startTime'
-        }).then(function(response) {
-          var events = response.result.items;
-          $('#calendar').fullCalendar({
-            events: events,
-            eventClick: function(calEvent, jsEvent, view) {
-              alert('Event: ' + calEvent.title);
-              alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
-              alert('View: ' + view.name);
-            }
-          });
-        });
+
+
+function decodeJwtResponse(token) {
+    let base64Url = token.split('.')[1]
+    let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    let jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+    return JSON.parse(jsonPayload)
+}
+
+let responsePayload;
+
+// https://developers.google.com/identity/gsi/web/guides/handle-credential-responses-js-functions
+window.handleCredentialResponse = (response) => {
+    // decodeJwtResponse() is a custom function defined by you
+    // to decode the credential response.
+    responsePayload = decodeJwtResponse(response.credential);
+    
+    console.log("ID: " + responsePayload.sub);
+    console.log('Full Name: ' + responsePayload.name);
+    console.log('Given Name: ' + responsePayload.given_name);
+    console.log('Family Name: ' + responsePayload.family_name);
+    console.log("Image URL: " + responsePayload.picture);
+    console.log("Email: " + responsePayload.email);
+    console.log("Calendar ID: " + responsePayload.calendarId);
+
+    }
+
+    // https://developers.google.com/calendar/api/quickstart/js
+    const CLIENT_ID = '588566071525-5p0gps8skl9gr5j9919r8gob501jqa01.apps.googleusercontent.com';
+    const API_KEY = 'AIzaSyDOfaJ3As7QXgrdKUrOv541oFDZutYE0q8';
+
+    const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest';
+    const SCOPES = 'https://www.googleapis.com/auth/calendar';
+
+    function handleClientLoad() {
+        gapi.client.setApiKey(apiKey);
+        window.setTimeout(checkAuth, 1);
+     }
+
+
+
+function makeApiCall(){
+    gapi.client.load('calendar', 'v3', function () { // load the calendar api (version 3)
+                var request = gapi.client.calendar.events.insert
+                ({
+                    'calendarId': '24tn4fht2tr6m86efdiqqlsedk@group.calendar.google.com', 
+    // calendar ID which id of Google Calendar where you are creating events. this can be copied from your Google Calendar user view.
+
+                    "resource": resource 	// above resource will be passed here
+                });                
+})}
+
+    let tokenClient;
+    let gapiInited = false;
+    let gisInited = false;
+
+    document.getElementById('authorize_button').style.visibility = 'hidden';
+    document.getElementById('signout_button').style.visibility = 'hidden';
+// Callback after api.js is loaded.
+
+    function gapiLoaded() {
+      gapi.load('client', initializeGapiClient);
+    }
+
+//Callback after the API client is loaded. Loads the discovery doc to initialize the API.
+
+    async function initializeGapiClient() {
+      await gapi.client.init({
+        apiKey: API_KEY,
+        discoveryDocs: [DISCOVERY_DOC],
       });
-  });
-});
+      gapiInited = true;
+      maybeEnableButtons();
+    }
 
-$(document).ready(function() {
-    $('#login-google').on('click', function() {
-      gapi.auth2.getAuthInstance().signIn();
-    });
-  });
+//Callback after Google Identity Services are loaded.
 
-  gapi.client.calendar.events.insert({
-    calendarId: 'primary',
-    resource: {
-      summary: 'Test Event',
-      start: {
-        dateTime: '2023-02-11T10:00:00',
-        timeZone: 'America/Los_Angeles'
-      },
-      end: {
-        dateTime: '2023-02-11T11:00:00',
-        timeZone: 'America/Los_Angeles'
+    function gisLoaded() {
+      tokenClient = google.accounts.oauth2.initTokenClient({
+        client_id: CLIENT_ID,
+        scope: SCOPES,
+        callback: '', // defined later
+      });
+      gisInited = true;
+      maybeEnableButtons();
+    }
+
+//Enables user interaction after all libraries are loaded.
+
+    function maybeEnableButtons() {
+      if (gapiInited && gisInited) {
+        document.getElementById('authorize_button').style.visibility = 'visible';
       }
     }
-  }).then(function(response) {
-    if (gapi.auth2.getAuthInstance().isSignedIn.get()) {
-      console.log(response.result);
-    } else {
-      console.log('User is not signed in.');
+
+// Sign in the user upon button click.
+
+    function handleAuthClick() {
+      tokenClient.callback = async (resp) => {
+        if (resp.error !== undefined) {
+          throw (resp);
+        }
+        document.getElementById('signout_button').style.visibility = 'visible';
+        document.getElementById('authorize_button').innerText = 'Refresh';
+        await listUpcomingEvents();
+      };
+
+      if (gapi.client.getToken() === null) {
+        // Prompt the user to select a Google Account and ask for consent to share their data
+        // when establishing a new session.
+        tokenClient.requestAccessToken({prompt: 'consent'});
+      } else {
+        // Skip display of account chooser and consent dialog for an existing session.
+        tokenClient.requestAccessToken({prompt: ''});
+      }
     }
-  });
+
+
+     //Sign out the user upon button click.
+
+    function handleSignoutClick() {
+      const token = gapi.client.getToken();
+      if (token !== null) {
+        google.accounts.oauth2.revoke(token.access_token);
+        gapi.client.setToken('');
+        document.getElementById('content').innerText = '';
+        document.getElementById('authorize_button').innerText = 'Authorize';
+        document.getElementById('signout_button').style.visibility = 'hidden';
+      }
+    }
+
+    
+

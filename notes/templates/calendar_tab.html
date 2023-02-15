@@ -1,19 +1,33 @@
 {% extends 'base_content.html' %}
  {% block content %}
      <div class="container">
-      <div id='calendar'></div>
-   </div>
-          <button id="addEvent" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#eventModal">
+      <div id='calendar' style="color: rgb(245, 93, 66)"></div>
+              <button id="addEvent" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#eventModal">
                 Add New Event
           </button>
-          <div class="g-signin2" data-onsuccess="googleSignIn"></div>
-        </div>   
+             
+
+          <script src="https://accounts.google.com/gsi/client" async defer></script>
+            <div id="g_id_onload"
+                data-client_id="588566071525-5p0gps8skl9gr5j9919r8gob501jqa01.apps.googleusercontent.com"
+                data-callback="handleCredentialResponse">
+            </div>
+            <div id="googleSignIn" class="g_id_signin" data-type="standard"></div>
+
+            <button id="authorize_button" onclick="handleAuthClick()">Authorize</button>
+    <button id="signout_button" onclick="handleSignoutClick()">Sign Out</button>
+
+    <pre id="content" style="white-space: pre-wrap;"></pre>
+
+   
+
+   </div>
           <div class="modal fade" id="eventModal" tabindex="-1">
             <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title">Event Modal</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="modal-content" style="color: rgb(245, 93, 66)">
+                    <div class="modal-header">
+                      <h5 class="modal-title" style="color: rgb(245, 93, 66)">Event Modal</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                         {{ event_form.media }}
@@ -52,38 +66,15 @@
           </div>
                 
 
-            {% comment %} <button id="login-google"></button> {% endcomment %}
-
-            {% comment %} <script src="https://accounts.google.com/gsi/client" async defer></script>
-                        <div id="g_id_onload"
-                data-client_id="588566071525-5p0gps8skl9gr5j9919r8gob501jqa01.apps.googleusercontent.com"
-                data-context="signin"
-                data-ux_mode="popup"
-                data-callback="onSignIn"
-                data-itp_support="true">
-            </div>
-
-            <div class="g_id_signin"
-                data-type="standard"
-                data-shape="rectangular"
-                data-theme="outline"
-                data-text="signin_with"
-                data-size="large"
-                data-logo_alignment="left">
-            </div> {% endcomment %}
-
-    {% include 'partials/eventDetail.html' %}
+    {% include 'partials/eventModal.html' %}
  {% endblock %}
  {% block scripts %}
 {% load static%}
   <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.4/index.global.min.js'></script>
   <script src="https://apis.google.com/js/platform.js" async defer></script>
     <meta name="google-signin-client_id" content="588566071525-5p0gps8skl9gr5j9919r8gob501jqa01.apps.googleusercontent.com">
+    <meta name="referrer" content="no-referrer-when-downgrade">
 <script>
-    $('#id_tag').on('change', function (){
-        let color = $(this).find(':selected').attr('style')
-        $(this).attr('style', color);
-    });
     const calendarEl = document.getElementById('calendar');
     const calendar = new FullCalendar.Calendar(calendarEl, {
         headerToolbar: {
@@ -93,31 +84,30 @@
         },
         initialView: 'dayGridMonth',
         events: [
-            {% for i in events %}
+            {% for event in events %}
             {
-                id: "{{i.id}}",
-                title: "{{ i.title}}",
-                start: '{{ i.start_time|date:"Y-m-d H:i:s" }}',
-                end: '{{ i.end_time|date:"Y-m-d H:i:s" }}'
+                id: "{{event.id}}",
+                title: "{{ event.title}}",
+                start: '{{ event.start_time|date:"Y-m-d H:i:s" }}',
+                end: '{{ event.end_time|date:"Y-m-d H:i:s" }}',
+                backgroundColor: '{{ event.tags.first.color }}',
+                tags: "{% for tag in event.tags.all %}{{ tag.title }},{% endfor %}".slice(0,-1)
             },
             {% endfor %}
         ],
-        eventClick:  function(e) {
+        eventClick: function(e) {
+             $.ajax({
+                url: "{% url 'event_detail' 0 %}".replace("0", e.event.id),
+                success: function(data) {
+                  $('#detail').html(data.html);
+                },
+                error: function() {
+                  alert('Error retrieving event detail');
+                }
+              });
                     $('#eventDetail').modal('show');
-                    let link = "{% url 'delete_event' 1%}";
-                    let index = link.lastIndexOf('/');
-                    let newStr = link.substring(0, index+1);
-                    let title = e.event.title;
-                    $('#title').html('Title: '+title);
-                    let description = e.event.description;
-                    $('#description').html('Description: '+description);
-                    let tag = e.event.tag;
-                    $('#tag').html('Tag: '+tag);
-                    let start_time = e.event.start;
-                    $('#start_time').html('Start_time: '+start_time);
-                    let end_time = e.event.end
-                    $('#end_time').html('End_time: '+end_time);
-                   $('#delete_link').attr('href', newStr + e.event.id)
+                   $('#delete_link').attr('href', "{% url 'delete_event' 0 %}".replace("0", e.event.id))
+
                 },
                 editable: true,
             dateClick: function(info) {
@@ -128,11 +118,8 @@
             const start = event.start.toISOString();
             const end = event.end.toISOString();
             // send updated start and end times to server to update database
-            let link = "{% url 'update_event' 1%}";
-            let index = link.lastIndexOf('/');
-            let newStr = link.substring(0, index+1);
             $.ajax({
-                url: newStr+event.id,
+                url: "{% url 'update_event' 0 %}".replace("0", event.id),
                 type: 'POST',
                 data: {
                     start: start,
@@ -141,19 +128,49 @@
               }
             });
           },
+         customButtons: {
+            selectAll:{
+                text: '•All',
+                 click: function() {
+                     calendar.getEvents().forEach(function(event) {
+                         event.setProp('display', 'auto');
+                     });
+                 }
+            },
+    {% for tag in tags %}
+        {{ forloop.counter }}: {
+          text: '•{{ tag }}',
+          click: function() {
+             const tag = '{{ tag.title }}';
+          calendar.getEvents().forEach(function(event) {
+            if (event.extendedProps.tags.includes(tag)) {
+              event.setProp('display', 'auto');
+            } else {
+              event.setProp('display', 'none');
+            }
+          });
+          calendar.rerenderEvents();
+          }
+        },
+    {% endfor %}
+      },
+            footerToolbar:{
+                 start: '',
+  center: '',
+  end: "selectAll {% for tag in tags %}{{ forloop.counter }} {% endfor %}".slice(0, -1)
+            },
         });
-
     calendar.render();
+        {% for tag in tags %}
+        console.log($('.fc-{{ forloop.counter }}-button'));
+        $('.fc-{{ forloop.counter }}-button').css('color', '{{ tag.color }}')
 
-    function googleSignIn(googleUser) {
-        // Get the ID token and basic profile information from the Google user object
-        var id_token = googleUser.getAuthResponse().id_token;
-        var profile = googleUser.getBasicProfile();
-      
-        console.log(id_token)
-        console.log(profile)
-        console.log("testing")
-      }
+    {% endfor %}
+
+    document.getElementById("googleSignIn").addEventListener("click", function() {
+        console.log("User has signed in");
+      });
+
     var tagModal = document.getElementById('tagModal')
     tagModal.addEventListener('hidden.bs.modal', function (event) {
     var eventModal = document.getElementById('eventModal')
@@ -162,6 +179,7 @@
   })
     </script>
     <link rel="stylesheet" href="{%static 'css_style/calendarTabStyle.css' %}"/>
-    <script src="https://apis.google.com/js/api.js"></script>
     <script src="{%static 'javascript/calendar/syncGoogleCalendar.js'%}"></script>
+    <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
+    <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
 {% endblock %}
