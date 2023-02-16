@@ -128,9 +128,14 @@
     {% include 'partials/symbols.html' %}
 {% endblock %}
 {% block scripts %}
+    <style>
+    .cm-scroller { overflow: auto; min-height: 200px;max-height: 350px }
+    </style>
     {% load static %}
     <script src="{%static 'javascript/note-taking/fabric.min.js'%}"></script>
+        <script src="{%static 'javascript/note-taking/editor.bundle.js'%}"></script>
     <script>
+    cm6.setContent("{{ page.code|escapejs }}");
     const page_id = "{{ page.id }}";
     const drawing = '{{ page.drawing|safe}}';
     function getCookie(name) {
@@ -149,20 +154,16 @@
         return cookieValue;
     }
     const csrf = getCookie('csrftoken');
+
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
+
         <script src="{%static 'javascript/note-taking/draw.js'%}"></script>
         <script src="{%static 'javascript/note-taking/jscolor.js'%}"></script>
-        <script src="{%static 'javascript/note-taking/codemirror.js'%}"></script>
-        <link rel="stylesheet" href="{%static 'css_style/codemirror.css'%}">
-        <script src="{%static 'javascript/mode/python.js'%}"></script>
-        <script src="{%static 'javascript/mode/javascript.js'%}"></script>
-        <script src="{%static 'javascript/mode/django.js'%}"></script>
 
         <script src="{% static 'javascript/download.js'%}"></script>
         <script src="{% static 'javascript/fileSaver.min.js'%}"></script>
         <script src="{% static 'javascript/canvas-toBlob.js'%}"></script>
-        <script src="{%static 'javascript/note-taking/codeEditor.js'%}"></script>
         <script src="{%static 'javascript/note-taking/symbols.js'%}"></script>
         <script src="{% static 'javascript/note-taking/linkPage.js'%}"></script>
         <script src="{% static 'javascript/note-taking/table.js'%}"></script>

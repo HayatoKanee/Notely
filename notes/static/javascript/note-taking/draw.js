@@ -299,7 +299,7 @@ function save(sync){
         url: "/save_page/"+page_id,
         data: {
             data: JSON.stringify(canvas.toJSON(['link'])),
-            code: editor.getValue(),
+            code: cm6.getContent(),
             csrfmiddlewaretoken: csrf
         }
     });
