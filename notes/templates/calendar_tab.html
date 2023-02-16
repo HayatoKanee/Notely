@@ -12,12 +12,14 @@
                 data-client_id="588566071525-5p0gps8skl9gr5j9919r8gob501jqa01.apps.googleusercontent.com"
                 data-callback="handleCredentialResponse">
             </div>
-            <div id="googleSignIn" class="g_id_signin" data-type="standard"></div>
 
             <button id="authorize_button" onclick="handleAuthClick()">Authorize</button>
     <button id="signout_button" onclick="handleSignoutClick()">Sign Out</button>
 
     <pre id="content" style="white-space: pre-wrap;"></pre>
+
+    
+    
 
    
 
@@ -83,6 +85,8 @@
         right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
         },
         initialView: 'dayGridMonth',
+        {% comment %} googleCalendarApiKey: 'AIzaSyDOfaJ3As7QXgrdKUrOv541oFDZutYE0q8',
+        events: 'en.usa#holiday@group.v.calendar.google.com', {% endcomment %}
         events: [
             {% for event in events %}
             {

@@ -35,7 +35,7 @@ window.handleCredentialResponse = (response) => {
     const SCOPES = 'https://www.googleapis.com/auth/calendar';
 
     function handleClientLoad() {
-        gapi.client.setApiKey(apiKey);
+        gapi.client.setApiKey(API_KEY);
         window.setTimeout(checkAuth, 1);
      }
 
@@ -107,13 +107,16 @@ function makeApiCall(){
         await listUpcomingEvents();
       };
 
+    console.log("test1")
       if (gapi.client.getToken() === null) {
         // Prompt the user to select a Google Account and ask for consent to share their data
         // when establishing a new session.
         tokenClient.requestAccessToken({prompt: 'consent'});
+        console.log("test2", tokenClient)
       } else {
         // Skip display of account chooser and consent dialog for an existing session.
         tokenClient.requestAccessToken({prompt: ''});
+        console.log("test3")
       }
     }
 
@@ -130,6 +133,8 @@ function makeApiCall(){
         document.getElementById('signout_button').style.visibility = 'hidden';
       }
     }
+
+
 
     
 
