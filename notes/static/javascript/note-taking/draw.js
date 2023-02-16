@@ -214,8 +214,10 @@ const canvas = initCanvas('canvas');
 canvas.loadFromJSON(drawing, function(){
     canvas.getObjects().forEach(function(obj) {
     if (obj.link) {
-      obj.on('selected', function() {
-        window.location.href = this.link;
+      obj.on('mousedown', function(e) {
+          if(currentMode=='select') {
+              window.location.href = this.link;
+          }
       });
     }
   });
@@ -297,7 +299,7 @@ function save(sync){
         url: "/save_page/"+page_id,
         data: {
             data: JSON.stringify(canvas.toJSON(['link'])),
-            code: editor.getValue(),
+            code: cm6.getContent(),
             csrfmiddlewaretoken: csrf
         }
     });
