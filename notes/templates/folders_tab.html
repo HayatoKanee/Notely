@@ -1,21 +1,6 @@
 {% extends 'base_content.html' %}
 {% block content %}
 
-<<<<<<< HEAD
-
-<div style="height: 600px;">
-    <ul class="folder-nav" style="margin-top: 20px;">
-      <li style="background-color: white; font-size: 22px; color: rgb(245, 93, 66);">
-          Name
-      </li>
-      <li>
-        <button id="addChoice" data-bs-toggle="modal" data-bs-target="#add" style="margin-right: 20px; color: rgb(245, 93, 66);">
-          <span style="margin-left: 28px; color: rgb(245, 93, 66); font-size: 15px;">New</span>
-        </button>
-      </li>
-    </ul>
-=======
->>>>>>> 389841cbee9cc61c2501f98f05827de631a2431d
 <div class="folder-path">
 ><a href="{%url 'folders_tab' %}" style="color: #1b1b1b; margin-left: 20px;"><button class="folder-button" style="font-size: 20px; background-color: white; color: rgb(245, 93, 66);">Home</button></a>
 {% if folder %}
@@ -40,13 +25,8 @@
           <div class="col" style="margin-left: -90px; width: 60%;">
                 {% if item.get_type == "Folder" %}
                 <form action="{% url 'sub_folders_tab' item.id %}" method="get">
-<<<<<<< HEAD
                     <button id = "folder_img">
                         <span style="margin-left: 40px; color: rgb(245, 93, 66); font-size: 20px;">{{ item.folder_name }}</span>
-=======
-                    <button id = "folder_img" >
-                        <span style="margin-left:45px">{{ item.folder_name }}</span>
->>>>>>> 389841cbee9cc61c2501f98f05827de631a2431d
                     </button>
                 </form>
                 {% else %}
