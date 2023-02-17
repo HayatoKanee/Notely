@@ -199,7 +199,6 @@ def save_page(request, page_id):
             title = editor['title']
             code = editor['code']
             editor = Editor.objects.create(title=title, code=code, page=page)
-            print(editor.code)
         return JsonResponse({'status': 'success'})
     return JsonResponse({'status': 'fail'})
 
