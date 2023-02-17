@@ -19,7 +19,7 @@
       <div class="col">
            <form action="{% url 'page' page.id %}" method="post">
                {% csrf_token %}
-            <button type="submit" name="add_notebook_submit" class="bi bi-plus-square-dotted"></button>
+            <button type="submit" name="add_page_submit" class="bi bi-plus-square-dotted"></button>
            </form>
       </div>
           {% for p in page.notebook.pages.all %}
