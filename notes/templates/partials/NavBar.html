@@ -20,15 +20,13 @@
               <td>
                 <img src="{{ user.profile.mini_gravatar }}" alt="Gravatar of {{ user.username }}" class="rounded-circle">
                   </button>
-                  <div class="nav-item dropdown">
-          <div class="dropdown-menu" aria-labelledby="user-account-dropdown">
-            <a class="dropdown-item nav-link nav-link-drop" href="{% url 'profile_tab' %}" style="color: rgb(245, 93, 66, 0.8);">Profile</a>
-              <a class="dropdown-item nav-link nav-link-drop" href="{% url 'gravatar' %}" target="_blank"  style="color: rgb(245, 93, 66, 0.8);">Change Gravatar</a>
-            <a class="dropdown-item nav-link nav-link-drop" href="{% url 'password_tab' %}"  style="color: rgb(245, 93, 66, 0.8);">Change Password</a>
-            <hr class="dropdown-divider">
-              <a class="dropdown-item nav-link nav-link-dro" href="{% url 'log_out' %}"  style="color: rgb(245, 93, 66, 0.8);">Log out</a>
-          </div>
-                      </div>
+              <div class="dropdown-menu" aria-labelledby="user-account-dropdown">
+                <a class="dropdown-item nav-link nav-link-drop" href="{% url 'profile_tab' %}" style="color: rgb(245, 93, 66, 0.8)">Profile</a>
+                  <a class="dropdown-item nav-link nav-link-drop" href="{% url 'gravatar' %}" target="_blank"  style="color: rgb(245, 93, 66, 0.8)">Change Gravatar</a>
+                <a class="dropdown-item nav-link nav-link-drop" href="{% url 'password_tab' %}"  style="color: rgb(245, 93, 66, 0.8)">Change Password</a>
+                <hr class="dropdown-divider">
+                  <a class="dropdown-item nav-link nav-link-drop" href="{% url 'log_out' %}"  style="color: rgb(245, 93, 66, 0.8)">Log out</a>
+              </div>
                </tr>
                  </li>
         </li>
@@ -36,39 +34,3 @@
       </div>
   </div>
 </nav>
-
-{#<header class="p-3 mb-3 border-bottom">#}
-{#    <div class="container">#}
-{##}
-{#        <nav class="navbar navbar-expand-lg shadow-sm">#}
-{#  <div class="container-fluid">#}
-{#      <img class="logo img-fluid">#}
-{#      <a class="navbar-brand fw-bold brand"data-bs-toggle="offcanvas" href="#sidebar" role="button" aria-controls="sidebar">#}
-{#           <span class="navbar-toggler-icon"></span>#}
-{#      </a>#}
-{#      <div class="container-fluid collapse navbar-collapse px-2" id="navbarSupportedContent" style="justify-content: flex-end;">#}
-{#          <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">#}
-{#          <li><a href="{% url 'folders_tab' %}" class="nav-link px-2 link-secondary ">Notes</a></li>#}
-{#          <li><a href="{% url 'calendar_tab'%}"class="nav-link px-2 link-dark">Calendar</a></li>#}
-{#        </ul>#}
-{#      <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">#}
-{##}
-{#        <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">#}
-{#          <input type="search" class="form-control" placeholder="Search..." aria-label="Search">#}
-{#        </form>#}
-{##}
-{#        <div class="dropdown text-end">#}
-{#          <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">#}
-{#            <img src="{{ user.profile.gravatar }}" alt="your profile photo" width="32" height="32" class="rounded-circle">#}
-{#          </a>#}
-{#          <ul class="dropdown-menu text-small" style="color: rgb(242, 69, 39);">#}
-{#            <li><a class="dropdown-item" href="{% url 'profile_tab' %}" style="color: rgb(242, 69, 39, 0.5);">Profile</a></li>#}
-{#            <li><a class="dropdown-item" href="{% url 'gravatar' %}"  target="_blank" style="color: rgb(242, 69, 39, 0.5);">Change Gravatar</a></li>#}
-{#            <li><a class="dropdown-item" href="{% url 'password_tab' %}" style="color: rgb(242, 69, 39, 0.5);">Change Password</a></li>#}
-{#            <li><hr class="dropdown-divider"></li>#}
-{#            <li><a class="dropdown-item" href="{% url 'log_out' %}" style="color: rgb(242, 69, 39, 0.5);">Log out</a></li>#}
-{#          </ul>#}
-{#        </div>#}
-{#      </div>#}
-{#    </div>#}
-{#  </header>#}

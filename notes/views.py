@@ -104,7 +104,6 @@ def calendar_tab(request):
         for tag in event.tags.all():
             tags.add(tag)
 
-    print(tags)
     if request.method == "POST":
         if 'event_submit' in request.POST:
             event_form = EventForm(request.user, request.POST)
