@@ -28,7 +28,6 @@ urlpatterns = [
     path('delete_folder_tab/<folder_id>', views.delete_folder, name='delete_folder_tab'),
     path('delete_notebook_tab/<folder_id>', views.delete_notebook, name='delete_notebook_tab'),
     path('calendar_tab/', views.calendar_tab, name='calendar_tab'),
-    # path('page/<page_id>', views.notebook_tag_color, name='notebook_sidebar'),
     path('profile_tab/', views.profile_tab, name='profile_tab'),
     path('password_tab/', views.password_tab, name='password_tab'),
     path('gravatar/', views.gravatar, name='gravatar'),
@@ -37,4 +36,5 @@ urlpatterns = [
     path('delete_event/<event_id>', views.delete_event, name='delete_event'),
     path('update_event/<event_id>', views.update_event, name='update_event'),
     path('event_detail/<event_id>', views.event_detail, name='event_detail'),
+    path('page_detail/<page_id>', views.page_detail, name='page_detail'),
 ]

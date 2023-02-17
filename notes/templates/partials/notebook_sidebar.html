@@ -25,6 +25,7 @@
           {% for p in page.notebook.pages.all %}
               <div class="col">
                   <a href="{% url 'page' page.id %}"> <button id="page-button">page {{ forloop.counter }}</button></a>
+{#                <button class="new-button" data-page-id="{{ p.id }}">New Button</button>#}
               </div>
           {% endfor %}
       </div>
@@ -76,9 +77,27 @@
     </div>
 </div>
 
-
-
-
+{#<script>#}
+{#    const newButtons = document.querySelectorAll('.new-button');#}
+{##}
+{#    newButtons.forEach(button => {#}
+{#      button.addEventListener('click', event => {#}
+{#        const pageId = button.getAttribute('data-page-id');#}
+{#        console.log(`New button clicked for page ${pageId}`);#}
+{#        // Perform any other actions you want to do with the page ID#}
+{#          $.ajax({#}
+{#                url: "{% url 'page_detail' 0 %}".replace("0", pageId),#}
+{#                success: function(data) {#}
+{#                  $('#detail').html(data.html);#}
+{#                },#}
+{#                error: function() {#}
+{#                  alert('Error retrieving event detail');#}
+{#                }#}
+{#              });#}
+{#      });#}
+{#    });#}
+{##}
+{#</script>#}
 
 
 
