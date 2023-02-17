@@ -300,7 +300,6 @@ function save(sync){
         const code = editor.state.doc.toString();
         const aElement = aElements.item(i);
         const title = aElement.textContent.trim().slice(0,-1);
-        console.log(code);
         editorsData.push({
           title: title,
           code: code
