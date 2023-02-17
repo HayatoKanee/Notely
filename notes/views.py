@@ -258,7 +258,7 @@ def page_detail(request, page_id):
         if form.is_valid():
             form.save()
             messages.add_message(request, messages.SUCCESS, "page updated!")
-            return redirect('calendar_tab')
+            return redirect('page', page.id)
     form = PageForm(instance=page)
     html = render_to_string('partials/page_detail.html', {'form': form, 'page': page}, request=request)
     return JsonResponse({'html': html})

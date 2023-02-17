@@ -4,7 +4,7 @@
           <input type="submit" value="Save Changes" class="btn-chocolate fw-bold" style="color: rgb(245, 93, 66)">
         </form>
 <div class="collapse multi-collapse show" style="font-size: 20px;word-wrap: break-word;">
-        <p id="tag" style="font-size: 15px; color: rgb(245, 93, 66)">Tag: {% for tag in event.tags.all %}
+        <p id="tag" style="font-size: 15px; color: rgb(245, 93, 66)">Tag: {% for tag in page.tags.all %}
             <span style="color: {{ tag.color }}">&#x25CF</span>{{tag}}
         {% endfor %}</p>
 </div>

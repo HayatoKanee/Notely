@@ -210,7 +210,7 @@ class PageForm(forms.ModelForm):  # The form for linking the tag and the page.
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['tag'].widget = TagSelectWidget()
-        self.fields['tag'].queryset = PageTag.objects.filter(user=user)
+        self.fields['tag'].queryset = PageTag.objects.all()
 
     def save(self):
         tag = super().save(commit=False)

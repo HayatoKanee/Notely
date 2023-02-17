@@ -19,13 +19,13 @@
       <div class="col">
            <form action="{% url 'page' page.id %}" method="post">
                {% csrf_token %}
-            <button type="submit" name="add_notebook_submit" class="bi bi-plus-square-dotted"></button>
+            <button type="submit" name="add_page_submit" class="bi bi-plus-square-dotted"></button>
            </form>
       </div>
           {% for p in page.notebook.pages.all %}
               <div class="col">
                   <a href="{% url 'page' page.id %}"> <button id="page-button">page {{ forloop.counter }}</button></a>
-{#                <button class="new-button" data-page-id="{{ p.id }}">New Button</button>#}
+                <button class="new-button" data-page-id="{{ p.id }}">New Button</button>
               </div>
           {% endfor %}
       </div>
@@ -77,27 +77,29 @@
     </div>
 </div>
 
-{#<script>#}
-{#    const newButtons = document.querySelectorAll('.new-button');#}
-{##}
-{#    newButtons.forEach(button => {#}
-{#      button.addEventListener('click', event => {#}
-{#        const pageId = button.getAttribute('data-page-id');#}
-{#        console.log(`New button clicked for page ${pageId}`);#}
-{#        // Perform any other actions you want to do with the page ID#}
-{#          $.ajax({#}
-{#                url: "{% url 'page_detail' 0 %}".replace("0", pageId),#}
-{#                success: function(data) {#}
-{#                  $('#detail').html(data.html);#}
-{#                },#}
-{#                error: function() {#}
-{#                  alert('Error retrieving event detail');#}
-{#                }#}
-{#              });#}
-{#      });#}
-{#    });#}
-{##}
-{#</script>#}
+{% include 'partials/pageModal.html' %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    const newButtons = document.querySelectorAll('.new-button');
+
+    newButtons.forEach(button => {
+      button.addEventListener('click', event => {
+        const page_id = button.getAttribute('data-page-id');
+             $.ajax({
+                url: "{% url 'page_detail' 0 %}".replace("0", page_id),
+                success: function(data) {
+                  $('#detail').html(data.html);
+                },
+                error: function() {
+                  alert('Error retrieving event detail');
+                }
+              });
+             $('#pageDetail').modal('show');
+             $('#delete_link').attr('href', "{% url 'delete_event' 0 %}".replace("0", e.event.id))
+      });
+    });
+
+</script>
 
 
 
