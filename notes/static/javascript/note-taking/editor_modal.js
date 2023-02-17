@@ -5,14 +5,19 @@ function clickEvent(e) {
 }
 function deleteEvent(e){
     e.preventDefault();
-    const tabId = $(e.target).closest('a[data-toggle="tab"]').attr('href');
-    const editorIndex = $(e.target).closest('li').index();
-    const editor = editors[editorIndex];
-    if (editor) {
-        editors.splice(editorIndex, 1);
+    if (editors.length === 1){
+        alert('you must keep at least one editor')
     }
-    $(tabId).remove();
-    $(e.target).closest('li').remove();
+    else {
+        const tabId = $(e.target).closest('a[data-toggle="tab"]').attr('href');
+        const editorIndex = $(e.target).closest('li').index();
+        const editor = editors[editorIndex];
+        if (editor) {
+            editors.splice(editorIndex, 1);
+        }
+        $(tabId).remove();
+        $(e.target).closest('li').remove();
+    }
 }
 
 function doubleClickEvent(e){
