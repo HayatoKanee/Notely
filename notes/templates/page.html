@@ -130,12 +130,19 @@
 {% block scripts %}
     <style>
     .cm-scroller { overflow: auto; min-height: 200px;max-height: 350px }
+    .closeBtn { background: none;border: none}
+    .closeBtn:hover {background-color: #e0e0e0;}
     </style>
     {% load static %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
     <script src="{%static 'javascript/note-taking/fabric.min.js'%}"></script>
         <script src="{%static 'javascript/note-taking/editor.bundle.js'%}"></script>
     <script>
-    cm6.setContent("{{ page.code|escapejs }}");
+    let counter = {{ page.editors.all|length|add:"1" }};
+    const editors = [];
+    {% for editor in page.editors.all %}
+        editors.push(cm6.createEditor('{{ editor.code|escapejs }}',"#code{{forloop.counter}}"))
+    {% endfor %}
     const page_id = "{{ page.id }}";
     const drawing = '{{ page.drawing|safe}}';
     function getCookie(name) {
@@ -156,8 +163,7 @@
     const csrf = getCookie('csrftoken');
 
     </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
-
+    <script src="{% static 'javascript/note-taking/editor_modal.js' %}"></script>
         <script src="{%static 'javascript/note-taking/draw.js'%}"></script>
         <script src="{%static 'javascript/note-taking/jscolor.js'%}"></script>
 

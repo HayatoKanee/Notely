@@ -1,3 +1,5 @@
+import json
+
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
@@ -6,7 +8,8 @@ from django.template.loader import render_to_string
 
 from .forms import SignUpForm, LogInForm, UserForm, ProfileForm, PasswordForm, FolderForm, NotebookForm, EventForm, \
     EventTagForm
-from .models import User, Folder, Notebook, Page, Event , Reminder
+from .models import User, Folder, Notebook, Page, Event, Editor, Reminder
+
 from django.contrib.auth.decorators import login_required
 from .helpers import login_prohibited, check_perm
 from django.contrib.auth.hashers import check_password
@@ -108,8 +111,8 @@ def calendar_tab(request):
         if 'event_submit' in request.POST:
             event_form = EventForm(request.user, request.POST)
             if event_form.is_valid():
-                if event_form.cleaned_data['reminder'] :
-                    Reminder.objects.create(event= event, reminder_time =event_form.cleaned_data['reminder'] )
+                if event_form.cleaned_data['reminder']:
+                    Reminder.objects.create(event=event, reminder_time=event_form.cleaned_data['reminder'])
                     messages.add_message(request, messages.SUCCESS, "reminder Created!")
                 event = event_form.save()
                 event.user = request.user
@@ -185,10 +188,12 @@ def page(request, page_id):
     return render(request, 'page.html', {'page': page})
 
 
+@login_required
+@check_perm('dg_edit_page', Page)
 def save_page(request, page_id):
     if request.method == 'POST':
-        data = request.POST.get('data')
-        code = request.POST.get('code')
+        canvas = request.POST.get('canvas')
+        editors = json.loads(request.POST.get('editors'))
         page = Page.objects.get(id=page_id)
         notebook = page.notebook
         last_page = notebook.last_page
@@ -196,9 +201,13 @@ def save_page(request, page_id):
         last_page.save()
         notebook.last_page = page
         notebook.save()
-        page.drawing = data
-        page.code = code
+        page.drawing = canvas
+        page.editors.all().delete()
         page.save()
+        for editor in editors:
+            title = editor['title']
+            code = editor['code']
+            editor = Editor.objects.create(title=title, code=code, page=page)
         return JsonResponse({'status': 'success'})
     return JsonResponse({'status': 'fail'})
 
