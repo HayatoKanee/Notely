@@ -6,7 +6,7 @@ from django.template.loader import render_to_string
 
 from .forms import SignUpForm, LogInForm, UserForm, ProfileForm, PasswordForm, FolderForm, NotebookForm, EventForm, \
     EventTagForm
-from .models import User, Folder, Notebook, Page, Event
+from .models import User, Folder, Notebook, Page, Event , Reminder
 from django.contrib.auth.decorators import login_required
 from .helpers import login_prohibited, check_perm
 from django.contrib.auth.hashers import check_password
@@ -108,8 +108,14 @@ def calendar_tab(request):
         if 'event_submit' in request.POST:
             event_form = EventForm(request.user, request.POST)
             if event_form.is_valid():
-                event_form.save()
+                if event_form.cleaned_data['reminder'] :
+                    Reminder.objects.create(event= event, reminder_time =event_form.cleaned_data['reminder'] )
+                    messages.add_message(request, messages.SUCCESS, "reminder Created!")
+                event = event_form.save()
+                event.user = request.user
+                event.save()
                 messages.add_message(request, messages.SUCCESS, "Event Created!")
+
                 return redirect('calendar_tab')
 
         if 'tag_submit' in request.POST:

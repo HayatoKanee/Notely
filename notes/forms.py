@@ -3,9 +3,9 @@ from django import forms
 from django.core.validators import RegexValidator
 from django.utils.safestring import mark_safe
 
-from .models import User, Profile, Folder, Notebook, Event, Tag, Page, EventTag
+from .models import User, Profile, Folder, Notebook, Event, Tag, Page, EventTag , Reminder 
 from guardian.shortcuts import assign_perm
-from bootstrap_datepicker_plus.widgets import DateTimePickerInput
+from bootstrap_datepicker_plus.widgets import DateTimePickerInput,DatePickerInput,TimePickerInput
 from colorfield.fields import ColorField
 from django.forms import ModelChoiceField, widgets, ModelMultipleChoiceField
 from django.utils.html import format_html
@@ -136,12 +136,10 @@ class TagSelectWidget(SelectMultiple):
 class EventForm(forms.ModelForm):
     tag = TagImageChoiceField(queryset=None, label="tags", required=False)
     page = forms.ModelChoiceField(queryset=Page.objects.all(), required=False)
-
+    reminder = forms.ChoiceField(choices=Reminder.reminder_choice , required= False)
     class Meta:
         model = Event
-
         fields = ['title', 'description', 'start_time', 'end_time']
-
         widgets = {
             "start_time": DateTimePickerInput(attrs={"class": "form-control"}),
             "end_time": DateTimePickerInput(attrs={"class": "form-control"}),
@@ -199,3 +197,15 @@ class NotebookForm(forms.ModelForm):
         assign_perm('dg_edit_notebook', user, notebook)
         assign_perm('dg_delete_notebook', user, notebook)
         return notebook
+
+class reminderForm(forms.ModelForm):
+    event = forms.ModelChoiceField(queryset=Event.objects.all(), required=False)
+    class Meta:
+        model = Reminder 
+        fields = ['event','reminder_time']
+
+
+    def __init__(self, user, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.user = user
+        self.fields['event'].queryset = user.events.all()
