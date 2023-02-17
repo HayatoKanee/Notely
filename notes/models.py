@@ -187,8 +187,16 @@ class Event(models.Model):
 
 class Reminder(models.Model):
     event = models.ForeignKey(Event, related_name="reminders", on_delete=models.CASCADE)
-    reminder_name = models.CharField(max_length=50, blank=False)
-    alert_date = models.TimeField(auto_now=False, auto_now_add=False )
-    alert_time = models.DateField(auto_now=False, auto_now_add=False )
-    pages = models.ForeignKey(Page, related_name="pages" , on_delete = models.CASCADE)
-    
+    reminder_choice = [
+        ("0", "When event start"),
+        ("1", "5 minutes before"),
+        ("4", "10 minutes before"),
+        ("2", "15 minutes before"),
+        ("3", "30 minutes before"),
+        ("4", "1  hour before"),
+        ("5", "2  hours before"),
+        ("6", "1  day before"),
+        ("7", "2  days before"),
+        ("8", "1  week before"),
+    ]
+    reminder_time = models.CharField(choices=reminder_choice, max_length=10, blank=True)
