@@ -57,8 +57,8 @@ $(function () {
           .on('dblclick',function (event){
               doubleClickEvent(event);
           })
-        .on('click', 'button[data-dismiss="tab"]', function(event) {
-          deleteEvent(event);
+        .find('button[data-dismiss="tab"]').on('click', function(event) {
+            deleteEvent(event);
         });
       //insert tab content
       $('<div class="tab-pane" id="' + id + '" role="tabpanel"><div id='+'code'+counter+'></div></div>').insertAfter('#codeEditor .tab-content .tab-pane:last');
@@ -67,7 +67,7 @@ $(function () {
       $('#codeEditor .nav-tabs a[href="#' + id + '"]').tab('show');
       counter++;
     });
-  $('#codeEditor .nav-tabs a').click(function (event){
+  $('#codeEditor .nav-tabs .editorTab').click(function (event){
           clickEvent(event);
   });
    $('#codeEditor .nav-tabs button[data-dismiss="tab"]').click(function (event){
