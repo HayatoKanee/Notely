@@ -181,6 +181,8 @@ def page(request, page_id):
     return render(request, 'page.html', {'page': page})
 
 
+@login_required
+@check_perm('dg_edit_page', Page)
 def save_page(request, page_id):
     if request.method == 'POST':
         canvas = request.POST.get('canvas')
