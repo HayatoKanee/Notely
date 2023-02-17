@@ -107,7 +107,6 @@ class Page(models.Model):
     drawing = models.TextField(blank=True)
     last_page_of = models.OneToOneField(Notebook, related_name="last_page", on_delete=models.CASCADE, null=True,
                                         blank=True)
-    code = models.TextField(blank=True)
 
     class Meta:
         permissions = [
@@ -124,6 +123,19 @@ class Page(models.Model):
             notebook.last_page = pages.last()
         else:
             notebook.last_page = Page.objects.create(notebook=notebook, last_page_of=notebook)
+
+
+class Editor(models.Model):
+    title = models.CharField(max_length=10)
+    code = models.TextField(blank=True)
+    page = models.ForeignKey(Page, related_name="editors", on_delete=models.CASCADE)
+
+    def delete(self, *args, **kwargs):
+        page = self.page
+        super().delete(*args, **kwargs)
+        editors = page.editors.all()
+        if not editors.exists():
+            Editor.objects.create(page=page)
 
 
 class Tag(models.Model):

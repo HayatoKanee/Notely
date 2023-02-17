@@ -293,13 +293,26 @@ document.onkeydown = function (e){
     }
 }
 function save(sync){
+    const editorsData = [];
+    const aElements = document.querySelectorAll('.editorTab a');
+    for (let i = 0; i < editors.length; i++) {
+        const editor = editors[i];
+        const code = editor.state.doc.toString();
+        const aElement = aElements.item(i);
+        const title = aElement.textContent.trim().slice(0,-1);
+        console.log(code);
+        editorsData.push({
+          title: title,
+          code: code
+        });
+  }
     $.ajax({
         type:"POST",
         async:sync,
         url: "/save_page/"+page_id,
         data: {
-            data: JSON.stringify(canvas.toJSON(['link'])),
-            code: cm6.getContent(),
+            canvas: JSON.stringify(canvas.toJSON(['link'])),
+            editors: JSON.stringify(editorsData),
             csrfmiddlewaretoken: csrf
         }
     });
