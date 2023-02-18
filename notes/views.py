@@ -238,6 +238,17 @@ def delete_event(request, event_id):
 
 
 @login_required
+def delete_page(request, page_id):
+    page = Page.objects.get(id=page_id)
+    notebook = page.last_page_of
+    page.delete()
+    if notebook:
+        print("2"+str(notebook.last_page))
+        notebook.save()
+    return redirect('folders_tab')
+
+
+@login_required
 def event_detail(request, event_id):
     event = Event.objects.get(id=event_id)
     if request.method == 'POST':
@@ -249,6 +260,7 @@ def event_detail(request, event_id):
     form = EventForm(request.user, instance=event)
     html = render_to_string('partials/event_detail.html', {'form': form, 'event': event}, request=request)
     return JsonResponse({'html': html})
+
 
 @login_required
 def page_detail(request, page_id):

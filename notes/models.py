@@ -119,13 +119,14 @@ class Page(models.Model):
     def delete(self, *args, **kwargs):
         notebook = self.last_page_of
         super().delete(*args, **kwargs)
-        pages = notebook.pages.all()
-        if pages.exists():
-            notebook.last_page = pages.last()
-        else:
-            notebook.last_page = Page.objects.create(notebook=notebook, last_page_of=notebook)
-
-
+        if notebook:
+            pages = notebook.pages.all()
+            if pages.exists():
+                notebook.last_page = pages.last()
+            else:
+                notebook.last_page = Page.objects.create(notebook=notebook, last_page_of=notebook)
+            notebook.save()
+            print("1"+str(notebook.last_page))
 class Tag(models.Model):
     title = models.CharField(max_length=30, unique=True)
     COLOR_PALETTE = [
