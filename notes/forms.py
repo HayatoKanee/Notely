@@ -3,13 +3,22 @@ from django import forms
 from django.core.validators import RegexValidator
 from django.utils.safestring import mark_safe
 
-from .models import User, Profile, Folder, Notebook, Tag, Page, EventTag , Reminder, Event
+from .models import User, Profile, Folder, Notebook, Tag, Page, EventTag , Reminder, Event, Credential
 from guardian.shortcuts import assign_perm
 from bootstrap_datepicker_plus.widgets import DateTimePickerInput,DatePickerInput,TimePickerInput
 from colorfield.fields import ColorField
 from django.forms import ModelChoiceField, widgets, ModelMultipleChoiceField, CheckboxInput
 from django.utils.html import format_html
 from django.forms.widgets import Select, SelectMultiple
+
+import datetime
+from google.oauth2.credentials import Credentials
+from googleapiclient.errors import HttpError
+from googleapiclient.discovery import build
+
+import datetime
+import json
+
 
 
 class LogInForm(forms.Form):
@@ -137,11 +146,11 @@ class EventForm(forms.ModelForm):
     tag = TagImageChoiceField(queryset=None, label="tags", required=False)
     page = forms.ModelChoiceField(queryset=Page.objects.all(), required=False)
     reminder = forms.ChoiceField(choices=Reminder.reminder_choice , required= False)
-    sync = forms.BooleanField(required=False, )
+    sync = forms.BooleanField(required=False)
 
     class Meta:
         model = Event
-        fields = ['title', 'description', 'start_time', 'end_time' ]
+        fields = ['title', 'description', 'start_time', 'end_time', 'page', 'sync']
 
         widgets = {
             "start_time": DateTimePickerInput(attrs={"class": "form-control"}),
@@ -155,6 +164,7 @@ class EventForm(forms.ModelForm):
         self.user = user
         self.fields['tag'].widget = TagSelectWidget()
         self.fields['tag'].queryset = user.event_tags.all()
+
         
 
     def clean(self):
@@ -168,8 +178,17 @@ class EventForm(forms.ModelForm):
         event = super().save(commit=False)
         event.user = self.user
         event.save()
+        event.start_time = self.cleaned_data.get('start_time')
+        event.end_time = self.cleaned_data.get('end_time')
+        event.title = self.cleaned_data.get('title')
+        event.description = self.cleaned_data.get('description')
         if self.cleaned_data.get('tag'):
             event.tags.set(self.cleaned_data['tag'])
+        if self.cleaned_data.get('page'):
+            event.page = self.cleaned_data['page']
+        if self.cleaned_data.get('sync'):
+            print("sync")
+        
         event.save()
         return event
 
