@@ -28,6 +28,7 @@ urlpatterns = [
     path('delete_folder_tab/<folder_id>', views.delete_folder, name='delete_folder_tab'),
     path('delete_notebook_tab/<folder_id>', views.delete_notebook, name='delete_notebook_tab'),
     path('calendar_tab/', views.calendar_tab, name='calendar_tab'),
+    path('help_tab/', views.help_tab, name='help_tab'),
     path('profile_tab/', views.profile_tab, name='profile_tab'),
     path('password_tab/', views.password_tab, name='password_tab'),
     path('gravatar/', views.gravatar, name='gravatar'),
