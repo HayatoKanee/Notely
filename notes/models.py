@@ -188,15 +188,15 @@ class Event(models.Model):
 class Reminder(models.Model):
     event = models.ForeignKey(Event, related_name="reminders", on_delete=models.CASCADE)
     reminder_choice = [
-        ("0", "When event start"),
-        ("1", "5 minutes before"),
-        ("4", "10 minutes before"),
-        ("2", "15 minutes before"),
-        ("3", "30 minutes before"),
-        ("4", "1  hour before"),
-        ("5", "2  hours before"),
-        ("6", "1  day before"),
-        ("7", "2  days before"),
-        ("8", "1  week before"),
+        (0, "When event start"),
+        (5, "5 minutes before"),
+        (10, "10 minutes before"),
+        (15, "15 minutes before"),
+        (30, "30 minutes before"),
+        (60, "1  hour before"),
+        (120, "2  hours before"),
+        (1440, "1  day before"),
+        (2880, "2  days before"),
+        (10080, "1  week before"),
     ]
-    reminder_time = models.CharField(choices=reminder_choice, max_length=10, blank=True)
+    reminder_time = models.IntegerField(choices=reminder_choice)

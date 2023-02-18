@@ -3,6 +3,8 @@ Django
 Faker
 django-widget-tweaks
 libgravatar
+channels
+daphne
 django-guardian
 django-bootstrap-datepicker-plus
 django-colorfield

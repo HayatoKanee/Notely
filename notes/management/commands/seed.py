@@ -17,3 +17,4 @@ class Command(BaseCommand):
             email='jane.doe@example.org',
             password=DEFAULT_PASSWORD
         )
+ 

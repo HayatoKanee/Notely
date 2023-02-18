@@ -30,6 +30,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "daphne",
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,7 +42,8 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'guardian',
     'bootstrap_datepicker_plus',
-    'colorfield'
+    'colorfield',
+    'pytz',
 ]
 
 MIDDLEWARE = [
@@ -70,8 +73,18 @@ TEMPLATES = [
         },
     },
 ]
+ASGI_APPLICATION = 'notely.asgi.application'
 
 WSGI_APPLICATION = 'notely.wsgi.application'
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("localhost", 8000)],
+        },
+    },
+}
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
