@@ -81,21 +81,11 @@
                 end: '{{ event.end_time|date:"Y-m-d H:i:s" }}',
                 backgroundColor: '{{ event.tags.first.color }}',
                 tags: "{% for tag in event.tags.all %}{{ tag.title }},{% endfor %}".slice(0,-1),
-                external: false
-            },
-            {% endfor %}
-            {% for event in google_events %}
-            {
-                id: "{{ event.google_id }}",
-                title: "{{ event.title}}",
-                start: '{{ event.start}}',
-                end: '{{ event.end }}',
-                external: true
             },
             {% endfor %}
         ],
         eventClick: function(e) {
-            if(! e.event.extendedProps.external){
+            
                 $.ajax({
                 url: "{% url 'event_detail' 0 %}".replace("0", e.event.id),
                 success: function(data) {
@@ -108,9 +98,7 @@
                     $('#eventDetail').modal('show');
                    $('#delete_link').attr('href', "{% url 'delete_event' 0 %}".replace("0", e.event.id))
 
-                } else {
-                    console.log(e.event.id)
-                }
+                
             },
                 editable: true,
             dateClick: function(info) {
@@ -170,9 +158,6 @@
 
     {% endfor %}
 
-    document.getElementById("googleSignIn").addEventListener("click", function() {
-        console.log("User has signed in");
-      });
 
     var tagModal = document.getElementById('tagModal')
     tagModal.addEventListener('hidden.bs.modal', function (event) {

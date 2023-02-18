@@ -15,7 +15,7 @@ from django.contrib.auth.decorators import login_required
 from .helpers import login_prohibited, check_perm
 from django.contrib.auth.hashers import check_password
 from guardian.shortcuts import get_objects_for_user, assign_perm
-from .view_helper import sort_items_by_created_time, save_folder_notebook_forms, get_google_events
+from .view_helper import sort_items_by_created_time, save_folder_notebook_forms, get_or_create_google_event
 from datetime import datetime
 from google_auth_oauthlib.flow import Flow
 
@@ -103,12 +103,12 @@ def sub_folders_tab(request, folder_id):
 
 @login_required
 def calendar_tab(request):
-    internal_events = request.user.internal_events.all()
-    google_events = get_google_events(request)
+    get_or_create_google_event(request)
+    events = request.user.events.all()
     event_form = EventForm(request.user)
     tag_form = EventTagForm()
     tags = set()
-    for event in internal_events:
+    for event in events:
         for tag in event.tags.all():
             tags.add(tag)
 
@@ -133,8 +133,8 @@ def calendar_tab(request):
                 messages.add_message(request, messages.SUCCESS, "Tag Created!")
                 return redirect('calendar_tab')
 
-    return render(request, 'calendar_tab.html', {'event_form': event_form, 'tag_form': tag_form, 'events': internal_events,
-                                                 'tags': tags, 'google_events': google_events})
+    return render(request, 'calendar_tab.html', {'event_form': event_form, 'tag_form': tag_form, 'events': events,
+                                                 'tags': tags, })
 
 
 
