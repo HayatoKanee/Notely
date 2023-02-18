@@ -1,6 +1,12 @@
+import datetime
+import json
+
 from notes.forms import FolderForm, NotebookForm
 from django.contrib import messages
 from django.shortcuts import redirect
+from google.oauth2.credentials import Credentials
+from googleapiclient.discovery import build
+from notes.models import Credential
 
 
 def save_folder_notebook_forms(request, user, folder=None):
@@ -27,3 +33,32 @@ def sort_items_by_created_time(*args):
     for arg in args:
         items += list(arg)
     return sorted(items, key=lambda x: x.created_at, reverse=True)
+
+
+def get_google_events(request):
+    try:
+        credential = Credential.objects.get(user=request.user)
+    except Credential.DoesNotExist:
+        return None
+    creds = Credentials.from_authorized_user_info(info=json.loads(credential.google_cred))
+    # Create a service object to interact with the Google Calendar API
+    service = build('calendar', 'v3', credentials=creds)
+
+    # Call the Calendar API to get the upcoming events
+    now = datetime.datetime.utcnow().isoformat() + 'Z'
+    events_result = service.events().list(calendarId='primary', timeMin=now,
+                                          maxResults=10, singleEvents=True,
+                                          orderBy='startTime').execute()
+    events = events_result.get('items', [])
+
+    # Return the events as a JSON response
+    event_list = []
+    for event in events:
+        start = event['start'].get('dateTime', event['start'].get('date'))
+        end = event['end'].get('dateTime', event['end'].get('date'))
+        event_list.append({
+            'title': event['summary'],
+            'start': start,
+            'end': end
+        })
+    return event_list

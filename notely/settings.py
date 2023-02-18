@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'guardian',
     'bootstrap_datepicker_plus',
-    'colorfield'
+    'colorfield',
+    'sslserver'
 ]
 
 MIDDLEWARE = [
@@ -143,3 +144,5 @@ REDIRECT_URL_WHEN_LOGGED_IN = 'folders_tab'
 MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 }
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+GOOGLE_CREDENTIALS_PATH = os.path.join(BASE_DIR, 'notes', 'assets', 'credentials.json')

@@ -213,3 +213,8 @@ class Reminder(models.Model):
         ("8", "1  week before"),
     ]
     reminder_time = models.CharField(choices=reminder_choice, max_length=10, blank=True)
+
+
+class Credential(models.Model):
+    user = models.ForeignKey(User, related_name="creds", on_delete=models.CASCADE)
+    google_cred = models.TextField(blank=True)
