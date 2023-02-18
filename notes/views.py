@@ -103,12 +103,12 @@ def sub_folders_tab(request, folder_id):
 
 @login_required
 def calendar_tab(request):
-    events = request.user.events.all()
+    internal_events = request.user.internal_events.all()
     google_events = get_google_events(request)
     event_form = EventForm(request.user)
     tag_form = EventTagForm()
     tags = set()
-    for event in events:
+    for event in internal_events:
         for tag in event.tags.all():
             tags.add(tag)
 
@@ -133,8 +133,9 @@ def calendar_tab(request):
                 messages.add_message(request, messages.SUCCESS, "Tag Created!")
                 return redirect('calendar_tab')
 
-    return render(request, 'calendar_tab.html', {'event_form': event_form, 'tag_form': tag_form, 'events': events,
+    return render(request, 'calendar_tab.html', {'event_form': event_form, 'tag_form': tag_form, 'events': internal_events,
                                                  'tags': tags, 'google_events': google_events})
+
 
 
 @login_required
@@ -293,3 +294,5 @@ def google_auth_callback(request):
     credentials = flow.credentials.to_json()
     Credential.objects.update_or_create(user=request.user, defaults={'google_cred': credentials})
     return redirect('calendar_tab')
+
+

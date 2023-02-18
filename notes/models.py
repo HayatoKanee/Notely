@@ -171,7 +171,6 @@ class PageTag(Tag):
 
 
 class Event(models.Model):
-    user = models.ForeignKey(User, related_name="events", on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     description = models.TextField(default="")
     start_time = models.DateTimeField()
@@ -198,10 +197,16 @@ class Event(models.Model):
     routine = models.CharField(choices=routine_choice, max_length=10, blank=True)
 
 class GoogleEvent(Event):
+    user = models.ForeignKey(User, related_name="google_events", on_delete=models.CASCADE)
     google_id = models.CharField(blank=False, max_length=200)
+
+
+class InternalEvent(Event):
+    user = models.ForeignKey(User, related_name="internal_events", on_delete=models.CASCADE)
     sync = models.BooleanField(default=False)
 
-    
+
+
 
 class Reminder(models.Model):
     event = models.ForeignKey(Event, related_name="reminders", on_delete=models.CASCADE)

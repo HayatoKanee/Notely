@@ -3,7 +3,7 @@ from django import forms
 from django.core.validators import RegexValidator
 from django.utils.safestring import mark_safe
 
-from .models import User, Profile, Folder, Notebook, Event, Tag, Page, EventTag , Reminder 
+from .models import User, Profile, Folder, Notebook, InternalEvent, Tag, Page, EventTag , Reminder, Event
 from guardian.shortcuts import assign_perm
 from bootstrap_datepicker_plus.widgets import DateTimePickerInput,DatePickerInput,TimePickerInput
 from colorfield.fields import ColorField
@@ -138,7 +138,7 @@ class EventForm(forms.ModelForm):
     page = forms.ModelChoiceField(queryset=Page.objects.all(), required=False)
     reminder = forms.ChoiceField(choices=Reminder.reminder_choice , required= False)
     class Meta:
-        model = Event
+        model = InternalEvent
         fields = ['title', 'description', 'start_time', 'end_time']
 
         widgets = {
