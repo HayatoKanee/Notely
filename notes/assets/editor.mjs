@@ -15,7 +15,6 @@ function createEditor(doc, id){
        target.dispatch({
                effects: language.reconfigure(languageModes[x])
            })
-        $("#lang").text(languageModes[x]);
     }
     return new EditorView({
     extensions: [basicSetup,
