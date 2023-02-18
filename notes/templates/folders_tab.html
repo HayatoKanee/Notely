@@ -1,29 +1,27 @@
-
 {% extends 'base_content.html' %}
 {% block content %}
-
 <div class="folder-path">
-><a href="{%url 'folders_tab' %}" style="color:#1b1b1b;margin-left:20px"><button class="folder-button" style="font-size:20px; background-color:white;">Home</button></a>
-{% if folder %}
-{% for item in folder.get_path %}
-  ><a href="{% url 'sub_folders_tab' item.id%}" style="color:#1b1b1b;margin-left:20px"><button class="folder-button" style="font-size:20px; background-color:white;">{{item.folder_name}}</button></a>
-{% endfor %}
-{% endif %}
+    ><a href="{%url 'folders_tab' %}" style="color:#1b1b1b;margin-left:20px"><button class="folder-button" style="font-size:20px; background-color:white; border: none;">Home</button></a>
+    {% if folder %}
+    {% for item in folder.get_path %}
+      ><a href="{% url 'sub_folders_tab' item.id%}" style="color:#1b1b1b;margin-left:20px"><button class="folder-button" style="font-size:20px; background-color:white; border: none;">{{item.folder_name}}</button></a>
+    {% endfor %}
+    {% endif %}
 </div>
+
+<ul class="folder-nav">
+    <li style="background-color: white;font-size:23px; font-weight: bold; left: 10px;">
+        Name
+    </li>
+    <button id="addChoice" data-bs-toggle="modal" data-bs-target="#add" style="margin-right: 20px">
+        <span style="margin-left:30px">New</span>
+    </button>
+</ul>
 <div style="height: 800px">
-    <ul class="folder-nav">
-      <li style="background-color: white;font-size:23px; font-weight: bold; left: 10px;">
-          Name
-      </li>
-        <button id="addChoice" data-bs-toggle="modal" data-bs-target="#add" style="margin-right: 20px">
-          <span style="margin-left:30px">New</span>
-        </button>
-    </ul>
   <div class="folder-container">
     <div class="container">
           {% for item in items %}
-              <div class="col" style="margin-left:-60px; width:100%; display: flex; justify-content: space-between; padding: 20px;">
-          <div class="col" style="margin-left:-90px; width:60%;">
+              <div class="col" style="margin-left:-100px; width:100%; display: flex; justify-content: space-between; padding: 20px;">
                 {% if item.get_type == "Folder" %}
                 <form action="{% url 'sub_folders_tab' item.id %}" method="get">
                     <button id = "folder_img" >
@@ -37,7 +35,6 @@
                     </button>
                  </form>
                 {% endif %}
-        </div>
                     {% if item.get_type == "Folder" %}
                         <div class="dropdown">
                           <button class="dropbtn">Options</button>
