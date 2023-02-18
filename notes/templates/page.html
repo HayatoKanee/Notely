@@ -5,6 +5,7 @@
     {% else %}
          <a href={% url 'folders_tab'%} style="color:rgb(245,93,66);margin-left:20px;font-size:20px;"> <i class="bi bi-arrow-left"></i> Go back</a>
     {% endif %}
+    <button  id="notesHelp"  data-bs-toggle="modal" data-bs-target="#notesHelp" style="color: rgb(245, 93, 66);"></button>
     <canvas id="canvas"></canvas>
     <nav class="navbar navbar-expand-lg fixed-bottom navbar-light bg-light">
     <div class="container-fluid">
@@ -126,6 +127,7 @@
     </nav>
     {% include 'partials/codeEditor.html' %}
     {% include 'partials/symbols.html' %}
+    {% include 'partials/eventModal.html' %}
 {% endblock %}
 {% block scripts %}
     <style>
