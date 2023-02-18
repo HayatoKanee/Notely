@@ -54,9 +54,11 @@ def get_google_events(request):
     # Return the events as a JSON response
     event_list = []
     for event in events:
+        google_id = event.get('id')
         start = event['start'].get('dateTime', event['start'].get('date'))
         end = event['end'].get('dateTime', event['end'].get('date'))
         event_list.append({
+            'google_id': google_id,
             'title': event['summary'],
             'start': start,
             'end': end

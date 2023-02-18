@@ -86,6 +86,7 @@
             {% endfor %}
             {% for event in google_events %}
             {
+                id: "{{ event.google_id }}",
                 title: "{{ event.title}}",
                 start: '{{ event.start}}',
                 end: '{{ event.end }}',
@@ -107,6 +108,8 @@
                     $('#eventDetail').modal('show');
                    $('#delete_link').attr('href', "{% url 'delete_event' 0 %}".replace("0", e.event.id))
 
+                } else {
+                    console.log(e.event.id)
                 }
             },
                 editable: true,
