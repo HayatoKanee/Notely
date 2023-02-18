@@ -2,10 +2,10 @@ from django.dispatch import receiver
 from django.db.models.signals import post_save, pre_save
 from guardian.shortcuts import assign_perm
 from notes.helpers import calculate_age
-from notes.models import User, Profile, Notebook, Page , Reminder ,Event
+from notes.models import User, Profile, Notebook, Page, Editor , Reminder ,Event
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
-import datetime , pytz 
+import datetime 
 from django.utils import timezone
 
 @receiver(post_save, sender=User)
@@ -63,3 +63,9 @@ def send_notification(sender, instance, **kwargs):
     #             "delay": seconds_until_reminder.total_seconds(),
     #         },
     #     )
+
+@receiver(post_save, sender=Page)
+def create_editor(sender, instance, created, **kwargs):
+    """Create an empty editor when user create a page"""
+    if created:
+        Editor.objects.create(page=instance, title="Editor1")

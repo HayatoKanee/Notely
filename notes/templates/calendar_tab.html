@@ -5,20 +5,10 @@
               <button id="addEvent" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#eventModal">
                 Add New Event
           </button>
-             
 
-          <script src="https://accounts.google.com/gsi/client" async defer></script>
-            <div id="g_id_onload"
-                data-client_id="588566071525-5p0gps8skl9gr5j9919r8gob501jqa01.apps.googleusercontent.com"
-                data-callback="handleCredentialResponse">
-            </div>
-
-            <button id="authorize_button" onclick="handleAuthClick()">Authorize</button>
-    <button id="signout_button" onclick="handleSignoutClick()">Sign Out</button>
-
-    <pre id="content" style="white-space: pre-wrap;"></pre>
-
-    
+    <a href="{% url 'google_auth' %}" class="btn btn-google">
+  <i class="fa fa-google"></i> Sign in with Google
+</a>
     
 
    
@@ -73,9 +63,6 @@
  {% block scripts %}
 {% load static%}
   <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.4/index.global.min.js'></script>
-  <script src="https://apis.google.com/js/platform.js" async defer></script>
-    <meta name="google-signin-client_id" content="588566071525-5p0gps8skl9gr5j9919r8gob501jqa01.apps.googleusercontent.com">
-    <meta name="referrer" content="no-referrer-when-downgrade">
 <script>
     const calendarEl = document.getElementById('calendar');
     const calendar = new FullCalendar.Calendar(calendarEl, {
@@ -85,8 +72,6 @@
         right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
         },
         initialView: 'dayGridMonth',
-        {% comment %} googleCalendarApiKey: 'AIzaSyDOfaJ3As7QXgrdKUrOv541oFDZutYE0q8',
-        events: 'en.usa#holiday@group.v.calendar.google.com', {% endcomment %}
         events: [
             {% for event in events %}
             {
@@ -95,12 +80,22 @@
                 start: '{{ event.start_time|date:"Y-m-d H:i:s" }}',
                 end: '{{ event.end_time|date:"Y-m-d H:i:s" }}',
                 backgroundColor: '{{ event.tags.first.color }}',
-                tags: "{% for tag in event.tags.all %}{{ tag.title }},{% endfor %}".slice(0,-1)
+                tags: "{% for tag in event.tags.all %}{{ tag.title }},{% endfor %}".slice(0,-1),
+                external: false
+            },
+            {% endfor %}
+            {% for event in google_events %}
+            {
+                title: "{{ event.title}}",
+                start: '{{ event.start}}',
+                end: '{{ event.end }}',
+                external: true
             },
             {% endfor %}
         ],
         eventClick: function(e) {
-             $.ajax({
+            if(! e.event.extendedProps.external){
+                $.ajax({
                 url: "{% url 'event_detail' 0 %}".replace("0", e.event.id),
                 success: function(data) {
                   $('#detail').html(data.html);
@@ -112,7 +107,8 @@
                     $('#eventDetail').modal('show');
                    $('#delete_link').attr('href', "{% url 'delete_event' 0 %}".replace("0", e.event.id))
 
-                },
+                }
+            },
                 editable: true,
             dateClick: function(info) {
             calendar.changeView('timeGridDay', info.dateStr);
@@ -183,7 +179,7 @@
   })
     </script>
     <link rel="stylesheet" href="{%static 'css_style/calendarTabStyle.css' %}"/>
-    <script src="{%static 'javascript/calendar/syncGoogleCalendar.js'%}"></script>
-    <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
-    <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
+{#    <script src="{%static 'javascript/calendar/syncGoogleCalendar.js'%}"></script>#}
+{#    <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>#}
+{#    <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>#}
 {% endblock %}

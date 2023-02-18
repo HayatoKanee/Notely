@@ -1,3 +1,6 @@
+import json
+
+from django.conf import settings
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
@@ -6,13 +9,17 @@ from django.template.loader import render_to_string
 
 from .forms import SignUpForm, LogInForm, UserForm, ProfileForm, PasswordForm, FolderForm, NotebookForm, EventForm, \
     EventTagForm
-from .models import User, Folder, Notebook, Page, Event , Reminder
+from .models import User, Folder, Notebook, Page, Event, Editor, Reminder, Credential
+
 from django.contrib.auth.decorators import login_required
 from .helpers import login_prohibited, check_perm
 from django.contrib.auth.hashers import check_password
 from guardian.shortcuts import get_objects_for_user, assign_perm
-from .view_helper import sort_items_by_created_time, save_folder_notebook_forms
+from .view_helper import sort_items_by_created_time, save_folder_notebook_forms, get_google_events
 from datetime import datetime
+from google_auth_oauthlib.flow import Flow
+
+SCOPES = ['https://www.googleapis.com/auth/calendar']
 
 
 @login_prohibited
@@ -97,6 +104,7 @@ def sub_folders_tab(request, folder_id):
 @login_required
 def calendar_tab(request):
     events = request.user.events.all()
+    google_events = get_google_events(request)
     event_form = EventForm(request.user)
     tag_form = EventTagForm()
     tags = set()
@@ -126,7 +134,7 @@ def calendar_tab(request):
                 return redirect('calendar_tab')
 
     return render(request, 'calendar_tab.html', {'event_form': event_form, 'tag_form': tag_form, 'events': events,
-                                                 'tags': tags})
+                                                 'tags': tags, 'google_events': google_events})
 
 
 @login_required
@@ -183,10 +191,12 @@ def page(request, page_id):
     return render(request, 'page.html', {'page': page})
 
 
+@login_required
+@check_perm('dg_edit_page', Page)
 def save_page(request, page_id):
     if request.method == 'POST':
-        data = request.POST.get('data')
-        code = request.POST.get('code')
+        canvas = request.POST.get('canvas')
+        editors = json.loads(request.POST.get('editors'))
         page = Page.objects.get(id=page_id)
         notebook = page.notebook
         last_page = notebook.last_page
@@ -194,9 +204,13 @@ def save_page(request, page_id):
         last_page.save()
         notebook.last_page = page
         notebook.save()
-        page.drawing = data
-        page.code = code
+        page.drawing = canvas
+        page.editors.all().delete()
         page.save()
+        for editor in editors:
+            title = editor['title']
+            code = editor['code']
+            editor = Editor.objects.create(title=title, code=code, page=page)
         return JsonResponse({'status': 'success'})
     return JsonResponse({'status': 'fail'})
 
@@ -249,3 +263,33 @@ def update_event(request, event_id):
         event.save()
         return JsonResponse({'status': 'success'})
     return JsonResponse({'status': 'fail'})
+
+
+@login_required
+def google_auth(request):
+    flow = Flow.from_client_secrets_file(
+        settings.GOOGLE_CREDENTIALS_PATH,
+        scopes=SCOPES, redirect_uri=request.build_absolute_uri('/google_auth_callback/')
+    )
+    authorization_url, state = flow.authorization_url(
+        access_type='offline',
+        include_granted_scopes='true'
+    )
+    return redirect(authorization_url)
+
+
+@login_required
+def google_auth_callback(request):
+    state = request.session.pop('google_auth_state', None)
+    flow = Flow.from_client_secrets_file(
+        settings.GOOGLE_CREDENTIALS_PATH,
+        scopes=SCOPES, redirect_uri=request.build_absolute_uri('/google_auth_callback/')
+    )
+
+    # Exchange authorization code for access token
+    flow.fetch_token(authorization_response=request.build_absolute_uri(), state=state)
+
+    # Get the user's credentials and store them in the database
+    credentials = flow.credentials.to_json()
+    Credential.objects.update_or_create(user=request.user, defaults={'google_cred': credentials})
+    return redirect('calendar_tab')
