@@ -17,6 +17,7 @@ from django.contrib.auth.hashers import check_password
 from guardian.shortcuts import get_objects_for_user, assign_perm
 from .view_helper import sort_items_by_created_time, save_folder_notebook_forms, get_or_create_google_event
 from datetime import datetime
+from django.utils import timezone
 from google_auth_oauthlib.flow import Flow
 
 SCOPES = ['https://www.googleapis.com/auth/calendar']
@@ -117,7 +118,7 @@ def calendar_tab(request):
             event_form = EventForm(request.user, request.POST)
             if event_form.is_valid():
                 event = event_form.save()
-                if event_form.cleaned_data['reminder'] and event_form.cleaned_data['reminder']== 'No reminder' :
+                if  int(event_form.cleaned_data['reminder']) > -1  :
                     Reminder.objects.create(event= event, reminder_time =event_form.cleaned_data['reminder'] )
                     messages.add_message(request, messages.SUCCESS, "Reminder Created!")
                 messages.add_message(request, messages.SUCCESS, "Event Created!")
