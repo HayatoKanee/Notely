@@ -200,14 +200,9 @@ class Event(models.Model):
     sync = models.BooleanField(blank=False, default=False)
 
 
-    
-
-
-
-
-
 
 class Reminder(models.Model):
+    user = models.ForeignKey(User, related_name="reminders", on_delete=models.CASCADE)
     event = models.ForeignKey(Event, related_name="reminders", on_delete=models.CASCADE)
     reminder_choice = [
         (0, "When event start"),

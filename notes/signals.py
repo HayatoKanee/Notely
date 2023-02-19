@@ -52,7 +52,7 @@ def send_notification(sender, instance, **kwargs):
         "10080": "at next week",
     }
     # If the notification time is in the future, schedule a message to be sent to the user's browser
-    if seconds_until_reminder > 0:
+    if seconds_until_reminder.total_seconds() > 0:
         channel_layer = get_channel_layer()
         async_to_sync(channel_layer.group_send)(
             f"user_{instance.user.id}",
