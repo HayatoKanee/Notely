@@ -19,17 +19,18 @@
                 <td>{{user.username}} </td>
               <td>
                 <img src="{{ user.profile.mini_gravatar }}" alt="Gravatar of {{ user.username }}" class="rounded-circle" >
+           </button>
                   <div class="nav-item dropdown">
-          <div class="dropdown-menu" aria-labelledby="user-account-dropdown" style="margin-left: -130px;">
-            <a class="dropdown-item nav-link nav-link-drop px-2 text-muted" href="{% url 'profile_tab' %}" style="color: rgb(245, 93, 66, 0.8)">Profile</a>
-              <a class="dropdown-item nav-link nav-link-drop px-2 text-muted" href="{% url 'gravatar' %}"  target="_blank" style="color: rgb(245, 93, 66, 0.8)">Change Gravatar</a>
-            <a class="dropdown-item nav-link nav-link-drop px-2 text-muted" href="{% url 'password_tab' %}" style="color: rgb(245, 93, 66, 0.8)">Change Password</a>
+          <div class="dropdown-menu" aria-labelledby="user-account-dropdown">
+            <a class="dropdown-item nav-link nav-link-drop px-2 " href="{% url 'profile_tab' %}" style="color: rgb(245, 93, 66, 0.8)">Profile</a>
+              <a class="dropdown-item nav-link nav-link-drop px-2 " href="{% url 'gravatar' %}"  target="_blank" style="color: rgb(245, 93, 66, 0.8)">Change Gravatar</a>
+            <a class="dropdown-item nav-link nav-link-drop px-2 " href="{% url 'password_tab' %}" style="color: rgb(245, 93, 66, 0.8)">Change Password</a>
             <hr class="dropdown-divider">
-              <a class="dropdown-item nav-link nav-link-drop px-2 text-muted" href="{% url 'log_out' %}">Log out</a>
+              <a class="dropdown-item nav-link nav-link-drop px-2 " href="{% url 'log_out' %}">Log out</a>
           </div>
           </div>
             </tr>
-            </button>
+
         </li>
            </ul>
       </div>
