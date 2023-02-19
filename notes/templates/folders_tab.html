@@ -46,21 +46,21 @@
               <div class="col col-lg-2" style="height: 100px;">
               {% if item.get_type == "Folder" %}
                         <div class="dropdown">
-                          <button class="dropbtn" style="color: rgb(245, 93, 66);">Options</button>
-                          <div class="dropdown-content" style="color: rgb(245, 93, 66);">
-                            <a href="{% url 'delete_folder_tab' item.id %}" style="color: rgb(245, 93, 66);">Delete</a>
-                            <a href="#" style="color: rgb(245, 93, 66);">Link 2</a>
-                            <a href="#" style="color: rgb(245, 93, 66);">Link 3</a>
+                          <button class="dropbtn">Options</button>
+                          <div class="dropdown-content">
+                            <a href="{% url 'delete_folder_tab' item.id %}">Delete</a>
+                            <a href="#">Link 2</a>
+                            <a href="#">Link 3</a>
                           </div>
                         </div>
                     {% else %}
                 <div>
                     <div class="dropdown">
-                      <button class="dropbtn" style="color: rgb(245, 93, 66);">Options</button>
-                      <div class="dropdown-content" style="color: rgb(245, 93, 66);">
-                        <a href="{% url 'delete_notebook_tab' item.id %}" style="color: rgb(245, 93, 66);">Delete</a>
-                        <a href="#" style="color: rgb(245, 93, 66);">Link 2</a>
-                        <a href="#" style="color: rgb(245, 93, 66);">Link 3</a>
+                      <button class="dropbtn">Options</button>
+                      <div class="dropdown-content">
+                        <a href="{% url 'delete_notebook_tab' item.id %}">Delete</a>
+                        <a href="#">Link 2</a>
+                        <a href="#">Link 3</a>
                       </div>
                     </div>
                     </div>
@@ -93,7 +93,7 @@
     position: absolute;
     background-color: #f1f1f1;
     min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
   }
 

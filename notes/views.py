@@ -2,6 +2,7 @@ import json
 
 from django.conf import settings
 
+
 import base64
 
 from django.core.files.base import ContentFile
@@ -19,6 +20,7 @@ from django.contrib.auth.hashers import check_password
 from guardian.shortcuts import get_objects_for_user
 from .view_helper import sort_items_by_created_time, save_folder_notebook_forms, get_or_create_google_event
 from datetime import datetime
+
 from django.utils import timezone
 from google_auth_oauthlib.flow import Flow
 
@@ -106,7 +108,6 @@ def sub_folders_tab(request, folder_id):
 
 @login_required
 def calendar_tab(request):
-    get_or_create_google_event(request)
     events = request.user.events.all()
     event_form = EventForm(request.user)
     tag_form = EventTagForm()
@@ -124,7 +125,6 @@ def calendar_tab(request):
                     Reminder.objects.create(event=event, reminder_time=event_form.cleaned_data['reminder'])
                     messages.add_message(request, messages.SUCCESS, "Reminder Created!")
                 messages.add_message(request, messages.SUCCESS, "Event Created!")
-
                 return redirect('calendar_tab')
 
         if 'tag_submit' in request.POST:
@@ -137,8 +137,7 @@ def calendar_tab(request):
                 return redirect('calendar_tab')
 
     return render(request, 'calendar_tab.html', {'event_form': event_form, 'tag_form': tag_form, 'events': events,
-                                                 'tags': tags, })
-
+                                                 'tags': tags})
 
 @login_required
 def profile_tab(request):

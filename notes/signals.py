@@ -2,7 +2,7 @@ from django.dispatch import receiver
 from django.db.models.signals import post_save, pre_save
 from guardian.shortcuts import assign_perm
 from notes.helpers import calculate_age
-from notes.models import User, Profile, Notebook, Page, Editor , Reminder ,Event
+from notes.models import User, Profile, Notebook, Page, Editor, Reminder, Event
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 
@@ -11,6 +11,7 @@ from django.conf import settings
 from django.core.mail import send_mail
 
 from datetime import datetime, timedelta
+
 
 @receiver(post_save, sender=User)
 def create_profile(sender, instance, created, **kwargs):
@@ -31,6 +32,7 @@ def create_page(sender, instance, created, **kwargs):
         new_page = Page.objects.create(notebook=instance)
         instance.last_page = new_page
         instance.save()
+
 
 @receiver(post_save, sender=Reminder)
 def send_notification(sender, instance, **kwargs):
@@ -65,6 +67,7 @@ def send_notification(sender, instance, **kwargs):
             },
         )
 
+
 @receiver(post_save, sender=Page)
 def create_editor(sender, instance, created, **kwargs):
     """Create an empty editor when user create a page"""
@@ -72,12 +75,20 @@ def create_editor(sender, instance, created, **kwargs):
         Editor.objects.create(page=instance, title="Editor1")
 
 
+@receiver(post_save, sender=Page)
+def give_permission(sender, instance, created, **kwargs):
+    if created:
+        assign_perm('dg_view_page', instance.notebook.user, instance)
+        assign_perm('dg_edit_page', instance.notebook.user, instance)
+        assign_perm('dg_delete_page', instance.notebook.user, instance)
+
 
 @receiver(post_save, sender=Reminder)
 def send_reminder_email(sender, instance, created, **kwargs):
     if not created:
         # Check if reminder time is now
-        if instance.reminder_time == 0 or instance.event.start_time - timedelta(minutes=instance.reminder_time) <= datetime.now():
+        if instance.reminder_time == 0 or instance.event.start_time - timedelta(
+                minutes=instance.reminder_time) <= datetime.now():
             # Send email to event user's email
             send_mail(
                 f"Reminder for event: {instance.event.title}",
@@ -87,10 +98,10 @@ def send_reminder_email(sender, instance, created, **kwargs):
                 fail_silently=False,
             )
 
+
 @receiver(post_save, sender=Page)
 def give_permission(sender, instance, created, **kwargs):
     if created:
         assign_perm('dg_view_page', instance.notebook.user, instance)
         assign_perm('dg_edit_page', instance.notebook.user, instance)
         assign_perm('dg_delete_page', instance.notebook.user, instance)
-
