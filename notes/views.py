@@ -1,3 +1,6 @@
+import base64
+
+from django.core.files.base import ContentFile
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
@@ -196,6 +199,8 @@ def save_page(request, page_id):
     if request.method == 'POST':
         data = request.POST.get('data')
         code = request.POST.get('code')
+        thumbnail = request.POST.get('thumbnail')
+        thumbnail_binary = base64.b64decode(thumbnail.split(',')[1])
         page = Page.objects.get(id=page_id)
         notebook = page.notebook
         last_page = notebook.last_page
@@ -205,6 +210,7 @@ def save_page(request, page_id):
         notebook.save()
         page.drawing = data
         page.code = code
+        page.thumbnail.save(f'{page.id}.jpeg', content=ContentFile(thumbnail_binary), save=True)
         page.save()
         return JsonResponse({'status': 'success'})
     return JsonResponse({'status': 'fail'})

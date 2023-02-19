@@ -15,7 +15,10 @@
       </div>
           {% for p in page.notebook.pages.all %}
               <div class="col page">
-
+              {% if p.thumbnail %}
+                                    <img src="{{ p.thumbnail.url }}">
+                  {% else %}
+                  {% endif %}
                   <div class="dropdown">
                                         <span style="color: {{ p.tags.first.color }}">&#x25CF<a href="{% url 'page' p.id %}" style="color: #CD5C5C;"> page {{ forloop.counter }}</a></span>
                       <button class="page dropdown-toggle" type="button" id="dropdownMenu" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>

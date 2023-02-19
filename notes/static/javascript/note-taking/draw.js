@@ -290,14 +290,25 @@ document.onkeydown = function (e){
         canvas.discardActiveObject();
     }
 }
+
+function getThumbnail(){
+    const thumbnail = document.createElement('canvas')
+    thumbnail.width = 100;
+    thumbnail.height = 100;
+
+    const context = thumbnail.getContext('2d');
+    context.drawImage(canvas.getElement(), 0,0,thumbnail.width,thumbnail.height);
+    return thumbnail.toDataURL('image/jpeg');
+}
 function save(sync){
     $.ajax({
         type:"POST",
         async:sync,
         url: "/save_page/"+page_id,
         data: {
-            data: JSON.stringify(canvas.toJSON(['link'])),
+            data: JSON.stringify(canvas.toDatalessJSON(['link'])),
             code: editor.getValue(),
+            thumbnail:getThumbnail(),
             csrfmiddlewaretoken: csrf
         }
     });
