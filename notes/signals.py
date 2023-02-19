@@ -5,8 +5,12 @@ from notes.helpers import calculate_age
 from notes.models import User, Profile, Notebook, Page, Editor , Reminder ,Event
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
-import datetime 
+
 from django.utils import timezone
+from django.conf import settings
+from django.core.mail import send_mail
+
+from datetime import datetime, timedelta
 
 @receiver(post_save, sender=User)
 def create_profile(sender, instance, created, **kwargs):
@@ -36,9 +40,9 @@ def send_notification(sender, instance, **kwargs):
     reminder_time = instance.reminder_time
 
     # Calculate the number of seconds until the reminder time
-    now = datetime.datetime.now()
+    now = datetime.now()
     user_time_zone = now.tzinfo
-    seconds_until_reminder = (event_start_time - datetime.timedelta(minutes=int(reminder_time))) - now
+    seconds_until_reminder = (event_start_time - timedelta(minutes=int(reminder_time))) - now
     reminderDict = {
         "0": "now",
         "5": "in 5 minutes",
@@ -68,3 +72,18 @@ def create_editor(sender, instance, created, **kwargs):
     """Create an empty editor when user create a page"""
     if created:
         Editor.objects.create(page=instance, title="Editor1")
+
+
+@receiver(post_save, sender=Reminder)
+def send_reminder_email(sender, instance, created, **kwargs):
+    if not created:
+        # Check if reminder time is now
+        if instance.reminder_time == 0 or instance.event.start_time - timedelta(minutes=instance.reminder_time) <= datetime.now():
+            # Send email to event user's email
+            send_mail(
+                f"Reminder for event: {instance.event.title}",
+                instance.event.description,
+                'winniethepooh.notely@gmail.com',
+                [instance.event.user.email],
+                fail_silently=False,
+            )
