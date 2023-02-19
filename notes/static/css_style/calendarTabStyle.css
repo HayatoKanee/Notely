@@ -50,3 +50,7 @@
 
   .today {
   }
+
+  .btn-google:hover{
+      font-weight: bold;
+  }

@@ -5,11 +5,9 @@ from notes.helpers import calculate_age
 from notes.models import User, Profile, Notebook, Page, Editor, Reminder, Event
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
-
 from django.utils import timezone
 from django.conf import settings
 from django.core.mail import send_mail
-
 from datetime import datetime, timedelta
 
 

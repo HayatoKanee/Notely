@@ -1,7 +1,6 @@
 from django import forms
 from django.core.validators import RegexValidator
 from django.utils.safestring import mark_safe
-
 from .models import User, Profile, Folder, Notebook, Tag, Page, EventTag, Reminder, Event, Credential, PageTag
 from guardian.shortcuts import assign_perm
 from bootstrap_datepicker_plus.widgets import DateTimePickerInput, DatePickerInput, TimePickerInput

@@ -1,10 +1,7 @@
 import json
-
-from django.conf import settings
-
-
 import base64
 
+from django.conf import settings
 from django.core.files.base import ContentFile
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
@@ -20,7 +17,6 @@ from django.contrib.auth.hashers import check_password
 from guardian.shortcuts import get_objects_for_user
 from .view_helper import sort_items_by_created_time, save_folder_notebook_forms, get_or_create_google_event
 from datetime import datetime
-
 from django.utils import timezone
 from google_auth_oauthlib.flow import Flow
 
@@ -138,6 +134,7 @@ def calendar_tab(request):
 
     return render(request, 'calendar_tab.html', {'event_form': event_form, 'tag_form': tag_form, 'events': events,
                                                  'tags': tags})
+
 
 @login_required
 def profile_tab(request):
