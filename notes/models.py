@@ -196,6 +196,15 @@ class Event(models.Model):
         ("Sunday", "Sunday"),
     ]
     routine = models.CharField(choices=routine_choice, max_length=10, blank=True)
+    google_id = models.CharField(blank=True, max_length=200)
+    sync = models.BooleanField(blank=False, default=False)
+
+
+    
+
+
+
+
 
 
 class Reminder(models.Model):
