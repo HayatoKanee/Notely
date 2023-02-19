@@ -55,10 +55,10 @@ def send_notification(sender, instance, **kwargs):
     if seconds_until_reminder.total_seconds() > 0:
         channel_layer = get_channel_layer()
         async_to_sync(channel_layer.group_send)(
-            f"user_{instance.user.id}",
+            f"user_{instance.event.user.id}",
             {
                 "type": "schedule_reminder",
-                "message": f"Reminder: {instance.event.title}  will start {reminderDict.get(instance.reminder_field)} .",
+                "message": f"Reminder: {instance.event.title}  will start {reminderDict.get(instance.reminder_time)} .",
                 "delay": seconds_until_reminder.total_seconds(),
             },
         )
