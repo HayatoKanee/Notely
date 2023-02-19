@@ -2,8 +2,7 @@ from bootstrap_datepicker_plus.widgets import DateTimePickerInput
 from django import forms
 from django.core.validators import RegexValidator
 from django.utils.safestring import mark_safe
-
-from .models import User, Profile, Folder, Notebook, Event, Tag, Page, EventTag
+from .models import User, Profile, Folder, Notebook, Event, Tag, Page, EventTag, PageTag
 from guardian.shortcuts import assign_perm
 from bootstrap_datepicker_plus.widgets import DateTimePickerInput
 from colorfield.fields import ColorField
@@ -119,18 +118,31 @@ class FolderForm(forms.ModelForm):
 
 class TagImageChoiceField(ModelMultipleChoiceField):
     def label_from_instance(self, obj):
-        return mark_safe('{} {}'.format('&#x25CF', obj.title))
+        return mark_safe('{} {} {} '.format(obj.id, '&#x25CF', obj.title))
 
 
 class TagSelectWidget(SelectMultiple):
+    tag_model = None
+
     def create_option(self, name, value, label, selected, index, subindex=None, attrs=None):
         option = super().create_option(name, value, label, selected, index, subindex, attrs)
         try:
-            tag = EventTag.objects.get(title=label.replace('&#x25CF ', ''))
+            tag_id = label.split('&#x25CF')[0]
+            title = label.split('&#x25CF')[1]
+            tag = self.tag_model.objects.get(id=tag_id)
             option['attrs']['style'] = f'color: {tag.color}'
-        except EventTag.DoesNotExist:
+            option['label'] = mark_safe('{} {} '.format('&#x25CF', title))
+        except self.tag_model.DoesNotExist:
             pass
         return option
+
+
+class PageTagSelectWidget(TagSelectWidget):
+    tag_model = PageTag
+
+
+class EventTagSelectWidget(TagSelectWidget):
+    tag_model = EventTag
 
 
 class EventForm(forms.ModelForm):
@@ -151,7 +163,7 @@ class EventForm(forms.ModelForm):
     def __init__(self, user, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.user = user
-        self.fields['tag'].widget = TagSelectWidget()
+        self.fields['tag'].widget = EventTagSelectWidget()
         self.fields['tag'].queryset = user.event_tags.all()
 
     def clean(self):
@@ -177,9 +189,9 @@ class EventTagForm(forms.ModelForm):
         fields = ['title', 'color']
 
 
-class PageTagForm(forms.ModelForm):
+class PageTagForm(forms.ModelForm):  # The form for the tag.
     class Meta:
-        model = EventTag
+        model = PageTag
         fields = ['title', 'color']
 
 
@@ -199,3 +211,23 @@ class NotebookForm(forms.ModelForm):
         assign_perm('dg_edit_notebook', user, notebook)
         assign_perm('dg_delete_notebook', user, notebook)
         return notebook
+
+
+class PageForm(forms.ModelForm):  # The form for linking the tag and the page.
+    tag = TagImageChoiceField(queryset=None, label="tags", required=False)
+
+    class Meta:
+        model = Page
+        fields = []
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['tag'].widget = PageTagSelectWidget()
+        self.fields['tag'].queryset = PageTag.objects.all()
+
+    def save(self):
+        tag = super().save(commit=False)
+        if self.cleaned_data.get('tag'):
+            tag.tags.set(self.cleaned_data['tag'])
+        tag.save()
+        return tag

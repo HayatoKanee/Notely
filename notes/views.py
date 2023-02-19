@@ -1,18 +1,21 @@
+
 import json
 
+import base64
+
+from django.core.files.base import ContentFile
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
-from django.template.loader import render_to_string
-
 from .forms import SignUpForm, LogInForm, UserForm, ProfileForm, PasswordForm, FolderForm, NotebookForm, EventForm, \
-    EventTagForm
+    EventTagForm, PageTagForm, PageForm
 from .models import User, Folder, Notebook, Page, Event, Editor
+from django.template.loader import render_to_string
 from django.contrib.auth.decorators import login_required
 from .helpers import login_prohibited, check_perm
 from django.contrib.auth.hashers import check_password
-from guardian.shortcuts import get_objects_for_user, assign_perm
+from guardian.shortcuts import get_objects_for_user
 from .view_helper import sort_items_by_created_time, save_folder_notebook_forms
 from datetime import datetime
 
@@ -172,13 +175,20 @@ def gravatar(request):
 @check_perm('dg_view_page', Page)
 def page(request, page_id):
     page = Page.objects.get(id=page_id)
+    page_tag_form = PageTagForm()
     if request.method == 'POST':
-        new_page = Page.objects.create(notebook=page.notebook)
-        assign_perm('dg_view_page', request.user, new_page)
-        assign_perm('dg_edit_page', request.user, new_page)
-        assign_perm('dg_delete_page', request.user, new_page)
-        return redirect('page', new_page.id)
-    return render(request, 'page.html', {'page': page})
+        if 'page_tag_submit' in request.POST:
+            page_tag_form = PageTagForm(request.POST)
+            if page_tag_form.is_valid():
+                tag = page_tag_form.save(commit=False)
+                tag.user = request.user
+                tag.save()
+                messages.add_message(request, messages.SUCCESS, "Tag Created!")
+                return redirect('page', page.id)
+        if 'add_page_submit' in request.POST:
+            new_page = Page.objects.create(notebook=page.notebook)
+            return redirect('page', new_page.id)
+    return render(request, 'page.html', {'page': page, 'page_tag_form': page_tag_form})
 
 
 @login_required
@@ -187,6 +197,8 @@ def save_page(request, page_id):
     if request.method == 'POST':
         canvas = request.POST.get('canvas')
         editors = json.loads(request.POST.get('editors'))
+        thumbnail = request.POST.get('thumbnail')
+        thumbnail_binary = base64.b64decode(thumbnail.split(',')[1])
         page = Page.objects.get(id=page_id)
         notebook = page.notebook
         last_page = notebook.last_page
@@ -196,6 +208,7 @@ def save_page(request, page_id):
         notebook.save()
         page.drawing = canvas
         page.editors.all().delete()
+        page.thumbnail.save(f'{page.id}.jpeg', content=ContentFile(thumbnail_binary), save=True)
         page.save()
         for editor in editors:
             title = editor['title']
@@ -229,6 +242,15 @@ def delete_event(request, event_id):
 
 
 @login_required
+def delete_page(request, page_id):
+    page = Page.objects.get(id=page_id)
+    notebook = page.notebook
+    page.delete()
+    notebook.refresh_from_db()
+    return redirect('page', notebook.last_page.id)
+
+
+@login_required
 def event_detail(request, event_id):
     event = Event.objects.get(id=event_id)
     if request.method == 'POST':
@@ -239,6 +261,20 @@ def event_detail(request, event_id):
             return redirect('calendar_tab')
     form = EventForm(request.user, instance=event)
     html = render_to_string('partials/event_detail.html', {'form': form, 'event': event}, request=request)
+    return JsonResponse({'html': html})
+
+
+@login_required
+def page_detail(request, page_id):
+    page = Page.objects.get(id=page_id)
+    if request.method == 'POST':
+        form = PageForm(instance=page, data=request.POST)
+        if form.is_valid():
+            form.save()
+            messages.add_message(request, messages.SUCCESS, "page updated!")
+            return redirect('page', page.id)
+    form = PageForm(instance=page)
+    html = render_to_string('partials/page_detail.html', {'form': form, 'page': page}, request=request)
     return JsonResponse({'html': html})
 
 
