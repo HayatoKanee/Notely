@@ -73,9 +73,9 @@ TEMPLATES = [
         },
     },
 ]
-ASGI_APPLICATION = 'notely.asgi.application'
-
 WSGI_APPLICATION = 'notely.wsgi.application'
+# Daphne
+ASGI_APPLICATION = 'notely.asgi.application'
 
 CHANNEL_LAYERS = {
     "default": {

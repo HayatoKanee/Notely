@@ -40,7 +40,6 @@ def send_notification(sender, instance, **kwargs):
     # Calculate the number of seconds until the reminder time
     now = datetime.datetime.now()
     user_time_zone = now.tzinfo
-    
     seconds_until_reminder = (event_start_time - datetime.timedelta(minutes=int(reminder_time))) - now
     reminderDict = {
         "0": "now",
@@ -55,16 +54,16 @@ def send_notification(sender, instance, **kwargs):
         "10080": "at next week",
     }
     # If the notification time is in the future, schedule a message to be sent to the user's browser
-    # if seconds_until_reminder > 0:
-    #     channel_layer = get_channel_layer()
-    #     async_to_sync(channel_layer.group_send)(
-    #         f"user_{instance.user.id}",
-    #         {
-    #             "type": "schedule_reminder",
-    #             "message": f"Reminder: {instance.event.title}  will start {reminderDict.get(instance.reminder_field)} .",
-    #             "delay": seconds_until_reminder.total_seconds(),
-    #         },
-    #     )
+    if seconds_until_reminder.total_seconds() > 0:
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            f"user_{instance.event.user.id}",
+            {
+                "type": "schedule_reminder",
+                "message": f"Reminder: {instance.event.title}  will start {reminderDict.get(instance.reminder_time)} .",
+                "delay": seconds_until_reminder.total_seconds(),
+            },
+        )
 
 @receiver(post_save, sender=Page)
 def create_editor(sender, instance, created, **kwargs):

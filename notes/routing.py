@@ -1,7 +1,8 @@
-from django.urls import re_path
+from django.urls import path
 
-from . import consumers
+from notes.consumer import ReminderConsumer
 
 websocket_urlpatterns = [
-    re_path(r'ws/$', consumers.ReminderConsumer.as_asgi()),
+    path('calendar_tab/', ReminderConsumer.as_asgi()),
+
 ]
