@@ -14,18 +14,15 @@
           </form>
       </div>
           {% for p in page.notebook.pages.all %}
-
               <div class="col page" data-tag-id = {{ p.get_all_tags_id }}>
-
-
-              {% if p.thumbnail %}
+                  <div class="dropdown">
+                      <a href="{% url 'page' p.id %}" style="color: #CD5C5C;">
+                          <span style="color: {{ p.tags.first.color }}">&#x25CF{% if p.thumbnail %}
                                     <img src="{{ p.thumbnail.url }}">
                   {% else %}
                   {% load static %}
-                  <img src={% static  'images/default_thumbnail.jpeg'%}>
-                  {% endif %}
-                  <div class="dropdown">
-                      <span style="color: {{ p.tags.first.color }}">&#x25CF<a href="{% url 'page' p.id %}" style="color: #CD5C5C;"> page {{ forloop.counter }}</a></span>
+                  <img src={% static 'images/default_thumbnail.jpeg'%}>
+                  {% endif %} page {{ forloop.counter }}</span></a>
                       <button class="page dropdown-toggle" type="button" id="dropdownMenu" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
                       <div class="dropdown-menu" aria-labelledby="dropdownMenu">
                           <button class="dropdown-item add-tags" type="button" data-page-id="{{ p.id }}">Add tags</button>
