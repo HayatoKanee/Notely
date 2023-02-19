@@ -110,6 +110,7 @@ class Page(models.Model):
     drawing = models.TextField(blank=True)
     thumbnail = models.ImageField(upload_to='pages/thumbnails', storage=CustomStorage, blank=True)
 
+
     class Meta:
         permissions = [
             ("dg_view_page", "can view page"),
@@ -130,6 +131,14 @@ class Page(models.Model):
             notebook.save()
         except ObjectDoesNotExist:
             super().delete(*args, **kwargs)
+
+    def get_all_tags_id(self):
+        ids = ""
+        for tag in self.tags.all():
+            ids += f'{tag.id},'
+        if ids != "":
+            return ids[:-1]
+        return ids
 
 
 class Editor(models.Model):

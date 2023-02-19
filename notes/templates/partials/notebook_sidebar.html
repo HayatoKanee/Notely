@@ -14,7 +14,10 @@
           </form>
       </div>
           {% for p in page.notebook.pages.all %}
-              <div class="col page">
+
+              <div class="col page" data-tag-id = {{ p.get_all_tags_id }}>
+
+
               {% if p.thumbnail %}
                                     <img src="{{ p.thumbnail.url }}">
                   {% else %}
@@ -22,7 +25,7 @@
                   <img src={% static  'images/default_thumbnail.jpeg'%}>
                   {% endif %}
                   <div class="dropdown">
-                                        <span style="color: {{ p.tags.first.color }}">&#x25CF<a href="{% url 'page' p.id %}" style="color: #CD5C5C;"> page {{ forloop.counter }}</a></span>
+                      <span style="color: {{ p.tags.first.color }}">&#x25CF<a href="{% url 'page' p.id %}" style="color: #CD5C5C;"> page {{ forloop.counter }}</a></span>
                       <button class="page dropdown-toggle" type="button" id="dropdownMenu" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
                       <div class="dropdown-menu" aria-labelledby="dropdownMenu">
                           <button class="dropdown-item add-tags" type="button" data-page-id="{{ p.id }}">Add tags</button>
@@ -40,10 +43,12 @@
 <div class="offcanva-footer">
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"> New Tag </button>
 </div>
-
+<div class="tag-buttons">
+    {% for tag in tags %}
+        <span style="color: {{ tag.color }}">&#x25CF<button class="tag-button" data-tag-id="{{ tag.id }}">tag</button></span>
+    {% endfor %}
 </div>
-
-
+</div>
 <div class="modal fade" id="exampleModal" >
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -66,6 +71,7 @@
 {% include 'partials/pageModal.html' %}
 <script>
     const newButtons = document.querySelectorAll('.dropdown-item.add-tags');
+    const tagButton = document.querySelectorAll('.tag-button');
 
     newButtons.forEach(button => {
       button.addEventListener('click', event => {
@@ -82,6 +88,15 @@
              $('#pageDetail').modal('show');
       });
     });
+
+        tagButton.forEach(button => {
+            button.addEventListener('click', event => {
+                const tag_id = button.getAttribute('data-tag-id');
+                $(".page").hide();
+                $(".page[data-tag-id*=" + tag_id+"]").show();
+
+            });
+        });
 
 </script>
 

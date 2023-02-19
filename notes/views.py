@@ -176,6 +176,7 @@ def gravatar(request):
 def page(request, page_id):
     page = Page.objects.get(id=page_id)
     page_tag_form = PageTagForm()
+    tags = PageTag.objects.all()
     if request.method == 'POST':
         if 'page_tag_submit' in request.POST:
             page_tag_form = PageTagForm(request.POST)
@@ -188,7 +189,7 @@ def page(request, page_id):
         if 'add_page_submit' in request.POST:
             new_page = Page.objects.create(notebook=page.notebook)
             return redirect('page', new_page.id)
-    return render(request, 'page.html', {'page': page, 'page_tag_form': page_tag_form})
+    return render(request, 'page.html', {'page': page, 'page_tag_form': page_tag_form, 'tags': tags})
 
 
 @login_required
