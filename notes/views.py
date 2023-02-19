@@ -10,7 +10,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from .forms import SignUpForm, LogInForm, UserForm, ProfileForm, PasswordForm, FolderForm, NotebookForm, EventForm, \
     EventTagForm, PageTagForm, PageForm
-from .models import User, Folder, Notebook, Page, Event, Editor, PageTag
+from .models import User, Folder, Notebook, Page, Event, Editor, PageTag, Reminder
 from django.template.loader import render_to_string
 from django.contrib.auth.decorators import login_required
 from .helpers import login_prohibited, check_perm
@@ -18,6 +18,11 @@ from django.contrib.auth.hashers import check_password
 from guardian.shortcuts import get_objects_for_user
 from .view_helper import sort_items_by_created_time, save_folder_notebook_forms
 from datetime import datetime
+
+from django.utils import timezone
+from google_auth_oauthlib.flow import Flow
+
+SCOPES = ['https://www.googleapis.com/auth/calendar']
 
 
 @login_prohibited
@@ -113,7 +118,10 @@ def calendar_tab(request):
         if 'event_submit' in request.POST:
             event_form = EventForm(request.user, request.POST)
             if event_form.is_valid():
-                event_form.save()
+                event = event_form.save()
+                if  int(event_form.cleaned_data['reminder']) > -1  :
+                    Reminder.objects.create(event= event, reminder_time =event_form.cleaned_data['reminder'] )
+                    messages.add_message(request, messages.SUCCESS, "Reminder Created!")
                 messages.add_message(request, messages.SUCCESS, "Event Created!")
                 return redirect('calendar_tab')
 

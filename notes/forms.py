@@ -148,6 +148,9 @@ class EventTagSelectWidget(TagSelectWidget):
 class EventForm(forms.ModelForm):
     tag = TagImageChoiceField(queryset=None, label="tags", required=False)
     page = forms.ModelChoiceField(queryset=Page.objects.all(), required=False)
+    reminder = forms.ChoiceField(choices=Reminder.reminder_choice , required= False, initial="No reminder")
+    sync = forms.BooleanField(required=False)
+
 
     class Meta:
         model = Event

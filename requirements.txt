@@ -5,6 +5,8 @@ django-widget-tweaks
 libgravatar
 channels
 daphne
+redis 
+django-redis
 django-guardian
 django-bootstrap-datepicker-plus
 django-colorfield

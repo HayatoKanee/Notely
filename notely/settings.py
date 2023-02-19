@@ -73,15 +73,15 @@ TEMPLATES = [
         },
     },
 ]
-ASGI_APPLICATION = 'notely.asgi.application'
-
 WSGI_APPLICATION = 'notely.wsgi.application'
+# Daphne
+ASGI_APPLICATION = 'notely.asgi.application'
 
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [("localhost", 8000)],
+            "hosts": [("localhost", 6379)],
         },
     },
 }
@@ -157,5 +157,20 @@ MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 }
 
+
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+GOOGLE_CREDENTIALS_PATH = os.path.join(BASE_DIR, 'notes', 'assets', 'credentials.json')
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+EMAIL_HOST_USER = 'winniethepooh.notely@gmail.com'
+EMAIL_HOST_PASSWORD = '30624700wtfym'
+
