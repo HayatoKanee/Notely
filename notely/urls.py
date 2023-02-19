@@ -13,6 +13,8 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
 from notes import views
@@ -39,3 +41,6 @@ urlpatterns = [
     path('page_detail/<page_id>', views.page_detail, name='page_detail'),
     path('delete_page/<page_id>', views.delete_page, name='delete_page'),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

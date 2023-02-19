@@ -8,6 +8,7 @@ from datetime import datetime
 from django.urls import reverse
 
 from notes.helpers import validate_date
+from notes.storage import CustomStorage
 
 
 class User(AbstractUser):
@@ -107,6 +108,7 @@ class Notebook(models.Model):
 class Page(models.Model):
     notebook = models.ForeignKey(Notebook, related_name="pages", on_delete=models.CASCADE)
     drawing = models.TextField(blank=True)
+    thumbnail = models.ImageField(upload_to='pages/thumbnails', storage=CustomStorage, blank=True)
     code = models.TextField(blank=True)
 
     class Meta:
