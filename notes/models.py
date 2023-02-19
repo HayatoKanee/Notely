@@ -224,6 +224,7 @@ class Reminder(models.Model):
     reminder_time = models.IntegerField(choices=reminder_choice)
 
 
+
 class Credential(models.Model):
     user = models.ForeignKey(User, related_name="creds", on_delete=models.CASCADE)
     google_cred = models.TextField(blank=True)
