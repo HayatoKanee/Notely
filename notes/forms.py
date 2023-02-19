@@ -2,13 +2,21 @@ from bootstrap_datepicker_plus.widgets import DateTimePickerInput
 from django import forms
 from django.core.validators import RegexValidator
 from django.utils.safestring import mark_safe
-from .models import User, Profile, Folder, Notebook, Event, Tag, Page, EventTag, PageTag, Reminder
+from .models import User, Profile, Folder, Notebook, Tag, Page, EventTag, Reminder, Event, Credential, PageTag
 from guardian.shortcuts import assign_perm
-from bootstrap_datepicker_plus.widgets import DateTimePickerInput
+from bootstrap_datepicker_plus.widgets import DateTimePickerInput, DatePickerInput, TimePickerInput
 from colorfield.fields import ColorField
-from django.forms import ModelChoiceField, widgets, ModelMultipleChoiceField
+from django.forms import ModelChoiceField, widgets, ModelMultipleChoiceField, CheckboxInput
 from django.utils.html import format_html
 from django.forms.widgets import Select, SelectMultiple
+
+import datetime
+from google.oauth2.credentials import Credentials
+from googleapiclient.errors import HttpError
+from googleapiclient.discovery import build
+
+import datetime
+import json
 
 
 class LogInForm(forms.Form):
@@ -181,6 +189,10 @@ class EventForm(forms.ModelForm):
         event.save()
         if self.cleaned_data.get('tag'):
             event.tags.set(self.cleaned_data['tag'])
+        if self.cleaned_data.get('page'):
+            event.page = self.cleaned_data['page']
+        if self.cleaned_data.get('sync'):
+            print("sync")
         event.save()
         return event
 
@@ -213,6 +225,19 @@ class NotebookForm(forms.ModelForm):
         assign_perm('dg_edit_notebook', user, notebook)
         assign_perm('dg_delete_notebook', user, notebook)
         return notebook
+
+
+class ReminderForm(forms.ModelForm):
+    event = forms.ModelChoiceField(queryset=Event.objects.all(), required=False)
+
+    class Meta:
+        model = Reminder
+        fields = ['event', 'reminder_time']
+
+    def __init__(self, user, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.user = user
+        self.fields['event'].queryset = user.events.all()
 
 
 class PageForm(forms.ModelForm):  # The form for linking the tag and the page.

@@ -37,6 +37,8 @@ urlpatterns = [
     path('delete_event/<event_id>', views.delete_event, name='delete_event'),
     path('update_event/<event_id>', views.update_event, name='update_event'),
     path('event_detail/<event_id>', views.event_detail, name='event_detail'),
+    path('google_auth/', views.google_auth, name='google_auth'),
+    path('google_auth_callback/', views.google_auth_callback, name='google_auth_callback'),
     path('page_detail/<page_id>', views.page_detail, name='page_detail'),
     path('delete_page/<page_id>', views.delete_page, name='delete_page'),
 ]

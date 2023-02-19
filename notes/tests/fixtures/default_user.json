@@ -63,8 +63,7 @@
         "pk": 1,
         "fields": {
             "event_id": 1,
-            "reminder_name": "Reminder1",
-            "alert_time": "2022-10-25 13:45:20"
+            "reminder_time": "5"
         }
     }
 ]

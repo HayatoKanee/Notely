@@ -1,8 +1,7 @@
-
 import json
-
 import base64
 
+from django.conf import settings
 from django.core.files.base import ContentFile
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
@@ -10,15 +9,14 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from .forms import SignUpForm, LogInForm, UserForm, ProfileForm, PasswordForm, FolderForm, NotebookForm, EventForm, \
     EventTagForm, PageTagForm, PageForm
-from .models import User, Folder, Notebook, Page, Event, Editor, PageTag, Reminder
+from .models import User, Folder, Notebook, Page, Event, Editor, Reminder, Credential, PageTag
 from django.template.loader import render_to_string
 from django.contrib.auth.decorators import login_required
 from .helpers import login_prohibited, check_perm
 from django.contrib.auth.hashers import check_password
 from guardian.shortcuts import get_objects_for_user
-from .view_helper import sort_items_by_created_time, save_folder_notebook_forms
+from .view_helper import sort_items_by_created_time, save_folder_notebook_forms, get_or_create_google_event
 from datetime import datetime
-
 from django.utils import timezone
 from google_auth_oauthlib.flow import Flow
 
@@ -119,8 +117,8 @@ def calendar_tab(request):
             event_form = EventForm(request.user, request.POST)
             if event_form.is_valid():
                 event = event_form.save()
-                if  int(event_form.cleaned_data['reminder']) > -1  :
-                    Reminder.objects.create(event= event, reminder_time =event_form.cleaned_data['reminder'] )
+                if int(event_form.cleaned_data['reminder']) > -1:
+                    Reminder.objects.create(event=event, reminder_time=event_form.cleaned_data['reminder'])
                     messages.add_message(request, messages.SUCCESS, "Reminder Created!")
                 messages.add_message(request, messages.SUCCESS, "Event Created!")
                 return redirect('calendar_tab')
@@ -298,3 +296,33 @@ def update_event(request, event_id):
         event.save()
         return JsonResponse({'status': 'success'})
     return JsonResponse({'status': 'fail'})
+
+
+@login_required
+def google_auth(request):
+    flow = Flow.from_client_secrets_file(
+        settings.GOOGLE_CREDENTIALS_PATH,
+        scopes=SCOPES, redirect_uri=request.build_absolute_uri('/google_auth_callback/')
+    )
+    authorization_url, state = flow.authorization_url(
+        access_type='offline',
+        include_granted_scopes='true'
+    )
+    return redirect(authorization_url)
+
+
+@login_required
+def google_auth_callback(request):
+    state = request.session.pop('google_auth_state', None)
+    flow = Flow.from_client_secrets_file(
+        settings.GOOGLE_CREDENTIALS_PATH,
+        scopes=SCOPES, redirect_uri=request.build_absolute_uri('/google_auth_callback/')
+    )
+
+    # Exchange authorization code for access token
+    flow.fetch_token(authorization_response=request.build_absolute_uri(), state=state)
+
+    # Get the user's credentials and store them in the database
+    credentials = flow.credentials.to_json()
+    Credential.objects.update_or_create(user=request.user, defaults={'google_cred': credentials})
+    return redirect('calendar_tab')

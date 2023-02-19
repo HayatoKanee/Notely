@@ -110,7 +110,6 @@ class Page(models.Model):
     drawing = models.TextField(blank=True)
     thumbnail = models.ImageField(upload_to='pages/thumbnails', storage=CustomStorage, blank=True)
 
-
     class Meta:
         permissions = [
             ("dg_view_page", "can view page"),
@@ -219,7 +218,7 @@ class Event(models.Model):
 class Reminder(models.Model):
     event = models.ForeignKey(Event, related_name="reminders", on_delete=models.CASCADE)
     reminder_choice = [
-        (-1 , "No reminder"),
+        (-1, "No reminder"),
         (0, "When event start"),
         (5, "5 minutes before"),
         (10, "10 minutes before"),
@@ -233,10 +232,7 @@ class Reminder(models.Model):
     ]
     reminder_time = models.IntegerField(choices=reminder_choice)
 
+
 class Credential(models.Model):
     user = models.ForeignKey(User, related_name="creds", on_delete=models.CASCADE)
     google_cred = models.TextField(blank=True)
-
-
-
-
