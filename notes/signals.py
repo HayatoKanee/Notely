@@ -72,14 +72,14 @@ def create_editor(sender, instance, created, **kwargs):
         Editor.objects.create(page=instance, title="Editor1")
 
 
-<<<<<<< HEAD
+
 @receiver(post_save, sender=Page)
 def give_permission(sender, instance, created, **kwargs):
     if created:
         assign_perm('dg_view_page', instance.notebook.user, instance)
         assign_perm('dg_edit_page', instance.notebook.user, instance)
         assign_perm('dg_delete_page', instance.notebook.user, instance)
-=======
+
 @receiver(post_save, sender=Reminder)
 def send_reminder_email(sender, instance, created, **kwargs):
     if not created:
@@ -93,4 +93,4 @@ def send_reminder_email(sender, instance, created, **kwargs):
                 [instance.event.user.email],
                 fail_silently=False,
             )
->>>>>>> feature/calendar
+

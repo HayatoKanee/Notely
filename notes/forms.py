@@ -2,7 +2,7 @@ from bootstrap_datepicker_plus.widgets import DateTimePickerInput
 from django import forms
 from django.core.validators import RegexValidator
 from django.utils.safestring import mark_safe
-from .models import User, Profile, Folder, Notebook, Event, Tag, Page, EventTag, PageTag
+from .models import User, Profile, Folder, Notebook, Event, Tag, Page, EventTag, PageTag, Reminder
 from guardian.shortcuts import assign_perm
 from bootstrap_datepicker_plus.widgets import DateTimePickerInput
 from colorfield.fields import ColorField
@@ -148,9 +148,8 @@ class EventTagSelectWidget(TagSelectWidget):
 class EventForm(forms.ModelForm):
     tag = TagImageChoiceField(queryset=None, label="tags", required=False)
     page = forms.ModelChoiceField(queryset=Page.objects.all(), required=False)
-    reminder = forms.ChoiceField(choices=Reminder.reminder_choice , required= False, initial="No reminder")
+    reminder = forms.ChoiceField(choices=Reminder.reminder_choice, required=False, initial="No reminder")
     sync = forms.BooleanField(required=False)
-
 
     class Meta:
         model = Event
