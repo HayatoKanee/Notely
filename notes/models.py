@@ -229,6 +229,5 @@ class Credential(models.Model):
     google_cred = models.TextField(blank=True)
 
 
-class Credential(models.Model):
-    user = models.ForeignKey(User, related_name="creds", on_delete=models.CASCADE)
-    google_cred = models.TextField(blank=True)
+
+
