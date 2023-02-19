@@ -28,10 +28,9 @@ def save_age(sender, instance, **kwargs):
 @receiver(post_save, sender=Notebook)
 def create_page(sender, instance, created, **kwargs):
     if created:
-        new_page = Page.objects.create(notebook=instance, last_page_of=instance)
-        assign_perm('dg_view_page', instance.user, new_page)
-        assign_perm('dg_edit_page', instance.user, new_page)
-        assign_perm('dg_delete_page', instance.user, new_page)
+        new_page = Page.objects.create(notebook=instance)
+        instance.last_page = new_page
+        instance.save()
 
 @receiver(post_save, sender=Reminder)
 def send_notification(sender, instance, **kwargs):
@@ -73,6 +72,7 @@ def create_editor(sender, instance, created, **kwargs):
         Editor.objects.create(page=instance, title="Editor1")
 
 
+
 @receiver(post_save, sender=Reminder)
 def send_reminder_email(sender, instance, created, **kwargs):
     if not created:
@@ -86,3 +86,11 @@ def send_reminder_email(sender, instance, created, **kwargs):
                 [instance.event.user.email],
                 fail_silently=False,
             )
+
+@receiver(post_save, sender=Page)
+def give_permission(sender, instance, created, **kwargs):
+    if created:
+        assign_perm('dg_view_page', instance.notebook.user, instance)
+        assign_perm('dg_edit_page', instance.notebook.user, instance)
+        assign_perm('dg_delete_page', instance.notebook.user, instance)
+

@@ -35,7 +35,8 @@
             "user_id": 1,
             "folder_id": 1,
             "notebook_name": "FC1",
-            "created_at": "2022-11-25 13:45:20"
+            "created_at": "2022-11-25 13:45:20",
+            "last_page_id": 1
         }
     },
     {
@@ -62,8 +63,7 @@
         "pk": 1,
         "fields": {
             "event_id": 1,
-            "reminder_name": "Reminder1",
-            "alert_time": "2022-10-25 13:45:20"
+            "reminder_time": "5"
         }
     }
 ]

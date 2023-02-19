@@ -2,10 +2,9 @@ from bootstrap_datepicker_plus.widgets import DateTimePickerInput
 from django import forms
 from django.core.validators import RegexValidator
 from django.utils.safestring import mark_safe
-
-from .models import User, Profile, Folder, Notebook, Tag, Page, EventTag , Reminder, Event, Credential
+from .models import User, Profile, Folder, Notebook, Tag, Page, EventTag, Reminder, Event, Credential, PageTag
 from guardian.shortcuts import assign_perm
-from bootstrap_datepicker_plus.widgets import DateTimePickerInput,DatePickerInput,TimePickerInput
+from bootstrap_datepicker_plus.widgets import DateTimePickerInput, DatePickerInput, TimePickerInput
 from colorfield.fields import ColorField
 from django.forms import ModelChoiceField, widgets, ModelMultipleChoiceField, CheckboxInput
 from django.utils.html import format_html
@@ -18,7 +17,6 @@ from googleapiclient.discovery import build
 
 import datetime
 import json
-
 
 
 class LogInForm(forms.Form):
@@ -119,7 +117,7 @@ class FolderForm(forms.ModelForm):
             user=user,
             parent=parent,
             folder_name=self.cleaned_data.get('folder_name'),
-            )
+        )
         assign_perm('dg_view_folder', user, folder)
         assign_perm('dg_edit_folder', user, folder)
         assign_perm('dg_delete_folder', user, folder)
@@ -128,24 +126,37 @@ class FolderForm(forms.ModelForm):
 
 class TagImageChoiceField(ModelMultipleChoiceField):
     def label_from_instance(self, obj):
-        return mark_safe('{} {}'.format('&#x25CF', obj.title))
+        return mark_safe('{} {} {} '.format(obj.id, '&#x25CF', obj.title))
 
 
 class TagSelectWidget(SelectMultiple):
+    tag_model = None
+
     def create_option(self, name, value, label, selected, index, subindex=None, attrs=None):
         option = super().create_option(name, value, label, selected, index, subindex, attrs)
         try:
-            tag = EventTag.objects.get(title=label.replace('&#x25CF ', ''))
+            tag_id = label.split('&#x25CF')[0]
+            title = label.split('&#x25CF')[1]
+            tag = self.tag_model.objects.get(id=tag_id)
             option['attrs']['style'] = f'color: {tag.color}'
-        except EventTag.DoesNotExist:
+            option['label'] = mark_safe('{} {} '.format('&#x25CF', title))
+        except self.tag_model.DoesNotExist:
             pass
         return option
+
+
+class PageTagSelectWidget(TagSelectWidget):
+    tag_model = PageTag
+
+
+class EventTagSelectWidget(TagSelectWidget):
+    tag_model = EventTag
 
 
 class EventForm(forms.ModelForm):
     tag = TagImageChoiceField(queryset=None, label="tags", required=False)
     page = forms.ModelChoiceField(queryset=Page.objects.all(), required=False)
-    reminder = forms.ChoiceField(choices=Reminder.reminder_choice , required= False, initial="No reminder")
+    reminder = forms.ChoiceField(choices=Reminder.reminder_choice, required=False, initial="No reminder")
     sync = forms.BooleanField(required=False)
 
     class Meta:
@@ -156,16 +167,13 @@ class EventForm(forms.ModelForm):
             "start_time": DateTimePickerInput(attrs={"class": "form-control"}),
             "end_time": DateTimePickerInput(attrs={"class": "form-control"}),
 
-
         }
 
     def __init__(self, user, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.user = user
-        self.fields['tag'].widget = TagSelectWidget()
+        self.fields['tag'].widget = EventTagSelectWidget()
         self.fields['tag'].queryset = user.event_tags.all()
-
-        
 
     def clean(self):
         super().clean()
@@ -188,7 +196,7 @@ class EventForm(forms.ModelForm):
             event.page = self.cleaned_data['page']
         if self.cleaned_data.get('sync'):
             print("sync")
-        
+
         event.save()
         return event
 
@@ -199,9 +207,9 @@ class EventTagForm(forms.ModelForm):
         fields = ['title', 'color']
 
 
-class PageTagForm(forms.ModelForm):
+class PageTagForm(forms.ModelForm):  # The form for the tag.
     class Meta:
-        model = EventTag
+        model = PageTag
         fields = ['title', 'color']
 
 
@@ -222,14 +230,35 @@ class NotebookForm(forms.ModelForm):
         assign_perm('dg_delete_notebook', user, notebook)
         return notebook
 
-class reminderForm(forms.ModelForm):
-    event = forms.ModelChoiceField(queryset=Event.objects.all(), required=False)
-    class Meta:
-        model = Reminder 
-        fields = ['event','reminder_time']
 
+class ReminderForm(forms.ModelForm):
+    event = forms.ModelChoiceField(queryset=Event.objects.all(), required=False)
+
+    class Meta:
+        model = Reminder
+        fields = ['event', 'reminder_time']
 
     def __init__(self, user, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.user = user
         self.fields['event'].queryset = user.events.all()
+
+
+class PageForm(forms.ModelForm):  # The form for linking the tag and the page.
+    tag = TagImageChoiceField(queryset=None, label="tags", required=False)
+
+    class Meta:
+        model = Page
+        fields = []
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['tag'].widget = PageTagSelectWidget()
+        self.fields['tag'].queryset = PageTag.objects.all()
+
+    def save(self):
+        tag = super().save(commit=False)
+        if self.cleaned_data.get('tag'):
+            tag.tags.set(self.cleaned_data['tag'])
+        tag.save()
+        return tag
