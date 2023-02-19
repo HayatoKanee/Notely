@@ -104,7 +104,6 @@ def calendar_tab(request):
         for tag in event.tags.all():
             tags.add(tag)
 
-    print(tags)
     if request.method == "POST":
         if 'event_submit' in request.POST:
             event_form = EventForm(request.user, request.POST)
@@ -189,9 +188,6 @@ def page(request, page_id):
                 return redirect('page', page.id)
         if 'add_page_submit' in request.POST:
             new_page = Page.objects.create(notebook=page.notebook)
-            assign_perm('dg_view_page', request.user, new_page)
-            assign_perm('dg_edit_page', request.user, new_page)
-            assign_perm('dg_delete_page', request.user, new_page)
             return redirect('page', new_page.id)
     return render(request, 'page.html', {'page': page, 'page_tag_form': page_tag_form})
 
@@ -243,7 +239,6 @@ def delete_page(request, page_id):
     notebook = page.last_page_of
     page.delete()
     if notebook:
-        print("2"+str(notebook.last_page))
         notebook.save()
     return redirect('folders_tab')
 

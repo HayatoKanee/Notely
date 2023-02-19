@@ -126,7 +126,8 @@ class Page(models.Model):
             else:
                 notebook.last_page = Page.objects.create(notebook=notebook, last_page_of=notebook)
             notebook.save()
-            print("1"+str(notebook.last_page))
+
+
 class Tag(models.Model):
     title = models.CharField(max_length=30, unique=True)
     COLOR_PALETTE = [

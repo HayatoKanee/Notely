@@ -26,3 +26,11 @@ def create_page(sender, instance, created, **kwargs):
         assign_perm('dg_view_page', instance.user, new_page)
         assign_perm('dg_edit_page', instance.user, new_page)
         assign_perm('dg_delete_page', instance.user, new_page)
+
+
+@receiver(post_save, sender=Page)
+def give_permission(sender, instance, created, **kwargs):
+    if created:
+        assign_perm('dg_view_page', instance.notebook.user, instance)
+        assign_perm('dg_edit_page', instance.notebook.user, instance)
+        assign_perm('dg_delete_page', instance.notebook.user, instance)
