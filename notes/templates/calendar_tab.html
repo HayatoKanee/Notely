@@ -1,7 +1,7 @@
 {% extends 'base_content.html' %}
  {% block content %}
      <div class="container">
-      <div id='calendar' style="color: rgb(245, 93, 66)"></div>
+      <div id='calendar' style="color: rgb(245, 93, 66);"></div>
               <button id="addEvent" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#eventModal">
                 Add New Event
           </button>
@@ -9,16 +9,14 @@
     <a href="{% url 'google_auth' %}" class="btn btn-google" style="color: rgb(245, 93, 66);">
   <i class="fa fa-google"></i> Sign in with Google
 </a>
-    
 
-   
 
    </div>
           <div class="modal fade" id="eventModal" tabindex="-1">
             <div class="modal-dialog">
-                <div class="modal-content" style="color: rgb(245, 93, 66)">
+                <div class="modal-content" style="color: rgb(245, 93, 66);">
                     <div class="modal-header">
-                      <h5 class="modal-title" style="color: rgb(245, 93, 66)">Event Modal</h5>
+                      <h5 class="modal-title" style="color: rgb(245, 93, 66);">Event Modal</h5>
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -27,9 +25,9 @@
                             {% csrf_token %}
                             {% include 'partials/bootstrap_form.html' with form=event_form %}
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <input type="submit" name="event_submit" value ="Create event" class="btn btn-primary">
+                            <input type="submit" name="event_submit" value ="Create event" class="btn btn-primary" style="margin-left: 3px;">
                         </form>
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tagModal" data-bs-dismiss="modal">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tagModal" data-bs-dismiss="modal" style="margin-top: 7px;">
                           New tag
                         </button>
                       </div>
@@ -41,16 +39,16 @@
                   <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h5 class="modal-title">New Tag</h5>
+                        <h5 class="modal-title" style="color: rgb(245, 93, 66);">New Tag</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>
-                      <div class="modal-body">
+                      <div class="modal-body" style="color: rgb(245, 93, 66);">
                         {{ tag_form.media }}
                         <form action="{% url 'calendar_tab' %}" method="post">
                             {% csrf_token %}
                             {% include 'partials/bootstrap_form.html' with form=tag_form %}
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <input type="submit" name="tag_submit" value ="Create tag" class="btn btn-primary">
+                            <input type="submit" name="tag_submit" value ="Create tag" class="btn btn-primary" style="margin-left: 3px;">
                         </form>
                       </div>
                     </div>
