@@ -236,11 +236,10 @@ def delete_event(request, event_id):
 @login_required
 def delete_page(request, page_id):
     page = Page.objects.get(id=page_id)
-    notebook = page.last_page_of
+    notebook = page.notebook
     page.delete()
-    if notebook:
-        notebook.save()
-    return redirect('folders_tab')
+    notebook.refresh_from_db()
+    return redirect('page', notebook.last_page.id)
 
 
 @login_required

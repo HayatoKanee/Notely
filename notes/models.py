@@ -1,4 +1,5 @@
 from colorfield.fields import ColorField
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator, MinValueValidator, MaxValueValidator
@@ -90,6 +91,7 @@ class Notebook(models.Model):
     folder = models.ForeignKey(Folder, related_name="notebooks", on_delete=models.CASCADE, null=True, blank=True)
     notebook_name = models.CharField(max_length=10)
     created_at = models.DateTimeField(auto_now_add=True)
+    last_page = models.OneToOneField('Page', related_name="last_page_of", on_delete=models.SET_NULL, null=True)
 
     class Meta:
         permissions = [
@@ -105,8 +107,6 @@ class Notebook(models.Model):
 class Page(models.Model):
     notebook = models.ForeignKey(Notebook, related_name="pages", on_delete=models.CASCADE)
     drawing = models.TextField(blank=True)
-    last_page_of = models.OneToOneField(Notebook, related_name="last_page", on_delete=models.CASCADE, null=True,
-                                        blank=True)
     code = models.TextField(blank=True)
 
     class Meta:
@@ -117,15 +117,18 @@ class Page(models.Model):
         ]
 
     def delete(self, *args, **kwargs):
-        notebook = self.last_page_of
-        super().delete(*args, **kwargs)
-        if notebook:
+        try:
+            notebook = self.last_page_of
+            super().delete(*args, **kwargs)
             pages = notebook.pages.all()
             if pages.exists():
                 notebook.last_page = pages.last()
+                print(notebook.last_page)
             else:
-                notebook.last_page = Page.objects.create(notebook=notebook, last_page_of=notebook)
+                notebook.last_page = Page.objects.create(notebook=notebook)
             notebook.save()
+        except ObjectDoesNotExist:
+            super().delete(*args, **kwargs)
 
 
 class Tag(models.Model):

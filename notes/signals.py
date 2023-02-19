@@ -22,10 +22,9 @@ def save_age(sender, instance, **kwargs):
 @receiver(post_save, sender=Notebook)
 def create_page(sender, instance, created, **kwargs):
     if created:
-        new_page = Page.objects.create(notebook=instance, last_page_of=instance)
-        assign_perm('dg_view_page', instance.user, new_page)
-        assign_perm('dg_edit_page', instance.user, new_page)
-        assign_perm('dg_delete_page', instance.user, new_page)
+        new_page = Page.objects.create(notebook=instance)
+        instance.last_page = new_page
+        instance.save()
 
 
 @receiver(post_save, sender=Page)
