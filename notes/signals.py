@@ -38,9 +38,9 @@ def send_notification(sender, instance, **kwargs):
     reminder_time = instance.reminder_time
 
     # Calculate the number of seconds until the reminder time
-    now = datetime.datetime.now()
+    now = datetime.now()
     user_time_zone = now.tzinfo
-    seconds_until_reminder = (event_start_time - datetime.timedelta(minutes=int(reminder_time))) - now
+    seconds_until_reminder = (event_start_time - timedelta(minutes=int(reminder_time))) - now
     reminderDict = {
         "0": "now",
         "5": "in 5 minutes",
