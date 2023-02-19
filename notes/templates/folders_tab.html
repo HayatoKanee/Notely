@@ -1,27 +1,28 @@
 {% extends 'base_content.html' %}
 {% block content %}
 
-<div class="folder-path">
-><a href="{%url 'folders_tab' %}" style="color: #1b1b1b; margin-left: 20px;"><button class="folder-button" style="font-size: 20px; background-color: white; color: rgb(245, 93, 66);">Home</button></a>
+<div class="folder-path" style="margin-top: 10px;">
+><a href="{%url 'folders_tab' %}" style="color: #1b1b1b; margin-left: 20px;"><button class="folder-button" style="font-size: 20px; background-color: white; color: rgb(245, 93, 66);">Home</button>
+</a>
 {% if folder %}
 {% for item in folder.get_path %}
-  ><a href="{% url 'sub_folders_tab' item.id%}" style="color: #1b1b1b; margin-left: 20px;"><button class="folder-button" style="font-size: 20px; background-color: white;">{{item.folder_name}}</button></a>
+  <a href="{% url 'sub_folders_tab' item.id%}" style="color: #1b1b1b; margin-left: 20px;"><button class="folder-button" style="font-size: 20px; background-color: white;">{{item.folder_name}}</button></a>
 {% endfor %}
 {% endif %}
 </div>
 <div style="height: 800px">
-    <ul class="folder-nav">
-      <li style="background-color: white;font-size:23px; font-weight: bold; left: 10px;">
+    <ul class="folder-nav" style="margin-top: 9px;">
+      <li style="background-color: white; font-size:23px; font-weight: bold; color: rgb(245, 93, 66); margin-left: 10px;">
           Name
       </li>
-        <button id="addChoice" data-bs-toggle="modal" data-bs-target="#add" style="margin-right: 20px">
-          <span style="margin-left:30px">New</span>
-        </button>
+            <button id="addChoice" style="width: 100px; margin-top: -200px;">
+                <span style="margin-left:20px; color: rgb(245, 93, 66);">New</span>
+            </button>
     </ul>
   <div class="folder-container">
     <div class="container">
           {% for item in items %}
-              <div class="col" style="margin-top: 30px; margin-left: -60px; width: 15%; display: flex; justify-content: space-between; padding: 20px;">
+              <div class="col" style="margin-top: 30px; margin-left: -26px; width: 15%; display: flex; justify-content: space-between; padding: 20px;">
           <div class="col" style="margin-left: -90px; width: 60%;">
                 {% if item.get_type == "Folder" %}
                 <form action="{% url 'sub_folders_tab' item.id %}" method="get">
