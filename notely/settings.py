@@ -156,5 +156,6 @@ REDIRECT_URL_WHEN_LOGGED_IN = 'folders_tab'
 MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 }
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-GOOGLE_CREDENTIALS_PATH = os.path.join(BASE_DIR, 'notes', 'assets', 'credentials.json')
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'

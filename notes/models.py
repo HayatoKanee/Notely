@@ -1,4 +1,5 @@
 from colorfield.fields import ColorField
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator, MinValueValidator, MaxValueValidator
@@ -7,6 +8,7 @@ from datetime import datetime
 from django.urls import reverse
 
 from notes.helpers import validate_date
+from notes.storage import CustomStorage
 
 
 class User(AbstractUser):
@@ -90,6 +92,7 @@ class Notebook(models.Model):
     folder = models.ForeignKey(Folder, related_name="notebooks", on_delete=models.CASCADE, null=True, blank=True)
     notebook_name = models.CharField(max_length=10)
     created_at = models.DateTimeField(auto_now_add=True)
+    last_page = models.OneToOneField('Page', related_name="last_page_of", on_delete=models.SET_NULL, null=True)
 
     class Meta:
         permissions = [
@@ -105,8 +108,8 @@ class Notebook(models.Model):
 class Page(models.Model):
     notebook = models.ForeignKey(Notebook, related_name="pages", on_delete=models.CASCADE)
     drawing = models.TextField(blank=True)
-    last_page_of = models.OneToOneField(Notebook, related_name="last_page", on_delete=models.CASCADE, null=True,
-                                        blank=True)
+    thumbnail = models.ImageField(upload_to='pages/thumbnails', storage=CustomStorage, blank=True)
+
 
     class Meta:
         permissions = [
@@ -116,13 +119,26 @@ class Page(models.Model):
         ]
 
     def delete(self, *args, **kwargs):
-        notebook = self.last_page_of
-        super().delete(*args, **kwargs)
-        pages = notebook.pages.all()
-        if pages.exists():
-            notebook.last_page = pages.last()
-        else:
-            notebook.last_page = Page.objects.create(notebook=notebook, last_page_of=notebook)
+        try:
+            notebook = self.last_page_of
+            super().delete(*args, **kwargs)
+            pages = notebook.pages.all()
+            if pages.exists():
+                notebook.last_page = pages.last()
+                print(notebook.last_page)
+            else:
+                notebook.last_page = Page.objects.create(notebook=notebook)
+            notebook.save()
+        except ObjectDoesNotExist:
+            super().delete(*args, **kwargs)
+
+    def get_all_tags_id(self):
+        ids = ""
+        for tag in self.tags.all():
+            ids += f'{tag.id},'
+        if ids != "":
+            return ids[:-1]
+        return ids
 
 
 class Editor(models.Model):
@@ -139,7 +155,7 @@ class Editor(models.Model):
 
 
 class Tag(models.Model):
-    title = models.CharField(max_length=30, unique=True)
+    title = models.CharField(max_length=30)
     COLOR_PALETTE = [
         ('#000000', 'black'),
         ('#0000FF', 'Blue'),
@@ -198,13 +214,6 @@ class Event(models.Model):
     routine = models.CharField(choices=routine_choice, max_length=10, blank=True)
     google_id = models.CharField(blank=True, max_length=200)
     sync = models.BooleanField(blank=False, default=False)
-
-
-    
-
-
-
-
 
 
 class Reminder(models.Model):

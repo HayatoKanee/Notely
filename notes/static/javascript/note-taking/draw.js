@@ -292,6 +292,16 @@ document.onkeydown = function (e){
         canvas.discardActiveObject();
     }
 }
+
+function getThumbnail(){
+    const thumbnail = document.createElement('canvas')
+    thumbnail.width = 100;
+    thumbnail.height = 100;
+
+    const context = thumbnail.getContext('2d');
+    context.drawImage(canvas.getElement(), 0,0,thumbnail.width,thumbnail.height);
+    return thumbnail.toDataURL('image/jpeg');
+}
 function save(sync){
     const editorsData = [];
     const aElements = document.querySelectorAll('.editorTab a');
@@ -310,8 +320,9 @@ function save(sync){
         async:sync,
         url: "/save_page/"+page_id,
         data: {
-            canvas: JSON.stringify(canvas.toJSON(['link'])),
+            canvas: JSON.stringify(canvas.toDatalessJSON(['link'])),
             editors: JSON.stringify(editorsData),
+            thumbnail:getThumbnail(),
             csrfmiddlewaretoken: csrf
         }
     });

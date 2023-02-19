@@ -1,5 +1,4 @@
 """notely URL Configuration
-
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.1/topics/http/urls/
 Examples:
@@ -13,6 +12,8 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
 from notes import views
@@ -36,6 +37,9 @@ urlpatterns = [
     path('delete_event/<event_id>', views.delete_event, name='delete_event'),
     path('update_event/<event_id>', views.update_event, name='update_event'),
     path('event_detail/<event_id>', views.event_detail, name='event_detail'),
-    path('google_auth/', views.google_auth, name='google_auth'),
-    path('google_auth_callback/', views.google_auth_callback, name='google_auth_callback'),
+    path('page_detail/<page_id>', views.page_detail, name='page_detail'),
+    path('delete_page/<page_id>', views.delete_page, name='delete_page'),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

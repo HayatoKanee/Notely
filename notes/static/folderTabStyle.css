@@ -3,9 +3,9 @@
     border-radius: 10px;
     background: url("images/addFolder.png") no-repeat;
     background-size: contain;
-    width: 5%;
+    width: 10%;
     height: 30px;
-    margin-top: 13px;
+    margin-top: 5px;
     margin-left: 900px;
 }
 .add{
@@ -22,10 +22,9 @@
     background-color: transparent;
     border: none;
     width: 100%;
-    height: 40px;
+    height: 50px;
     display: block;
     text-align: left;
-    margin: 10px 50px 10px 10px;
 }
 #folder_img{
     background: url("images/bluefolder.png") no-repeat;
@@ -34,36 +33,26 @@
     background-color: transparent;
     border: none;
     width: 100%;
-    height: 40px;
+    height: 50px;
     display: block;
     text-align: left;
-    margin: 10px 50px 20px 7px;
-}
-.element {
-  width: 10%;
-  height: 10px;
-}
-.folder-card {
-  width: 100%;
-  height: 70px;
 }
 .folder-button {
   font-weight: bold;
   box-shadow: None!important;
 }
 .folder-container {
-  margin-top: 100px;
-    margin-bottom: 10px;
+  margin-bottom: 10px;
   width: 100%;
-    padding: 10px;
-    height: 800px;
+  padding: 20px;
+  height: 800px;
   overflow: scroll;
 }
 .folder-nav {
     list-style-type: none;
     background-color: white;
-    position: absolute;
-    top: 120px;
+    display: flex;
+    align-items: center;
     width: 100%;
     box-shadow: 0 0 10px 2px rgba(0,0,0,0.2);
     z-index: 2;
@@ -75,9 +64,6 @@
     margin-right: 500px;
   }
 .folder-path {
-  position: absolute;
-  top: 70px;
-  left: 20px;
   width: 100%;
 }
 #goback-button {
@@ -93,5 +79,7 @@
   height: 40px;
   display: block;
 }
+
+
 
 
