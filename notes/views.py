@@ -10,7 +10,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from .forms import SignUpForm, LogInForm, UserForm, ProfileForm, PasswordForm, FolderForm, NotebookForm, EventForm, \
     EventTagForm, PageTagForm, PageForm
-from .models import User, Folder, Notebook, Page, Event, Editor
+from .models import User, Folder, Notebook, Page, Event, Editor, PageTag
 from django.template.loader import render_to_string
 from django.contrib.auth.decorators import login_required
 from .helpers import login_prohibited, check_perm
