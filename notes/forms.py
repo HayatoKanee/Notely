@@ -118,18 +118,31 @@ class FolderForm(forms.ModelForm):
 
 class TagImageChoiceField(ModelMultipleChoiceField):
     def label_from_instance(self, obj):
-        return mark_safe('{} {}'.format('&#x25CF', obj.title))
+        return mark_safe('{} {} {} '.format(obj.id, '&#x25CF', obj.title))
 
 
 class TagSelectWidget(SelectMultiple):
+    tag_model = None
+
     def create_option(self, name, value, label, selected, index, subindex=None, attrs=None):
         option = super().create_option(name, value, label, selected, index, subindex, attrs)
         try:
-            tag = EventTag.objects.get(title=label.replace('&#x25CF ', ''))
+            tag_id = label.split('&#x25CF')[0]
+            title = label.split('&#x25CF')[1]
+            tag = self.tag_model.objects.get(id=tag_id)
             option['attrs']['style'] = f'color: {tag.color}'
-        except EventTag.DoesNotExist:
+            option['label'] = mark_safe('{} {} '.format('&#x25CF', title))
+        except self.tag_model.DoesNotExist:
             pass
         return option
+
+
+class PageTagSelectWidget(TagSelectWidget):
+    tag_model = PageTag
+
+
+class EventTagSelectWidget(TagSelectWidget):
+    tag_model = EventTag
 
 
 class EventForm(forms.ModelForm):
@@ -150,7 +163,7 @@ class EventForm(forms.ModelForm):
     def __init__(self, user, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.user = user
-        self.fields['tag'].widget = TagSelectWidget()
+        self.fields['tag'].widget = EventTagSelectWidget()
         self.fields['tag'].queryset = user.event_tags.all()
 
     def clean(self):
@@ -209,7 +222,7 @@ class PageForm(forms.ModelForm):  # The form for linking the tag and the page.
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['tag'].widget = TagSelectWidget()
+        self.fields['tag'].widget = PageTagSelectWidget()
         self.fields['tag'].queryset = PageTag.objects.all()
 
     def save(self):

@@ -132,7 +132,7 @@ class Page(models.Model):
 
 
 class Tag(models.Model):
-    title = models.CharField(max_length=30, unique=True)
+    title = models.CharField(max_length=30)
     COLOR_PALETTE = [
         ('#000000', 'black'),
         ('#0000FF', 'Blue'),
