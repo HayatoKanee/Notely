@@ -5,10 +5,12 @@ from notes.helpers import calculate_age
 from notes.models import User, Profile, Notebook, Page, Editor , Reminder ,Event
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
-import datetime 
+
 from django.utils import timezone
 from django.conf import settings
 from django.core.mail import send_mail
+
+from datetime import datetime, timedelta
 
 @receiver(post_save, sender=User)
 def create_profile(sender, instance, created, **kwargs):
@@ -71,12 +73,6 @@ def create_editor(sender, instance, created, **kwargs):
     if created:
         Editor.objects.create(page=instance, title="Editor1")
 
-from django.core.mail import send_mail
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-from datetime import datetime, timedelta
-
-from .models import Reminder
 
 @receiver(post_save, sender=Reminder)
 def send_reminder_email(sender, instance, created, **kwargs):
