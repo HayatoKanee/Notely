@@ -177,6 +177,17 @@
     var bsModal = bootstrap.Modal.getInstance(eventModal)
     bsModal.show()
   })
+  
+  var socket = new WebSocket("ws://" + window.location.host + "/ws/calendar");
+  socket.onmessage = function(event) {
+      var data = JSON.parse(event.data);
+      if (data.type === "show_notification") {
+          // Create a notification with the message received from the server
+          var notification = new Notification("Notification Title", {
+              body: data.message,
+          });
+      }
+  };
     </script>
     <link rel="stylesheet" href="{%static 'css_style/calendarTabStyle.css' %}"/>
 {#    <script src="{%static 'javascript/calendar/syncGoogleCalendar.js'%}"></script>#}
