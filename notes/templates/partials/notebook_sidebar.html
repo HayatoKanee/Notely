@@ -18,6 +18,8 @@
               {% if p.thumbnail %}
                                     <img src="{{ p.thumbnail.url }}">
                   {% else %}
+                  {% load static %}
+                  <img src={% static  'images/default_thumbnail.jpeg'%}>
                   {% endif %}
                   <div class="dropdown">
                                         <span style="color: {{ p.tags.first.color }}">&#x25CF<a href="{% url 'page' p.id %}" style="color: #CD5C5C;"> page {{ forloop.counter }}</a></span>
