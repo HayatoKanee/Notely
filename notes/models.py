@@ -130,6 +130,14 @@ class Page(models.Model):
         except ObjectDoesNotExist:
             super().delete(*args, **kwargs)
 
+    def get_all_tags_id(self):
+        ids = ""
+        for tag in self.tags.all():
+            ids += f'{tag.id},'
+        if ids != "":
+            return ids[:-1]
+        return ids
+
 
 class Tag(models.Model):
     title = models.CharField(max_length=30)

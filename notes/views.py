@@ -6,7 +6,7 @@ from .forms import SignUpForm, LogInForm, UserForm, ProfileForm, PasswordForm, F
     PageForm, EventForm, EventTagForm, PageTagForm
 from django.template.loader import render_to_string
 from .forms import SignUpForm, LogInForm, UserForm, ProfileForm, PasswordForm, FolderForm, NotebookForm
-from .models import User, Folder, Notebook, Page, Event
+from .models import User, Folder, Notebook, Page, Event, Tag, PageTag
 from django.contrib.auth.decorators import login_required
 from .helpers import login_prohibited, check_perm
 from django.contrib.auth.hashers import check_password
@@ -171,6 +171,7 @@ def gravatar(request):
 def page(request, page_id):
     page = Page.objects.get(id=page_id)
     page_tag_form = PageTagForm()
+    tags = PageTag.objects.all()
     if request.method == 'POST':
         # if 'page_submit' in request.POST:
         #     sidebar_note_tag_form = PageForm(request.POST)
@@ -189,7 +190,7 @@ def page(request, page_id):
         if 'add_page_submit' in request.POST:
             new_page = Page.objects.create(notebook=page.notebook)
             return redirect('page', new_page.id)
-    return render(request, 'page.html', {'page': page, 'page_tag_form': page_tag_form})
+    return render(request, 'page.html', {'page': page, 'page_tag_form': page_tag_form, 'tags': tags})
 
 
 def save_page(request, page_id):
