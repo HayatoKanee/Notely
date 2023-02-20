@@ -1,17 +1,17 @@
 {% extends 'base_content.html' %}
 {% block content %}
 <div class="folder-path" style="color: rgb(245, 93, 66); margin-left: 30px; height: 50px;">
-    ><a href="{%url 'folders_tab' %}" style="color: #1b1b1b; margin-left: 20px;"><button class="folder-button" style="font-size: 20px; background-color: white; border: none; color: rgb(245, 93, 66); margin-top: 8px;">Home</button></a>
+    ><a href="{%url 'folders_tab' %}" style="margin-left: 20px;"><button class="folder-button" style="font-size: 20px; background-color: white; border: none; color: rgb(245, 93, 66); margin-top: 8px; margin-right: 18px;">Home</button></a>
     {% if folder %}
     {% for item in folder.get_path %}
-      ><a href="{% url 'sub_folders_tab' item.id%}" style="color: #1b1b1b; margin-left: 20px; color: rgb(245, 93, 66);"><button class="folder-button" style="font-size: 20px; background-color: white; border: none;">{{item.folder_name}}</button></a>
+      ><a href="{% url 'sub_folders_tab' item.id%}" style="margin-left: 18px; color: rgb(245, 93, 66);"><button class="folder-button" style="font-size: 20px; background-color: white; border: none; color: rgb(245, 93, 66);">{{item.folder_name}}</button></a>
     {% endfor %}
     {% endif %}
 </div>
 <div class="row">
   <div class="folder-nav" style="height: 50px; color: rgb(245, 93, 66);">
     <div class="col">
-        <div style="background-color: white; font-size:23px; font-weight: bold; margin-left: 60px; color: rgb(245, 93, 66);">
+        <div style="background-color: white; font-size:23px; margin-left: 60px; color: rgb(245, 93, 66);">
             Name
         </div>
     </div>

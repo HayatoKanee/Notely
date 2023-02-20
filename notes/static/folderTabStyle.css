@@ -9,6 +9,10 @@
     margin-left: 900px;
 }
 
+#addChoice:hover {
+    font-weight: bold;
+}
+
 .add {
     background-color: transparent;
     border: none;
@@ -89,6 +93,3 @@
   display: block;
 }
 
-#addChoice:hover {
-    font-weight: bold;
-}
