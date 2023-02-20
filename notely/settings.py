@@ -171,3 +171,6 @@ EMAIL_HOST_USER = 'winniethepooh.notely@gmail.com'
 EMAIL_HOST_PASSWORD = '30624700wtfym'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+CELERY_BROKER_URL = "redis://localhost:6379"
+CELERY_RESULT_BACKEND = "redis://localhost:6379"

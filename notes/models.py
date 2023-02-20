@@ -231,6 +231,7 @@ class Reminder(models.Model):
         (10080, "1  week before"),
     ]
     reminder_time = models.IntegerField(choices=reminder_choice)
+    task_id = models.TextField(unique=True, blank=True, null=True)
 
 
 class Credential(models.Model):
