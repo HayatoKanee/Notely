@@ -1,5 +1,19 @@
 {% extends 'base_content.html' %}
  {% block content %}
+<div class="wrapper">
+    <div class="filter">
+        <div class="event_filter_wrapper">
+            <input id="noTag" class="event_filter" name="event_filter_select" type="checkbox" value="noTag" data-type="tag" />
+            <label for="noTag"> No Tag </label>
+        </div>
+        {% for tag in tags %}
+        <div class="event_filter_wrapper">
+            <input id="{{tag.title}}" class="event_filter" name="event_filter_select" type="checkbox" value="{{tag.title}}" data-type="tag" />
+            <label for="{{tag.title}}"> {{tag.title}} </label>
+        </div>
+        {% endfor %}
+    </div>
+</div>
      <div class="container">
       <div id='calendar' style="color: rgb(245, 93, 66)"></div>
               <button id="addEvent" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#eventModal">
@@ -82,6 +96,7 @@
     <meta name="google-signin-client_id" content="588566071525-5p0gps8skl9gr5j9919r8gob501jqa01.apps.googleusercontent.com">
 <script>
     const calendarEl = document.getElementById('calendar');
+    const tagList = [];
     const calendar = new FullCalendar.Calendar(calendarEl, {
         headerToolbar: {
         left: 'today prev,next',
@@ -101,6 +116,23 @@
             },
             {% endfor %}
         ],
+        eventRender: function(info) {
+            var display = true;
+            var tags = [];
+            $("input[name='event_filter_select']:checked").each(function() {
+                if ($(this).data('type') == 'tag') {
+                    tags.push($(this).val());
+                }
+            });
+            if (tags.length) {
+                display = display && tags.some(r=> info.event.extendedProps.tags.includes(r));
+            }
+            if(!tags.length) {
+                display = true;
+            }
+            return display;
+        },
+
         eventClick: function(e) {
              $.ajax({
                 url: "{% url 'event_detail' 0 %}".replace("0", e.event.id),
@@ -118,7 +150,7 @@
                 editable: true,
             dateClick: function(info) {
             calendar.changeView('timeGridDay', info.dateStr);
-          },
+        },
         eventDrop: function(info) {
             const event = info.event;
             const start = event.start.toISOString();
@@ -141,6 +173,30 @@
                      calendar.getEvents().forEach(function(event) {
                          event.setProp('display', 'auto');
                      });
+                     tagList.length = 0;
+                 }
+            },
+            noTag:{
+                text: '•No Tag',
+                 click: function() {
+                    const tag = 'noTag';
+                    if (tagList.includes(tag)) {
+                        tagList.splice(tagList.indexOf(tag), 1);
+                        $(this).text('No Tag');
+                    } else {
+                        tagList.push(tag);
+                        $(this).text('No Tag *');
+                    }
+
+                    calendar.getEvents().forEach(function(event) {
+                        if (tagList.includes('noTag') && event.extendedProps.tags.length == 0) {
+                            event.setProp('display', 'auto');
+                        } else if (tagList.some(r=> event.extendedProps.tags.includes(r))) {
+                            event.setProp('display', 'auto');
+                        } else {
+                            event.setProp('display', 'none');
+                        }
+                    });
                  }
             },
     {% for tag in tags %}
@@ -148,12 +204,21 @@
           text: '•{{ tag }}',
           click: function() {
              const tag = '{{ tag.title }}';
+             if (tagList.includes(tag)) {
+                tagList.splice(tagList.indexOf(tag), 1);
+                $(this).text('•{{ tag }}');
+             } else {
+                tagList.push(tag);
+                $(this).text('•{{ tag }} *');
+             }
           calendar.getEvents().forEach(function(event) {
-            if (event.extendedProps.tags.includes(tag)) {
-              event.setProp('display', 'auto');
-            } else {
-              event.setProp('display', 'none');
-            }
+             if (tagList.some(r=> event.extendedProps.tags.includes(r))) {
+                event.setProp('display', 'auto');
+             } else if (tagList.includes('noTag') && event.extendedProps.tags.length == 0) {
+                event.setProp('display', 'auto');
+             } else {
+                event.setProp('display', 'none');
+             }
           });
           calendar.rerenderEvents();
           }
@@ -163,15 +228,19 @@
             footerToolbar:{
                  start: '',
   center: '',
-  end: "selectAll {% for tag in tags %}{{ forloop.counter }} {% endfor %}".slice(0, -1)
+  end: "selectAll noTag {% for tag in tags %}{{ forloop.counter }} {% endfor %}".slice(0, -1)
             },
         });
     calendar.render();
+    $('input[class=event_filter]').change(function() {
+        calendar.rerenderEvents();
+    });
+        $('.fc-noTag-button').css('color', 'pink')
         {% for tag in tags %}
         console.log($('.fc-{{ forloop.counter }}-button'));
         $('.fc-{{ forloop.counter }}-button').css('color', '{{ tag.color }}')
 
-    {% endfor %}
+        {% endfor %}
 
     function googleSignIn(googleUser) {
         // Get the ID token and basic profile information from the Google user object
