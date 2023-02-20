@@ -104,6 +104,7 @@ def sub_folders_tab(request, folder_id):
 
 @login_required
 def calendar_tab(request):
+    get_or_create_google_event(request)
     events = request.user.events.all()
     event_form = EventForm(request.user)
     tag_form = EventTagForm()
