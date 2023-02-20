@@ -1,22 +1,11 @@
-from bootstrap_datepicker_plus.widgets import DateTimePickerInput
 from django import forms
 from django.core.validators import RegexValidator
 from django.utils.safestring import mark_safe
 from .models import User, Profile, Folder, Notebook, Tag, Page, EventTag, Reminder, Event, Credential, PageTag
 from guardian.shortcuts import assign_perm
 from bootstrap_datepicker_plus.widgets import DateTimePickerInput, DatePickerInput, TimePickerInput
-from colorfield.fields import ColorField
 from django.forms import ModelChoiceField, widgets, ModelMultipleChoiceField, CheckboxInput
-from django.utils.html import format_html
 from django.forms.widgets import Select, SelectMultiple
-
-import datetime
-from google.oauth2.credentials import Credentials
-from googleapiclient.errors import HttpError
-from googleapiclient.discovery import build
-
-import datetime
-import json
 
 
 class LogInForm(forms.Form):

@@ -121,7 +121,7 @@ def calendar_tab(request):
             if event_form.is_valid():
                 event = event_form.save()
                 if int(event_form.cleaned_data['reminder']) > -1:
-                    Reminder.objects.create(event=event, reminder_time=event_form.cleaned_data['reminder'])
+                    Reminder.objects.create(event=event, reminder_time=int(event_form.cleaned_data['reminder']))
                     messages.add_message(request, messages.SUCCESS, "Reminder Created!")
                 messages.add_message(request, messages.SUCCESS, "Event Created!")
 
