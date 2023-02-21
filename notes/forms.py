@@ -251,3 +251,11 @@ class PageForm(forms.ModelForm):  # The form for linking the tag and the page.
             tag.tags.set(self.cleaned_data['tag'])
         tag.save()
         return tag
+
+class ShareEventForm(forms.Form):
+    # event = forms.ModelChoiceField(queryset=Event.objects.all(), to_field_name='title', required=False)
+    email = forms.EmailField(required=False)
+    message = forms.CharField(widget=forms.Textarea, required=False)
+
+    
+        

@@ -10,7 +10,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from .forms import SignUpForm, LogInForm, UserForm, ProfileForm, PasswordForm, FolderForm, NotebookForm, EventForm, \
-    EventTagForm, PageTagForm, PageForm
+    EventTagForm, PageTagForm, PageForm, ShareEventForm
 from .models import User, Folder, Notebook, Page, Event, Editor, Reminder, Credential, PageTag
 from django.template.loader import render_to_string
 from django.contrib.auth.decorators import login_required
@@ -21,6 +21,13 @@ from .view_helper import sort_items_by_created_time, save_folder_notebook_forms,
 from datetime import datetime
 from django.utils import timezone
 from google_auth_oauthlib.flow import Flow
+from django.conf import settings
+from django.core.mail import send_mail
+import os
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
+import sendgrid
+
 
 SCOPES = ['https://www.googleapis.com/auth/calendar']
 
@@ -110,6 +117,7 @@ def calendar_tab(request):
     events = request.user.events.all()
     event_form = EventForm(request.user)
     tag_form = EventTagForm()
+    shareEvent_form = ShareEventForm()
     tags = set()
     for event in events:
         for tag in event.tags.all():
@@ -136,8 +144,39 @@ def calendar_tab(request):
                 messages.add_message(request, messages.SUCCESS, "Tag Created!")
                 return redirect('calendar_tab')
 
+        if 'shareEvent_submit' in request.POST:
+            shareEvent_form = ShareEventForm(request.POST)
+            if shareEvent_form.is_valid():
+            # shareEvent = request.POST['event']
+                # shareEvent = request.POST.get('event', "False")
+                # message = request.POST.get('message', "")
+                # email = request.POST.get('email', "wingyiuip812@gmail.com")
+                # send_mail(
+                #     'Share Event',
+                #     shareEvent_form.cleaned_data['message'],
+                #     settings.EMAIL_HOST_USER,
+                #     [shareEvent_form.cleaned_data['email']],
+                #     fail_silently=False
+                # )
+                # print(send_mail)
+                message = Mail(
+                    from_email='winniethepooh.notely@gmail.com',
+                    to_emails='wingyiuip812@gmail.com',
+                    subject='Sending with Twilio SendGrid is Fun',
+                    html_content='<strong>and easy to do anywhere, even with Python</strong>')
+                try:
+                    sg = SendGridAPIClient(api_key='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')
+                    response = sg.send(message)
+                    print(response.status_code)
+                    print(response.body)
+                    print(response.headers)
+                except Exception as ex:
+                    print("a")
+                messages.add_message(request, messages.SUCCESS, "Event Shared!")
+                return redirect('calendar_tab')
+
     return render(request, 'calendar_tab.html', {'event_form': event_form, 'tag_form': tag_form, 'events': events,
-                                                 'tags': tags, })
+                                                 'tags': tags, 'shareEvent_form': shareEvent_form})
 
 
 @login_required
