@@ -1,14 +1,15 @@
 {% extends 'base_content.html' %}
  {% block content %}
-<div class="wrapper">
-    <div class="filter">
+<div class="event_wrapper">
+    <div class="event_filter">
+        <h3>Filter (Now needs refreshing page)</h3>
         <div class="event_filter_wrapper">
-            <input id="noTag" class="event_filter" name="event_filter_select" type="checkbox" value="noTag" data-type="tag" />
+            <input id="noTag" class="event_filter" name="event_filter_select" type="checkbox" value="noTag" data-type="tags" />
             <label for="noTag"> No Tag </label>
         </div>
         {% for tag in tags %}
         <div class="event_filter_wrapper">
-            <input id="{{tag.title}}" class="event_filter" name="event_filter_select" type="checkbox" value="{{tag.title}}" data-type="tag" />
+            <input id="{{tag.title}}" class="event_filter" name="event_filter_select" type="checkbox" value="{{tag.title}}" data-type="tags" />
             <label for="{{tag.title}}"> {{tag.title}} </label>
         </div>
         {% endfor %}
@@ -116,20 +117,27 @@
             },
             {% endfor %}
         ],
-        eventRender: function(info) {
+        eventClassNames: function(info) {
             var display = true;
             var tags = [];
             $("input[name='event_filter_select']:checked").each(function() {
-                if ($(this).data('type') == 'tag') {
+                if ($(this).data('type') == 'tags') {
                     tags.push($(this).val());
                 }
             });
+            //alert(tags);
+
             if (tags.length) {
-                display = display && tags.some(r=> info.event.extendedProps.tags.includes(r));
+                if (info.event.extendedProps.tags.length == 0) {
+                    display = display && tags.includes('noTag');
+                } else {
+                    display = display && tags.indexOf(info.event.extendedProps.tags) >= 0;
+                }
             }
-            if(!tags.length) {
-                display = true;
+            if (!display) {
+                info.event.setProp('display', 'none');
             }
+            //alert(display);
             return display;
         },
 
@@ -233,7 +241,7 @@
         });
     calendar.render();
     $('input[class=event_filter]').change(function() {
-        calendar.rerenderEvents();
+        calendar.render();
     });
         $('.fc-noTag-button').css('color', 'pink')
         {% for tag in tags %}
