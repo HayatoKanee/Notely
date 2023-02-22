@@ -14,7 +14,12 @@ jobs:
       max-parallel: 4
       matrix:
         python-version: [3.9]
-
+    services:
+      redis:
+        image: redis
+        ports:
+          - 6379/tcp
+        options: --entrypoint redis-server --loglevel warning --appendonly no
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
@@ -26,5 +31,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     - name: Run Tests
+      env:
+          REDIS_URL: redis://localhost:6379/0
       run: |
         python manage.py test
