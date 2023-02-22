@@ -216,6 +216,8 @@ class Event(models.Model):
     routine = models.CharField(choices=routine_choice, max_length=10, blank=True)
     google_id = models.CharField(blank=True, max_length=200)
     sync = models.BooleanField(blank=False, default=False)
+    pages = models.ManyToManyField('Page', blank=True, related_name='events')
+
 
     def save(
             self, force_insert=False, force_update=False, using=None, update_fields=None

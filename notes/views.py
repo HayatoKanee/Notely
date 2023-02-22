@@ -129,7 +129,21 @@ def calendar_tab(request):
         if 'event_submit' in request.POST:
             event_form = EventForm(request.user, request.POST)
             if event_form.is_valid():
-                event = event_form.save()
+                
+                page_id = event_form.cleaned_data['page'].id
+                page = Page.objects.get(id=page_id)
+                event = Event(
+                    user=request.user,
+                    title=event_form.cleaned_data['title'],
+                    description=event_form.cleaned_data['description'],
+                    start_time=event_form.cleaned_data['start_time'],
+                    end_time=event_form.cleaned_data['end_time'],
+                    sync= event_form.cleaned_data['sync']
+                )
+                
+                
+                event.save()  # Save the event before adding the page to the many-to-many relationship
+                event.pages.add(page)
                 if int(event_form.cleaned_data['reminder']) > -1:
                     Reminder.objects.create(event=event, reminder_time=int(event_form.cleaned_data['reminder']))
                     messages.add_message(request, messages.SUCCESS, "Reminder Created!")

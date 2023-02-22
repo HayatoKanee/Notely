@@ -144,6 +144,11 @@ class EventTagSelectWidget(TagSelectWidget):
 
 class EventForm(forms.ModelForm):
     tag = TagImageChoiceField(queryset=None, label="tags", required=False)
+    # page = forms.ModelMultipleChoiceField(
+    #     queryset=Page.objects.all(),
+    #     widget=forms.CheckboxSelectMultiple,
+    #     required=False,
+    # )
     page = forms.ModelChoiceField(queryset=Page.objects.all(), required=False)
     reminder = forms.ChoiceField(choices=Reminder.reminder_choice, required=False, initial="No reminder")
     sync = forms.BooleanField(required=False)
@@ -163,6 +168,8 @@ class EventForm(forms.ModelForm):
         self.user = user
         self.fields['tag'].widget = EventTagSelectWidget()
         self.fields['tag'].queryset = user.event_tags.all()
+        
+        self.fields['page'].choices = [(page.id, f"{page.notebook.notebook_name}: {page.id}") for page in Page.objects.filter(notebook__user=user)]
 
     def clean(self):
         super().clean()
@@ -182,9 +189,10 @@ class EventForm(forms.ModelForm):
         if self.cleaned_data.get('tag'):
             event.tags.set(self.cleaned_data['tag'])
         if self.cleaned_data.get('page'):
-            event.page = self.cleaned_data['page']
+            event.pages.add(self.cleaned_data['page'])
+            self.save_m2m()
         if self.cleaned_data.get('sync'):
-            print("sync")
+            event.sync = True
 
         event.save()
         return event
