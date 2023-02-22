@@ -60,9 +60,11 @@ def get_or_create_google_event(request):
             google_event = Event.objects.get(google_id=google_id)
             return google_event
         except Event.DoesNotExist:
-            
+
             start = event['start'].get('dateTime', event['start'].get('date'))
             end = event['end'].get('dateTime', event['end'].get('date'))
+            start = datetime.datetime.fromisoformat(start[:-1] + '+00:00')
+            end = datetime.datetime.fromisoformat(end[:-1] + '+00:00')
             google_event = Event.objects.create(
                 user=request.user,
                 google_id=google_id,
@@ -70,16 +72,10 @@ def get_or_create_google_event(request):
                 description=event.get('description', ''),
                 start_time=start,
                 end_time=end,
+                sync=True
             )
             event_list.append({
-            'event': google_event,
+                'event': google_event,
 
-        })
+            })
     return event_list
-    
-    # return None
-    
-
-    # except HttpError as error:
-    #     print('An error occurred: %s' % error)
-    #     return None
