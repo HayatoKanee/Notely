@@ -1,4 +1,4 @@
-from datetime import datetime
+import datetime
 
 from django.conf import settings
 from django.shortcuts import redirect, get_object_or_404
