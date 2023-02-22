@@ -46,7 +46,11 @@ Run all tests with:
 $ python3 manage.py test
 ```
 
-Run server with( for development and testing ONLY):
+Collect all static files with:
+```
+$ python3 manage.py collectstatic
+```
+Run server with(for development and testing ONLY):
 ```
 $ daphne -e ssl:8000:privateKey=key.pem:certKey=cert.pem notely.asgi:application
 $ celery -A notely worker -l INFO
