@@ -8,6 +8,7 @@ from django.core.validators import RegexValidator, MinValueValidator, MaxValueVa
 from libgravatar import Gravatar
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
 
 from notes.helpers import validate_date
 from notes.storage import CustomStorage
@@ -245,6 +246,26 @@ class Event(models.Model):
                 created_event = service.events().insert(calendarId='primary', body=g_event).execute()
                 self.google_id = created_event['id']
         super().save()
+
+    def delete(self, using=None, keep_parents=False):
+        if self.sync:
+            try:
+                credential = Credential.objects.get(user=self.user)
+            except Credential.DoesNotExist:
+                return super().delete(using=using, keep_parents=keep_parents)
+            creds = Credentials.from_authorized_user_info(info=json.loads(credential.google_cred))
+            # Create a service object to interact with the Google Calendar API
+            service = build('calendar', 'v3', credentials=creds)
+            if self.google_id:
+                try:
+                    service.events().delete(calendarId='primary', eventId=self.google_id).execute()
+                except HttpError as error:
+                    # Log error if the event was not found
+                    if error.resp.status == 404:
+                        print(f"Event with ID {self.google_id} not found.")
+                    else:
+                        raise
+        super().delete(using=using, keep_parents=keep_parents)
 
 
 class Reminder(models.Model):
