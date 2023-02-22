@@ -17,7 +17,7 @@ from django.contrib.auth.decorators import login_required
 from .helpers import login_prohibited, check_perm
 from django.contrib.auth.hashers import check_password
 from guardian.shortcuts import get_objects_for_user
-from .view_helper import sort_items_by_created_time, save_folder_notebook_forms, get_or_create_google_event
+from .view_helper import sort_items_by_created_time, save_folder_notebook_forms, get_or_create_event_from_google, create_google_event
 from datetime import datetime
 from django.utils import timezone
 from google_auth_oauthlib.flow import Flow
@@ -27,6 +27,8 @@ import os
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 import sendgrid
+from google.oauth2.credentials import Credentials
+from googleapiclient.errors import HttpError
 
 
 SCOPES = ['https://www.googleapis.com/auth/calendar']
@@ -113,7 +115,7 @@ def sub_folders_tab(request, folder_id):
 
 @login_required
 def calendar_tab(request):
-    get_or_create_google_event(request)
+    get_or_create_event_from_google(request)
     events = request.user.events.all()
     event_form = EventForm(request.user)
     tag_form = EventTagForm()
@@ -131,6 +133,12 @@ def calendar_tab(request):
                 if int(event_form.cleaned_data['reminder']) > -1:
                     Reminder.objects.create(event=event, reminder_time=int(event_form.cleaned_data['reminder']))
                     messages.add_message(request, messages.SUCCESS, "Reminder Created!")
+                if event_form.cleaned_data['sync']:
+                    try:
+                        create_google_event(request, event)
+                        messages.success(request, 'Event created in Google Calendar')
+                    except HttpError as error:
+                        messages.error(request, 'An error occurred: %s' % error)
                 messages.add_message(request, messages.SUCCESS, "Event Created!")
 
                 return redirect('calendar_tab')

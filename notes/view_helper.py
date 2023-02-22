@@ -35,7 +35,7 @@ def sort_items_by_created_time(*args):
     return sorted(items, key=lambda x: x.created_at, reverse=True)
 
 
-def get_or_create_google_event(request):
+def get_or_create_event_from_google(request):
     try:
         credential = Credential.objects.get(user=request.user)
     except Credential.DoesNotExist:
