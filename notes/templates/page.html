@@ -21,52 +21,63 @@
         <li class="nav-item">
             <button class="toolbox" id="select" onclick="toggleSelect(this)"></button>
          </li>
-        <li class="nav-item">
-         <button class="toolbox" id="draw" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePen" aria-expanded="false"
-                 aria-controls="collapsePen" onclick="toggleDraw(this)"></button>
-        </li>
-        <li class="nav-item">
-            <div style="min-height: 120px;">
-                <div class="collapse collapse-horizontal" id="collapsePen" style="color: rgb(245, 93, 66);">
-                <div class="card card-body" style="width: 300px;">
-                    <label>Pen Mode</label>
-                    <select id="chooseMode" style="color: rgb(245, 93, 66);">
-                        <option value="circle">Circle Brush</option>
-                        <option value="crayon">Crayon</option>
-                        <option value="ink">Ink Pen</option>
-                        <option value="fur">Fur Brush</option>
-                        <option value="longfur">Long Fur Brush</option>
-                        <option value="marker">Marker</option>
-                        <option value="ribbon">Ribbon Brush</option>
-                        <option value="shaded">Shaded Brush</option>
-                        <option value="sketchy">Sketchy Brush</option>
-                        <option value="spraypaint">Spray Paint</option>
-                        <option value="square">Square brush</option>
-                        <option value="web">Web Brush</option>
-                    </select>
-                    <label>Pen Colour</label>
-                    <input id='choosePenColor' value="#000000" data-jscolor="" style="color: rgb(245, 93, 66);">
-                    <label>Pen Width</label>
-                    <input id='chooseWidth' value='1' type=range min='1' max='20'>
-                </div>
-                </div>
-            </div>
-        </li>
-        <li class="nav-item">
-            <button class="toolbox" id="text" type="button" data-bs-toggle="collapse" data-bs-target="#collapseText" aria-expanded="false"
-                    aria-controls="collapseText" onclick="toggleText(this)" style="color: rgb(245, 93, 66);">
-            </button>
-        </li>
-        <li class="nav-item">
-            <div style="min-height: 120px;">
-                <div class="collapse collapse-horizontal" id="collapseText">
-                <div class="card card-body" style="width: 300px; color: rgb(245, 93, 66);">
-                    <label>Text Colour</label>
-                    <input id='chooseTextColor' value="#000000" data-jscolor="" style="color: rgb(245, 93, 66);">
-                </div>
+        <div class="accordion accordion-flush" id="accordionFlush">
+            <div class="accordion-item">
+                <li class="accordion-header" id="flush-headingPen">
+                    <li class="nav-item">
+                    <button class="toolbox" id="draw" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapsePen"
+                            aria-expanded="false" aria-controls="flush-collapsePen" onclick="toggleDraw(this)"></button>
+                    </li>
+                </li>
+                <div id="flush-collapsePen" class="accordion-collapse collapse" aria-labelledby="flush-headingPen" data-bs-parent="#accordionFlush">
+                    <li class="nav-item">
+                        <div style="min-height: 120px;">
+                            <div class="card card-body" style="width: 300px;">
+                                <label>Pen Mode</label>
+                                <select id="chooseMode" style="color: rgb(245, 93, 66);">
+                                    <option value="circle">Circle Brush</option>
+                                    <option value="crayon">Crayon</option>
+                                    <option value="ink">Ink Pen</option>
+                                    <option value="fur">Fur Brush</option>
+                                    <option value="longfur">Long Fur Brush</option>
+                                    <option value="marker">Marker</option>
+                                    <option value="ribbon">Ribbon Brush</option>
+                                    <option value="shaded">Shaded Brush</option>
+                                    <option value="sketchy">Sketchy Brush</option>
+                                    <option value="spraypaint">Spray Paint</option>
+                                    <option value="square">Square brush</option>
+                                    <option value="web">Web Brush</option>
+                                </select>
+                                <label>Pen Colour</label>
+                                <input id='choosePenColor' value="#000000" data-jscolor="" style="color: rgb(245, 93, 66);">
+                                <label>Pen Width</label>
+                                <input id='chooseWidth' value='1' type=range min='1' max='20'>
+                        </div>
+                        </div>
+                    </li>
                 </div>
             </div>
-        </li>
+            <div class="accordion-item">
+                <li class="accordion-header" id="flush-headingText">
+                    <li class="nav-item">
+                        <button class="toolbox" id="text" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseText" aria-expanded="false"
+                                aria-controls="flush-collapseText" onclick="toggleText(this)" style="color: rgb(245, 93, 66);">
+                        </button>
+                    </li>
+                </li>
+                <div id="flush-collapseText" class="accordion-collapse collapse" aria-labelledby="flush-headingText" data-bs-parent="#accordionFlush">
+                    <li class="nav-item">
+                        <div style="min-height: 120px;">
+                            <div class="card card-body" style="width: 300px; color: rgb(245, 93, 66);">
+                                <label>Text Colour</label>
+                                <input id='chooseTextColor' value="#000000" data-jscolor="" style="color: rgb(245, 93, 66);">
+                            </div>
+                        </div>
+                    </li>
+                </div>
+            </div>
+
+        </div>
         <li class="nav-item">
          <button class="toolbox" id="erase" type="button" onclick="toggleErase(this)" style="color: rgb(245, 93, 66);">
          </button>
