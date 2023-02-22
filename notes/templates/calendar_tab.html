@@ -189,8 +189,13 @@
     var bsModal = bootstrap.Modal.getInstance(eventModal)
     bsModal.show()
   })
+    const loc = window.location;
+    let wsStart = 'ws://';
+    if (loc.protocol == 'https:') {
+     wsStart = 'wss://';
+    }
   
-  var socket = new WebSocket("ws://" + window.location.host + "/ws/calendar");
+  var socket = new WebSocket(wsStart + window.location.host + "/ws/calendar");
   socket.onmessage = function(event) {
       var data = JSON.parse(event.data);
       if (data.type === "show_notification") {
@@ -203,7 +208,4 @@
   };
     </script>
     <link rel="stylesheet" href="{%static 'css_style/calendarTabStyle.css' %}"/>
-{#    <script src="{%static 'javascript/calendar/syncGoogleCalendar.js'%}"></script>#}
-{#    <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>#}
-{#    <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>#}
 {% endblock %}

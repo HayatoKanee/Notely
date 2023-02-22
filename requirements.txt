@@ -13,5 +13,5 @@ django-colorfield
 google-api-python-client 
 google-auth-httplib2 
 google-auth-oauthlib
-django-sslserver
-asgiref
+celery
+channels-redis
