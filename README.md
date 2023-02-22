@@ -46,6 +46,21 @@ Run all tests with:
 $ python3 manage.py test
 ```
 
+Collect all static files with:
+```
+$ python3 manage.py collectstatic
+```
+
+Redis is required for the ASGI set up. You can install redis by:
+```
+$ sudo apt install redis-server
+```
+Run server with(for development and testing ONLY):
+```
+$ daphne -e ssl:8000:privateKey=key.pem:certKey=cert.pem notely.asgi:application
+$ celery -A notely worker -l INFO
+```
+
 *The above instructions should work in your version of the application.  If there are deviations, declare those here in bold.  Otherwise, remove this line.*
 
 ## Sources

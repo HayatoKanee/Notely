@@ -9,6 +9,34 @@
     <a href="{% url 'google_auth' %}" class="btn btn-google" style="color: rgb(245, 93, 66);">
   <i class="fa fa-google"></i> Sign in with Google
 </a>
+<<<<<<< HEAD
+=======
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#shareEventModal" data-bs-dismiss="modal">
+    Share Event
+  </button>
+
+  <div class="modal fade" id="shareEventModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content" style="color: rgb(245, 93, 66)">
+            <div class="modal-header">
+              <h5 class="modal-title" style="color: rgb(245, 93, 66)">Share Event</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+                <form action="{% url 'calendar_tab' %}" method="post">
+                    {% csrf_token %}
+                    {% comment %} {% include 'partials/bootstrap_form.html' with form=shareEvent_form %} {% endcomment %}
+                    {{shareEvent_form.as_p}}
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <input type="submit" name="shareEvent_submit" value ="Share event" class="btn btn-primary">
+                </form>
+                
+              </div>
+            </div>
+          </div>
+  </div>
+    
+>>>>>>> feature/calendar
 
 
    </div>
@@ -163,8 +191,13 @@
     var bsModal = bootstrap.Modal.getInstance(eventModal)
     bsModal.show()
   })
+    const loc = window.location;
+    let wsStart = 'ws://';
+    if (loc.protocol == 'https:') {
+     wsStart = 'wss://';
+    }
   
-  var socket = new WebSocket("ws://" + window.location.host + "/ws/calendar");
+  var socket = new WebSocket(wsStart + window.location.host + "/ws/calendar");
   socket.onmessage = function(event) {
       var data = JSON.parse(event.data);
       if (data.type === "show_notification") {
@@ -172,11 +205,9 @@
           var notification = new Notification("Notification Title", {
               body: data.message,
           });
+          console.log(data.message);
       }
   };
     </script>
     <link rel="stylesheet" href="{%static 'css_style/calendarTabStyle.css' %}"/>
-{#    <script src="{%static 'javascript/calendar/syncGoogleCalendar.js'%}"></script>#}
-{#    <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>#}
-{#    <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>#}
 {% endblock %}

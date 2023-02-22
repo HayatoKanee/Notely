@@ -1,11 +1,14 @@
+import json
+
 from colorfield.fields import ColorField
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator, MinValueValidator, MaxValueValidator
 from libgravatar import Gravatar
-from datetime import datetime
-from django.urls import reverse
+from google.oauth2.credentials import Credentials
+from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
 
 from notes.helpers import validate_date
 from notes.storage import CustomStorage
@@ -214,6 +217,56 @@ class Event(models.Model):
     google_id = models.CharField(blank=True, max_length=200)
     sync = models.BooleanField(blank=False, default=False)
 
+    def save(
+            self, force_insert=False, force_update=False, using=None, update_fields=None
+    ):
+        if self.sync:
+            try:
+                credential = Credential.objects.get(user=self.user)
+            except Credential.DoesNotExist:
+                return super().save()
+            creds = Credentials.from_authorized_user_info(info=json.loads(credential.google_cred))
+            # Create a service object to interact with the Google Calendar API
+            service = build('calendar', 'v3', credentials=creds)
+            g_event = {
+                'summary': self.title,
+                'description': self.description,
+                'start': {
+                    'dateTime': self.start_time.isoformat(),
+                    'timeZone': self.start_time.strftime('%Z')
+                },
+                'end': {
+                    'dateTime': self.end_time.isoformat(),
+                    'timeZone': self.start_time.strftime('%Z')
+                }
+            }
+            if self.google_id:
+                service.events().update(calendarId='primary', eventId=self.google_id, body=g_event).execute()
+            else:
+                created_event = service.events().insert(calendarId='primary', body=g_event).execute()
+                self.google_id = created_event['id']
+        super().save()
+
+    def delete(self, using=None, keep_parents=False):
+        if self.sync:
+            try:
+                credential = Credential.objects.get(user=self.user)
+            except Credential.DoesNotExist:
+                return super().delete(using=using, keep_parents=keep_parents)
+            creds = Credentials.from_authorized_user_info(info=json.loads(credential.google_cred))
+            # Create a service object to interact with the Google Calendar API
+            service = build('calendar', 'v3', credentials=creds)
+            if self.google_id:
+                try:
+                    service.events().delete(calendarId='primary', eventId=self.google_id).execute()
+                except HttpError as error:
+                    # Log error if the event was not found
+                    if error.resp.status == 404:
+                        print(f"Event with ID {self.google_id} not found.")
+                    else:
+                        raise
+        super().delete(using=using, keep_parents=keep_parents)
+
 
 class Reminder(models.Model):
     event = models.ForeignKey(Event, related_name="reminders", on_delete=models.CASCADE)
@@ -231,6 +284,7 @@ class Reminder(models.Model):
         (10080, "1  week before"),
     ]
     reminder_time = models.IntegerField(choices=reminder_choice)
+    task_id = models.TextField(unique=True, blank=True, null=True)
 
 
 class Credential(models.Model):
