@@ -129,10 +129,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'notes/static')
-# STATICFILES_DIRS = [
-#     os.path.join(BASE_DIR, 'notes/static'),
-# ]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'notes/static'),
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
@@ -157,15 +157,21 @@ MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 }
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
-
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 GOOGLE_CREDENTIALS_PATH = os.path.join(BASE_DIR, 'notes', 'assets', 'credentials.json')
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'winniethepooh.notely@gmail.com'
 EMAIL_HOST_PASSWORD = '30624700wtfym'
+
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
+CELERY_BROKER_URL = "redis://localhost:6379"
+CELERY_RESULT_BACKEND = "redis://localhost:6379"

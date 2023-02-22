@@ -1,11 +1,11 @@
 from django import forms
 from django.core.validators import RegexValidator
 from django.utils.safestring import mark_safe
-from .models import User, Profile, Folder, Notebook, Tag, Page, EventTag, Reminder, Event, Credential, PageTag
+from .models import User, Profile, Folder, Notebook, Page, EventTag, Reminder, Event, PageTag
 from guardian.shortcuts import assign_perm
-from bootstrap_datepicker_plus.widgets import DateTimePickerInput, DatePickerInput, TimePickerInput
-from django.forms import ModelChoiceField, widgets, ModelMultipleChoiceField
-from django.forms.widgets import Select, SelectMultiple
+from bootstrap_datepicker_plus.widgets import DateTimePickerInput
+from django.forms import ModelMultipleChoiceField
+from django.forms.widgets import SelectMultiple
 
 
 class LogInForm(forms.Form):
@@ -247,3 +247,11 @@ class PageForm(forms.ModelForm):  # The form for linking the tag and the page.
             tag.tags.set(self.cleaned_data['tag'])
         tag.save()
         return tag
+
+class ShareEventForm(forms.Form):
+    # event = forms.ModelChoiceField(queryset=Event.objects.all(), to_field_name='title', required=False)
+    email = forms.EmailField(required=False)
+    message = forms.CharField(widget=forms.Textarea, required=False)
+
+    
+        

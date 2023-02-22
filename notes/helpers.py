@@ -3,7 +3,6 @@ import datetime
 from django.conf import settings
 from django.shortcuts import redirect, get_object_or_404
 from django.core.exceptions import ValidationError, PermissionDenied
-from functools import wraps
 
 
 def login_prohibited(view_function):
@@ -42,3 +41,4 @@ def check_perm(perm, obj_type):
         return modified_view_function
 
     return decorator
+
