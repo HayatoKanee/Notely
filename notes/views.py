@@ -17,7 +17,7 @@ from django.contrib.auth.decorators import login_required
 from .helpers import login_prohibited, check_perm
 from django.contrib.auth.hashers import check_password
 from guardian.shortcuts import get_objects_for_user
-from .view_helper import sort_items_by_created_time, save_folder_notebook_forms, get_or_create_event_from_google, get_or_create_event_from_google
+from .view_helper import sort_items_by_created_time, save_folder_notebook_forms, get_or_create_event_from_google
 from datetime import datetime
 from django.utils import timezone
 from google_auth_oauthlib.flow import Flow
