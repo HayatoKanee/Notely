@@ -1,0 +1,68 @@
+.my-card {
+  display: flex;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 60px;
+  margin-bottom: 60px;
+  border-radius: 10px;
+  width: 50%;
+  height: 300px;
+ }
+.float-left {
+  float: left;
+}
+.my-header {
+  font-size: 40px;
+  font-weight: bold;
+}
+.first-card-button {
+  font-weight: bold;
+  padding: 10px 20px;
+  font-size: 13px;
+  color: white;
+  border: 2px solid white;
+  border-radius: 20px;
+  background-color: rgb(245, 93, 66);
+}
+.header-button{
+  font-weight: bold;
+  padding: 10px;
+  color: black;
+  border: transparent;
+  background-color: white;
+}
+.header-home-button{
+  font-weight: bold;
+  padding: 10px;
+  color: black;
+  border: transparent;
+  background-color: white;
+}
+.footer-button {
+  color: white;
+  border: transparent;
+  background-color: rgb(242, 69, 39);
+}
+#footer-menu {
+  display: flex;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  background-color: rgb(242, 69, 39);
+  color: white;
+  padding: 10px;
+}
+.navbar-custom {
+  box-shadow: 0px 4px 6px 0px rgba(0,0,0,0.2);
+  position: fixed;
+  top: 0;
+  background-color: white;
+  width: 100%;
+}
+.icon-image {
+  width: 4vw;
+  height:5vh;
+  background: url("../images/notebookicon.jpg") no-repeat;
+  background-size: contain;
+}

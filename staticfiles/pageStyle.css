@@ -1,0 +1,123 @@
+#draw {
+    background: url("images/pen.png") no-repeat;
+    background-size: contain;
+    width: 30px;
+    height: 30px;
+    border: none;
+}
+
+#clearAll{
+    background: url("images/clearAll.png") no-repeat;
+    background-size: contain;
+    width: 30px;
+    height: 30px;
+    border: none;
+}
+
+#select.active {
+    background-color: rgb(245, 93, 66, 0.2);
+}
+
+#select {
+    background: url("images/select.png") no-repeat;
+    background-size: contain;
+    width: 30px;
+    height: 30px;
+    border: none;
+}
+
+#draw.active {
+    background-color: rgb(245, 93, 66, 0.2);
+}
+
+#text{
+    background: url("images/text.png") no-repeat;
+    background-size: contain;
+    width: 30px;
+    height: 30px;
+    border: none;
+}
+
+#text.active {
+    background-color: rgb(245, 93, 66, 0.2);
+}
+
+.toolbox {
+    margin: 20px;
+}
+
+#upload {
+    background: url("images/upload_pic.png") no-repeat;
+    background-size: contain;
+    width: 30px;
+    height: 30px;
+    border: none;
+}
+
+#upload.active {
+    background-color: rgb(245, 93, 66, 0.2);
+}
+
+#navbarcontainer {
+    background-color: rgb(255, 174, 159, 0.6);
+}
+
+#erase{
+    background: url("images/erase.png") no-repeat;
+    background-size: contain;
+    width: 30px;
+    height: 30px;
+    border: none;
+}
+
+#erase.active{
+    background-color: rgb(245, 93, 66, 0.2);
+}
+
+#undo{
+    background: url("images/undo.png") no-repeat;
+    background-size: contain;
+    width: 30px;
+    height: 30px;
+    border: none;
+}
+
+#redo{
+    background: url("images/redo.png") no-repeat;
+    background-size: contain;
+    width: 30px;
+    height: 30px;
+    border: none;
+}
+
+#showCodeEditor{
+    background: url("images/code.png") no-repeat;
+    background-size: contain;
+    width: 30px;
+    height: 30px;
+    border: none;
+}
+
+#showSymbols{
+    background: url("images/symbol.png") no-repeat;
+    background-size: contain;
+    width: 30px;
+    height: 30px;
+    border: none;
+}
+
+#table{
+    background: url("images/table.png") no-repeat;
+    background-size: contain;
+    width: 30px;
+    height: 30px;
+    border: none;
+}
+
+#download{
+    background: url("images/download.png") no-repeat;
+    background-size: contain;
+    width: 30px;
+    height: 30px;
+    border: none;
+}
