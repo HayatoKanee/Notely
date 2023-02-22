@@ -2,17 +2,18 @@
 {% block content %}
     <div class="container">
         <div id='calendar' style="color: rgb(245, 93, 66); margin-top: 10px;"></div>
-        <button id="addEvent" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#eventModal" style="margin-top: 10px;">
+
+        <a href="{% url 'google_auth' %}" class="btn btn-google" style="color: rgb(245, 93, 66);">
+            <i class="fa fa-google"></i> Sign in with Google
+        </a><br>
+
+        <button id="addEvent" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#eventModal" style="margin-top: 5px;">
             Add New Event
         </button><br>
 
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#shareEventModal" data-bs-dismiss="modal" style="margin-top: 10px;">
             Share Event
-        </button><br>
-
-        <a href="{% url 'google_auth' %}" class="btn btn-google" style="color: rgb(245, 93, 66); margin-top: 5px;">
-            <i class="fa fa-google"></i> Sign in with Google
-        </a>
+        </button>
 
         <div class="modal fade" id="shareEventModal" tabindex="-1">
             <div class="modal-dialog">
