@@ -60,9 +60,11 @@ def get_or_create_event_from_google(request):
             google_event = Event.objects.get(google_id=google_id)
             return google_event
         except Event.DoesNotExist:
-            
+
             start = event['start'].get('dateTime', event['start'].get('date'))
             end = event['end'].get('dateTime', event['end'].get('date'))
+            start = datetime.datetime.fromisoformat(start[:-1] + '+00:00')
+            end = datetime.datetime.fromisoformat(end[:-1] + '+00:00')
             google_event = Event.objects.create(
                 user=request.user,
                 google_id=google_id,
@@ -70,43 +72,10 @@ def get_or_create_event_from_google(request):
                 description=event.get('description', ''),
                 start_time=start,
                 end_time=end,
+                sync=True
             )
             event_list.append({
-            'event': google_event,
+                'event': google_event,
 
-        })
+            })
     return event_list
-    
-    # return None
-    
-
-    # except HttpError as error:
-    #     print('An error occurred: %s' % error)
-    #     return None
-
-
-def create_google_event(request, event):
-    try:
-        credential = Credential.objects.get(user=request.user)
-    except Credential.DoesNotExist:
-        return None
-    creds = Credentials.from_authorized_user_info(info=json.loads(credential.google_cred))
-    
-    service = build('calendar', 'v3', credentials=creds)
-
-    event_start = event.start_time.isoformat()
-    event_end = event.end_time.isoformat()
-    event = {
-        'summary': event.title,
-        'description': event.description,
-        'start': {
-            'dateTime': event_start,
-            'timeZone': 'UTC',
-        },
-        'end': {
-            'dateTime': event_end,
-            'timeZone': 'UTC',
-        },
-    }
-    calendar_id = 'primary'
-    service.events().insert(calendarId=calendar_id, body=event).execute()

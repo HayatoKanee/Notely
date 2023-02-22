@@ -347,5 +347,6 @@ $RECYCLE.BIN/
 *.lnk
 
 node_modules/
+staticfiles/
 # End of https://www.toptal.com/developers/gitignore/api/python,django,virtualenv,linux,macos,windows
 sendgrid.env
