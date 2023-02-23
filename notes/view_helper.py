@@ -51,35 +51,33 @@ def get_or_create_event_from_google(request):
                                           orderBy='startTime').execute()
     events = events_result.get('items', [])
 
-    # Return the events as a JSON response
-    event_list = []
     for event in events:
+        start = event['start'].get('dateTime', event['start'].get('date'))
+        end = event['end'].get('dateTime', event['end'].get('date'))
+        if start.endswith('Z'):
+            start = start[:-1] + '+00:00'
+        if end.endswith('Z'):
+            end = end[:-1] + '+00:00'
+        start = datetime.datetime.fromisoformat(start)
+        end = datetime.datetime.fromisoformat(end)
+        title = event['summary']
         google_id = event.get('id')
+        description = event.get('description', '')
         try:
             # Check if the event already exists in the GoogleEvent model
             google_event = Event.objects.get(google_id=google_id)
-            return google_event
+            google_event.title = title
+            google_event.start_time = start
+            google_event.end_time = end
+            google_event.description = description
+            google_event.save()
         except Event.DoesNotExist:
-
-            start = event['start'].get('dateTime', event['start'].get('date'))
-            end = event['end'].get('dateTime', event['end'].get('date'))
-            if start.endswith('Z'):
-                start = start[:-1] + '+00:00'
-            if end.endswith('Z'):
-                end = end[:-1] + '+00:00'
-            start = datetime.datetime.fromisoformat(start)
-            end = datetime.datetime.fromisoformat(end)
             google_event = Event.objects.create(
                 user=request.user,
                 google_id=google_id,
-                title=event['summary'],
-                description=event.get('description', ''),
+                title=title,
+                description=description,
                 start_time=start,
                 end_time=end,
                 sync=True
             )
-            event_list.append({
-                'event': google_event,
-
-            })
-    return event_list

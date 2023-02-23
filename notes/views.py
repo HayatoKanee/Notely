@@ -30,7 +30,6 @@ import sendgrid
 from google.oauth2.credentials import Credentials
 from googleapiclient.errors import HttpError
 
-
 SCOPES = ['https://www.googleapis.com/auth/calendar']
 
 
@@ -129,21 +128,22 @@ def calendar_tab(request):
         if 'event_submit' in request.POST:
             event_form = EventForm(request.user, request.POST)
             if event_form.is_valid():
-                
-                page_id = event_form.cleaned_data['page'].id
-                page = Page.objects.get(id=page_id)
+
+                page_data = event_form.cleaned_data['page']
                 event = Event(
                     user=request.user,
                     title=event_form.cleaned_data['title'],
                     description=event_form.cleaned_data['description'],
                     start_time=event_form.cleaned_data['start_time'],
                     end_time=event_form.cleaned_data['end_time'],
-                    sync= event_form.cleaned_data['sync']
+                    sync=event_form.cleaned_data['sync']
                 )
-                
-                
+
                 event.save()  # Save the event before adding the page to the many-to-many relationship
-                event.pages.add(page)
+                if page_data:
+                    page_id = page_data.id
+                    page = Page.objects.get(id=page_id)
+                    event.pages.add(page)
                 if int(event_form.cleaned_data['reminder']) > -1:
                     Reminder.objects.create(event=event, reminder_time=int(event_form.cleaned_data['reminder']))
                     messages.add_message(request, messages.SUCCESS, "Reminder Created!")
@@ -163,7 +163,7 @@ def calendar_tab(request):
         if 'shareEvent_submit' in request.POST:
             shareEvent_form = ShareEventForm(request.POST)
             if shareEvent_form.is_valid():
-            # shareEvent = request.POST['event']
+                # shareEvent = request.POST['event']
                 # shareEvent = request.POST.get('event', "False")
                 # message = request.POST.get('message', "")
                 # email = request.POST.get('email', "wingyiuip812@gmail.com")
@@ -181,7 +181,8 @@ def calendar_tab(request):
                     subject='Sending with Twilio SendGrid is Fun',
                     html_content='<strong>and easy to do anywhere, even with Python</strong>')
                 try:
-                    sg = SendGridAPIClient(api_key='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')
+                    sg = SendGridAPIClient(
+                        api_key='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')
                     response = sg.send(message)
                     print(response.status_code)
                     print(response.body)

@@ -221,7 +221,6 @@ class Event(models.Model):
     def save(
             self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
-        print(self.title)
         if self.sync:
             try:
                 credential = Credential.objects.get(user=self.user)
