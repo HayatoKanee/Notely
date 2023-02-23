@@ -207,5 +207,14 @@
       }
   };
     </script>
+    <script type="text/javascript"
+        src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js">
+    </script>
+    <script type="text/javascript">
+    (function(){
+        emailjs.init("service_7fj9to5");
+    })();
+    </script>
+
     <link rel="stylesheet" href="{%static 'css_style/calendarTabStyle.css' %}"/>
 {% endblock %}
