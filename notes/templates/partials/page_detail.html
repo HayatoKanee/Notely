@@ -1,5 +1,5 @@
 <form action="{% url 'page_detail' page.id %}" method="post">
-          {% csrf_token %}
-          {% include 'partials/bootstrap_form.html' with form=form %}
-          <input type="submit" value="Save Changes" class="btn-chocolate fw-bold" style="color: rgb(245, 93, 66)">
+    {% csrf_token %}
+    {% include 'partials/bootstrap_form.html' with form=form %}
+    <input type="submit" value="Save Changes" class="btn-chocolate fw-bold" style="color: rgb(245, 93, 66)">
 </form>

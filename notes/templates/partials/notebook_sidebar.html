@@ -1,52 +1,53 @@
 <div class="offcanvas offcanvas-start" data-bs-scroll="true" id="sidebar" aria-labelledby="sidebarLabel" data-bs-backdrop="false"
      data-bs-keyboard="false" aria-hidden="true" aria-labelledby="symbolsLabel" tabindex="-1" style="color: rgb(245, 93, 66);">
-  <div class="offcanvas-header" style="font-size: 22px; color: #FF4500; text-align: center; line-height: 70px; background: #FFE4C4; user-select: none; color: rgb(245, 93, 66);">
-    <h5 class="offcanvas-title" id="sidebarLabel">{{ page.notebook.notebook_name}}</h5>
-    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close" id="closeBtn"></button>
-  </div>
-  <div class="offcanvas-body" style="background-color: #FFF0F5; transition: all .5s ease;">
-<div class="container">
-      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-      <div class="col">
-          <form action="{% url 'page' page.id %}" method="post">
-              {% csrf_token %}
-              <button class="plus" type="submit" name="add_page_submit" ></button>
-          </form>
-      </div>
-          {% for p in page.notebook.pages.all %}
-              <div class="col page" data-tag-id = {{ p.get_all_tags_id }}>
-                  <div class="dropdown">
-                      <a href="{% url 'page' p.id %}" style="color: #CD5C5C;">
-                          <span style="color: {{ p.tags.first.color }}">&#x25CF{% if p.thumbnail %}
-                                    <img src="{{ p.thumbnail.url }}">
-                  {% else %}
-                  {% load static %}
-                  <img src={% static 'images/default_thumbnail.jpeg'%}>
-                  {% endif %} page {{ forloop.counter }}</span></a>
-                      <button class="page dropdown-toggle" type="button" id="dropdownMenu" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
-                      <div class="dropdown-menu" aria-labelledby="dropdownMenu">
-                          <button class="dropdown-item add-tags" type="button" data-page-id="{{ p.id }}">Add tags</button>
-                          <button class="dropdown-item" type="button"><a href="{% url 'delete_page'  p.id  %}">Delete</a></button>
-                          <button class="dropdown-item" type="button"></button>
-                          <button class="dropdown-item" type="button"></button>
-                          <button class="dropdown-item" type="button"></button>
-                      </div>
-                  </div>
-              </div>
-          {% endfor %}
-      </div>
+    <div class="offcanvas-header" style="font-size: 22px; color: #FF4500; text-align: center; line-height: 70px; background: #FFE4C4; user-select: none; color: rgb(245, 93, 66);">
+        <h5 class="offcanvas-title" id="sidebarLabel">{{ page.notebook.notebook_name}}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close" id="closeBtn"></button>
     </div>
-  </div>
-<div class="offcanva-footer">
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"> New Tag </button>
+    <div class="offcanvas-body" style="background-color: #FFF0F5; transition: all .5s ease;">
+        <div class="container">
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                <div class="col">
+                    <form action="{% url 'page' page.id %}" method="post">
+                        {% csrf_token %}
+                        <button class="plus" type="submit" name="add_page_submit" ></button>
+                    </form>
+                </div>
+                {% for p in page.notebook.pages.all %}
+                    <div class="col page" data-tag-id = {{ p.get_all_tags_id }}>
+                        <div class="dropdown">
+                            <a href="{% url 'page' p.id %}" style="color: #CD5C5C;">
+                                <span style="color: {{ p.tags.first.color }}">&#x25CF{% if p.thumbnail %}
+                                    <img src="{{ p.thumbnail.url }}">
+                                {% else %}
+                                    {% load static %}
+                                    <img src={% static 'images/default_thumbnail.jpeg'%}>
+                                {% endif %} page {{ forloop.counter }}</span></a>
+                            <button class="page dropdown-toggle" type="button" id="dropdownMenu" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenu">
+                                <button class="dropdown-item add-tags" type="button" data-page-id="{{ p.id }}">Add tags</button>
+                                <button class="dropdown-item" type="button"><a href="{% url 'delete_page'  p.id  %}">Delete</a></button>
+                                <button class="dropdown-item" type="button"></button>
+                                <button class="dropdown-item" type="button"></button>
+                                <button class="dropdown-item" type="button"></button>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="offcanva-footer">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"> New Tag </button>
+    </div>
+    <div class="tag-buttons">
+        <button class="show-all-tags-button">All</button>
+        {% for tag in tags %}
+            <span style="color: {{ tag.color }}">&#x25CF<button class="tag-button" data-tag-id="{{ tag.id }}">tag</button></span>
+        {% endfor %}
+    </div>
 </div>
-<div class="tag-buttons">
-    <button class="show-all-tags-button">All</button>
-    {% for tag in tags %}
-        <span style="color: {{ tag.color }}">&#x25CF<button class="tag-button" data-tag-id="{{ tag.id }}">tag</button></span>
-    {% endfor %}
-</div>
-</div>
+
 <div class="modal fade" id="exampleModal" >
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -73,34 +74,35 @@
     const showAllTagsButton = document.querySelectorAll('.show-all-tags-button');
 
     newButtons.forEach(button => {
-      button.addEventListener('click', event => {
-        const page_id = button.getAttribute('data-page-id');
-             $.ajax({
+        button.addEventListener('click', event => {
+            const page_id = button.getAttribute('data-page-id');
+            $.ajax({
                 url: "{% url 'page_detail' 0 %}".replace("0", page_id),
                 success: function(data) {
-                  $('#detail').html(data.html);
+                    $('#detail').html(data.html);
+
                 },
                 error: function() {
-                  alert('Error retrieving event detail');
+                    alert('Error retrieving event detail');
                 }
-              });
-             $('#pageDetail').modal('show');
-      });
+            });
+            $('#pageDetail').modal('show');
+        });
     });
 
-        tagButton.forEach(button => {
-            button.addEventListener('click', event => {
-                const tag_id = button.getAttribute('data-tag-id');
-                $(".page").hide();
-                $(".page[data-tag-id*=" + tag_id+"]").show();
-            });
+    tagButton.forEach(button => {
+        button.addEventListener('click', event => {
+            const tag_id = button.getAttribute('data-tag-id');
+            $(".page").hide();
+            $(".page[data-tag-id*=" + tag_id+"]").show();
         });
+    });
 
-        showAllTagsButton.forEach(button => {
-            button.addEventListener('click', event => {
-                $(".page").show();
-            });
+    showAllTagsButton.forEach(button => {
+        button.addEventListener('click', event => {
+            $(".page").show();
         });
+    });
 </script>
 
 <style>
@@ -108,8 +110,8 @@
         transition-duration: 0.4s;
         font-size: 16px;
         background:none;
-
     }
+
     .page:hover {
         background-color: #FFA07A;
         color: white;
@@ -117,7 +119,7 @@
         padding-right: 20px;
     }
 
-    .plus{
+    .plus {
         position: absolute;
         width: 35px;
         height: 35px;
@@ -125,6 +127,7 @@
         cursor: pointer;
         border: 2px solid #A9A9A9;
     }
+
     .plus:after {
         content: '';
         position: absolute;
@@ -133,8 +136,8 @@
         background: #A9A9A9;
         top: 50%;
         left: 50%;
-
     }
+
     .plus:before {
         content: '';
         position: absolute;
@@ -146,7 +149,9 @@
         left: 50%;
 
     }
+
     .plus:after,
+
     .plus:before {
         content: '';
         position: absolute;
@@ -154,13 +159,15 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-
     }
+
     .plus:hover:before,
+
     .plus:hover:after {
         background: #FFF0F5;
         transition: 0.2s;
     }
+
     .plus:hover {
         background-color: #A9A9A9;
         transition: 0.2s;
@@ -169,10 +176,7 @@
     #dropdownMenu {
         padding: 1px;
         border: none;
-
     }
 
-    #sidebarLabel {
-        text-align: center;
-    }
+    #sidebarLabel { text-align: center; }
 </style>

@@ -70,9 +70,7 @@ body {
     letter-spacing: 1px;/*文本中字符之间的间距*/
 }
 
-.box .input-box > input > input:focus {
-    border: 1px solid rgba(197,81,58,0.8);/*元素边框的样式、宽度和颜色*/
-}
+.box .input-box > input > input:focus { border: 1px solid rgba(197,81,58,0.8);/*元素边框的样式、宽度和颜色*/ }
 
 .box .btn-box {
     width: 250px;/*元素的宽度*/
@@ -114,14 +112,13 @@ body {
     transition: 0.2s;/*元素在某些状态变化时的过渡效果*/
 }
 
-.box .btn-box > div > button:nth-of-type(2) {
-    margin-left: 10px;/*元素左边与其他元素之间的间距*/
-}
+.box .btn-box > div > button:nth-of-type(2) { margin-left: 10px;/*元素左边与其他元素之间的间距*/ }
 
 .box .btn-box > div > button:hover {
     border: 1px solid rgba(197,81,58,0.8);/*元素边框的样式、宽度和颜色*/
     background: rgba(197,81,58,0.5);/*元素的背景颜色*/
 }
+
 .my-button {
   position: relative;
   top: -5px;

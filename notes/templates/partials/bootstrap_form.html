@@ -1,24 +1,24 @@
 {% load widget_tweaks %}
 {% for field in form %}
-        <div class=" position-relative mb-3">
-          <label class="">{{ field.label }}</label> {% if form.is_bound %}
-          {% if field.errors %}
-          {% render_field field class="form-control is-invalid" %}
-          {% else %}
-          {% render_field field class="form-control is-valid" %}
-          {% endif %}
-          {% else %}
-            {% if field.field.widget.input_type == 'checkbox' %}
-                    {% render_field field class="form-check-input" %}
-            {% else %}
-          {% render_field field class="form-control input-space" %}
-                {% endif %}
-          {% endif %}
-          <div class="valid-feedback" style="font-size: 12px; color: rgb(245, 93, 66)">
+    <div class=" position-relative mb-3">
+        <label class="">{{ field.label }}</label> {% if form.is_bound %}
+        {% if field.errors %}
+            {% render_field field class="form-control is-invalid" %}
+        {% else %}
+            {% render_field field class="form-control is-valid" %}
+        {% endif %}
+    {% else %}
+        {% if field.field.widget.input_type == 'checkbox' %}
+            {% render_field field class="form-check-input" %}
+        {% else %}
+            {% render_field field class="form-control input-space" %}
+        {% endif %}
+    {% endif %}
+        <div class="valid-feedback" style="font-size: 12px; color: rgb(245, 93, 66)">
             Looks good!
-          </div>
-          <div class="invalid-feedback">
-            {{field.errors}}
-          </div>
         </div>
+        <div class="invalid-feedback">
+            {{field.errors}}
+        </div>
+    </div>
 {% endfor %}
