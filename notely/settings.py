@@ -161,14 +161,15 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 GOOGLE_CREDENTIALS_PATH = os.path.join(BASE_DIR, 'notes', 'assets', 'credentials.json')
 
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_PORT = 465
+EMAIL_USE_TLS = False
 
-EMAIL_HOST_USER = 'winniethepooh.notely@gmail.com'
-EMAIL_HOST_PASSWORD = '30624700wtfym'
+EMAIL_HOST_USER = 'apikey'
+EMAIL_HOST_PASSWORD = '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'
+
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 

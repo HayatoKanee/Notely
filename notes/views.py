@@ -175,19 +175,18 @@ def calendar_tab(request):
                 #     fail_silently=False
                 # )
                 # print(send_mail)
+
                 message = Mail(
                     from_email='winniethepooh.notely@gmail.com',
-                    to_emails='wingyiuip812@gmail.com',
-                    subject='Sending with Twilio SendGrid is Fun',
-                    html_content='<strong>and easy to do anywhere, even with Python</strong>')
-                try:
-                    sg = SendGridAPIClient(api_key='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')
-                    response = sg.send(message)
-                    print(response.status_code)
-                    print(response.body)
-                    print(response.headers)
-                except Exception as ex:
-                    print("a")
+                    to_emails='k21072718@kcl.ac.uk',
+                    subject='Notely',
+                    html_content='<strong>Send Notely Message from sendgrid</strong>')
+                sg = SendGridAPIClient(api_key=settings.EMAIL_HOST_PASSWORD)
+                response = sg.send(message)
+                print(response.status_code)
+                print(response.body)
+                print(response.headers)
+
                 messages.add_message(request, messages.SUCCESS, "Event Shared!")
                 return redirect('calendar_tab')
 
