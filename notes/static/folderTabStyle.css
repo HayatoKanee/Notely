@@ -9,18 +9,14 @@
     margin-left: 900px;
 }
 
-#addChoice:hover {
-    font-weight: bold;
-}
+#addChoice:hover { font-weight: bold; }
 
 .add {
     background-color: transparent;
     border: none;
 }
 
-.add:hover {
-    font-weight: bold;
-}
+.add:hover { font-weight: bold; }
 
 #notebook_img {
     background: url("images/brownnotebook.png") no-repeat;
@@ -75,9 +71,7 @@
     margin-right: 500px;
 }
 
-.folder-path {
-  width: 100%;
-}
+.folder-path { width: 100%; }
 
 #goback-button {
   position: absolute;
@@ -92,4 +86,3 @@
   height: 40px;
   display: block;
 }
-
