@@ -257,9 +257,14 @@ class PageForm(forms.ModelForm):  # The form for linking the tag and the page.
         return tag
 
 class ShareEventForm(forms.Form):
-    # event = forms.ModelChoiceField(queryset=Event.objects.all(), to_field_name='title', required=False)
+    event = forms.ModelChoiceField(queryset=Event.objects.all(), required=False)
     email = forms.EmailField(required=False)
     message = forms.CharField(widget=forms.Textarea, required=False)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        self.fields['event'].choices = [(event.id, f"{event.title}") for event in Event.objects.all()]
 
     
         
