@@ -216,6 +216,7 @@ class Event(models.Model):
     routine = models.CharField(choices=routine_choice, max_length=10, blank=True)
     google_id = models.CharField(blank=True, max_length=200)
     sync = models.BooleanField(blank=False, default=False)
+    pages = models.ManyToManyField('Page', blank=True, related_name='events')
 
     def save(
             self, force_insert=False, force_update=False, using=None, update_fields=None
@@ -241,7 +242,10 @@ class Event(models.Model):
                 }
             }
             if self.google_id:
-                service.events().update(calendarId='primary', eventId=self.google_id, body=g_event).execute()
+                try:
+                    service.events().update(calendarId='primary', eventId=self.google_id, body=g_event).execute()
+                except HttpError:
+                    return
             else:
                 created_event = service.events().insert(calendarId='primary', body=g_event).execute()
                 self.google_id = created_event['id']
