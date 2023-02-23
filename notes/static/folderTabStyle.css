@@ -1,4 +1,4 @@
-#addChoice{
+#addChoice {
     position: relative;
     border-radius: 10px;
     background: url("images/addFolder.png") no-repeat;
@@ -8,14 +8,17 @@
     margin-top: 5px;
     margin-left: 900px;
 }
-.add{
+
+.add {
     background-color: transparent;
     border: none;
 }
-.add:hover{
+
+.add:hover {
     font-weight: bold;
 }
-#notebook_img{
+
+#notebook_img {
     background: url("images/brownnotebook.png") no-repeat;
     background-size: contain;
     background-position: left;
@@ -26,7 +29,8 @@
     display: block;
     text-align: left;
 }
-#folder_img{
+
+#folder_img {
     background: url("images/bluefolder.png") no-repeat;
     background-size: contain;
     background-position: left;
@@ -37,10 +41,12 @@
     display: block;
     text-align: left;
 }
+
 .folder-button {
   font-weight: bold;
   box-shadow: None!important;
 }
+
 .folder-container {
   margin-bottom: 10px;
   width: 100%;
@@ -48,6 +54,7 @@
   height: 800px;
   overflow: scroll;
 }
+
 .folder-nav {
     list-style-type: none;
     background-color: white;
@@ -56,16 +63,18 @@
     width: 100%;
     box-shadow: 0 0 10px 2px rgba(0,0,0,0.2);
     z-index: 2;
-  }
+}
 
 .folder-nav li {
     float: left;
     padding: 10px;
     margin-right: 500px;
-  }
+}
+
 .folder-path {
   width: 100%;
 }
+
 #goback-button {
   position: absolute;
   bottom: 90px;
@@ -80,6 +89,6 @@
   display: block;
 }
 
-
-
-
+#addChoice:hover {
+    font-weight: bold;
+}

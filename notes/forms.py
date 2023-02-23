@@ -1,11 +1,11 @@
 from django import forms
 from django.core.validators import RegexValidator
 from django.utils.safestring import mark_safe
-from .models import User, Profile, Folder, Notebook, Tag, Page, EventTag, Reminder, Event, Credential, PageTag
+from .models import User, Profile, Folder, Notebook, Page, EventTag, Reminder, Event, PageTag
 from guardian.shortcuts import assign_perm
-from bootstrap_datepicker_plus.widgets import DateTimePickerInput, DatePickerInput, TimePickerInput
-from django.forms import ModelChoiceField, widgets, ModelMultipleChoiceField, CheckboxInput
-from django.forms.widgets import Select, SelectMultiple
+from bootstrap_datepicker_plus.widgets import DateTimePickerInput
+from django.forms import ModelMultipleChoiceField
+from django.forms.widgets import SelectMultiple
 
 
 class LogInForm(forms.Form):
@@ -155,7 +155,8 @@ class EventForm(forms.ModelForm):
 
     class Meta:
         model = Event
-        fields = ['title', 'description', 'start_time', 'end_time', 'page', 'sync']
+
+        fields = ['title', 'description', 'start_time', 'end_time']
 
         widgets = {
             "start_time": DateTimePickerInput(attrs={"class": "form-control"}),
@@ -182,10 +183,6 @@ class EventForm(forms.ModelForm):
         event = super().save(commit=False)
         event.user = self.user
         event.save()
-        event.start_time = self.cleaned_data.get('start_time')
-        event.end_time = self.cleaned_data.get('end_time')
-        event.title = self.cleaned_data.get('title')
-        event.description = self.cleaned_data.get('description')
         if self.cleaned_data.get('tag'):
             event.tags.set(self.cleaned_data['tag'])
         if self.cleaned_data.get('page'):
@@ -193,7 +190,6 @@ class EventForm(forms.ModelForm):
             self.save_m2m()
         if self.cleaned_data.get('sync'):
             event.sync = True
-
         event.save()
         return event
 

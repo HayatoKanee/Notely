@@ -1,6 +1,6 @@
 <div class="offcanvas offcanvas-start" data-bs-scroll="true" id="sidebar" aria-labelledby="sidebarLabel" data-bs-backdrop="false"
-     data-bs-keyboard="false" aria-hidden="true" aria-labelledby="symbolsLabel" tabindex="-1" >
-  <div class="offcanvas-header" style="font-size: 22px;color: #FF4500;text-align: center;line-height: 70px;background: #FFE4C4;user-select: none;">
+     data-bs-keyboard="false" aria-hidden="true" aria-labelledby="symbolsLabel" tabindex="-1" style="color: rgb(245, 93, 66);">
+  <div class="offcanvas-header" style="font-size: 22px; color: #FF4500; text-align: center; line-height: 70px; background: #FFE4C4; user-select: none; color: rgb(245, 93, 66);">
     <h5 class="offcanvas-title" id="sidebarLabel">{{ page.notebook.notebook_name}}</h5>
     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close" id="closeBtn"></button>
   </div>
@@ -14,18 +14,15 @@
           </form>
       </div>
           {% for p in page.notebook.pages.all %}
-
               <div class="col page" data-tag-id = {{ p.get_all_tags_id }}>
-
-
-              {% if p.thumbnail %}
+                  <div class="dropdown">
+                      <a href="{% url 'page' p.id %}" style="color: #CD5C5C;">
+                          <span style="color: {{ p.tags.first.color }}">&#x25CF{% if p.thumbnail %}
                                     <img src="{{ p.thumbnail.url }}">
                   {% else %}
                   {% load static %}
-                  <img src={% static  'images/default_thumbnail.jpeg'%}>
-                  {% endif %}
-                  <div class="dropdown">
-                      <span style="color: {{ p.tags.first.color }}">&#x25CF<a href="{% url 'page' p.id %}" style="color: #CD5C5C;"> page {{ forloop.counter }}</a></span>
+                  <img src={% static 'images/default_thumbnail.jpeg'%}>
+                  {% endif %} page {{ forloop.counter }}</span></a>
                       <button class="page dropdown-toggle" type="button" id="dropdownMenu" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
                       <div class="dropdown-menu" aria-labelledby="dropdownMenu">
                           <button class="dropdown-item add-tags" type="button" data-page-id="{{ p.id }}">Add tags</button>
@@ -44,6 +41,7 @@
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"> New Tag </button>
 </div>
 <div class="tag-buttons">
+    <button class="show-all-tags-button">All</button>
     {% for tag in tags %}
         <span style="color: {{ tag.color }}">&#x25CF<button class="tag-button" data-tag-id="{{ tag.id }}">tag</button></span>
     {% endfor %}
@@ -72,6 +70,7 @@
 <script>
     const newButtons = document.querySelectorAll('.dropdown-item.add-tags');
     const tagButton = document.querySelectorAll('.tag-button');
+    const showAllTagsButton = document.querySelectorAll('.show-all-tags-button');
 
     newButtons.forEach(button => {
       button.addEventListener('click', event => {
@@ -94,10 +93,14 @@
                 const tag_id = button.getAttribute('data-tag-id');
                 $(".page").hide();
                 $(".page[data-tag-id*=" + tag_id+"]").show();
-
             });
         });
 
+        showAllTagsButton.forEach(button => {
+            button.addEventListener('click', event => {
+                $(".page").show();
+            });
+        });
 </script>
 
 <style>

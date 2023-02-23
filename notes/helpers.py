@@ -41,3 +41,4 @@ def check_perm(perm, obj_type):
         return modified_view_function
 
     return decorator
+

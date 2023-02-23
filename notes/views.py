@@ -1,9 +1,7 @@
 import json
-
-from django.conf import settings
-
 import base64
 
+from django.conf import settings
 from django.core.files.base import ContentFile
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
@@ -148,7 +146,6 @@ def calendar_tab(request):
                     Reminder.objects.create(event=event, reminder_time=int(event_form.cleaned_data['reminder']))
                     messages.add_message(request, messages.SUCCESS, "Reminder Created!")
                 messages.add_message(request, messages.SUCCESS, "Event Created!")
-
                 return redirect('calendar_tab')
 
         if 'tag_submit' in request.POST:

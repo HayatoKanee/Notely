@@ -5,7 +5,6 @@ from notes.helpers import calculate_age
 from notes.models import User, Profile, Notebook, Page, Editor, Reminder, Event
 from notes.tasks import send_notification
 from django.core.mail import send_mail
-
 from datetime import datetime, timedelta
 from django.utils import timezone
 
