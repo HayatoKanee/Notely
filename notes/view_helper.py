@@ -63,8 +63,12 @@ def get_or_create_event_from_google(request):
 
             start = event['start'].get('dateTime', event['start'].get('date'))
             end = event['end'].get('dateTime', event['end'].get('date'))
-            start = datetime.datetime.fromisoformat(start[:-1] + '+00:00')
-            end = datetime.datetime.fromisoformat(end[:-1] + '+00:00')
+            if start.endswith('Z'):
+                start = start[:-1] + '+00:00'
+            if end.endswith('Z'):
+                end = end[:-1] + '+00:00'
+            start = datetime.datetime.fromisoformat(start)
+            end = datetime.datetime.fromisoformat(end)
             google_event = Event.objects.create(
                 user=request.user,
                 google_id=google_id,

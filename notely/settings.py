@@ -42,8 +42,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'guardian',
     'bootstrap_datepicker_plus',
-    'colorfield',
-    'sslserver'
+    'colorfield'
 ]
 
 MIDDLEWARE = [
