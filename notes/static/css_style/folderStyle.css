@@ -10,3 +10,7 @@
 .my-div{
   background-color: black;
 } */
+
+#addChoice:hover {
+    font-weight: bold;
+}

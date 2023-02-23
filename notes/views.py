@@ -1,9 +1,7 @@
 import json
-
-from django.conf import settings
-
 import base64
 
+from django.conf import settings
 from django.core.files.base import ContentFile
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
@@ -29,7 +27,6 @@ from sendgrid.helpers.mail import Mail
 import sendgrid
 from google.oauth2.credentials import Credentials
 from googleapiclient.errors import HttpError
-
 
 SCOPES = ['https://www.googleapis.com/auth/calendar']
 
@@ -129,26 +126,26 @@ def calendar_tab(request):
         if 'event_submit' in request.POST:
             event_form = EventForm(request.user, request.POST)
             if event_form.is_valid():
-                
-                page_id = event_form.cleaned_data['page'].id
-                page = Page.objects.get(id=page_id)
+
+                page_data = event_form.cleaned_data['page']
                 event = Event(
                     user=request.user,
                     title=event_form.cleaned_data['title'],
                     description=event_form.cleaned_data['description'],
                     start_time=event_form.cleaned_data['start_time'],
                     end_time=event_form.cleaned_data['end_time'],
-                    sync= event_form.cleaned_data['sync']
+                    sync=event_form.cleaned_data['sync']
                 )
-                
-                
+
                 event.save()  # Save the event before adding the page to the many-to-many relationship
-                event.pages.add(page)
+                if page_data:
+                    page_id = page_data.id
+                    page = Page.objects.get(id=page_id)
+                    event.pages.add(page)
                 if int(event_form.cleaned_data['reminder']) > -1:
                     Reminder.objects.create(event=event, reminder_time=int(event_form.cleaned_data['reminder']))
                     messages.add_message(request, messages.SUCCESS, "Reminder Created!")
                 messages.add_message(request, messages.SUCCESS, "Event Created!")
-
                 return redirect('calendar_tab')
 
         if 'tag_submit' in request.POST:
@@ -163,7 +160,7 @@ def calendar_tab(request):
         if 'shareEvent_submit' in request.POST:
             shareEvent_form = ShareEventForm(request.POST)
             if shareEvent_form.is_valid():
-            # shareEvent = request.POST['event']
+                # shareEvent = request.POST['event']
                 # shareEvent = request.POST.get('event', "False")
                 # message = request.POST.get('message', "")
                 # email = request.POST.get('email', "wingyiuip812@gmail.com")
@@ -181,12 +178,17 @@ def calendar_tab(request):
                     to_emails='k21072718@kcl.ac.uk',
                     subject='Notely',
                     html_content='<strong>Send Notely Message from sendgrid</strong>')
-                sg = SendGridAPIClient(api_key=settings.EMAIL_HOST_PASSWORD)
-                response = sg.send(message)
-                print(response.status_code)
-                print(response.body)
-                print(response.headers)
-
+                
+                try:
+                    sg = SendGridAPIClient(
+                        api_key=settings.EMAIL_HOST_PASSWORD
+                        )
+                    response = sg.send(message)
+                    print(response.status_code)
+                    print(response.body)
+                    print(response.headers)
+                except Exception as ex:
+                    print("a")
                 messages.add_message(request, messages.SUCCESS, "Event Shared!")
                 return redirect('calendar_tab')
 
