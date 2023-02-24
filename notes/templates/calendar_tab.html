@@ -1,8 +1,8 @@
 {% extends 'base_content.html' %}
  {% block content %}
-<div class="event_wrapper">
-    <div class="event_filter">
-        <h3>Filter (Now needs refreshing page)</h3>
+<div class="wrapper">
+    <div class="filter">
+        <h3>Filter</h3>
         <div class="event_filter_wrapper">
             <input id="noTag" class="event_filter" name="event_filter_select" type="checkbox" value="noTag" data-type="tags" />
             <label for="noTag"> No Tag </label>
@@ -120,6 +120,7 @@
         eventClassNames: function(info) {
             var display = true;
             var tags = [];
+
             $("input[name='event_filter_select']:checked").each(function() {
                 if ($(this).data('type') == 'tags') {
                     tags.push($(this).val());
@@ -135,9 +136,10 @@
                 }
             }
             if (!display) {
-                info.event.setProp('display', 'none');
+                display = "hidden";
             }
             //alert(display);
+
             return display;
         },
 
@@ -264,9 +266,10 @@
     var eventModal = document.getElementById('eventModal')
     var bsModal = bootstrap.Modal.getInstance(eventModal)
     bsModal.show()
-  })
+  });
     </script>
     <link rel="stylesheet" href="{%static 'css_style/calendarTabStyle.css' %}"/>
+    <link rel="filter" href="{%static 'css_style/calendarEventFilter.css' %}"/>
     <script src="https://apis.google.com/js/api.js"></script>
     <script src="{%static 'javascript/calendar/syncGoogleCalendar.js'%}"></script>
 {% endblock %}
