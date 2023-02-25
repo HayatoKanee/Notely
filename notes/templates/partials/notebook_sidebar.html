@@ -27,8 +27,6 @@
                             <div class="dropdown-menu" aria-labelledby="dropdownMenu">
                                 <button class="dropdown-item add-tags" type="button" data-page-id="{{ page.id }}">Add tags</button>
                                 <button class="dropdown-item" type="button"><a href="{% url 'delete_page'  page.id  %}">Delete</a></button>
-                                <button class="dropdown-item" type="button" data-page-id="{{ page.id }}"
-                                        data-bs-toggle="modal" data-bs-target="#shareModal">Share</button>
                                 <button class="dropdown-item" type="button"></button>
                                 <button class="dropdown-item" type="button"></button>
                             </div>
@@ -67,7 +65,6 @@
         </div>
     </div>
 </div>
-
 {% include 'partials/pageModal.html' %}
 <script>
     const newButtons = document.querySelectorAll('.dropdown-item.add-tags');
