@@ -15,7 +15,7 @@ from django.template.loader import render_to_string
 from django.contrib.auth.decorators import login_required
 from .helpers import login_prohibited, check_perm
 from django.contrib.auth.hashers import check_password
-from guardian.shortcuts import get_objects_for_user, get_users_with_perms
+from guardian.shortcuts import get_objects_for_user, get_users_with_perms, assign_perm
 from .view_helper import sort_items_by_created_time, save_folder_notebook_forms, get_or_create_event_from_google
 from datetime import datetime
 from django.utils import timezone
@@ -255,7 +255,8 @@ def page(request, page_id):
         if 'add_page_submit' in request.POST:
             new_page = Page.objects.create(notebook=page.notebook)
             return redirect('page', new_page.id)
-    return render(request, 'page.html', {'page': page, 'page_tag_form': page_tag_form, 'tags': tags,'users':users_without_perms})
+    return render(request, 'page.html',
+                  {'page': page, 'page_tag_form': page_tag_form, 'tags': tags, 'users': users_without_perms})
 
 
 @login_required
@@ -386,3 +387,16 @@ def google_auth_callback(request):
     credentials = flow.credentials.to_json()
     Credential.objects.update_or_create(user=request.user, defaults={'google_cred': credentials})
     return redirect('calendar_tab')
+
+
+@login_required
+def share_page(request, page_id):
+    try:
+        page = Page.objects.get(id=page_id)
+        selected_users = request.POST.getlist('selected_users[]')
+        for email in selected_users:
+            user = User.objects.get(email=email)
+            assign_perm('dg_view_page', user, page)
+        return JsonResponse({'status': 'success'})
+    except Page.DoesNotExist:
+        return JsonResponse({'status': 'fail'})

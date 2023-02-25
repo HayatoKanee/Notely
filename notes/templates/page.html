@@ -197,7 +197,7 @@
         }
     </style>
     <script>
-    new TomSelect("#select-user",{
+    const t_select = new TomSelect("#select-user",{
         plugins: ['remove_button'],
 	    persist: false,
 	    maxItems: null,
@@ -224,10 +224,26 @@
                     '<span class="label">' + escape(label) + '</span>' +
                     (caption ? '<span class="caption">' + escape(caption) + '</span>' : '') + '</div>'+ '<div class="col">'+
                      '<span class="gravatar">' + '<img class="rounded-circle" src="'+ item.gravatar + '"</img></span>' +
-                    '</div>'
+                    '</div>'+
                 '</div>';
             }
 	    }
+    });
+    $('#shareBtn').click(function (){
+       const selectedUsers = t_select.getValue();
+          $.ajax({
+               url: "{% url 'share_page' page.id %}",
+               type: 'POST',
+               async: true,
+               data: {
+                   'selected_users[]': selectedUsers,
+                   csrfmiddlewaretoken: csrf
+               },
+       });
+        for (let i = 0; i < selectedUsers.length; i++) {
+            const selectedOption = selectedUsers[i];
+            t_select.removeOption(selectedOption);
+        }
     });
     </script>
 {% endblock %}
