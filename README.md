@@ -66,7 +66,7 @@ $ celery -A notely worker -l INFO
 ## Sources
 The packages used by this application are specified in `requirements.txt`
 
-### JavaScript Liabary
+### JavaScript Library
 - [Fabric](http://fabricjs.com/)
 - [CodeMirror](https://codemirror.net/)
 - [Bootstrap](https://getbootstrap.com/)
