@@ -206,7 +206,7 @@
         searchField: ['username', 'email'],
         options: [
             {% for user in users %}
-                {email: "{{ user.email }}", username: "{{ user.username }}"},
+                {email: "{{ user.email }}", username: "{{ user.username }}", gravatar: "{{ user.profile.mini_gravatar}}"},
             {% endfor %}
 	    ],
         render: {
@@ -214,14 +214,17 @@
                 return '<div>' +
                     (item.username ? '<span class="name">' + escape(item.username) + '</span>' : '') +
                     (item.email ? '<span class="email">' + escape(item.email) + '</span>' : '') +
+                    '<span class="gravatar">' + '<img class="rounded-circle" src="'+ item.gravatar + '"</img></span>'+
                 '</div>';
             },
             option: function(item, escape) {
                 var label = item.username || item.email;
                 var caption = item.username ? item.email : null;
-                return '<div>' +
+                return '<div class="row">' + '<div class="col">' +
                     '<span class="label">' + escape(label) + '</span>' +
-                    (caption ? '<span class="caption">' + escape(caption) + '</span>' : '') +
+                    (caption ? '<span class="caption">' + escape(caption) + '</span>' : '') + '</div>'+ '<div class="col">'+
+                     '<span class="gravatar">' + '<img class="rounded-circle" src="'+ item.gravatar + '"</img></span>' +
+                    '</div>'
                 '</div>';
             }
 	    }
