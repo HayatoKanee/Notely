@@ -78,11 +78,17 @@ function addImage(e) {
 
 function choosePenColor() {
     const chooser = document.getElementById('choosePenColor')
-    chooser.addEventListener('change', (e) => {
-        penColor = '#' + e.target.value
-        canvas.freeDrawingBrush.color = penColor
-        canvas.requestRenderAll()
-    })
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            if (mutation.attributeName === 'data-current-color') {
+              const newColor = chooser.getAttribute('data-current-color')
+                penColor = newColor;
+                canvas.freeDrawingBrush.color = penColor;
+                canvas.requestRenderAll();
+            }
+          });
+        });
+    observer.observe(chooser, {attributes:true})
 }
 
 
@@ -97,11 +103,17 @@ function chooseWidth() {
 
 function chooseTextColor() {
     const chooser = document.getElementById('chooseTextColor')
-    chooser.addEventListener('change', (e) => {
-        textColor = '#' + e.target.value
-        canvas.freeDrawingBrush.color = textColor
-        canvas.requestRenderAll()
-    })
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            if (mutation.attributeName === 'data-current-color') {
+              const newColor = chooser.getAttribute('data-current-color')
+                textColor = newColor;
+                canvas.freeDrawingBrush.color = textColor;
+                canvas.requestRenderAll();
+            }
+          });
+        });
+    observer.observe(chooser, {attributes:true})
 }
 
 // reference: https://github.com/av01d/fabric-brushes

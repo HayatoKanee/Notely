@@ -13,21 +13,22 @@
                         <button class="plus" type="submit" name="add_page_submit" ></button>
                     </form>
                 </div>
-                {% for p in page.notebook.pages.all %}
-                    <div class="col page" data-tag-id = {{ p.get_all_tags_id }}>
+                {% for page in page.notebook.pages.all %}
+                    <div class="col page" data-tag-id = {{ page.get_all_tags_id }}>
                         <div class="dropdown">
-                            <a href="{% url 'page' p.id %}" style="color: #CD5C5C;">
-                                <span style="color: {{ p.tags.first.color }}">&#x25CF{% if p.thumbnail %}
-                                    <img src="{{ p.thumbnail.url }}">
+                            <a href="{% url 'page' page.id %}" style="color: #CD5C5C;">
+                                <span style="color: {{ p.tags.first.color }}">&#x25CF{% if page.thumbnail %}
+                                    <img src="{{ page.thumbnail.url }}">
                                 {% else %}
                                     {% load static %}
                                     <img src={% static 'images/default_thumbnail.jpeg'%}>
                                 {% endif %} page {{ forloop.counter }}</span></a>
                             <button class="page dropdown-toggle" type="button" id="dropdownMenu" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenu">
-                                <button class="dropdown-item add-tags" type="button" data-page-id="{{ p.id }}">Add tags</button>
-                                <button class="dropdown-item" type="button"><a href="{% url 'delete_page'  p.id  %}">Delete</a></button>
-                                <button class="dropdown-item" type="button"></button>
+                                <button class="dropdown-item add-tags" type="button" data-page-id="{{ page.id }}">Add tags</button>
+                                <button class="dropdown-item" type="button"><a href="{% url 'delete_page'  page.id  %}">Delete</a></button>
+                                <button class="dropdown-item" type="button" data-page-id="{{ page.id }}"
+                                        data-bs-toggle="modal" data-bs-target="#shareModal">Share</button>
                                 <button class="dropdown-item" type="button"></button>
                                 <button class="dropdown-item" type="button"></button>
                             </div>
