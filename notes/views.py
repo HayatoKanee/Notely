@@ -241,6 +241,7 @@ def page(request, page_id):
     page = Page.objects.get(id=page_id)
     page_tag_form = PageTagForm()
     tags = PageTag.objects.all()
+    viewable_pages = get_objects_for_user(request.user, 'dg_view_page', klass=Page).filter(notebook=page.notebook)
     users_with_perms = get_users_with_perms(page, only_with_perms_in=['dg_view_page'])
     users_without_perms = User.objects.exclude(pk__in=users_with_perms).exclude(username='AnonymousUser')
     if request.method == 'POST':
@@ -256,7 +257,8 @@ def page(request, page_id):
             new_page = Page.objects.create(notebook=page.notebook)
             return redirect('page', new_page.id)
     return render(request, 'page.html',
-                  {'page': page, 'page_tag_form': page_tag_form, 'tags': tags, 'users': users_without_perms})
+                  {'page': page, 'page_tag_form': page_tag_form, 'tags': tags, 'users': users_without_perms,
+                   'viewable_pages': viewable_pages})
 
 
 @login_required
@@ -397,6 +399,7 @@ def share_page(request, page_id):
         for email in selected_users:
             user = User.objects.get(email=email)
             assign_perm('dg_view_page', user, page)
+            assign_perm('dg_view_notebook', user, page.notebook)
         return JsonResponse({'status': 'success'})
     except Page.DoesNotExist:
         return JsonResponse({'status': 'fail'})

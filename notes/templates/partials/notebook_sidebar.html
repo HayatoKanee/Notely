@@ -13,7 +13,7 @@
                         <button class="plus" type="submit" name="add_page_submit" ></button>
                     </form>
                 </div>
-                {% for page in page.notebook.pages.all %}
+                {% for page in viewable_pages %}
                     <div class="col page" data-tag-id = {{ page.get_all_tags_id }}>
                         <div class="dropdown">
                             <a href="{% url 'page' page.id %}" style="color: #CD5C5C;">
