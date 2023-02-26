@@ -289,7 +289,7 @@ class Reminder(models.Model):
     ]
     reminder_time = models.IntegerField(choices=reminder_choice)
     task_id = models.TextField(unique=True, blank=True, null=True)
-
+    exact_time = models.DateTimeField(null=True)
 
 class Credential(models.Model):
     user = models.ForeignKey(User, related_name="creds", on_delete=models.CASCADE)

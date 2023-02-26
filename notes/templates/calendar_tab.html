@@ -2,7 +2,7 @@
  {% block content %}
      <div class="container">
       <div id='calendar' style="color: rgb(245, 93, 66);"></div>
-              <button id="addEvent" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#eventModal">
+              <button onclick="checkPermission()" id="addEvent" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#eventModal">
                 Add New Event
           </button>
 
@@ -195,12 +195,23 @@
      wsStart = 'wss://';
     }
   
+
+  function checkPermission() {
+    if (!("Notification" in window)) {
+      console.log("This browser does not support desktop notification");
+    } else if (Notification.permission === "granted") {
+      console.log("granted permission");
+    } else if (Notification.permission !== "denied") {
+      Notification.requestPermission();
+    }
+  }
+
   var socket = new WebSocket(wsStart + window.location.host + "/ws/calendar");
   socket.onmessage = function(event) {
       var data = JSON.parse(event.data);
       if (data.type === "show_notification") {
           // Create a notification with the message received from the server
-          var notification = new Notification("Notification Title", {
+          var notification = new Notification("Event Reminder", {
               body: data.message,
           });
           console.log(data.message);
