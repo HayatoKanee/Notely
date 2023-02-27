@@ -13,7 +13,9 @@
             <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" aria-describedby="button-addon1" list="pageList">
             <datalist id="pageList">
               {% for page in page.notebook.pages.all %}
-                  <option><a href="{% url 'page' page.id %}"><img src="{{ page.thumbnail.url }}"></a></option>
+                  {% if page.thumbnail %}
+                    <option value="{{ page.id }}"><a href="{% url 'page' page.id %}"><img src="{{ page.thumbnail.url }}"></a></option>
+                  {% endif %}
               {% endfor %}
             </datalist>
 {#              <div class="dropdown">#}
