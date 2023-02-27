@@ -160,30 +160,32 @@ def calendar_tab(request):
         if 'shareEvent_submit' in request.POST:
             shareEvent_form = ShareEventForm(request.POST)
             if shareEvent_form.is_valid():
-                # shareEvent = request.POST['event']
-                # shareEvent = request.POST.get('event', "False")
-                # message = request.POST.get('message', "")
-                # email = request.POST.get('email', "wingyiuip812@gmail.com")
-                # send_mail(
-                #     'Share Event',
-                #     shareEvent_form.cleaned_data['message'],
-                #     settings.EMAIL_HOST_USER,
-                #     [shareEvent_form.cleaned_data['email']],
-                #     fail_silently=False
-                # )
-                # print(send_mail)
+                
+                email = shareEvent_form.cleaned_data['email']
+                message = shareEvent_form.cleaned_data['message']
+                user = request.user.username
 
-                message = Mail(
+                event = shareEvent_form.cleaned_data['event']
+                title = event.title
+                description = event.description
+                start_time = event.start_time
+                end_time = event.end_time
+
+                subject = f'You have been invited to the following event: {title}'
+
+                html_content = f'<p>You have been invited to the following event: {title}\n</p> <p>by {user}\n</p> <p>Message from {user}: {message}\n</p> <p>Please see below event details:\n</p> <p>description: {description}\n</p> <p>start time: {start_time}\n</p> <p>end time: {end_time}</p>'
+
+                mail = Mail(
                     from_email='winniethepooh.notely@gmail.com',
-                    to_emails='k21072718@kcl.ac.uk',
-                    subject='Notely',
-                    html_content='<strong>Send Notely Message from sendgrid</strong>')
+                    to_emails=email,
+                    subject=subject,
+                    html_content=html_content)
                 
                 try:
                     sg = SendGridAPIClient(
                         api_key=settings.EMAIL_HOST_PASSWORD
                         )
-                    response = sg.send(message)
+                    response = sg.send(mail)
                     print(response.status_code)
                     print(response.body)
                     print(response.headers)
