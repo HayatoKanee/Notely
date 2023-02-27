@@ -218,6 +218,14 @@ class Event(models.Model):
     sync = models.BooleanField(blank=False, default=False)
     pages = models.ManyToManyField('Page', blank=True, related_name='events')
 
+    class Meta:
+        permissions = [
+            ("dg_view_event", "can view event"),
+            ("dg_edit_event", "can edit event"),
+            ("dg_delete_event", "can delete event")
+        ]
+
+
     def save(
             self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
@@ -245,7 +253,7 @@ class Event(models.Model):
                 try:
                     service.events().update(calendarId='primary', eventId=self.google_id, body=g_event).execute()
                 except HttpError:
-                    return
+                    return super().save()
             else:
                 created_event = service.events().insert(calendarId='primary', body=g_event).execute()
                 self.google_id = created_event['id']
