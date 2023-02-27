@@ -245,7 +245,7 @@ class Event(models.Model):
                 try:
                     service.events().update(calendarId='primary', eventId=self.google_id, body=g_event).execute()
                 except HttpError:
-                    return
+                    return super().save()
             else:
                 created_event = service.events().insert(calendarId='primary', body=g_event).execute()
                 self.google_id = created_event['id']
