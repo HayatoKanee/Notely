@@ -240,9 +240,8 @@
                    csrfmiddlewaretoken: csrf
                },
        });
-        for (let i = 0; i < selectedUsers.length; i++) {
-            const selectedOption = selectedUsers[i];
-            t_select.removeOption(selectedOption);
+        while(selectedUsers.length!=0){
+            t_select.removeOption(selectedUsers[0]);
         }
     });
     </script>

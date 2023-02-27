@@ -169,8 +169,9 @@ class EventForm(forms.ModelForm):
         self.user = user
         self.fields['tag'].widget = EventTagSelectWidget()
         self.fields['tag'].queryset = user.event_tags.all()
-        
-        self.fields['page'].choices = [(page.id, f"{page.notebook.notebook_name}: {page.id}") for page in Page.objects.filter(notebook__user=user)]
+
+        self.fields['page'].choices = [(page.id, f"{page.notebook.notebook_name}: {page.id}") for page in
+                                       Page.objects.filter(notebook__user=user)]
 
     def clean(self):
         super().clean()
@@ -256,10 +257,8 @@ class PageForm(forms.ModelForm):  # The form for linking the tag and the page.
         tag.save()
         return tag
 
+
 class ShareEventForm(forms.Form):
     # event = forms.ModelChoiceField(queryset=Event.objects.all(), to_field_name='title', required=False)
     email = forms.EmailField(required=False)
     message = forms.CharField(widget=forms.Textarea, required=False)
-
-    
-        
