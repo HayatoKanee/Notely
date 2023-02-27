@@ -252,6 +252,9 @@ def page(request, page_id):
         if 'add_page_submit' in request.POST:
             new_page = Page.objects.create(notebook=page.notebook)
             return redirect('page', new_page.id)
+        if 'search_page_submit' in request.POST:
+            new_page = Page.obejects.get(id=page_id)
+            return redirect('page', new_page.id)
     return render(request, 'page.html', {'page': page, 'page_tag_form': page_tag_form, 'tags': tags})
 
 
