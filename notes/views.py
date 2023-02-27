@@ -400,7 +400,7 @@ def google_auth_callback(request):
 def share_page(request, page_id):
     try:
         page = Page.objects.get(id=page_id)
-        if page.user != request.user:
+        if page.notebook.user != request.user:
             return JsonResponse({'status': 'fail'})
         selected_users = request.POST.getlist('selected_users[]')
         for email in selected_users:
