@@ -159,12 +159,12 @@ class Editor(models.Model):
 class Tag(models.Model):
     title = models.CharField(max_length=30)
     COLOR_PALETTE = [
-        ('#000000', 'black'),
+        ('#000000', 'Black'),
         ('#0000FF', 'Blue'),
         ('#C12FFF', 'Purple'),
-        ('#34eb67', 'green'),
-        ('#FF5B09', 'orange'),
-        ('#FC1501', 'red'),
+        ('#34eb67', 'Green'),
+        ('#FF5B09', 'Orange'),
+        ('#FC1501', 'Red'),
         ('#FFFF00', 'Yellow'),
         ('#FFA3EE', 'Pink'),
     ]
@@ -191,7 +191,7 @@ class PageTag(Tag):
 class Event(models.Model):
     user = models.ForeignKey(User, related_name="events", on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
-    description = models.TextField(default="")
+    description = models.TextField(default=" ")
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
 

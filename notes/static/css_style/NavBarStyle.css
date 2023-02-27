@@ -42,3 +42,11 @@ h1 {
 #cancel:hover {
     font-weight: bold;
 }
+
+#bell {
+  width: 40px;
+  height: 32px ;
+  background: url("../images/bell.png") no-repeat;
+  background-size: contain;
+  margin-top: 14%;
+}
