@@ -37,6 +37,7 @@ def schedule_reminder(sender, instance, created, **kwargs):
     target_time = event_start_time - timedelta(minutes=reminder_time)
     if created:
         task = send_notification.apply_async(args=[instance.id], eta=target_time)
+        instance.exact_time = target_time
         instance.task_id = task.id
         instance.save()
 

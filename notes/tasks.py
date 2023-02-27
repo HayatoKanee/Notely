@@ -36,4 +36,4 @@ def send_notification(reminder_id):
     }
 
     async_to_sync(send_to_group)(f"user_{reminder.event.user.id}",
-                                 f"Reminder: {reminder.event.title}  will start {reminder_dict.get(reminder_time)} .")
+                                 f"{reminder.event.title} will start {reminder_dict.get(reminder_time)} .")
