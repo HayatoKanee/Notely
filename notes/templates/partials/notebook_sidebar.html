@@ -1,10 +1,10 @@
 <div class="offcanvas offcanvas-start" data-bs-scroll="true" id="sidebar" aria-labelledby="sidebarLabel" data-bs-backdrop="false"
      data-bs-keyboard="false" aria-hidden="true" aria-labelledby="symbolsLabel" tabindex="-1" style="color: rgb(245, 93, 66);">
-    <div class="offcanvas-header" style="font-size: 22px; color: #FF4500; text-align: center; line-height: 70px; background: #FFE4C4; user-select: none; color: rgb(245, 93, 66);">
+    <div class="offcanvas-header" style="font-size: 22px; color: rgb(245, 93, 66); text-align: center; line-height: 70px; background: rgb(245, 93, 66, 0.1); user-select: none; color: rgb(245, 93, 66);">
         <h5 class="offcanvas-title" id="sidebarLabel">{{ page.notebook.notebook_name}}</h5>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close" id="closeBtn"></button>
     </div>
-    <div class="offcanvas-body" style="background-color: #FFF0F5; transition: all .5s ease;">
+    <div class="offcanvas-body" style="background-color: white; transition: all .5s ease;">
         <div class="container">
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
                 <div class="col">
@@ -16,7 +16,7 @@
                 {% for page in viewable_pages %}
                     <div class="col page" data-tag-id = {{ page.get_all_tags_id }}>
                         <div class="dropdown">
-                            <a href="{% url 'page' page.id %}" style="color: #CD5C5C;">
+                            <a href="{% url 'page' page.id %}" style="color: rgb(245, 93, 66,0.9);">
                                 <span style="color: {{ p.tags.first.color }}">&#x25CF{% if page.thumbnail %}
                                     <img src="{{ page.thumbnail.url }}">
                                 {% else %}
@@ -111,8 +111,7 @@
     }
 
     .page:hover {
-        background-color: #FFA07A;
-        color: white;
+        background-color: rgb(245, 93, 66, 0.1);
         border-radius: 50%;
         padding-right: 20px;
     }
@@ -121,9 +120,9 @@
         position: absolute;
         width: 35px;
         height: 35px;
-        background: #FFF0F5;
+        background: rgb(245, 93, 66, 0.02);
         cursor: pointer;
-        border: 2px solid #A9A9A9;
+        border: 2px solid rgb(245, 93, 66, 0.5);
     }
 
     .plus:after {
@@ -131,7 +130,7 @@
         position: absolute;
         height: 4px;
         width: 50%;
-        background: #A9A9A9;
+        background: rgb(245, 93, 66, 0.8);
         top: 50%;
         left: 50%;
     }
@@ -142,7 +141,7 @@
         height: 50%;
         width: 4px;
         transform: translate(-50%, -50%);
-        background: #A9A9A9;
+        background: rgb(245, 93, 66, 0.8);
         top: 50%;
         left: 50%;
 
@@ -162,12 +161,12 @@
     .plus:hover:before,
 
     .plus:hover:after {
-        background: #FFF0F5;
+        background: rgb(245, 93, 66, 0.8);
         transition: 0.2s;
     }
 
     .plus:hover {
-        background-color: #A9A9A9;
+        background-color: rgb(245, 93, 66, 0.08);
         transition: 0.2s;
     }
 

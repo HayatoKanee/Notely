@@ -1,12 +1,12 @@
 {% include 'partials/sidebar.html' %}
 <nav class="navbar navbar-expand-lg bg-nav shadow-sm">
-    <div class="container-fluid">
-        <img class="logo img-fluid">
+    <div class="container-fluid" style="height: 55px;">
+        <div class="container-fluid collapse navbar-collapse">
+                     <img class="logo img-fluid">
         <a class="navbar-brand fw-bold brand" id='sideBtn' data-bs-toggle="offcanvas" href="#sidebar" role="button" aria-controls="sidebar">
             <span class="navbar-toggler-icon"></span>
         </a>
-        <div class="container-fluid collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ms-auto mb-2 mb-lg-0" style="margin-right: 13px;">
+            <ul class="navbar-nav ms-auto">
                 <li class="nav-item ">
                     <a class="nav-link active bold-hover" href="{% url 'folders_tab' %}" style="color: rgb(245, 93, 66); font-size: 20px;" >Notes</a>
                 </li>
