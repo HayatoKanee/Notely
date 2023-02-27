@@ -32,13 +32,21 @@
                             {% if item.get_type == "Folder" %}
                                 <form action="{% url 'sub_folders_tab' item.id %}" method="get">
                                     <button id = "folder_img" style="margin-left:-5px;">
+                                        {% if item.user == user%}
                                         <span style="margin-left: 80px; color: rgb(245, 93, 66);">{{ item.folder_name }}</span>
+                                        {% else %}
+                                        <span style="margin-left: 80px; color: rgb(245, 93, 66);">{{ item.folder_name }} (shared by {{item.user.username}})</span>
+                                        {% endif %}
                                     </button>
                                 </form>
                             {% else %}
                                 <form action="{% url 'page' item.last_page.id %}" method="get">
                                     <button id="notebook_img" style="text-align: left;">
+                                        {% if item.user == user%}
                                         <span style="margin-left: 75px; color: rgb(245, 93, 66);">{{ item.notebook_name }}</span>
+                                        {% else %}
+                                          <span style="margin-left: 75px; color: rgb(245, 93, 66);">{{ item.notebook_name }} (shared by {{item.user.username}})</span>
+                                        {% endif %}
                                     </button>
                                 </form>
                             {% endif %}

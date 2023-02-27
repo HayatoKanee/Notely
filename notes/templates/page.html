@@ -9,6 +9,7 @@
     <nav class="navbar navbar-expand-lg fixed-bottom navbar-light bg-light">
         <div class="container-fluid">
             <ul class="navbar-nav mx-auto mt-2 mt-lg-0">
+                {% if can_edit %}
                 <li class="nav-item">
                     <button class="toolbox" id="clearAll" onclick="clearCanvas(canvas)" style="color: rgb(245, 93, 66);"></button>
                 </li>
@@ -99,15 +100,18 @@
                         </div>
                     </div>
                 </li>
+                {% endif %}
                 <li class="nav-item">
                     <button class="toolbox" id="showCodeEditor"  data-bs-toggle="modal" data-bs-target="#codeEditor" style="color: rgb(245, 93, 66);"></button>
                 </li>
+                {% if can_edit %}
                 <li class="nav-item">
                     <button class="toolbox" id="showSymbols"  data-bs-toggle="modal" data-bs-target="#symbols" style="color: rgb(245, 93, 66);"></button>
                 </li>
                 <li class="nav-item">
                     <button class="toolbox" id="linkPage"  data-bs-toggle="offcanvas" href="#sidebar" aria-controls="sidebar" style="color: rgb(245, 93, 66);"> Link Page</button>
                 </li>
+                {% endif %}
                 <li class="nav-item">
                     <button class="toolbox" id="download" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDownload" aria-expanded="false"
                             aria-controls="collapseDownload" style="color: rgb(245, 93, 66);"></button>
@@ -121,9 +125,11 @@
                         </div>
                     </div>
                 </li>
+                {% if can_edit %}
                 <li class="nav-item">
                     <button class="toolbox" id="share" type="button" data-bs-toggle="modal" data-bs-target="#shareModal">Share</button>
                 </li>
+                {% endif %}
             </ul>
         </div>
     </nav>
@@ -142,6 +148,7 @@
     <script src="{%static 'javascript/note-taking/fabric.min.js'%}"></script>
     <script src="{%static 'javascript/note-taking/editor.bundle.js'%}"></script>
     <script>
+        const can_edit = "{{can_edit}}";
         let counter = {{ page.editors.all|length|add:"1" }};
         const editors = [];
         {% for editor in page.editors.all %}
@@ -171,6 +178,7 @@
     <script src="{% static 'javascript/download.js'%}"></script>
     <script src="{% static 'javascript/fileSaver.min.js'%}"></script>
     <script src="{% static 'javascript/canvas-toBlob.js'%}"></script>
+    {% if can_edit %}
     <script src="{%static 'javascript/note-taking/symbols.js'%}"></script>
     <script src="{% static 'javascript/note-taking/linkPage.js'%}"></script>
     <script src="{% static 'javascript/note-taking/table.js'%}"></script>
@@ -245,4 +253,5 @@
         }
     });
     </script>
+    {% endif %}
 {% endblock %}
