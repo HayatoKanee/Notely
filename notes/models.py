@@ -218,6 +218,14 @@ class Event(models.Model):
     sync = models.BooleanField(blank=False, default=False)
     pages = models.ManyToManyField('Page', blank=True, related_name='events')
 
+    class Meta:
+        permissions = [
+            ("dg_view_event", "can view event"),
+            ("dg_edit_event", "can edit event"),
+            ("dg_delete_event", "can delete event")
+        ]
+
+
     def save(
             self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
