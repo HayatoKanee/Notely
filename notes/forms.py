@@ -176,9 +176,10 @@ class EventForm(forms.ModelForm):
         notebooks = Notebook.objects.filter(user=user)
         for notebook in notebooks:
             for i, page in enumerate(notebook.pages.all()):
-                notebook_choices.append((f"{notebook.id}_{page.id}", f"{notebook.notebook_name}: {i+1}"))
+                notebook_choices.append((page.id, f"{notebook.notebook_name}: {i+1}"))
 
         self.fields['page'].choices = notebook_choices
+        print(notebook_choices)
 
     def clean(self):
         super().clean()
@@ -200,6 +201,7 @@ class EventForm(forms.ModelForm):
             self.save_m2m()
         if self.cleaned_data.get('sync'):
             event.sync = True
+        self.save_m2m()
         event.save()
         return event
 
