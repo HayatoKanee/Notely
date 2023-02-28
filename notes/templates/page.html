@@ -121,11 +121,16 @@
                         </div>
                     </div>
                 </li>
+                <li class="nav-item">
+                    <button class="toolbox" id="share" type="button" data-bs-toggle="modal" data-bs-target="#shareModal">Share</button>
+                </li>
             </ul>
         </div>
     </nav>
+    {% include 'partials/shareModal.html' %}
     {% include 'partials/codeEditor.html' %}
     {% include 'partials/symbols.html' %}
+    {% include 'partials/notebook_sidebar.html' %}
 {% endblock %}
 {% block scripts %}
     <style>
@@ -171,4 +176,108 @@
     <script src="{% static 'javascript/note-taking/linkPage.js'%}"></script>
     <script src="{% static 'javascript/note-taking/table.js'%}"></script>
     <script src="{%static 'javascript/note-taking/fabric.brushes.min.js'%}"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+    <style>
+            .ts-wrapper.userEmail .ts-control > div .email {
+            opacity: 0.7;
+        }
+        .ts-wrapper.userEmail .ts-control > div .name + .email {
+            margin-left: 5px;
+        }
+        .ts-wrapper.userEmail .ts-control > div .email:before {
+            content: '<';
+        }
+        .ts-wrapper.userEmail .ts-control > div .email:after {
+            content: '>';
+        }
+        .ts-wrapper.userEmail .ts-dropdown .caption {
+            font-size: 12px;
+            display: block;
+            color: #a0a0a0;
+        }
+    </style>
+    <script>
+
+    const t_select = new TomSelect("#select-user",{
+        plugins: ['remove_button'],
+	    persist: false,
+	    maxItems: null,
+        valueField: 'email',
+	    labelField: 'name',
+        searchField: ['username', 'email'],
+        options: [
+            {% for user in users %}
+                {email: "{{ user.email }}", username: "{{ user.username }}", gravatar: "{{ user.profile.mini_gravatar}}"},
+            {% endfor %}
+	    ],
+        render: {
+            item: function(item, escape) {;
+                return '<div>' +
+                    (item.username ? '<span class="name">' + escape(item.username) + '</span>' : '') +
+                    (item.email ? '<span class="email">' + escape(item.email) + '</span>' : '') +
+                    '<span class="gravatar">' + '<img class="rounded-circle" src="'+ item.gravatar + '"</img></span>'+
+                '</div>';
+            },
+            option: function(item, escape) {
+                var label = item.username || item.email;
+                var caption = item.username ? item.email : null;
+                return '<div class="row">' + '<div class="col">' +
+                    '<span class="label">' + escape(label) + '</span>' +
+                    (caption ? '<span class="caption">' + escape(caption) + '</span>' : '') + '</div>'+ '<div class="col">'+
+                     '<span class="gravatar">' + '<img class="rounded-circle" src="'+ item.gravatar + '"</img></span>' +
+                    '</div>'+
+                '</div>';
+            }
+	    }
+    });
+    $('#shareBtn').click(function (){
+       const selectedUsers = t_select.getValue();
+          $.ajax({
+               url: "{% url 'share_page' page.id %}",
+               type: 'POST',
+               async: true,
+               data: {
+                   'selected_users[]': selectedUsers,
+                   csrfmiddlewaretoken: csrf
+               },
+       });
+        for (let i = 0; i < selectedUsers.length; i++) {
+            const selectedOption = selectedUsers[i];
+            t_select.removeOption(selectedOption);
+        }
+    });
+
+    $('#search-button').click(function (){
+       const selectedPage = t_select2.getValue();
+       $(".page").hide();
+        $(".page[data-page-id*=" + selectedPage+"]").show();
+    });
+
+const t_select2 = new TomSelect('#search-bar',{
+	valueField: 'id',
+	searchField: 'id',
+	options: [
+        {% for page in viewable_pages %}
+            {% if page.thumbnail %}
+                {id: "{{ page.id }}", image: "{{ page.thumbnail.url }}"},
+            {% endif %}
+        {% endfor %}
+	],
+	render: {
+		option: function(data, escape) {
+			return '<div>' +
+					'<span class="id">' + escape(data.id) + '</span>' +
+                    '<span>' + '<img src="' +escape(data.image) + '">' + '</span>' +
+				'</div>';
+		},
+		item: function(data, escape) {
+			return '<div>' +escape(data.id)+ '</div>';
+		}
+	}
+
+});
+
+
+    </script>
 {% endblock %}

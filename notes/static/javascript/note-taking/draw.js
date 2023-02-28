@@ -344,6 +344,6 @@ window.setInterval(function (){
 }, 50000);
 
 window.onbeforeunload= function(event) {
-     save(true);
+     save(false);
      return "";
   };

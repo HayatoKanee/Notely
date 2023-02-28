@@ -7,29 +7,10 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
-        <div class="input-group sm-3">
-          <form action="{% url 'page' page.id %}" method="post" class="input-group sm-3">
-            {% csrf_token %}
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" aria-describedby="button-addon1" list="pageList">
-            <datalist id="pageList">
-              {% for page in page.notebook.pages.all %}
-                  {% if page.thumbnail %}
-                    <option value="{{ page.id }}"><a href="{% url 'page' page.id %}"><img src="{{ page.thumbnail.url }}"></a></option>
-                  {% endif %}
-              {% endfor %}
-            </datalist>
-{#              <div class="dropdown">#}
-{#              <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" aria-describedby="button-addon1">#}
-{#              <div class="dropdown-content">#}
-{#                  {% for page in page.notebook.pages.all %}#}
-{#                    <a href="{% url 'page' page.id %}"><img src="{{ page.thumbnail.url }}"></a>#}
-{#                  {% endfor %}#}
-{#              </div>#}
-{#            </div>#}
-            <button class="btn btn-outline-secondary" type="submit" name="page_search_submit" id="button-addon1" >Search</button>
-          </form>
+
+        <select id="search-bar" placeholder="Type to search a page...." autocomplete="off"></select>
+          <button class="btn btn-outline-secondary" type="submit" name="page_search_submit" id="search-button" >Search</button>
         </div>
-      </div>
     </nav>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close" id="closeBtn"></button>
     </div>
@@ -42,7 +23,7 @@
                         <button class="plus" type="submit" name="add_page_submit" ></button>
                     </form>
                 </div>
-                {% for page in page.notebook.pages.all %}
+                {% for page in viewable_pages %}
                     <div class="col page" data-tag-id = {{ page.get_all_tags_id }}>
                         <div class="dropdown">
                             <a href="{% url 'page' page.id %}" style="color: #CD5C5C;">
@@ -56,8 +37,6 @@
                             <div class="dropdown-menu" aria-labelledby="dropdownMenu">
                                 <button class="dropdown-item add-tags" type="button" data-page-id="{{ page.id }}">Add tags</button>
                                 <button class="dropdown-item" type="button"><a href="{% url 'delete_page'  page.id  %}">Delete</a></button>
-                                <button class="dropdown-item" type="button" data-page-id="{{ page.id }}"
-                                        data-bs-toggle="modal" data-bs-target="#shareModal">Share</button>
                                 <button class="dropdown-item" type="button"></button>
                                 <button class="dropdown-item" type="button"></button>
                             </div>
@@ -96,11 +75,11 @@
         </div>
     </div>
 </div>
-
 {% include 'partials/pageModal.html' %}
 <script>
+
     const newButtons = document.querySelectorAll('.dropdown-item.add-tags');
-    const tagButton = document.querySelectorAll('.tag-button');
+    const tagButtons = document.querySelectorAll('.tag-button');
     const showAllTagsButton = document.querySelectorAll('.show-all-tags-button');
 
     newButtons.forEach(button => {
@@ -120,7 +99,7 @@
         });
     });
 
-    tagButton.forEach(button => {
+    tagButtons.forEach(button => {
         button.addEventListener('click', event => {
             const tag_id = button.getAttribute('data-tag-id');
             $(".page").hide();
@@ -210,47 +189,3 @@
 
     #sidebarLabel { text-align: center; }
 </style>
-
-	<title>Dropdown menu with images</title>
-	<style>
-		/* Style for the dropdown menu */
-		.dropdown {
-		  position: relative;
-		  display: inline-block;
-		}
-
-		/* Style for the dropdown menu button */
-		.dropdown button {
-		  background-color: #ddd;
-		  color: black;
-		  padding: 10px;
-		  font-size: 16px;
-		  border: none;
-		  cursor: pointer;
-		}
-
-		/* Style for the dropdown menu options */
-		.dropdown-content {
-		  display: none;
-		  position: absolute;
-		  z-index: 1;
-		}
-
-		/* Style for the dropdown menu options - show on hover */
-		.dropdown:hover .dropdown-content {
-		  display: block;
-		}
-
-		/* Style for the images in the dropdown menu */
-		.dropdown-content img {
-		  max-width: 100%;
-		  height: auto;
-		  display: block;
-		  margin-bottom: 10px;
-		}
-
-	</style>
-<body>
-
-
-</body>

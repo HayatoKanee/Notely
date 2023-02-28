@@ -3,6 +3,7 @@ import base64
 
 from django.conf import settings
 from django.core.files.base import ContentFile
+from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
@@ -14,7 +15,7 @@ from django.template.loader import render_to_string
 from django.contrib.auth.decorators import login_required
 from .helpers import login_prohibited, check_perm
 from django.contrib.auth.hashers import check_password
-from guardian.shortcuts import get_objects_for_user
+from guardian.shortcuts import get_objects_for_user, get_users_with_perms, assign_perm
 from .view_helper import sort_items_by_created_time, save_folder_notebook_forms, get_or_create_event_from_google
 from datetime import datetime
 from django.utils import timezone
@@ -240,6 +241,9 @@ def page(request, page_id):
     page = Page.objects.get(id=page_id)
     page_tag_form = PageTagForm()
     tags = PageTag.objects.all()
+    viewable_pages = get_objects_for_user(request.user, 'dg_view_page', klass=Page).filter(notebook=page.notebook)
+    users_with_perms = get_users_with_perms(page, only_with_perms_in=['dg_view_page'])
+    users_without_perms = User.objects.exclude(pk__in=users_with_perms).exclude(username='AnonymousUser')
     if request.method == 'POST':
         if 'page_tag_submit' in request.POST:
             page_tag_form = PageTagForm(request.POST)
@@ -255,7 +259,10 @@ def page(request, page_id):
         if 'search_page_submit' in request.POST:
             new_page = Page.obejects.get(id=page_id)
             return redirect('page', new_page.id)
-    return render(request, 'page.html', {'page': page, 'page_tag_form': page_tag_form, 'tags': tags})
+    return render(request, 'page.html',
+                  {'page': page, 'page_tag_form': page_tag_form, 'tags': tags, 'users': users_without_perms,
+                   'viewable_pages': viewable_pages})
+
 
 
 @login_required
@@ -386,3 +393,17 @@ def google_auth_callback(request):
     credentials = flow.credentials.to_json()
     Credential.objects.update_or_create(user=request.user, defaults={'google_cred': credentials})
     return redirect('calendar_tab')
+
+
+@login_required
+def share_page(request, page_id):
+    try:
+        page = Page.objects.get(id=page_id)
+        selected_users = request.POST.getlist('selected_users[]')
+        for email in selected_users:
+            user = User.objects.get(email=email)
+            assign_perm('dg_view_page', user, page)
+            assign_perm('dg_view_notebook', user, page.notebook)
+        return JsonResponse({'status': 'success'})
+    except Page.DoesNotExist:
+        return JsonResponse({'status': 'fail'})
