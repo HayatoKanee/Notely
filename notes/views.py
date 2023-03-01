@@ -137,11 +137,17 @@ def calendar_tab(request):
                     sync=event_form.cleaned_data['sync']
                 )
 
-                event.save()  # Save the event before adding the page to the many-to-many relationship
+                
+
                 if page_data:
                     page_id = page_data.id
                     page = Page.objects.get(id=page_id)
-                    event.pages.add(page)
+                    event.save()  # Save the event after adding the page to the many-to-many relationship
+                    event.pages.set([page])
+                else:
+                    event.save()  # Save the event without adding the page to the many-to-many relationship
+
+                
                 if int(event_form.cleaned_data['reminder']) > -1:
                     Reminder.objects.create(event=event, reminder_time=int(event_form.cleaned_data['reminder']))
                     messages.add_message(request, messages.SUCCESS, "Reminder Created!")
