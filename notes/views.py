@@ -7,6 +7,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
+from django.db.models import Q
 from .forms import SignUpForm, LogInForm, UserForm, ProfileForm, PasswordForm, FolderForm, NotebookForm, EventForm, \
     EventTagForm, PageTagForm, PageForm, ShareEventForm
 from .models import User, Folder, Notebook, Page, Event, Editor, Reminder, Credential, PageTag
@@ -14,7 +15,7 @@ from django.template.loader import render_to_string
 from django.contrib.auth.decorators import login_required
 from .helpers import login_prohibited, check_perm
 from django.contrib.auth.hashers import check_password
-from guardian.shortcuts import get_objects_for_user
+from guardian.shortcuts import get_objects_for_user, get_users_with_perms
 from .view_helper import sort_items_by_created_time, save_folder_notebook_forms, get_or_create_event_from_google
 from datetime import datetime
 from django.utils import timezone
@@ -111,6 +112,7 @@ def sub_folders_tab(request, folder_id):
 
 
 @login_required
+@check_perm('dg_view_event', Event)
 def calendar_tab(request):
     get_or_create_event_from_google(request)
     events = request.user.events.all()
@@ -119,6 +121,10 @@ def calendar_tab(request):
     shareEvent_form = ShareEventForm()
     tags = set()
     for event in events:
+
+        users_with_perms = get_users_with_perms(event, only_with_perms_in=['dg_view_event'])
+        users_without_perms = User.objects.exclude(pk__in=users_with_perms).exclude(username='AnonymousUser')
+        
         for tag in event.tags.all():
             tags.add(tag)
 
@@ -201,7 +207,7 @@ def calendar_tab(request):
                 return redirect('calendar_tab')
 
     return render(request, 'calendar_tab.html', {'event_form': event_form, 'tag_form': tag_form, 'events': events,
-                                                 'tags': tags, 'shareEvent_form': shareEvent_form})
+                                                 'tags': tags, 'shareEvent_form': shareEvent_form, 'users': users_without_perms})
 
 
 @login_required
