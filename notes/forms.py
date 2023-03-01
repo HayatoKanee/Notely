@@ -196,7 +196,7 @@ class EventForm(forms.ModelForm):
             event.tags.set(self.cleaned_data['tag'])
         if self.cleaned_data.get('page'):
             page_id = self.cleaned_data['page']
-            page = Page.objects.get(id=page_id)
+            page = self.cleaned_data['page']
             event.pages.add(page)
             self.save_m2m()
         if self.cleaned_data.get('sync'):
