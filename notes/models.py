@@ -142,6 +142,17 @@ class Page(models.Model):
             return ids[:-1]
         return ids
 
+    def get_page_number(self):
+        """
+        Returns the page number of this page within its respective notebook.
+        """
+        pages = self.notebook.pages.all()
+        sorted_pages = sorted(pages, key=lambda p: p.id)
+        index = sorted_pages.index(self)
+        page_number = index + 1
+        
+        return page_number
+
 
 class Editor(models.Model):
     title = models.CharField(max_length=10)

@@ -330,11 +330,13 @@ def event_detail(request, event_id):
 
     event = Event.objects.get(id=event_id)
     notebook_name = None
+    page_number = None
     if event.pages.exists():
         notebook_name = event.pages.all()[0].notebook.notebook_name
         page_id = event.pages.all()[0].id
         page = Page.objects.get(id=page_id)
         print(event.pages.all(), event.pages.all()[0].id)
+        page_number = page.get_page_number()
         
     if request.method == 'POST':
         form = EventForm(request.user, instance=event, data=request.POST)
@@ -344,7 +346,7 @@ def event_detail(request, event_id):
             return redirect('calendar_tab')
     else:
         form = EventForm(request.user, instance=event)
-    html = render_to_string('partials/event_detail.html', {'form': form, 'event': event, 'notebook_name': notebook_name, 'page': page}, request=request)
+    html = render_to_string('partials/event_detail.html', {'form': form, 'event': event, 'notebook_name': notebook_name, 'page': page, 'page_number': page_number}, request=request)
     return JsonResponse({'html': html})
 
 
