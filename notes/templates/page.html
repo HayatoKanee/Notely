@@ -125,7 +125,7 @@
                         </div>
                     </div>
                 </li>
-                {% if can_edit %}
+                {% if user == page.notebook.user %}
                 <li class="nav-item">
                     <button class="toolbox" id="share" type="button" data-bs-toggle="modal" data-bs-target="#shareModal">Share</button>
                 </li>
@@ -183,11 +183,11 @@
     <script src="{% static 'javascript/note-taking/linkPage.js'%}"></script>
     <script src="{% static 'javascript/note-taking/table.js'%}"></script>
     <script src="{%static 'javascript/note-taking/fabric.brushes.min.js'%}"></script>
-    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
     <style>
-            .ts-wrapper.userEmail .ts-control > div .email {
-            opacity: 0.7;
+        .ts-wrapper.userEmail .ts-control > div .email {
+        opacity: 0.7;
         }
         .ts-wrapper.userEmail .ts-control > div .name + .email {
             margin-left: 5px;
@@ -239,12 +239,14 @@
     });
     $('#shareBtn').click(function (){
        const selectedUsers = t_select.getValue();
+       const edit_perm = $('#editBox').prop('checked');
           $.ajax({
                url: "{% url 'share_page' page.id %}",
                type: 'POST',
                async: true,
                data: {
                    'selected_users[]': selectedUsers,
+                   'edit_perm': edit_perm,
                    csrfmiddlewaretoken: csrf
                },
        });
@@ -252,6 +254,7 @@
             t_select.removeOption(selectedUsers[0]);
         }
     });
+
     </script>
     {% endif %}
 {% endblock %}
