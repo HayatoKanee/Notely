@@ -432,3 +432,6 @@ def share_page(request, page_id):
         return JsonResponse({'status': 'success'})
     except Page.DoesNotExist:
         return JsonResponse({'status': 'fail'})
+
+def tutorial(request):
+    return render(request,'tutorial.html')

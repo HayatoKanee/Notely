@@ -42,6 +42,7 @@ urlpatterns = [
     path('page_detail/<page_id>', views.page_detail, name='page_detail'),
     path('delete_page/<page_id>', views.delete_page, name='delete_page'),
     path('share_page/<page_id>', views.share_page, name='share_page'),
+    path('tutorial/', views.tutorial, name='tutorial'),
 ]
 
 if settings.DEBUG:
