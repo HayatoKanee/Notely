@@ -156,6 +156,7 @@
         {% endfor %}
         const page_id = "{{ page.id }}";
         const drawing = '{{ page.drawing|safe}}';
+        console.log(drawing);
         function getCookie(name) {
             var cookieValue = null;
             if (document.cookie && document.cookie !== '') {
@@ -254,7 +255,16 @@
             t_select.removeOption(selectedUsers[0]);
         }
     });
-
+        const loc = window.location;
+     let wsStart = 'ws://';
+        if (loc.protocol == 'https:') {
+            wsStart = 'wss://';
+        }
+        const socket = new WebSocket(wsStart + window.location.host + "/ws/page"+"/{{ page.id }}/");
+  socket.onopen = function (){
+    console.log('connected');
+  };
     </script>
+                <script src="{%static 'javascript/note-taking/sync_page.js'%}"></script>
     {% endif %}
 {% endblock %}
