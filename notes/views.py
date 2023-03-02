@@ -139,11 +139,17 @@ def calendar_tab(request):
                     sync=event_form.cleaned_data['sync']
                 )
 
-                event.save()  # Save the event before adding the page to the many-to-many relationship
+                
+
                 if page_data:
                     page_id = page_data.id
                     page = Page.objects.get(id=page_id)
-                    event.pages.add(page)
+                    event.save()  # Save the event after adding the page to the many-to-many relationship
+                    event.pages.set([page])
+                else:
+                    event.save()  # Save the event without adding the page to the many-to-many relationship
+
+                
                 if int(event_form.cleaned_data['reminder']) > -1:
                     Reminder.objects.create(event=event, reminder_time=int(event_form.cleaned_data['reminder']))
                     messages.add_message(request, messages.SUCCESS, "Reminder Created!")
@@ -162,27 +168,32 @@ def calendar_tab(request):
         if 'shareEvent_submit' in request.POST:
             shareEvent_form = ShareEventForm(request.POST)
             if shareEvent_form.is_valid():
-                # shareEvent = request.POST['event']
-                # shareEvent = request.POST.get('event', "False")
-                # message = request.POST.get('message', "")
-                # email = request.POST.get('email', "wingyiuip812@gmail.com")
-                # send_mail(
-                #     'Share Event',
-                #     shareEvent_form.cleaned_data['message'],
-                #     settings.EMAIL_HOST_USER,
-                #     [shareEvent_form.cleaned_data['email']],
-                #     fail_silently=False
-                # )
-                # print(send_mail)
-                message = Mail(
+                
+                email = shareEvent_form.cleaned_data['email']
+                message = shareEvent_form.cleaned_data['message']
+                user = request.user.username
+
+                event = shareEvent_form.cleaned_data['event']
+                title = event.title
+                description = event.description
+                start_time = event.start_time
+                end_time = event.end_time
+
+                subject = f'You have been invited to the following event: {title}'
+
+                html_content = f'<p>You have been invited to the following event: {title}\n</p> <p>by {user}\n</p> <p>Message from {user}: {message}\n</p> <p>Please see below event details:\n</p> <p>description: {description}\n</p> <p>start time: {start_time}\n</p> <p>end time: {end_time}</p>'
+
+                mail = Mail(
                     from_email='winniethepooh.notely@gmail.com',
-                    to_emails='wingyiuip812@gmail.com',
-                    subject='Sending with Twilio SendGrid is Fun',
-                    html_content='<strong>and easy to do anywhere, even with Python</strong>')
+                    to_emails=email,
+                    subject=subject,
+                    html_content=html_content)
+                
                 try:
                     sg = SendGridAPIClient(
-                        api_key='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')
-                    response = sg.send(message)
+                        api_key=settings.EMAIL_HOST_PASSWORD
+                        )
+                    response = sg.send(mail)
                     print(response.status_code)
                     print(response.body)
                     print(response.headers)
@@ -327,15 +338,26 @@ def delete_page(request, page_id):
 
 @login_required
 def event_detail(request, event_id):
+
     event = Event.objects.get(id=event_id)
+    notebook_name = None
+    page_number = None
+    if event.pages.exists():
+        notebook_name = event.pages.all()[0].notebook.notebook_name
+        page_id = event.pages.all()[0].id
+        page = Page.objects.get(id=page_id)
+        print(event.pages.all(), event.pages.all()[0].id)
+        page_number = page.get_page_number()
+        
     if request.method == 'POST':
         form = EventForm(request.user, instance=event, data=request.POST)
         if form.is_valid():
             form.save()
             messages.add_message(request, messages.SUCCESS, "event updated!")
             return redirect('calendar_tab')
-    form = EventForm(request.user, instance=event)
-    html = render_to_string('partials/event_detail.html', {'form': form, 'event': event}, request=request)
+    else:
+        form = EventForm(request.user, instance=event)
+    html = render_to_string('partials/event_detail.html', {'form': form, 'event': event, 'notebook_name': notebook_name, 'page': page, 'page_number': page_number}, request=request)
     return JsonResponse({'html': html})
 
 
