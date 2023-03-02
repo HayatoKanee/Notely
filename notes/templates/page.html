@@ -239,12 +239,17 @@
     });
     $('#shareBtn').click(function (){
        const selectedUsers = t_select.getValue();
+       let edit_perm = false;
+       if($('#editBox').checked){
+           edit_perm = true;
+       }
           $.ajax({
                url: "{% url 'share_page' page.id %}",
                type: 'POST',
                async: true,
                data: {
                    'selected_users[]': selectedUsers,
+                   'edit_perm': edit_perm,
                    csrfmiddlewaretoken: csrf
                },
        });

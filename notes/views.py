@@ -403,9 +403,12 @@ def share_page(request, page_id):
         if page.notebook.user != request.user:
             return JsonResponse({'status': 'fail'})
         selected_users = request.POST.getlist('selected_users[]')
+        edit_perm = request.POST.get('edit_perm')
         for email in selected_users:
             user = User.objects.get(email=email)
             assign_perm('dg_view_page', user, page)
+            if edit_perm == "true":
+                assign_perm('dg_edit_page', user, page)
             assign_perm('dg_view_notebook', user, page.notebook)
         return JsonResponse({'status': 'success'})
     except Page.DoesNotExist:
