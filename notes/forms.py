@@ -251,11 +251,11 @@ class PageForm(forms.ModelForm):  # The form for linking the tag and the page.
         self.fields['tag'].queryset = PageTag.objects.all()
 
     def save(self):
-        tag = super().save(commit=False)
+        page = super().save(commit=False)
         if self.cleaned_data.get('tag'):
-            tag.tags.set(self.cleaned_data['tag'])
-        tag.save()
-        return tag
+            page.tags.set(self.cleaned_data['tag'])
+        page.save()
+        return page
 
 
 class ShareEventForm(forms.Form):
