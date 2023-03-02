@@ -1,12 +1,15 @@
 import datetime
 import json
 
+from django.http import JsonResponse
+from guardian.shortcuts import get_users_with_perms, assign_perm
+
 from notes.forms import FolderForm, NotebookForm
 from django.contrib import messages
 from django.shortcuts import redirect
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
-from notes.models import Credential, Event
+from notes.models import Credential, Event, Notebook, User
 
 
 def save_folder_notebook_forms(request, user, folder=None):
@@ -50,7 +53,6 @@ def get_or_create_event_from_google(request):
                                           maxResults=10, singleEvents=True,
                                           orderBy='startTime').execute()
     events = events_result.get('items', [])
-
     for event in events:
         start = event['start'].get('dateTime', event['start'].get('date'))
         end = event['end'].get('dateTime', event['end'].get('date'))
@@ -81,3 +83,54 @@ def get_or_create_event_from_google(request):
                 end_time=end,
                 sync=True
             )
+
+
+def get_options(obj, perm_name):
+    users_with_perms = get_users_with_perms(obj, only_with_perms_in=[perm_name])
+    users_without_perms = User.objects.exclude(pk__in=users_with_perms).exclude(username='AnonymousUser')
+    return [{'username': user.username, 'email': user.email, 'gravatar': user.profile.mini_gravatar()} for user in
+            users_without_perms]
+
+
+def assign_perm_notebook(user, notebook, can_edit=False):
+    assign_perm('dg_view_notebook', user, notebook)
+    for page in notebook.pages.all():
+        assign_perm('dg_view_page', user, page)
+    if can_edit:
+        assign_perm('dg_edit_notebook', user, notebook)
+        for page in notebook.pages.all():
+            assign_perm('dg_edit_page', user, page)
+    folder = notebook.folder
+    while folder:
+        assign_perm('dg_view_folder', user, folder)
+        folder = folder.parent
+
+
+def assign_perm_folder(user, folder, can_edit=False):
+    assign_perm('dg_view_folder', user, folder)
+    if can_edit:
+        assign_perm('dg_edit_folder', user, folder)
+    for notebook in folder.notebooks.all():
+        assign_perm_notebook(user, notebook, can_edit)
+    for sub_folder in folder.sub_folders.all():
+        assign_perm_folder(user, sub_folder, can_edit)
+    parent = folder.parent
+    while parent:
+        assign_perm('dg_view_folder', user, parent)
+        parent = folder.parent
+
+
+def share_obj(request, obj):
+    if obj.get_type() == 'Notebook':
+        assign_perm_func = assign_perm_notebook
+    elif obj.get_type() == 'Folder':
+        assign_perm_func = assign_perm_folder
+    if obj.user != request.user:
+        return JsonResponse({'status': 'fail'})
+    selected_users = request.POST.getlist('selected_users[]')
+    edit_perm = request.POST.get('edit_perm')
+    can_edit = edit_perm == "true"
+    for email in selected_users:
+        user = User.objects.get(email=email)
+        assign_perm_func(user, obj, can_edit)
+    return JsonResponse({'status': 'success'})

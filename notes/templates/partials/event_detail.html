@@ -1,8 +1,9 @@
 <form action="{% url 'event_detail' event.id %}" method="post" class="collapse multi-collapse">
-          {% csrf_token %}
-          {% include 'partials/bootstrap_form.html' with form=form %}
-          <input type="submit" value="Save Changes" class="btn-chocolate fw-bold" style="color: rgb(245, 93, 66);">
-        </form>
+    {% csrf_token %}
+    {% include 'partials/bootstrap_form.html' with form=form %}
+    <input type="submit" value="Save Changes" class="btn-chocolate fw-bold" style="color: rgb(245, 93, 66);">
+</form>
+
 <div class="collapse multi-collapse show" style="font-size: 20px; word-wrap: break-word;">
         <p id="title" style="font-size: 20px; color: rgb(245, 93, 66);">Title: {{ event.title }}</p>
         <p id="description" style="font-size: 18px; color: rgb(245, 93, 66);">Description:{{ event.description }}</p>

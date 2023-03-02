@@ -2,7 +2,7 @@ from django.dispatch import receiver
 from django.db.models.signals import post_save, pre_save
 from guardian.shortcuts import assign_perm
 from notes.helpers import calculate_age
-from notes.models import User, Profile, Notebook, Page, Editor, Reminder, Event
+from notes.models import User, Profile, Notebook, Page, Editor, Reminder, Event, Folder
 from notes.tasks import send_notification
 from django.core.mail import send_mail
 from datetime import datetime, timedelta
@@ -66,8 +66,25 @@ def create_editor(sender, instance, created, **kwargs):
 
 
 @receiver(post_save, sender=Page)
-def give_permission(sender, instance, created, **kwargs):
+def give_perm_page(sender, instance, created, **kwargs):
     if created:
         assign_perm('dg_view_page', instance.notebook.user, instance)
         assign_perm('dg_edit_page', instance.notebook.user, instance)
         assign_perm('dg_delete_page', instance.notebook.user, instance)
+
+
+@receiver(post_save, sender=Folder)
+def give_perm_folder(sender, instance, created, **kwargs):
+    if created:
+        assign_perm('dg_view_folder', instance.user, instance)
+        assign_perm('dg_edit_folder', instance.user, instance)
+        assign_perm('dg_delete_folder', instance.user, instance)
+
+
+@receiver(post_save, sender=Notebook)
+def give_perm_notebook(sender, instance, created, **kwargs):
+    if created:
+        assign_perm('dg_view_notebook', instance.user, instance)
+        assign_perm('dg_edit_notebook', instance.user, instance)
+        assign_perm('dg_delete_notebook', instance.user, instance)
+

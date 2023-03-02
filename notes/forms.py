@@ -107,9 +107,6 @@ class FolderForm(forms.ModelForm):
             parent=parent,
             folder_name=self.cleaned_data.get('folder_name'),
         )
-        assign_perm('dg_view_folder', user, folder)
-        assign_perm('dg_edit_folder', user, folder)
-        assign_perm('dg_delete_folder', user, folder)
         return folder
 
 
@@ -179,7 +176,6 @@ class EventForm(forms.ModelForm):
                 notebook_choices.append((page.id, f"{notebook.notebook_name}: {i+1}"))
 
         self.fields['page'].choices = notebook_choices
-        print(notebook_choices)
 
     def clean(self):
         super().clean()
@@ -230,9 +226,6 @@ class NotebookForm(forms.ModelForm):
             folder=folder,
             notebook_name=self.cleaned_data.get('notebook_name'),
         )
-        assign_perm('dg_view_notebook', user, notebook)
-        assign_perm('dg_edit_notebook', user, notebook)
-        assign_perm('dg_delete_notebook', user, notebook)
         return notebook
 
 
@@ -262,11 +255,11 @@ class PageForm(forms.ModelForm):  # The form for linking the tag and the page.
         self.fields['tag'].queryset = PageTag.objects.all()
 
     def save(self):
-        tag = super().save(commit=False)
+        page = super().save(commit=False)
         if self.cleaned_data.get('tag'):
-            tag.tags.set(self.cleaned_data['tag'])
-        tag.save()
-        return tag
+            page.tags.set(self.cleaned_data['tag'])
+        page.save()
+        return page
 
 
 class ShareEventForm(forms.Form):
@@ -280,4 +273,3 @@ class ShareEventForm(forms.Form):
         self.fields['event'].choices = [(event.id, f"{event.title}") for event in Event.objects.all()]
 
     
-        

@@ -1,64 +1,63 @@
 {% extends 'home_content.html' %}
 {% block content %}
-
-<div class="card-columns">
-  <div class="my-card">
-    <div class="row">
-      <div class="col-sm-6">
-        <header class="my-header">Online Note Taking Website</header>
-        <body>
-          Supporting both drawing and typing function, make things easy for u to take note.....
-          Don't have an account?
-          Free join now!.....
-        </body>
-        <p><a href="{% url 'sign_up' %}">
-          <button class="first-card-button">Sign Up </button>
-        </a></p>
-      </div>
-      <div class="col-sm-6">
-        <img src="static/home_page_image/takingnote.jpg" class="img-fluid">
-      </div>
+    <div class="card-columns">
+        <div class="my-card">
+            <div class="row">
+                <div class="col-sm-6">
+                    <header class="my-header">Online Note Taking Website</header>
+                    <body>
+                    Supporting both drawing and typing function, make things easy for u to take note.....
+                    Don't have an account?
+                    Free join now!.....
+                    </body>
+                    <p><a href="{% url 'sign_up' %}">
+                        <button class="first-card-button">Sign Up </button>
+                    </a></p>
+                </div>
+                <div class="col-sm-6">
+                    <img src="static/home_page_image/takingnote.jpg" class="img-fluid">
+                </div>
+            </div>
+        </div>
+        <div class="my-card">
+            <div class="row">
+                <div class="col-sm-6">
+                    <img src="static/home_page_image/canvas.jpg" class="img-fluid">
+                </div>
+                <div class="col-sm-6">
+                    <header class="my-header">Take down your ideas with our magic canvas</header>
+                    <body>
+                    You can feel free to use our tool picker to draw or hightlight notes
+                    </body>
+                </div>
+            </div>
+        </div>
+        <div class="my-card">
+            <div class="row">
+                <div class="col-sm-6">
+        <header class="my-header">Book an event for your note</header>
+                    <body>
+                    We allow user to book an event with calendar for notes. User can also set reminder for his event.
+                    </body>
+                </div>
+                <div class="col-sm-6">
+                    <img src="static/home_page_image/bookingevent.jpg" class="img-fluid">
+                </div>
+            </div>
+        </div>
+        <div class="my-card">
+            <div class="row">
+                <div class="col-sm-6">
+                    <img src="static/home_page_image/sharingnote.jpg" class="img-fluid">
+                </div>
+                <div class="col-sm-6">
+                    <header class="my-header">Taking notes with your friends</header>
+                    <body>
+                    User can also share notes with others.
+                    </body>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-  <div class="my-card">
-    <div class="row">
-      <div class="col-sm-6">
-        <img src="static/home_page_image/canvas.jpg" class="img-fluid">
-      </div>
-    <div class="col-sm-6">
-      <header class="my-header">Take down your ideas with our magic canvas</header>
-      <body>
-        You can feel free to use our tool picker to draw or hightlight notes
-      </body>
-    </div>
-  </div>
-  </div>
-  <div class="my-card">
-    <div class="row">
-    <div class="col-sm-6">
-      <header class="my-header">Book an event for your note</header>
-      <body>
-        We allow user to book an event with calendar for notes. User can also set reminder for his event.
-      </body>
-    </div>
-    <div class="col-sm-6">
-      <img src="static/home_page_image/bookingevent.jpg" class="img-fluid">
-    </div>
-    </div>
-  </div>
-  <div class="my-card">
-    <div class="row">
-      <div class="col-sm-6">
-        <img src="static/home_page_image/sharingnote.jpg" class="img-fluid">
-      </div>
-    <div class="col-sm-6">
-      <header class="my-header">Taking notes with your friends</header>
-      <body>
-        User can also share notes with others.
-      </body>
-    </div>
-  </div>
-  </div>
-</div>
-<br>
+    <br>
 {% endblock %}

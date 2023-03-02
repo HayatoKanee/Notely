@@ -2,6 +2,7 @@ import json
 import base64
 
 from django.conf import settings
+from django.core.exceptions import PermissionDenied
 from django.core.files.base import ContentFile
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
@@ -15,8 +16,9 @@ from django.template.loader import render_to_string
 from django.contrib.auth.decorators import login_required
 from .helpers import login_prohibited, check_perm
 from django.contrib.auth.hashers import check_password
-from guardian.shortcuts import get_objects_for_user, get_users_with_perms
-from .view_helper import sort_items_by_created_time, save_folder_notebook_forms, get_or_create_event_from_google
+from guardian.shortcuts import get_objects_for_user, get_users_with_perms, assign_perm
+from .view_helper import sort_items_by_created_time, save_folder_notebook_forms, get_or_create_event_from_google, \
+    get_options, assign_perm_notebook, assign_perm_folder, share_obj
 from datetime import datetime
 from django.utils import timezone
 from google_auth_oauthlib.flow import Flow
@@ -103,8 +105,10 @@ def sub_folders_tab(request, folder_id):
     else:
         folder_form = FolderForm()
         notebook_form = NotebookForm()
-    folders = folder.sub_folders.all()
-    notebooks = folder.notebooks.all()
+    folders = get_objects_for_user(user, 'dg_view_folder', klass=Folder)
+    folders = folders.filter(parent=folder)
+    notebooks = get_objects_for_user(user, 'dg_view_notebook', klass=Notebook)
+    notebooks = notebooks.filter(folder=folder)
     items = sort_items_by_created_time(folders, notebooks)
     return render(request, 'folders_tab.html',
                   {'items': items, 'folder_form': folder_form,
@@ -124,7 +128,7 @@ def calendar_tab(request):
 
         users_with_perms = get_users_with_perms(event, only_with_perms_in=['dg_view_event'])
         users_without_perms = User.objects.exclude(pk__in=users_with_perms).exclude(username='AnonymousUser')
-        
+
         for tag in event.tags.all():
             tags.add(tag)
 
@@ -257,6 +261,11 @@ def page(request, page_id):
     page = Page.objects.get(id=page_id)
     page_tag_form = PageTagForm()
     tags = PageTag.objects.all()
+    viewable_pages = get_objects_for_user(request.user, 'dg_view_page', klass=Page).filter(notebook=page.notebook)
+    users_with_perms = get_users_with_perms(page, only_with_perms_in=['dg_view_page'])
+    users_without_perms = User.objects.exclude(pk__in=users_with_perms).exclude(username='AnonymousUser')
+    can_edit = request.user.has_perm('dg_edit_page', page)
+    can_edit_notebook = request.user.has_perm('dg_edit_notebook', page.notebook)
     if request.method == 'POST':
         if 'page_tag_submit' in request.POST:
             page_tag_form = PageTagForm(request.POST)
@@ -267,9 +276,16 @@ def page(request, page_id):
                 messages.add_message(request, messages.SUCCESS, "Tag Created!")
                 return redirect('page', page.id)
         if 'add_page_submit' in request.POST:
+            if not request.user.has_perm('dg_edit_notebook', page.notebook):
+                raise PermissionDenied
             new_page = Page.objects.create(notebook=page.notebook)
+            assign_perm('dg_view_page', request.user, new_page)
+            assign_perm('dg_edit_page', request.user, new_page)
+            assign_perm('dg_delete_page', request.user, new_page)
             return redirect('page', new_page.id)
-    return render(request, 'page.html', {'page': page, 'page_tag_form': page_tag_form, 'tags': tags})
+    return render(request, 'page.html',
+                  {'page': page, 'page_tag_form': page_tag_form, 'tags': tags, 'users': users_without_perms,
+                   'viewable_pages': viewable_pages, 'can_edit': can_edit, 'can_edit_notebook': can_edit_notebook})
 
 
 @login_required
@@ -411,3 +427,58 @@ def google_auth_callback(request):
     credentials = flow.credentials.to_json()
     Credential.objects.update_or_create(user=request.user, defaults={'google_cred': credentials})
     return redirect('calendar_tab')
+
+
+@login_required
+def share_page(request, page_id):
+    try:
+        page = Page.objects.get(id=page_id)
+        if page.notebook.user != request.user:
+            return JsonResponse({'status': 'fail'})
+        selected_users = request.POST.getlist('selected_users[]')
+        edit_perm = request.POST.get('edit_perm')
+        for email in selected_users:
+            user = User.objects.get(email=email)
+            assign_perm('dg_view_page', user, page)
+            if edit_perm == "true":
+                assign_perm('dg_edit_page', user, page)
+            assign_perm('dg_view_notebook', user, page.notebook)
+        return JsonResponse({'status': 'success'})
+    except Page.DoesNotExist:
+        return JsonResponse({'status': 'fail'})
+
+
+@login_required
+def get_options_notebook(request, notebook_id):
+    try:
+        notebook = Notebook.objects.get(id=notebook_id)
+        return JsonResponse(get_options(notebook, 'dg_view_notebook'), safe=False)
+    except Notebook.DoesNotExist:
+        return JsonResponse({'status': 'fail'})
+
+
+@login_required
+def get_options_folder(request, folder_id):
+    try:
+        folder = Folder.objects.get(id=folder_id)
+        return JsonResponse(get_options(folder, 'dg_view_folder'), safe=False)
+    except Notebook.DoesNotExist:
+        return JsonResponse({'status': 'fail'})
+
+
+@login_required
+def share_notebook(request, notebook_id):
+    try:
+        notebook = Notebook.objects.get(id=notebook_id)
+        return share_obj(request, notebook)
+    except Notebook.DoesNotExist:
+        return JsonResponse({'status': 'fail'})
+
+
+@login_required
+def share_folder(request, folder_id):
+    try:
+        folder = Folder.objects.get(id=folder_id)
+        return share_obj(request, folder)
+    except Page.DoesNotExist:
+        return JsonResponse({'status': 'fail'})

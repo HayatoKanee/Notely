@@ -1,200 +1,206 @@
 {% extends 'base_content.html' %}
+<<<<<<< HEAD
+{% block content %}
+    <div class="container">
+        <div id='calendar' style="color: rgb(245, 93, 66); margin-top: 10px;"></div>
+=======
  {% block content %}
      <div class="container">
       <div id='calendar' style="color: rgb(245, 93, 66);"></div>
               <button onclick="checkPermission()" id="addEvent" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#eventModal">
                 Add New Event
           </button>
+>>>>>>> feature/calendar
 
-    <a href="{% url 'google_auth' %}" class="btn btn-google" style="color: rgb(245, 93, 66);">
-  <i class="fa fa-google"></i> Sign in with Google
-</a>
+        <a href="{% url 'google_auth' %}" class="btn btn-google" style="color: rgb(245, 93, 66);">
+            <i class="fa fa-google"></i> Sign in with Google
+        </a>
 
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#shareEventModal" data-bs-dismiss="modal">
-    Share Event
-  </button>
+        <button id="addEvent" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#eventModal">
+            Add New Event
+        </button>
 
-  <div class="modal fade" id="shareEventModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content" style="color: rgb(245, 93, 66)">
-            <div class="modal-header">
-              <h5 class="modal-title" style="color: rgb(245, 93, 66)">Share Event</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-                <form action="{% url 'calendar_tab' %}" method="post">
-                    {% csrf_token %}
-                    {% comment %} {% include 'partials/bootstrap_form.html' with form=shareEvent_form %} {% endcomment %}
-                    {{shareEvent_form.as_p}}
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <input type="submit" name="shareEvent_submit" value ="Share event" class="btn btn-primary">
-                </form>
-                
-              </div>
-            </div>
-          </div>
-  </div>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#shareEventModal" data-bs-dismiss="modal">
+            Share Event
+        </button>
 
-
-
-   </div>
-          <div class="modal fade" id="eventModal" tabindex="-1">
+        <div class="modal fade" id="shareEventModal" tabindex="-1">
             <div class="modal-dialog">
-                <div class="modal-content" style="color: rgb(245, 93, 66);">
+                <div class="modal-content" style="color: rgb(245, 93, 66)">
                     <div class="modal-header">
-                      <h5 class="modal-title" style="color: rgb(245, 93, 66);">Event Modal</h5>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <h5 class="modal-title" style="color: rgb(245, 93, 66)">Share Event</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{% url 'calendar_tab' %}" method="post">
+                            {% csrf_token %}
+                            {% comment %} {% include 'partials/bootstrap_form.html' with form=shareEvent_form %} {% endcomment %}
+                            {{shareEvent_form.as_p}}
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <input type="submit" name="shareEvent_submit" value ="Share event" class="btn btn-primary">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="eventModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content" style="color: rgb(245, 93, 66);">
+                <div class="modal-header">
+                    <h5 class="modal-title" style="color: rgb(245, 93, 66);">Event Modal</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                        {{ event_form.media }}
-                        <form action="{% url 'calendar_tab' %}" method="post">
-                            {% csrf_token %}
-                            {% include 'partials/bootstrap_form.html' with form=event_form %}
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <input type="submit" name="event_submit" value ="Create event" class="btn btn-primary" style="margin-left: 3px;">
-                        </form>
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tagModal" data-bs-dismiss="modal" style="margin-top: 7px;">
-                          New tag
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-          </div>
-                
-          <div class="modal fade" id="tagModal" tabindex="-1">
-                  <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title" style="color: rgb(245, 93, 66);">New Tag</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                      </div>
-                      <div class="modal-body" style="color: rgb(245, 93, 66);">
-                        {{ tag_form.media }}
-                        <form action="{% url 'calendar_tab' %}" method="post">
-                            {% csrf_token %}
-                            {% include 'partials/bootstrap_form.html' with form=tag_form %}
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <input type="submit" name="tag_submit" value ="Create tag" class="btn btn-primary" style="margin-left: 3px;">
-                        </form>
-                      </div>
-                    </div>
-                  </div>
-          </div>
-                
+                    {{ event_form.media }}
+                    <form action="{% url 'calendar_tab' %}" method="post">
+                        {% csrf_token %}
+                        {% include 'partials/bootstrap_form.html' with form=event_form %}
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <input type="submit" name="event_submit" value ="Create event" class="btn btn-primary" style="margin-left: 3px;">
+                    </form>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tagModal" data-bs-dismiss="modal" style="margin-top: 7px;">
+                        New tag
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <div class="modal fade" id="tagModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" style="color: rgb(245, 93, 66);">New Tag</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" style="color: rgb(245, 93, 66);">
+                    {{ tag_form.media }}
+                    <form action="{% url 'calendar_tab' %}" method="post">
+                        {% csrf_token %}
+                        {% include 'partials/bootstrap_form.html' with form=tag_form %}
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <input type="submit" name="tag_submit" value ="Create tag" class="btn btn-primary" style="margin-left: 3px;">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
     {% include 'partials/eventModal.html' %}
- {% endblock %}
- {% block scripts %}
-{% load static%}
-  <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.4/index.global.min.js'></script>
-<script>
-    const calendarEl = document.getElementById('calendar');
-    const calendar = new FullCalendar.Calendar(calendarEl, {
-        headerToolbar: {
-        left: 'today prev,next',
-        center: 'title',
-        right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
-        },
-        initialView: 'dayGridMonth',
-        events: [
-            {% for event in events %}
-            {
-                id: "{{event.id}}",
-                title: "{{ event.title}}",
-                start: '{{ event.start_time|date:"Y-m-d H:i:s" }}',
-                end: '{{ event.end_time|date:"Y-m-d H:i:s" }}',
-                backgroundColor: '{{ event.tags.first.color }}',
-                tags: "{% for tag in event.tags.all %}{{ tag.title }},{% endfor %}".slice(0,-1),
+
+{% endblock %}
+
+{% block scripts %}
+    {% load static%}
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.4/index.global.min.js'></script>
+    <script>
+        const calendarEl = document.getElementById('calendar');
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+            headerToolbar: {
+                left: 'today prev,next',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
             },
-            {% endfor %}
-        ],
-        eventClick: function(e) {
-            
+            initialView: 'dayGridMonth',
+            events: [
+                {% for event in events %}
+                    {
+                        id: "{{event.id}}",
+                        title: "{{ event.title}}",
+                        start: '{{ event.start_time|date:"Y-m-d H:i:s" }}',
+                        end: '{{ event.end_time|date:"Y-m-d H:i:s" }}',
+                        backgroundColor: '{{ event.tags.first.color }}',
+                        tags: "{% for tag in event.tags.all %}{{ tag.title }},{% endfor %}".slice(0,-1),
+                    },
+                {% endfor %}
+            ],
+            eventClick: function(e) {
                 $.ajax({
-                url: "{% url 'event_detail' 0 %}".replace("0", e.event.id),
-                success: function(data) {
-                  $('#detail').html(data.html);
-                },
-                error: function() {
-                  alert('Error retrieving event detail');
-                }
-              });
-                    $('#eventDetail').modal('show');
-                   $('#delete_link').attr('href', "{% url 'delete_event' 0 %}".replace("0", e.event.id))
+                    url: "{% url 'event_detail' 0 %}".replace("0", e.event.id),
+                    success: function(data) {
+                        $('#detail').html(data.html);
 
-                
+                    },
+                    error: function() {
+                        alert('Error retrieving event detail');
+                    }
+                });
+                $('#eventDetail').modal('show');
+                $('#delete_link').attr('href', "{% url 'delete_event' 0 %}".replace("0", e.event.id))
             },
-                editable: true,
+            editable: true,
             dateClick: function(info) {
-            calendar.changeView('timeGridDay', info.dateStr);
-          },
-        eventDrop: function(info) {
-            const event = info.event;
-            const start = event.start.toISOString();
-            const end = event.end.toISOString();
-            // send updated start and end times to server to update database
-            $.ajax({
-                url: "{% url 'update_event' 0 %}".replace("0", event.id),
-                type: 'POST',
-                data: {
-                    start: start,
-                    end: end,
-                    csrfmiddlewaretoken: '{{ csrf_token }}'
-              }
-            });
-          },
-         customButtons: {
-            selectAll:{
-                text: '•All',
-                 click: function() {
-                     calendar.getEvents().forEach(function(event) {
-                         event.setProp('display', 'auto');
-                     });
-                 }
+                calendar.changeView('timeGridDay', info.dateStr);
+
             },
-    {% for tag in tags %}
-        {{ forloop.counter }}: {
-          text: '•{{ tag }}',
-          click: function() {
-             const tag = '{{ tag.title }}';
-          calendar.getEvents().forEach(function(event) {
-            if (event.extendedProps.tags.includes(tag)) {
-              event.setProp('display', 'auto');
-            } else {
-              event.setProp('display', 'none');
-            }
-          });
-          calendar.rerenderEvents();
-          }
-        },
-    {% endfor %}
-      },
-            footerToolbar:{
-                 start: '',
-  center: '',
-  end: "selectAll {% for tag in tags %}{{ forloop.counter }} {% endfor %}".slice(0, -1)
+            eventDrop: function(info) {
+                const event = info.event;
+                const start = event.start.toISOString();
+                const end = event.end.toISOString();
+                // send updated start and end times to server to update database
+                $.ajax({
+                    url: "{% url 'update_event' 0 %}".replace("0", event.id),
+                    type: 'POST',
+                    data: {
+                        start: start,
+                        end: end,
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                    }
+                });
+
             },
-        });
-    calendar.render();
+            customButtons: {
+                selectAll:{
+                    text: '•All',
+                    click: function() {
+                        calendar.getEvents().forEach(function(event) {
+                            event.setProp('display', 'auto');
+                        });
+                    }
+                },
         {% for tag in tags %}
-        console.log($('.fc-{{ forloop.counter }}-button'));
-        $('.fc-{{ forloop.counter }}-button').css('color', '{{ tag.color }}')
+            {{ forloop.counter }}: {
+            text: '•{{ tag }}',
+                click: function() {
+                const tag = '{{ tag.title }}';
+                calendar.getEvents().forEach(function(event) {
+                    if (event.extendedProps.tags.includes(tag)) {
+                        event.setProp('display', 'auto');
+                    } else {
+                        event.setProp('display', 'none');
+                    }
+                });
+                calendar.rerenderEvents();
+            }
+        },
+        {% endfor %}
+        },
+        footerToolbar:{
+            start: '',
+                center: '',
+                end: "selectAll {% for tag in tags %}{{ forloop.counter }} {% endfor %}".slice(0, -1)
+        },
+        });
+        calendar.render();
+        {% for tag in tags %}
+            console.log($('.fc-{{ forloop.counter }}-button'));
+            $('.fc-{{ forloop.counter }}-button').css('color', '{{ tag.color }}')
 
-    {% endfor %}
+        {% endfor %}
 
+        var tagModal = document.getElementById('tagModal')
+        tagModal.addEventListener('hidden.bs.modal', function (event) {
+            var eventModal = document.getElementById('eventModal')
+            var bsModal = bootstrap.Modal.getInstance(eventModal)
+            bsModal.show()
+        })
+        const loc = window.location;
+        let wsStart = 'ws://';
+        if (loc.protocol == 'https:') {
+            wsStart = 'wss://';
+        }
 
-    var tagModal = document.getElementById('tagModal')
-    tagModal.addEventListener('hidden.bs.modal', function (event) {
-    var eventModal = document.getElementById('eventModal')
-    var bsModal = bootstrap.Modal.getInstance(eventModal)
-    bsModal.show()
-  })
-    const loc = window.location;
-    let wsStart = 'ws://';
-    if (loc.protocol == 'https:') {
-     wsStart = 'wss://';
-    }
-  
 
   function checkPermission() {
     if (!("Notification" in window)) {
