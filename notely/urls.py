@@ -42,6 +42,10 @@ urlpatterns = [
     path('page_detail/<page_id>', views.page_detail, name='page_detail'),
     path('delete_page/<page_id>', views.delete_page, name='delete_page'),
     path('share_page/<page_id>', views.share_page, name='share_page'),
+    path('get_options_notebook/<notebook_id>', views.get_options_notebook, name='get_options_notebook'),
+    path('get_options_folder/<folder_id>', views.get_options_folder, name='get_options_folder'),
+    path('share_folder/<folder_id>', views.share_folder, name='share_folder'),
+    path('share_notebook/<notebook_id>', views.share_notebook, name='share_notebook'),
 ]
 
 if settings.DEBUG:
