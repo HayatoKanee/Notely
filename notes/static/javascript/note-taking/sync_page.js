@@ -13,7 +13,9 @@
     socket.onmessage = function(event) {
         const data = JSON.parse(event.data);
         if (data.type === "update_canvas") {
-            canvas.off();
+              canvas.off('object:added', objectChangedCallback);
+      canvas.off('object:modified', objectChangedCallback);
+      canvas.off('object:removed', objectChangedCallback);
             canvas.loadFromJSON(data.data, function(){
                 canvas.getObjects().forEach(function(obj) {
                 if (obj.link) {
