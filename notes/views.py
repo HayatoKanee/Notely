@@ -137,11 +137,17 @@ def calendar_tab(request):
                     sync=event_form.cleaned_data['sync']
                 )
 
-                event.save()  # Save the event before adding the page to the many-to-many relationship
+                
+
                 if page_data:
                     page_id = page_data.id
                     page = Page.objects.get(id=page_id)
-                    event.pages.add(page)
+                    event.save()  # Save the event after adding the page to the many-to-many relationship
+                    event.pages.set([page])
+                else:
+                    event.save()  # Save the event without adding the page to the many-to-many relationship
+
+                
                 if int(event_form.cleaned_data['reminder']) > -1:
                     Reminder.objects.create(event=event, reminder_time=int(event_form.cleaned_data['reminder']))
                     messages.add_message(request, messages.SUCCESS, "Reminder Created!")
@@ -321,15 +327,26 @@ def delete_page(request, page_id):
 
 @login_required
 def event_detail(request, event_id):
+
     event = Event.objects.get(id=event_id)
+    notebook_name = None
+    page_number = None
+    if event.pages.exists():
+        notebook_name = event.pages.all()[0].notebook.notebook_name
+        page_id = event.pages.all()[0].id
+        page = Page.objects.get(id=page_id)
+        print(event.pages.all(), event.pages.all()[0].id)
+        page_number = page.get_page_number()
+        
     if request.method == 'POST':
         form = EventForm(request.user, instance=event, data=request.POST)
         if form.is_valid():
             form.save()
             messages.add_message(request, messages.SUCCESS, "event updated!")
             return redirect('calendar_tab')
-    form = EventForm(request.user, instance=event)
-    html = render_to_string('partials/event_detail.html', {'form': form, 'event': event}, request=request)
+    else:
+        form = EventForm(request.user, instance=event)
+    html = render_to_string('partials/event_detail.html', {'form': form, 'event': event, 'notebook_name': notebook_name, 'page': page, 'page_number': page_number}, request=request)
     return JsonResponse({'html': html})
 
 

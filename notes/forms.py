@@ -169,8 +169,17 @@ class EventForm(forms.ModelForm):
         self.user = user
         self.fields['tag'].widget = EventTagSelectWidget()
         self.fields['tag'].queryset = user.event_tags.all()
-        
-        self.fields['page'].choices = [(page.id, f"{page.notebook.notebook_name}: {page.id}") for page in Page.objects.filter(notebook__user=user)]
+
+
+
+        notebook_choices = []
+        notebooks = Notebook.objects.filter(user=user)
+        for notebook in notebooks:
+            for i, page in enumerate(notebook.pages.all()):
+                notebook_choices.append((page.id, f"{notebook.notebook_name}: {i+1}"))
+
+        self.fields['page'].choices = notebook_choices
+        print(notebook_choices)
 
     def clean(self):
         super().clean()
@@ -186,10 +195,13 @@ class EventForm(forms.ModelForm):
         if self.cleaned_data.get('tag'):
             event.tags.set(self.cleaned_data['tag'])
         if self.cleaned_data.get('page'):
-            event.pages.add(self.cleaned_data['page'])
+            page_id = self.cleaned_data['page']
+            page = self.cleaned_data['page']
+            event.pages.add(page)
             self.save_m2m()
         if self.cleaned_data.get('sync'):
             event.sync = True
+        self.save_m2m()
         event.save()
         return event
 
@@ -255,6 +267,7 @@ class PageForm(forms.ModelForm):  # The form for linking the tag and the page.
             tag.tags.set(self.cleaned_data['tag'])
         tag.save()
         return tag
+
 
 class ShareEventForm(forms.Form):
     event = forms.ModelChoiceField(queryset=Event.objects.all(), required=False)
