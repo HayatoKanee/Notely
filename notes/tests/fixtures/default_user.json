@@ -65,5 +65,15 @@
             "event_id": 1,
             "reminder_time": "5"
         }
+    },
+    {
+        "model": "notes.EventTag",
+        "pk": 1,
+        "fields": {
+            "user_id": 1,
+            "color": "#0000FF",
+            "title": "work",
+            "events": [1]
+        }
     }
 ]

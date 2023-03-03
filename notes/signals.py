@@ -32,7 +32,7 @@ def create_page(sender, instance, created, **kwargs):
 
 @receiver(post_save, sender=Reminder)
 def schedule_reminder(sender, instance, created, **kwargs):
-    event_start_time = timezone.make_naive(instance.event.start_time)
+    event_start_time = timezone.localtime(instance.event.start_time)
     reminder_time = instance.reminder_time
     target_time = event_start_time - timedelta(minutes=reminder_time)
     if created:
