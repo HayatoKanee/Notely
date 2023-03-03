@@ -178,7 +178,7 @@ class Tag(models.Model):
         ('#FFFF00', 'Yellow'),
         ('#FFA3EE', 'Pink'),
     ]
-    image = models.ImageField(upload_to="images")
+    image = models.ImageField(upload_to="images", blank=True)
     color = ColorField(image_field="image", samples=COLOR_PALETTE)
 
     class Meta:
