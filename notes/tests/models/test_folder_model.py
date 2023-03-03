@@ -58,6 +58,16 @@ class FolderModelTestCase(TestCase):
         self.assertEqual(path[0], self.folder.parent)
         self.assertEqual(path[1], self.folder)
 
+    def test_owner_get_all_permissions(self):
+        owner = self.folder.user
+        self.assertTrue(owner.has_perms(
+            ['dg_view_folder',
+             'dg_edit_folder',
+             'dg_delete_folder'
+             ]
+            , self.folder
+        ))
+
     # Validation (helpers)
     def _assert_folder_is_valid(self):
         try:

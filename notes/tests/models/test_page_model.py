@@ -24,6 +24,46 @@ class NotebookModelTestCase(TestCase):
         self.page.drawing = ""
         self._assert_page_is_valid()
 
+    def test_owner_get_all_permissions(self):
+        owner = self.page.notebook.user
+        self.assertTrue(owner.has_perms(
+            ['dg_view_page',
+             'dg_edit_page',
+             'dg_delete_page'
+             ]
+            , self.page
+        ))
+
+    def test_delete_if_page_is_the_only_page(self):
+        notebook = self.page.last_page_of
+        before = notebook.pages.all().count()
+        self.assertEqual(before, 1)
+        self.page.delete()
+        after = notebook.pages.all().count()
+        self.assertEqual(before, after)
+        self.assertNotEqual(notebook.last_page, None)
+
+    def test_delete_if_page_is_not_the_only_page_but_the_last_page(self):
+        notebook = self.page.last_page_of
+        page = Page.objects.create(notebook=notebook)
+        before = notebook.pages.all().count()
+        self.assertEqual(before, 2)
+        self.page.delete()
+        after = notebook.pages.all().count()
+        self.assertEqual(before - 1, after)
+        self.assertEqual(notebook.last_page, page)
+
+    def test_delete_if_page_is_not_the_only_page_also_not_the_last_page(self):
+        notebook = self.page.notebook
+        page = Page.objects.create(notebook=notebook)
+        notebook.last_page = page
+        before = notebook.pages.all().count()
+        self.assertEqual(before, 2)
+        self.page.delete()
+        after = notebook.pages.all().count()
+        self.assertEqual(before - 1, after)
+        self.assertEqual(notebook.last_page, page)
+
     # Validation (helpers)
     def _assert_page_is_valid(self):
         try:

@@ -37,6 +37,19 @@ class NotebookModelTestCase(TestCase):
     def test_folder_can_be_null(self):
         self.notebook.folder = None
         self._assert_notebook_is_valid()
+
+    def test_notebook_get_type(self):
+        self.assertEqual('Notebook', self.notebook.get_type())
+
+    def test_owner_get_all_permissions(self):
+        owner = self.notebook.user
+        self.assertTrue(owner.has_perms(
+            ['dg_view_notebook',
+             'dg_edit_notebook',
+             'dg_delete_notebook'
+             ]
+            , self.notebook
+        ))
     # Validation (helpers)
 
     def _assert_notebook_is_valid(self):
