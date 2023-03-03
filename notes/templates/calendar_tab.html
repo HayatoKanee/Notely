@@ -1,25 +1,15 @@
 {% extends 'base_content.html' %}
-<<<<<<< HEAD
-{% block content %}
-    <div class="container">
-        <div id='calendar' style="color: rgb(245, 93, 66); margin-top: 10px;"></div>
-=======
+
  {% block content %}
      <div class="container">
       <div id='calendar' style="color: rgb(245, 93, 66);"></div>
               <button onclick="checkPermission()" id="addEvent" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#eventModal">
                 Add New Event
           </button>
->>>>>>> feature/calendar
 
         <a href="{% url 'google_auth' %}" class="btn btn-google" style="color: rgb(245, 93, 66);">
             <i class="fa fa-google"></i> Sign in with Google
         </a>
-
-        <button id="addEvent" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#eventModal">
-            Add New Event
-        </button>
-
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#shareEventModal" data-bs-dismiss="modal">
             Share Event
         </button>

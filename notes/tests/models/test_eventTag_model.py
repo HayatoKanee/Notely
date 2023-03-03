@@ -1,4 +1,4 @@
-"""Tests for event model"""
+"""Tests for EventTag model"""
 from datetime import timedelta
 
 from django.core.exceptions import ValidationError
@@ -8,8 +8,8 @@ from django.utils import timezone
 from notes.models import EventTag, Event, User
 
 
-class EventModelTestCase(TestCase):
-    """Tests for event model"""
+class EventTagModelTestCase(TestCase):
+    """Tests for EventTag model"""
     fixtures = [
         'notes/tests/fixtures/default_user.json',
         'notes/tests/fixtures/other_users.json'
@@ -44,6 +44,9 @@ class EventModelTestCase(TestCase):
     def test_event_tag_can_have_no_events(self):
         self.event_tag.events.all().delete()
         self._assert_eventTag_is_valid()
+
+    def test_str_function(self):
+        self.assertEqual(str(self.event_tag), 'work')
 
     def test_event_tag_can_have_more_than_one_event(self):
         event = Event.objects.create(title='My Event'

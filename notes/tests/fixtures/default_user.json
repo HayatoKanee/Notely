@@ -75,5 +75,15 @@
             "title": "work",
             "events": [1]
         }
+    },
+    {
+        "model": "notes.PageTag",
+        "pk": 1,
+        "fields": {
+            "user_id": 1,
+            "color": "#0000FF",
+            "title": "FC",
+            "pages": [1]
+        }
     }
 ]
