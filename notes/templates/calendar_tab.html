@@ -1,24 +1,15 @@
 {% extends 'base_content.html' %}
-<<<<<<< HEAD
-{% block content %}
-    <div class="container">
-        <div id='calendar' style="color: rgb(245, 93, 66); margin-top: 10px;"></div>
-=======
  {% block content %}
      <div class="container">
       <div id='calendar' style="color: rgb(245, 93, 66);"></div>
               <button onclick="checkPermission()" id="addEvent" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#eventModal">
                 Add New Event
           </button>
->>>>>>> feature/calendar
 
         <a href="{% url 'google_auth' %}" class="btn btn-google" style="color: rgb(245, 93, 66);">
             <i class="fa fa-google"></i> Sign in with Google
         </a>
 
-        <button id="addEvent" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#eventModal">
-            Add New Event
-        </button>
 
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#shareEventModal" data-bs-dismiss="modal">
             Share Event
@@ -95,6 +86,7 @@
     {% load static%}
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.4/index.global.min.js'></script>
     <script>
+        let event_id;
         const calendarEl = document.getElementById('calendar');
         const calendar = new FullCalendar.Calendar(calendarEl, {
             headerToolbar: {
@@ -116,16 +108,35 @@
                 {% endfor %}
             ],
             eventClick: function(e) {
+                event_id = e.event.id;
+
                 $.ajax({
                     url: "{% url 'event_detail' 0 %}".replace("0", e.event.id),
                     success: function(data) {
                         $('#detail').html(data.html);
-
+                        if (data.event_user_id !== {{user.id}}){
+                            $('#eventModalFooter').hide();
+                        }
+                        console.log("data_euser", data.event_user_id)
+                        console.log("data_user", {{user.id}})
                     },
                     error: function() {
                         alert('Error retrieving event detail');
                     }
                 });
+                $.ajax({
+                    url: "{% url 'get_options_event' 0 %}".replace("0", e.event.id),
+                    success: function (data){
+                        t_select.clearOptions();
+                        for (const option of data) {
+                            t_select.addOption(option);
+                        }
+                    },
+                    error: function (){
+                        alert('Error retrieving data');
+                    }
+                });
+                
                 $('#eventDetail').modal('show');
                 $('#delete_link').attr('href', "{% url 'delete_event' 0 %}".replace("0", e.event.id))
             },

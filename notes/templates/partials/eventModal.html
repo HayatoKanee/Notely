@@ -7,7 +7,7 @@
           </div>
           <div id="detail" class="modal-body">
       </div>
-         <div class="modal-footer">
+         <div class="modal-footer" id="eventModalFooter">
          <button class="edit h6 fw-bold collapse multi-collapse show" id="EditButton"
                     style="font-size: 15px; color: rgb(245, 93, 66);"
                     data-bs-toggle="collapse" data-bs-target=".multi-collapse" aria-expanded="false"
@@ -20,77 +20,15 @@
             <a id="delete_link" style="font-size: 15px; color: rgb(245, 93, 66);">
                 <i class="bi bi-trash" style="font-size: 15px; color: rgb(245, 93, 66);"></i> Delete</a>
         </button>
-        <button  id="share" style="font-size: 15px; color: rgb(245, 93, 66);" type="button" 
-        data-bs-toggle="modal" data-bs-target="#shareEventModalInternal">Share</button>
+        
+        <button type="button" id="share" style="font-size: 15px; color: rgb(245, 93, 66);" class="btn btn-primary" 
+        data-bs-toggle="modal" data-bs-target="#shareEventModalInternal" data-bs-event-id="{{ event.id }}">Share</button>
+
       </div>
     </div>
  </div>
  </div>
+ {% include 'partials/share_event_internal.html' %}
 
- <div class="modal fade" id="shareEventModalInternal" aria-hidden="true" aria-labelledby="shareEventModalInternalLabel" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-          <div class="modal-header">
-             <h1 class="modal-title fs-5"style="color: rgb(245, 93, 66)">Share</h1>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-         <div class="modal-body">
-             <p id="title" style="font-size: 20px; color: rgb(245, 93, 66);">Event to be shared: {{ event.title }}</p>
-            <select id="select-user" class="userEmail" placeholder="Enter username or email" autocomplete="off">
-             </select>
-          </div>
-      </div>
-  </div>
-</div>
-<link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
-<style>
-        .ts-wrapper.userEmail .ts-control > div .email {
-        opacity: 0.7;
-    }
-    .ts-wrapper.userEmail .ts-control > div .name + .email {
-        margin-left: 5px;
-    }
-    .ts-wrapper.userEmail .ts-control > div .email:before {
-        content: '<';
-    }
-    .ts-wrapper.userEmail .ts-control > div .email:after {
-        content: '>';
-    }
-    .ts-wrapper.userEmail .ts-dropdown .caption {
-        font-size: 12px;
-        display: block;
-        color: #a0a0a0;
-    }
-</style>
-<script>
-new TomSelect("#select-user",{
-    plugins: ['remove_button'],
-  persist: false,
-  maxItems: null,
-    valueField: 'email',
-  labelField: 'name',
-    searchField: ['username', 'email'],
-    options: [
-        {% for user in users %}
-            {email: "{{ user.email }}", username: "{{ user.username }}"},
-        {% endfor %}
-  ],
-    render: {
-        item: function(item, escape) {;
-            return '<div>' +
-                (item.username ? '<span class="name">' + escape(item.username) + '</span>' : '') +
-                (item.email ? '<span class="email">' + escape(item.email) + '</span>' : '') +
-            '</div>';
-        },
-        option: function(item, escape) {
-            var label = item.username || item.email;
-            var caption = item.username ? item.email : null;
-            return '<div>' +
-                '<span class="label">' + escape(label) + '</span>' +
-                (caption ? '<span class="caption">' + escape(caption) + '</span>' : '') +
-            '</div>';
-        }
-  }
-});
-</script>
+
+ 
