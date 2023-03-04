@@ -57,6 +57,7 @@ class NotebookModelTestCase(TestCase):
         notebook = self.page.notebook
         page = Page.objects.create(notebook=notebook)
         notebook.last_page = page
+        notebook.save()
         before = notebook.pages.all().count()
         self.assertEqual(before, 2)
         self.page.delete()
