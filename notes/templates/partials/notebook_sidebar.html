@@ -8,7 +8,7 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
 
-        <select id="search-bar" placeholder="Type to search a page...." autocomplete="off"></select>
+        <select id="search-bar" multiple placeholder="Type to search a page...." autocomplete="off"></select>
           <button class="btn btn-outline-secondary" type="submit" name="page_search_submit" id="search-button" >Search</button>
         </div>
     </nav>
@@ -24,7 +24,7 @@
                     </form>
                 </div>
                 {% for page in viewable_pages %}
-                    <div class="col page" data-tag-id = {{ page.get_all_tags_id }}>
+                    <div class="col page" data-tag-id = {{ page.get_all_tags_id }}; data-page2-id = {{ page.id }}>
                         <div class="dropdown">
                             <a href="{% url 'page' page.id %}" style="color: #CD5C5C;">
                                 <span style="color: {{ p.tags.first.color }}">&#x25CF{% if page.thumbnail %}

@@ -130,7 +130,6 @@
     {% include 'partials/shareModal.html' %}
     {% include 'partials/codeEditor.html' %}
     {% include 'partials/symbols.html' %}
-    {% include 'partials/notebook_sidebar.html' %}
 {% endblock %}
 {% block scripts %}
     <style>
@@ -198,7 +197,6 @@
         }
     </style>
     <script>
-
     const t_select = new TomSelect("#select-user",{
         plugins: ['remove_button'],
 	    persist: false,
@@ -231,30 +229,7 @@
             }
 	    }
     });
-    $('#shareBtn').click(function (){
-       const selectedUsers = t_select.getValue();
-          $.ajax({
-               url: "{% url 'share_page' page.id %}",
-               type: 'POST',
-               async: true,
-               data: {
-                   'selected_users[]': selectedUsers,
-                   csrfmiddlewaretoken: csrf
-               },
-       });
-        for (let i = 0; i < selectedUsers.length; i++) {
-            const selectedOption = selectedUsers[i];
-            t_select.removeOption(selectedOption);
-        }
-    });
-
-    $('#search-button').click(function (){
-       const selectedPage = t_select2.getValue();
-       $(".page").hide();
-        $(".page[data-page-id*=" + selectedPage+"]").show();
-    });
-
-const t_select2 = new TomSelect('#search-bar',{
+    const t_select2 = new TomSelect('#search-bar',{
 	valueField: 'id',
 	searchField: 'id',
 	options: [
@@ -277,7 +252,29 @@ const t_select2 = new TomSelect('#search-bar',{
 	}
 
 });
+    $('#shareBtn').click(function (){
+       const selectedUsers = t_select.getValue();
+          $.ajax({
+               url: "{% url 'share_page' page.id %}",
+               type: 'POST',
+               async: true,
+               data: {
+                   'selected_users[]': selectedUsers,
+                   csrfmiddlewaretoken: csrf
+               },
+       });
+        for (let i = 0; i < selectedUsers.length; i++) {
+            const selectedOption = selectedUsers[i];
+            t_select.removeOption(selectedOption);
+        }
+    });
+    $('#search-button').click(function (){
+       const selectedPages = t_select2.getValue();
+       $(".page").hide();
+        selectedPages.forEach(page => {
 
-
+      $(".page[data-page2-id*=" + page +"]").show();
+   });
+    });
     </script>
 {% endblock %}
