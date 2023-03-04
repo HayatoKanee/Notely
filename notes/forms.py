@@ -181,8 +181,9 @@ class EventForm(forms.ModelForm):
         super().clean()
         start_time = self.cleaned_data.get('start_time')
         end_time = self.cleaned_data.get('end_time')
-        if end_time < start_time:
-            self.add_error('end_time', 'End Time cannot be less that Start Time')
+        if start_time is not None and end_time is not None:
+            if end_time < start_time:
+                self.add_error('end_time', 'End Time cannot be less that Start Time')
 
     def save(self):
         event = super().save(commit=False)
