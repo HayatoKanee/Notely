@@ -88,3 +88,11 @@ def give_perm_notebook(sender, instance, created, **kwargs):
         assign_perm('dg_edit_notebook', instance.user, instance)
         assign_perm('dg_delete_notebook', instance.user, instance)
 
+
+@receiver(post_save, sender=Event)
+def give_perm_event(sender, instance, created, **kwargs):
+    if created:
+        assign_perm('dg_view_event', instance.user, instance)
+        assign_perm('dg_edit_event', instance.user, instance)
+        assign_perm('dg_delete_event', instance.user, instance)
+

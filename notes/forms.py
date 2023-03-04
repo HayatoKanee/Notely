@@ -191,10 +191,10 @@ class EventForm(forms.ModelForm):
         if self.cleaned_data.get('tag'):
             event.tags.set(self.cleaned_data['tag'])
         if self.cleaned_data.get('page'):
-            page_id = self.cleaned_data['page']
-            page = self.cleaned_data['page']
-            event.pages.add(page)
-            self.save_m2m()
+            page_id = self.cleaned_data['page'].id
+            page = Page.objects.get(id=page_id)
+            event.save()  # Save the event after adding the page to the many-to-many relationship
+            event.pages.set([page])
         if self.cleaned_data.get('sync'):
             event.sync = True
         self.save_m2m()

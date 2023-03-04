@@ -4,11 +4,11 @@ import base64
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
 from django.core.files.base import ContentFile
-from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
+from django.db.models import Q
 from .forms import SignUpForm, LogInForm, UserForm, ProfileForm, PasswordForm, FolderForm, NotebookForm, EventForm, \
     EventTagForm, PageTagForm, PageForm, ShareEventForm
 from .models import User, Folder, Notebook, Page, Event, Editor, Reminder, Credential, PageTag
@@ -116,14 +116,20 @@ def sub_folders_tab(request, folder_id):
 
 
 @login_required
+@check_perm('dg_view_event', Event)
 def calendar_tab(request):
     get_or_create_event_from_google(request)
-    events = request.user.events.all()
+    events = get_objects_for_user(request.user, 'dg_view_event', klass=Event)
     event_form = EventForm(request.user)
     tag_form = EventTagForm()
     shareEvent_form = ShareEventForm()
     tags = set()
     for event in events:
+        # viewable_events = get_objects_for_user(request.user, 'dg_view_event', klass=Event).all()
+        # users_with_perms = get_users_with_perms(event, only_with_perms_in=['dg_view_event'])
+        # users_without_perms = User.objects.exclude(pk__in=users_with_perms).exclude(username='AnonymousUser')
+        # can_edit = request.user.has_perm('dg_edit_event', event)
+
         for tag in event.tags.all():
             tags.add(tag)
 
@@ -133,14 +139,7 @@ def calendar_tab(request):
             if event_form.is_valid():
 
                 page_data = event_form.cleaned_data['page']
-                event = Event(
-                    user=request.user,
-                    title=event_form.cleaned_data['title'],
-                    description=event_form.cleaned_data['description'],
-                    start_time=event_form.cleaned_data['start_time'],
-                    end_time=event_form.cleaned_data['end_time'],
-                    sync=event_form.cleaned_data['sync']
-                )
+                event = event_form.save()
 
                 
 
@@ -152,7 +151,7 @@ def calendar_tab(request):
                 else:
                     event.save()  # Save the event without adding the page to the many-to-many relationship
 
-                
+
                 if int(event_form.cleaned_data['reminder']) > -1:
                     Reminder.objects.create(event=event, reminder_time=int(event_form.cleaned_data['reminder']))
                     messages.add_message(request, messages.SUCCESS, "Reminder Created!")
@@ -278,9 +277,13 @@ def page(request, page_id):
             assign_perm('dg_edit_page', request.user, new_page)
             assign_perm('dg_delete_page', request.user, new_page)
             return redirect('page', new_page.id)
+        if 'search_page_submit' in request.POST:
+            new_page = Page.obejects.get(id=page_id)
+            return redirect('page', new_page.id)
     return render(request, 'page.html',
                   {'page': page, 'page_tag_form': page_tag_form, 'tags': tags, 'users': users_without_perms,
                    'viewable_pages': viewable_pages, 'can_edit': can_edit, 'can_edit_notebook': can_edit_notebook})
+
 
 
 @login_required
@@ -327,6 +330,7 @@ def delete_notebook(request, folder_id):
 
 
 @login_required
+@check_perm('dg_delete_event', Event)
 def delete_event(request, event_id):
     event = Event.objects.get(id=event_id)
     event.delete()
@@ -356,15 +360,25 @@ def event_detail(request, event_id):
         page_number = page.get_page_number()
         
     if request.method == 'POST':
+        if not request.user.has_perm('dg_edit_event', event):
+            raise PermissionDenied
+
         form = EventForm(request.user, instance=event, data=request.POST)
         if form.is_valid():
             form.save()
             messages.add_message(request, messages.SUCCESS, "event updated!")
             return redirect('calendar_tab')
+        
     else:
         form = EventForm(request.user, instance=event)
-    html = render_to_string('partials/event_detail.html', {'form': form, 'event': event, 'notebook_name': notebook_name, 'page': page, 'page_number': page_number}, request=request)
-    return JsonResponse({'html': html})
+    html = render_to_string('partials/event_detail.html', 
+                            {'form': form, 'event': event, 
+                            'notebook_name': notebook_name,
+                            'page_number':page_number
+                                                            }, request=request)
+    print(event.user.id)
+    print(request.user.id)
+    return JsonResponse({'html': html, 'event_user_id': event.user.id})
 
 
 @login_required
@@ -382,11 +396,14 @@ def page_detail(request, page_id):
 
 
 @login_required
+@check_perm('dg_edit_event', Event)
 def update_event(request, event_id):
     if request.method == 'POST':
+        event = Event.objects.get(id=event_id)
+        if not request.user.has_perm('dg_edit_event', event):
+                raise PermissionDenied
         start_time = request.POST.get('start')
         end_time = request.POST.get('end')
-        event = Event.objects.get(id=event_id)
         event.start_time = datetime.fromisoformat(start_time[:-1] + '+00:00')
         event.end_time = datetime.fromisoformat(end_time[:-1] + '+00:00')
         event.save()
@@ -476,4 +493,29 @@ def share_folder(request, folder_id):
         folder = Folder.objects.get(id=folder_id)
         return share_obj(request, folder)
     except Page.DoesNotExist:
+        return JsonResponse({'status': 'fail'})
+
+
+@login_required
+def share_event(request, event_id):
+    try:
+        event = Event.objects.get(id=event_id)
+        if event.user != request.user:
+            return JsonResponse({'status': 'fail'})
+        selected_users = request.POST.getlist('selected_users[]')
+        for email in selected_users:
+            user = User.objects.get(email=email)
+            assign_perm('dg_view_event', user, event)
+        html = render_to_string('partials/share_event_internal.html', {'event': event}, request=request)
+        return JsonResponse({'status': 'success', 'html': html})
+    except Event.DoesNotExist:
+        return JsonResponse({'status': 'fail'})
+
+
+@login_required
+def get_options_event(request, event_id):
+    try:
+        event = Event.objects.get(id=event_id)
+        return JsonResponse(get_options(event, 'dg_view_event'), safe=False)
+    except Event.DoesNotExist:
         return JsonResponse({'status': 'fail'})

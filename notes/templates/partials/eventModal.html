@@ -1,27 +1,34 @@
-<div class="modal fade" id="eventDetail" aria-hidden="true" aria-labelledby="eventDetail" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="addFolderLabel" style="color: rgb(245, 93, 66);">Event Detail</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div id="detail" class="modal-body">
-            </div>
-            <div class="modal-footer">
-                <button class="edit h6 fw-bold collapse multi-collapse show" id="EditButton"
-                        style="font-size: 15px; color: rgb(245, 93, 66);"
-                        data-bs-toggle="collapse" data-bs-target=".multi-collapse" aria-expanded="false"
-                        aria-controls=" EditButton">
-                    <a> <i class="bi bi-pencil-square"
-                           style="font-size: 15px; color: rgb(245, 93, 66);"></i> Edit</a>
-                </button>
-                <button id="delete"
-                        style="font-size: 15px; color: rgb(245, 93, 66);">
-                    <a id="delete_link" style="font-size: 15px; color: rgb(245, 93, 66);">
-                        <i class="bi bi-trash" style="font-size: 15px; color: rgb(245, 93, 66);"></i> Delete</a>
-                </button>
-            </div>
-        </div>
+ <div class="modal fade" id="eventDetail" aria-hidden="true" aria-labelledby="eventDetail" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="addFolderLabel" style="color: rgb(245, 93, 66);">Event Detail</h1>
+           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div id="detail" class="modal-body">
+      </div>
+         <div class="modal-footer" id="eventModalFooter">
+         <button class="edit h6 fw-bold collapse multi-collapse show" id="EditButton"
+                    style="font-size: 15px; color: rgb(245, 93, 66);"
+                    data-bs-toggle="collapse" data-bs-target=".multi-collapse" aria-expanded="false"
+                    aria-controls=" EditButton">
+            <a> <i class="bi bi-pencil-square"
+                   style="font-size: 15px; color: rgb(245, 93, 66);"></i> Edit</a>
+        </button>
+               <button id="delete"
+                    style="font-size: 15px; color: rgb(245, 93, 66);">
+            <a id="delete_link" style="font-size: 15px; color: rgb(245, 93, 66);">
+                <i class="bi bi-trash" style="font-size: 15px; color: rgb(245, 93, 66);"></i> Delete</a>
+        </button>
+        
+        <button type="button" id="share" style="font-size: 15px; color: rgb(245, 93, 66);" class="btn btn-primary" 
+        data-bs-toggle="modal" data-bs-target="#shareEventModalInternal" data-bs-event-id="{{ event.id }}">Share</button>
+
+      </div>
     </div>
  </div>
+ </div>
+ {% include 'partials/share_event_internal.html' %}
+
+
  
