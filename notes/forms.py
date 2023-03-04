@@ -264,9 +264,9 @@ class PageForm(forms.ModelForm):  # The form for linking the tag and the page.
 
 
 class ShareEventForm(forms.Form):
-    event = forms.ModelChoiceField(queryset=Event.objects.all(), required=False)
+    event = forms.ModelChoiceField(queryset=Event.objects.all(), required=True)
     email = forms.EmailField(required=False)
-    message = forms.CharField(widget=forms.Textarea, required=False)
+    message = forms.CharField(widget=forms.Textarea, required=False, max_length=200)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
