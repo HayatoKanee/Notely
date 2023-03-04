@@ -277,9 +277,13 @@ def page(request, page_id):
             assign_perm('dg_edit_page', request.user, new_page)
             assign_perm('dg_delete_page', request.user, new_page)
             return redirect('page', new_page.id)
+        if 'search_page_submit' in request.POST:
+            new_page = Page.obejects.get(id=page_id)
+            return redirect('page', new_page.id)
     return render(request, 'page.html',
                   {'page': page, 'page_tag_form': page_tag_form, 'tags': tags, 'users': users_without_perms,
                    'viewable_pages': viewable_pages, 'can_edit': can_edit, 'can_edit_notebook': can_edit_notebook})
+
 
 
 @login_required
