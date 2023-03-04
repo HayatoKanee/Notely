@@ -1,44 +1,84 @@
 <div class="modal fade" id="codeEditor" role="dialog" data-bs-backdrop="false"
      data-bs-keyboard="false" aria-hidden="true" aria-labelledby="codeEditorLabel" tabindex="-1"
      style="pointer-events: none; color: rgb(245, 93, 66);">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                {#        <h1 class="modal-title fs-5" >CodeEditor</h1>#}
-                <ul class="nav nav-tabs" role="tablist">
-                    <li class="nav-item editorTab">
-                        <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab"  style="color: rgb(245, 93, 66);">
-                            {{ page.editors.first.title}}
-                            <button class="closeBtn" data-dismiss="tab" aria-label="Close" style="color: rgb(245, 93, 66);"><span aria-hidden="true">&times;</span></button>
-                        </a>
-                    </li>
-                    {% for editor in page.editors.all|slice:"1:" %}
-                        <li class="nav-item editorTab" style="color: rgb(245, 93, 66);">
-                            <a class="nav-link" data-toggle="tab" href="#tab{{ forloop.counter|add:"1" }}" role="tab" style="color: rgb(245, 93, 66);">
-                                {{ editor.title }}
-                                <button class="closeBtn" data-dismiss="tab" aria-label="Close" style="color: rgb(245, 93, 66);"><span aria-hidden="true">&times;</span></button>
-                            </a>
-                        </li>
-                    {% endfor %}
-                    <button type="button" class="bi bi-plus-lg" id="add-tab-btn"></button>
-                </ul>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="tab-content">
-                    <div class="tab-pane active" id="tab1" role="tabpanel">
-                        <div id="code1"></div>
-                    </div>
-                    {% for editor in page.editors.all|slice:"1:" %}
-                        <div class="tab-pane" id="tab{{ forloop.counter|add:"1" }}" role="tabpanel">
-                            <div id="code{{ forloop.counter|add:"1" }}"></div>
-                        </div>
-                    {% endfor %}
-                </div>
-            </div>
-            <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background-color: rgb(245, 93, 66, 0.1); border-color: rgb(245, 93, 66); width: 100px; color: rgb(245, 93, 66);">Cancel</button>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+{#        <h1 class="modal-title fs-5" >CodeEditor</h1>#}
+          <ul class="nav nav-tabs" role="tablist">
+  <li class="nav-item editorTab">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab"  style="color: rgb(245, 93, 66);">
+               {{ page.editors.first.title}}
+            
+        <button class="closeBtn" data-dismiss="tab" aria-label="Close" style="color: rgb(245, 93, 66);"><span aria-hidden="true">&times;</span></button>
+      </a>
+       
+  </li>
+                     {% for editor in page.editors.all|slice:"1:" %}
+
+  <li class="nav-item editorTab" style="color: rgb(245, 93, 66);">
+    <a class="nav-link" data-toggle="tab" href="#tab{{ forloop.counter|add:"1" }}" role="tab" style="color: rgb(245, 93, 66);">
+          {{ editor.title }}
+        
+        <button class="closeBtn" data-dismiss="tab" aria-label="Close" style="color: rgb(245, 93, 66);"><span aria-hidden="true">&times;</span></button>
+      </a>
+      
+  </li>
+              {% endfor %}
+          <button type="button" class="bi bi-plus-lg" id="add-tab-btn"></button>
+</ul>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
+      <div class="modal-body">
+          <div class="tab-content">
+              <div class="tab-pane active" id="tab1" role="tabpanel">
+                  <div id="code1"></div>
+              </div>
+              {% for editor in page.editors.all|slice:"1:" %}
+                  <div class="tab-pane" id="tab{{ forloop.counter|add:"1" }}" role="tabpanel">
+                    <div id="code{{ forloop.counter|add:"1" }}"></div>
+                  </div>
+                {% endfor %}
+            </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="help_btn" style="background-color: rgb(245, 93, 66, 0.1); border-color: rgb(245, 93, 66); width: 100px; color: rgb(245, 93, 66);">Help</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background-color: rgb(245, 93, 66, 0.1); border-color: rgb(245, 93, 66); width: 100px; color: rgb(245, 93, 66);">Cancel</button>
+
+        <div class="modal fade" id="helpModal" tabindex="-1" aria-labelledby="helpModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+
+              <div class="modal-header">
+                <h5 class="modal-title" id="helpModalLabel">Feature Description</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <p>This code editor supports multiple languages, including Python, Javascript, and HTML, 
+                  which will be automatically recognized as you type. </p>
+                <p>It also has an auto complete feature to make coding more convenient.</p>
+                <p>The code editor window can be scrolled to other positions across the page, 
+                  and each page has a separate code editor window with all the code saved to that page.</p>
+                <p>New tabs of code editor can be created by clicking the '+' button, 
+                  and the tab can be renamed through double clicking the title of the tab</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              </div>
+            
+            </div>
+
+          </div>
         </div>
-    </div>
+      </div>
 </div>
+</div>
+</div>
+
+<script>
+  var helpBtn = document.getElementById("help_btn");
+  var helpModal = new bootstrap.Modal(document.getElementById("helpModal"));
+
+  helpBtn.addEventListener("click", function() {
+    helpModal.show();
+  });
+</script>

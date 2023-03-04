@@ -32,24 +32,35 @@
                             {% if item.get_type == "Folder" %}
                                 <form action="{% url 'sub_folders_tab' item.id %}" method="get">
                                     <button id = "folder_img" style="margin-left:-5px;">
+                                        {% if item.user == user%}
                                         <span style="margin-left: 80px; color: rgb(245, 93, 66);">{{ item.folder_name }}</span>
+                                        {% else %}
+                                        <span style="margin-left: 80px; color: rgb(245, 93, 66);">{{ item.folder_name }} (shared by {{item.user.username}})</span>
+                                        {% endif %}
                                     </button>
                                 </form>
                             {% else %}
                                 <form action="{% url 'page' item.last_page.id %}" method="get">
                                     <button id="notebook_img" style="text-align: left;">
+                                        {% if item.user == user%}
                                         <span style="margin-left: 75px; color: rgb(245, 93, 66);">{{ item.notebook_name }}</span>
+                                        {% else %}
+                                          <span style="margin-left: 75px; color: rgb(245, 93, 66);">{{ item.notebook_name }} (shared by {{item.user.username}})</span>
+                                        {% endif %}
                                     </button>
                                 </form>
                             {% endif %}
                         </div>
+                        {% if item.user == user%}
                         <div class="col col-lg-9" style="height: 100px;">
                             {% if item.get_type == "Folder" %}
                                 <div class="dropdown">
                                     <button class="dropbtn" style="color: rgb(245, 93, 66);">Options</button>
                                     <div class="dropdown-content">
                                         <a href="{% url 'delete_folder_tab' item.id %}" style="color: rgb(245, 93, 66);">Delete</a>
-                                        <a href="#" style="color: rgb(245, 93, 66);">Link 2</a>
+                                        <a class="share" type="button" data-bs-toggle="modal" data-bs-target="#shareModal"
+                                           data-options-url="{% url 'get_options_folder' item.id %}"
+                                            data-share-url="{% url 'share_folder' item.id%}">Share</a>
                                         <a href="#" style="color: rgb(245, 93, 66);">Link 3</a>
                                     </div>
                                 </div>
@@ -59,13 +70,16 @@
                                         <button class="dropbtn" style="color: rgb(245, 93, 66);">Options</button>
                                         <div class="dropdown-content">
                                             <a href="{% url 'delete_notebook_tab' item.id %}" style="color: rgb(245, 93, 66);">Delete</a>
-                                            <a href="#" style="color: rgb(245, 93, 66);">Link 2</a>
+                                            <a class="share" type="button" data-bs-toggle="modal" data-bs-target="#shareModal"
+                                             data-options-url="{% url 'get_options_notebook' item.id %}"
+                                                data-share-url="{% url 'share_notebook' item.id%}">Share</a>
                                             <a href="#" style="color: rgb(245, 93, 66);">Link 3</a>
                                         </div>
                                     </div>
                                 </div>
                             {% endif %}
                         </div>
+                        {% endif %}
                         <div class="w-100"></div>
                     {% endfor %}
                 </div>
@@ -110,5 +124,73 @@
     </style>
     </div>
     {% include 'partials/addChoice.html' %}
+    {% include 'partials/shareModal.html' %}
+{% endblock %}
 
+{% block scripts %}
+    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+    <script>
+        const t_select = new TomSelect("#select-user", {
+          plugins: ['remove_button'],
+          persist: false,
+          maxItems: null,
+          valueField: 'email',
+          labelField: 'name',
+          searchField: ['username', 'email'],
+          options: [],
+          render: {
+            item: function(item, escape) {
+              return '<div>' +
+                (item.username ? '<span class="name">' + escape(item.username) + '</span>' : '') +
+                (item.email ? '<span class="email">' + escape(item.email) + '</span>' : '') +
+                '<span class="gravatar">' + '<img class="rounded-circle" src="' + item.gravatar + '"</img></span>' +
+                '</div>';
+            },
+            option: function(item, escape) {
+              var label = item.username || item.email;
+              var caption = item.username ? item.email : null;
+              return '<div class="row">' + '<div class="col">' +
+                '<span class="label">' + escape(label) + '</span>' +
+                (caption ? '<span class="caption">' + escape(caption) + '</span>' : '') + '</div>' + '<div class="col">' +
+                '<span class="gravatar">' + '<img class="rounded-circle" src="' + item.gravatar + '"</img></span>' +
+                '</div>' +
+                '</div>';
+            }
+          }
+        });
+        let share_url;
+        $('.share').click(function (){
+            share_url = this.getAttribute('data-share-url')
+            $.ajax({
+                    url: this.getAttribute('data-options-url'),
+                    success: function (data){
+                        t_select.clearOptions();
+                        for (const option of data) {
+                            t_select.addOption(option);
+                        }
+                    },
+                    error: function (){
+                        alert('Error retrieving data');
+                    }
+                });
+            });
+        $('#shareBtn').click(function (){
+            const selectedUsers = t_select.getValue();
+           const edit_perm = $('#editBox').prop('checked');
+            $.ajax({
+               url: share_url,
+               type: 'POST',
+               async: true,
+               data: {
+                   'selected_users[]': selectedUsers,
+                   'edit_perm': edit_perm,
+                   csrfmiddlewaretoken: '{{csrf_token}}'
+               },
+       });
+        while(selectedUsers.length!=0){
+            t_select.removeOption(selectedUsers[0]);
+        }
+        });
+    </script>
 {% endblock %}
