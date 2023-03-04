@@ -238,6 +238,29 @@
             }
 	    }
     });
+    const t_select2 = new TomSelect('#search-bar',{
+	valueField: 'id',
+	searchField: 'id',
+	options: [
+        {% for page in viewable_pages %}
+            {% if page.thumbnail %}
+                {id: "{{ page.id }}", image: "{{ page.thumbnail.url }}"},
+            {% endif %}
+        {% endfor %}
+	],
+	render: {
+		option: function(data, escape) {
+			return '<div>' +
+					'<span class="id">' + escape(data.id) + '</span>' +
+                    '<span>' + '<img src="' +escape(data.image) + '">' + '</span>' +
+				'</div>';
+		},
+		item: function(data, escape) {
+			return '<div>' +escape(data.id)+ '</div>';
+		}
+	}
+
+});
     $('#shareBtn').click(function (){
        const selectedUsers = t_select.getValue();
        const edit_perm = $('#editBox').prop('checked');
@@ -254,6 +277,14 @@
         while(selectedUsers.length!=0){
             t_select.removeOption(selectedUsers[0]);
         }
+    });
+    $('#search-button').click(function (){
+       const selectedPages = t_select2.getValue();
+       $(".page").hide();
+        selectedPages.forEach(page => {
+
+      $(".page[data-page2-id*=" + page +"]").show();
+   });
     });
         const loc = window.location;
      let wsStart = 'ws://';

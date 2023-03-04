@@ -84,7 +84,7 @@ class Folder(models.Model):
     def get_path(self):
         path = [self]
         current = self.parent
-        while current != None:
+        while current is not None:
             path.insert(0, current)
             current = current.parent
         return path
@@ -127,7 +127,6 @@ class Page(models.Model):
             pages = notebook.pages.all()
             if pages.exists():
                 notebook.last_page = pages.last()
-                print(notebook.last_page)
             else:
                 notebook.last_page = Page.objects.create(notebook=notebook)
             notebook.save()
@@ -150,7 +149,7 @@ class Page(models.Model):
         sorted_pages = sorted(pages, key=lambda p: p.id)
         index = sorted_pages.index(self)
         page_number = index + 1
-        
+
         return page_number
 
 
@@ -179,7 +178,7 @@ class Tag(models.Model):
         ('#FFFF00', 'Yellow'),
         ('#FFA3EE', 'Pink'),
     ]
-    image = models.ImageField(upload_to="images")
+    image = models.ImageField(upload_to="images", blank=True)
     color = ColorField(image_field="image", samples=COLOR_PALETTE)
 
     class Meta:
@@ -235,7 +234,6 @@ class Event(models.Model):
             ("dg_edit_event", "can edit event"),
             ("dg_delete_event", "can delete event")
         ]
-
 
     def save(
             self, force_insert=False, force_update=False, using=None, update_fields=None
@@ -309,6 +307,7 @@ class Reminder(models.Model):
     reminder_time = models.IntegerField(choices=reminder_choice)
     task_id = models.TextField(unique=True, blank=True, null=True)
     exact_time = models.DateTimeField(null=True)
+
 
 class Credential(models.Model):
     user = models.ForeignKey(User, related_name="creds", on_delete=models.CASCADE)

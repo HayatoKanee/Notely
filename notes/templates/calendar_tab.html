@@ -1,4 +1,5 @@
 {% extends 'base_content.html' %}
+
  {% block content %}
      <div class="container">
       <div id='calendar' style="color: rgb(245, 93, 66);"></div>
@@ -9,7 +10,6 @@
         <a href="{% url 'google_auth' %}" class="btn btn-google" style="color: rgb(245, 93, 66);">
             <i class="fa fa-google"></i> Sign in with Google
         </a>
-
 
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#shareEventModal" data-bs-dismiss="modal">
             Share Event
