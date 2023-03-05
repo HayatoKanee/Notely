@@ -167,13 +167,11 @@ class EventForm(forms.ModelForm):
         self.fields['tag'].widget = EventTagSelectWidget()
         self.fields['tag'].queryset = user.event_tags.all()
 
-
-
         notebook_choices = []
         notebooks = Notebook.objects.filter(user=user)
         for notebook in notebooks:
             for i, page in enumerate(notebook.pages.all()):
-                notebook_choices.append((page.id, f"{notebook.notebook_name}: {i+1}"))
+                notebook_choices.append((page.id, f"{notebook.notebook_name}: {i + 1}"))
 
         self.fields['page'].choices = notebook_choices
 
@@ -255,7 +253,7 @@ class PageForm(forms.ModelForm):  # The form for linking the tag and the page.
         self.fields['tag'].widget = PageTagSelectWidget()
         self.fields['tag'].queryset = PageTag.objects.all()
 
-    def save(self):
+    def save(self, commit=True):
         page = super().save(commit=False)
         if self.cleaned_data.get('tag'):
             page.tags.set(self.cleaned_data['tag'])
@@ -270,7 +268,5 @@ class ShareEventForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        
-        self.fields['event'].choices = [(event.id, f"{event.title}") for event in Event.objects.all()]
 
-    
+        self.fields['event'].choices = [(event.id, f"{event.title}") for event in Event.objects.all()]
