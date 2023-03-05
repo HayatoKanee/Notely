@@ -1,4 +1,7 @@
 {% include 'partials/sidebar.html' %}
+{% load notifications_tags %}
+{% notifications_unread as unread_count %}
+
 <nav class="navbar navbar-expand-lg bg-nav shadow-sm">
   <div class="container-fluid">
       <img class="logo img-fluid">
@@ -7,9 +10,37 @@
       </a>
       <div class="container-fluid collapse navbar-collapse" id="navbarSupportedContent">
            <ul class="navbar-nav ms-auto mb-2 mb-lg-0" style="margin-right: 13px;">
-            <li class="nav-item">
-               <li class="nav-item ">
-                <a class="nav-link active" id="bell" href="#" ></a>
+            <li class="nav-item dropdown">
+              <a class="nav-link position-relative" href="#" id="bell" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <span class="position-absolute top-10 start-74 translate-middle badge rounded-pill bg-danger">{{ unread_count }}</span>
+                <span class="bell-icon"></span>
+              </a>
+              <ul>
+                <div class="dropdown-menu dropdown-menu-start notification-content" aria-labelledby="navbarDropdownMenuLink">
+                  <div class="notification-list">
+                    <div class="notification-header">
+                      <h5>Notifications</h5>
+                    </div>
+                    {% for notification in user.notifications.unread %}
+                    <div class="notification-item">
+                      <div class="d-flex flex-column justify-content-center flex-grow-1">
+                        <h6>{{ notification.verb }}</h6>
+                        <p>{{ notification.description }}</p>
+                        <small>{{ notification.actor }}</small>
+                      </div>
+                      <div class="ml-2">
+                        <small>{{ notification.timestamp|timesince }} ago</small>
+                      </div>
+                    </div>
+                    {% empty %}
+                    <div class="notification-item">
+                      <p class="text-muted">No notifications to display.</p>
+                    </div>
+                    {% endfor %}
+                  </div>
+                </div>
+                
+              </ul>
             </li>
                <li class="nav-item ">
           <a class="nav-link active" href="{% url 'folders_tab' %}" style="color: rgb(245, 93, 66); font-size: 20px;" >Notes</a>

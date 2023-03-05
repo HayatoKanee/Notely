@@ -17,6 +17,8 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
 from notes import views
+from django.urls import path, include
+import notifications.urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -41,6 +43,8 @@ urlpatterns = [
     path('google_auth_callback/', views.google_auth_callback, name='google_auth_callback'),
     path('page_detail/<page_id>', views.page_detail, name='page_detail'),
     path('delete_page/<page_id>', views.delete_page, name='delete_page'),
+    path('inbox/notifications/', include(notifications.urls, namespace='notifications')),
+
 ]
 
 if settings.DEBUG:
