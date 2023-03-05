@@ -1,7 +1,12 @@
 """Tests for event model"""
+import json
+
 from django.core.exceptions import ValidationError
 from django.test import TestCase
-from notes.models import User, Event
+from google.oauth2.credentials import Credentials
+
+from notes.models import User, Event, Credential
+from unittest import mock
 
 
 class EventModelTestCase(TestCase):
@@ -33,6 +38,13 @@ class EventModelTestCase(TestCase):
     def test_name_can_be_repeated_(self):
         self.event.title = Event.objects.get(pk=2).title
         self._assert_event_is_valid()
+
+    def test_save_if_sync_with_no_cred(self):
+        self.event.description = "test"
+        self.event.sync = True
+        self.event.save()
+        self.assertEqual(self.event.google_id, '')
+        self.assertEqual(self.event.description, 'test')
 
     # Validation (helpers)
     def _assert_event_is_valid(self):
