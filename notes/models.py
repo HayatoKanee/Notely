@@ -262,10 +262,11 @@ class Event(models.Model):
                 try:
                     service.events().update(calendarId='primary', eventId=self.google_id, body=g_event).execute()
                 except HttpError:
-                    return super().save()
+                    return
             else:
                 created_event = service.events().insert(calendarId='primary', body=g_event).execute()
                 self.google_id = created_event['id']
+
         super().save()
 
     def delete(self, using=None, keep_parents=False):
@@ -284,6 +285,7 @@ class Event(models.Model):
                     # Log error if the event was not found
                     if error.resp.status == 404:
                         print(f"Event with ID {self.google_id} not found.")
+                        raise
                     else:
                         raise
         super().delete(using=using, keep_parents=keep_parents)
