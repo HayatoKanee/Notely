@@ -37,8 +37,5 @@ def check_perm(perm, obj_type):
                     raise PermissionDenied
             result = view_function(request, *args, **kwargs)
             return result
-
         return modified_view_function
-
     return decorator
-

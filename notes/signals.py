@@ -2,7 +2,7 @@ from django.dispatch import receiver
 from django.db.models.signals import post_save, pre_save
 from guardian.shortcuts import assign_perm
 from notes.helpers import calculate_age
-from notes.models import User, Profile, Notebook, Page, Editor, Reminder, Event
+from notes.models import User, Profile, Notebook, Page, Editor, Reminder, Event, Folder
 from notes.tasks import send_notification
 from django.core.mail import send_mail
 from datetime import datetime, timedelta
@@ -32,11 +32,12 @@ def create_page(sender, instance, created, **kwargs):
 
 @receiver(post_save, sender=Reminder)
 def schedule_reminder(sender, instance, created, **kwargs):
-    event_start_time = timezone.make_naive(instance.event.start_time)
+    event_start_time = timezone.localtime(instance.event.start_time)
     reminder_time = instance.reminder_time
     target_time = event_start_time - timedelta(minutes=reminder_time)
     if created:
         task = send_notification.apply_async(args=[instance.id], eta=target_time)
+        instance.exact_time = target_time
         instance.task_id = task.id
         instance.save()
 
@@ -65,8 +66,32 @@ def create_editor(sender, instance, created, **kwargs):
 
 
 @receiver(post_save, sender=Page)
-def give_permission(sender, instance, created, **kwargs):
+def give_perm_page(sender, instance, created, **kwargs):
     if created:
         assign_perm('dg_view_page', instance.notebook.user, instance)
         assign_perm('dg_edit_page', instance.notebook.user, instance)
         assign_perm('dg_delete_page', instance.notebook.user, instance)
+
+
+@receiver(post_save, sender=Folder)
+def give_perm_folder(sender, instance, created, **kwargs):
+    if created:
+        assign_perm('dg_view_folder', instance.user, instance)
+        assign_perm('dg_edit_folder', instance.user, instance)
+        assign_perm('dg_delete_folder', instance.user, instance)
+
+
+@receiver(post_save, sender=Notebook)
+def give_perm_notebook(sender, instance, created, **kwargs):
+    if created:
+        assign_perm('dg_view_notebook', instance.user, instance)
+        assign_perm('dg_edit_notebook', instance.user, instance)
+        assign_perm('dg_delete_notebook', instance.user, instance)
+
+
+@receiver(post_save, sender=Event)
+def give_perm_event(sender, instance, created, **kwargs):
+    if created:
+        assign_perm('dg_view_event', instance.user, instance)
+        assign_perm('dg_edit_event', instance.user, instance)
+        assign_perm('dg_delete_event', instance.user, instance)

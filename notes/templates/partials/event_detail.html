@@ -12,6 +12,6 @@
     <p id="tag" style="font-size: 15px; color: rgb(245, 93, 66);">Tag: {% for tag in event.tags.all %}
         <span style="color: {{ tag.color }}">&#x25CF</span>{{tag}}
     {% endfor %}</p>
-    <p id="page" style="font-size: 15px; color: rgb(245, 93, 66)">Page: {{ event.pages.notebook.notebook_name }}</p>
+    <p id="page" style="font-size: 15px; color: rgb(245, 93, 66)">Page: {% if notebook_name %}{{ notebook_name }} - {% endif %}{{ page_number }}</p>
     <p id="sync" style="font-size: 15px; color: rgb(245, 93, 66)">Sync: {{ event.sync }}</p>
 </div>

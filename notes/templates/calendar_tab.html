@@ -1,15 +1,14 @@
 {% extends 'base_content.html' %}
 {% block content %}
     <div class="container">
-        <div id='calendar' style="color: rgb(245, 93, 66); margin-top: 10px;"></div>
+        <div id='calendar' style="color: rgb(245, 93, 66);"></div>
+        <button onclick="checkPermission()" id="addEvent" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#eventModal">
+            Add New Event
+        </button>
 
         <a href="{% url 'google_auth' %}" class="btn btn-google" style="color: rgb(245, 93, 66);">
             <i class="fa fa-google"></i> Sign in with Google
         </a>
-
-        <button id="addEvent" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#eventModal">
-            Add New Event
-        </button>
 
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#shareEventModal" data-bs-dismiss="modal">
             Share Event
@@ -81,11 +80,11 @@
     {% include 'partials/eventModal.html' %}
 
 {% endblock %}
-
 {% block scripts %}
     {% load static%}
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.4/index.global.min.js'></script>
     <script>
+        let event_id;
         const calendarEl = document.getElementById('calendar');
         const calendar = new FullCalendar.Calendar(calendarEl, {
             headerToolbar: {
@@ -107,14 +106,31 @@
                 {% endfor %}
             ],
             eventClick: function(e) {
+                event_id = e.event.id;
                 $.ajax({
                     url: "{% url 'event_detail' 0 %}".replace("0", e.event.id),
                     success: function(data) {
                         $('#detail').html(data.html);
-
+                        if (data.event_user_id !== {{user.id}}){
+                            $('#eventModalFooter').hide();
+                        }
+                        console.log("data_euser", data.event_user_id)
+                        console.log("data_user", {{user.id}})
                     },
                     error: function() {
                         alert('Error retrieving event detail');
+                    }
+                });
+                $.ajax({
+                    url: "{% url 'get_options_event' 0 %}".replace("0", e.event.id),
+                    success: function (data){
+                        t_select.clearOptions();
+                        for (const option of data) {
+                            t_select.addOption(option);
+                        }
+                    },
+                    error: function (){
+                        alert('Error retrieving data');
                     }
                 });
                 $('#eventDetail').modal('show');
@@ -123,7 +139,6 @@
             editable: true,
             dateClick: function(info) {
                 calendar.changeView('timeGridDay', info.dateStr);
-
             },
             eventDrop: function(info) {
                 const event = info.event;
@@ -139,7 +154,6 @@
                         csrfmiddlewaretoken: '{{ csrf_token }}'
                     }
                 });
-
             },
             customButtons: {
                 selectAll:{
@@ -165,7 +179,9 @@
                 calendar.rerenderEvents();
             }
         },
+
         {% endfor %}
+
         },
         footerToolbar:{
             start: '',
@@ -191,18 +207,39 @@
         if (loc.protocol == 'https:') {
             wsStart = 'wss://';
         }
-  
+
+        function checkPermission() {
+            if (!("Notification" in window)) {
+                console.log("This browser does not support desktop notification");
+            }
+            else if (Notification.permission === "granted") {
+                console.log("granted permission");
+            }
+            else if (Notification.permission !== "denied") {
+                Notification.requestPermission();
+            }
+        }
+
         var socket = new WebSocket(wsStart + window.location.host + "/ws/calendar");
         socket.onmessage = function(event) {
             var data = JSON.parse(event.data);
             if (data.type === "show_notification") {
                 // Create a notification with the message received from the server
-                var notification = new Notification("Notification Title", {
+                var notification = new Notification("Event Reminder", {
                     body: data.message,
                 });
                 console.log(data.message);
             }
         };
+    </script>
+
+    <script type="text/javascript"
+            src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js">
+    </script>
+    <script type="text/javascript">
+        (function(){
+            emailjs.init("service_7fj9to5");
+        })();
     </script>
     <link rel="stylesheet" href="{%static 'css_style/calendarTabStyle.css' %}"/>
 {% endblock %}

@@ -107,9 +107,6 @@ class FolderForm(forms.ModelForm):
             parent=parent,
             folder_name=self.cleaned_data.get('folder_name'),
         )
-        assign_perm('dg_view_folder', user, folder)
-        assign_perm('dg_edit_folder', user, folder)
-        assign_perm('dg_delete_folder', user, folder)
         return folder
 
 
@@ -169,8 +166,16 @@ class EventForm(forms.ModelForm):
         self.user = user
         self.fields['tag'].widget = EventTagSelectWidget()
         self.fields['tag'].queryset = user.event_tags.all()
-        
-        self.fields['page'].choices = [(page.id, f"{page.notebook.notebook_name}: {page.id}") for page in Page.objects.filter(notebook__user=user)]
+
+
+
+        notebook_choices = []
+        notebooks = Notebook.objects.filter(user=user)
+        for notebook in notebooks:
+            for i, page in enumerate(notebook.pages.all()):
+                notebook_choices.append((page.id, f"{notebook.notebook_name}: {i+1}"))
+
+        self.fields['page'].choices = notebook_choices
 
     def clean(self):
         super().clean()
@@ -186,10 +191,13 @@ class EventForm(forms.ModelForm):
         if self.cleaned_data.get('tag'):
             event.tags.set(self.cleaned_data['tag'])
         if self.cleaned_data.get('page'):
-            event.pages.add(self.cleaned_data['page'])
-            self.save_m2m()
+            page_id = self.cleaned_data['page'].id
+            page = Page.objects.get(id=page_id)
+            event.save()  # Save the event after adding the page to the many-to-many relationship
+            event.pages.set([page])
         if self.cleaned_data.get('sync'):
             event.sync = True
+        self.save_m2m()
         event.save()
         return event
 
@@ -218,9 +226,6 @@ class NotebookForm(forms.ModelForm):
             folder=folder,
             notebook_name=self.cleaned_data.get('notebook_name'),
         )
-        assign_perm('dg_view_notebook', user, notebook)
-        assign_perm('dg_edit_notebook', user, notebook)
-        assign_perm('dg_delete_notebook', user, notebook)
         return notebook
 
 
@@ -250,16 +255,19 @@ class PageForm(forms.ModelForm):  # The form for linking the tag and the page.
         self.fields['tag'].queryset = PageTag.objects.all()
 
     def save(self):
-        tag = super().save(commit=False)
+        page = super().save(commit=False)
         if self.cleaned_data.get('tag'):
-            tag.tags.set(self.cleaned_data['tag'])
-        tag.save()
-        return tag
+            page.tags.set(self.cleaned_data['tag'])
+        page.save()
+        return page
+
 
 class ShareEventForm(forms.Form):
-    # event = forms.ModelChoiceField(queryset=Event.objects.all(), to_field_name='title', required=False)
+    event = forms.ModelChoiceField(queryset=Event.objects.all(), required=False)
     email = forms.EmailField(required=False)
     message = forms.CharField(widget=forms.Textarea, required=False)
 
-    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         
+        self.fields['event'].choices = [(event.id, f"{event.title}") for event in Event.objects.all()]

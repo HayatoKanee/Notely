@@ -9,7 +9,6 @@ from libgravatar import Gravatar
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
-
 from notes.helpers import validate_date
 from notes.storage import CustomStorage
 
@@ -84,7 +83,7 @@ class Folder(models.Model):
     def get_path(self):
         path = [self]
         current = self.parent
-        while current != None:
+        while current is not None:
             path.insert(0, current)
             current = current.parent
         return path
@@ -127,7 +126,6 @@ class Page(models.Model):
             pages = notebook.pages.all()
             if pages.exists():
                 notebook.last_page = pages.last()
-                print(notebook.last_page)
             else:
                 notebook.last_page = Page.objects.create(notebook=notebook)
             notebook.save()
@@ -141,6 +139,17 @@ class Page(models.Model):
         if ids != "":
             return ids[:-1]
         return ids
+
+    def get_page_number(self):
+        """
+        Returns the page number of this page within its respective notebook.
+        """
+        pages = self.notebook.pages.all()
+        sorted_pages = sorted(pages, key=lambda p: p.id)
+        index = sorted_pages.index(self)
+        page_number = index + 1
+
+        return page_number
 
 
 class Editor(models.Model):
@@ -168,7 +177,7 @@ class Tag(models.Model):
         ('#FFFF00', 'Yellow'),
         ('#FFA3EE', 'Pink'),
     ]
-    image = models.ImageField(upload_to="images")
+    image = models.ImageField(upload_to="images", blank=True)
     color = ColorField(image_field="image", samples=COLOR_PALETTE)
 
     class Meta:
@@ -218,6 +227,13 @@ class Event(models.Model):
     sync = models.BooleanField(blank=False, default=False)
     pages = models.ManyToManyField('Page', blank=True, related_name='events')
 
+    class Meta:
+        permissions = [
+            ("dg_view_event", "can view event"),
+            ("dg_edit_event", "can edit event"),
+            ("dg_delete_event", "can delete event")
+        ]
+
     def save(
             self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
@@ -249,6 +265,7 @@ class Event(models.Model):
             else:
                 created_event = service.events().insert(calendarId='primary', body=g_event).execute()
                 self.google_id = created_event['id']
+
         super().save()
 
     def delete(self, using=None, keep_parents=False):
@@ -267,6 +284,7 @@ class Event(models.Model):
                     # Log error if the event was not found
                     if error.resp.status == 404:
                         print(f"Event with ID {self.google_id} not found.")
+                        raise
                     else:
                         raise
         super().delete(using=using, keep_parents=keep_parents)
@@ -289,6 +307,7 @@ class Reminder(models.Model):
     ]
     reminder_time = models.IntegerField(choices=reminder_choice)
     task_id = models.TextField(unique=True, blank=True, null=True)
+    exact_time = models.DateTimeField(null=True)
 
 
 class Credential(models.Model):

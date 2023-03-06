@@ -37,8 +37,53 @@
                 </div>
             </div>
             <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background-color: rgb(245, 93, 66, 0.1); border-color: rgb(245, 93, 66); width: 100px; color: rgb(245, 93, 66);">Cancel</button>
-      </div>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background-color: rgb(245, 93, 66, 0.1); border-color: rgb(245, 93, 66); width: 100px; color: rgb(245, 93, 66);">Cancel</button>
+            </div>
+            <div class="modal-body">
+                <div class="tab-content">
+                    <div class="tab-pane active" id="tab1" role="tabpanel">
+                        <div id="code1"></div>
+                    </div>
+                    {% for editor in page.editors.all|slice:"1:" %}
+                        <div class="tab-pane" id="tab{{ forloop.counter|add:"1" }}" role="tabpanel">
+                            <div id="code{{ forloop.counter|add:"1" }}"></div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="help_btn" style="background-color: rgb(245, 93, 66, 0.1); border-color: rgb(245, 93, 66); width: 100px; color: rgb(245, 93, 66);">Help</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background-color: rgb(245, 93, 66, 0.1); border-color: rgb(245, 93, 66); width: 100px; color: rgb(245, 93, 66);">Cancel</button>
+                    <div class="modal fade" id="helpModal" tabindex="-1" aria-labelledby="helpModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="helpModalLabel">Feature Description</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>This code editor supports multiple languages, including Python, Javascript, and HTML,
+                                        which will be automatically recognized as you type. </p>
+                                    <p>It also has an auto complete feature to make coding more convenient.</p>
+                                    <p>The code editor window can be scrolled to other positions across the page,
+                                        and each page has a separate code editor window with all the code saved to that page.</p>
+                                    <p>New tabs of code editor can be created by clicking the '+' button,
+                                        and the tab can be renamed through double clicking the title of the tab</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</div>
+
+    <script>
+        var helpBtn = document.getElementById("help_btn");
+        var helpModal = new bootstrap.Modal(document.getElementById("helpModal"));
+        helpBtn.addEventListener("click", function() {
+            helpModal.show();
+        });
+    </script>
