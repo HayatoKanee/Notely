@@ -167,13 +167,11 @@ class EventForm(forms.ModelForm):
         self.fields['tag'].widget = EventTagSelectWidget()
         self.fields['tag'].queryset = user.event_tags.all()
 
-
-
         notebook_choices = []
         notebooks = Notebook.objects.filter(user=user)
         for notebook in notebooks:
             for i, page in enumerate(notebook.pages.all()):
-                notebook_choices.append((page.id, f"{notebook.notebook_name}: {i+1}"))
+                notebook_choices.append((page.id, f"{notebook.notebook_name}: {i + 1}"))
 
         self.fields['page'].choices = notebook_choices
 
@@ -181,8 +179,9 @@ class EventForm(forms.ModelForm):
         super().clean()
         start_time = self.cleaned_data.get('start_time')
         end_time = self.cleaned_data.get('end_time')
-        if end_time < start_time:
-            self.add_error('end_time', 'End Time cannot be less that Start Time')
+        if start_time is not None and end_time is not None:
+            if end_time < start_time:
+                self.add_error('end_time', 'End Time cannot be less that Start Time')
 
     def save(self):
         event = super().save(commit=False)
@@ -254,7 +253,7 @@ class PageForm(forms.ModelForm):  # The form for linking the tag and the page.
         self.fields['tag'].widget = PageTagSelectWidget()
         self.fields['tag'].queryset = PageTag.objects.all()
 
-    def save(self):
+    def save(self, commit=True):
         page = super().save(commit=False)
         if self.cleaned_data.get('tag'):
             page.tags.set(self.cleaned_data['tag'])
@@ -263,11 +262,10 @@ class PageForm(forms.ModelForm):  # The form for linking the tag and the page.
 
 
 class ShareEventForm(forms.Form):
-    event = forms.ModelChoiceField(queryset=Event.objects.all(), required=False)
+    event = forms.ModelChoiceField(queryset=Event.objects.all(), required=True)
     email = forms.EmailField(required=False)
-    message = forms.CharField(widget=forms.Textarea, required=False)
+    message = forms.CharField(widget=forms.Textarea, required=False, max_length=200)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        
         self.fields['event'].choices = [(event.id, f"{event.title}") for event in Event.objects.all()]
