@@ -9,7 +9,6 @@ from libgravatar import Gravatar
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
-
 from notes.helpers import validate_date
 from notes.storage import CustomStorage
 

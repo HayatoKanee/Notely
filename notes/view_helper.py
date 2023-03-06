@@ -3,7 +3,6 @@ import json
 
 from django.http import JsonResponse
 from guardian.shortcuts import get_users_with_perms, assign_perm
-
 from notes.forms import FolderForm, NotebookForm
 from django.contrib import messages
 from django.shortcuts import redirect

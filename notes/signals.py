@@ -95,4 +95,3 @@ def give_perm_event(sender, instance, created, **kwargs):
         assign_perm('dg_view_event', instance.user, instance)
         assign_perm('dg_edit_event', instance.user, instance)
         assign_perm('dg_delete_event', instance.user, instance)
-

@@ -268,5 +268,4 @@ class ShareEventForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
         self.fields['event'].choices = [(event.id, f"{event.title}") for event in Event.objects.all()]

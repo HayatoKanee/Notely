@@ -22,7 +22,6 @@
             </div>
         </div>
     </div>
-
     <div style="height: 800px;">
         <div class="folder-container">
             <div class="container">
@@ -99,7 +98,6 @@
 
         .dropdown {
             position: relative;
-            display: inline-block;
         }
 
         .dropdown-content {
@@ -132,65 +130,65 @@
     <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
     <script>
         const t_select = new TomSelect("#select-user", {
-          plugins: ['remove_button'],
-          persist: false,
-          maxItems: null,
-          valueField: 'email',
-          labelField: 'name',
-          searchField: ['username', 'email'],
-          options: [],
-          render: {
-            item: function(item, escape) {
-              return '<div>' +
-                (item.username ? '<span class="name">' + escape(item.username) + '</span>' : '') +
-                (item.email ? '<span class="email">' + escape(item.email) + '</span>' : '') +
-                '<span class="gravatar">' + '<img class="rounded-circle" src="' + item.gravatar + '"</img></span>' +
-                '</div>';
-            },
-            option: function(item, escape) {
-              var label = item.username || item.email;
-              var caption = item.username ? item.email : null;
-              return '<div class="row">' + '<div class="col">' +
-                '<span class="label">' + escape(label) + '</span>' +
-                (caption ? '<span class="caption">' + escape(caption) + '</span>' : '') + '</div>' + '<div class="col">' +
-                '<span class="gravatar">' + '<img class="rounded-circle" src="' + item.gravatar + '"</img></span>' +
-                '</div>' +
-                '</div>';
+            plugins: ['remove_button'],
+            persist: false,
+            maxItems: null,
+            valueField: 'email',
+            labelField: 'name',
+            searchField: ['username', 'email'],
+            options: [],
+            render: {
+                item: function(item, escape) {
+                    return '<div>' +
+                        (item.username ? '<span class="name">' + escape(item.username) + '</span>' : '') +
+                        (item.email ? '<span class="email">' + escape(item.email) + '</span>' : '') +
+                        '<span class="gravatar">' + '<img class="rounded-circle" src="' + item.gravatar + '"</img></span>' +
+                        '</div>';
+                    },
+                option: function(item, escape) {
+                    var label = item.username || item.email;
+                    var caption = item.username ? item.email : null;
+                    return '<div class="row">' + '<div class="col">' +
+                        '<span class="label">' + escape(label) + '</span>' +
+                        (caption ? '<span class="caption">' + escape(caption) + '</span>' : '') + '</div>' + '<div class="col">' +
+                        '<span class="gravatar">' + '<img class="rounded-circle" src="' + item.gravatar + '"</img></span>' +
+                        '</div>' +
+                        '</div>';
+                }
             }
-          }
         });
         let share_url;
         $('.share').click(function (){
             share_url = this.getAttribute('data-share-url')
             $.ajax({
-                    url: this.getAttribute('data-options-url'),
-                    success: function (data){
-                        t_select.clearOptions();
-                        for (const option of data) {
-                            t_select.addOption(option);
-                        }
-                    },
-                    error: function (){
-                        alert('Error retrieving data');
+                url: this.getAttribute('data-options-url'),
+                success: function (data){
+                    t_select.clearOptions();
+                    for (const option of data) {
+                        t_select.addOption(option);
                     }
-                });
+                },
+                error: function (){
+                    alert('Error retrieving data');
+                }
             });
+        });
         $('#shareBtn').click(function (){
             const selectedUsers = t_select.getValue();
-           const edit_perm = $('#editBox').prop('checked');
+            const edit_perm = $('#editBox').prop('checked');
             $.ajax({
-               url: share_url,
-               type: 'POST',
-               async: true,
-               data: {
-                   'selected_users[]': selectedUsers,
-                   'edit_perm': edit_perm,
-                   csrfmiddlewaretoken: '{{csrf_token}}'
-               },
-       });
-        while(selectedUsers.length!=0){
-            t_select.removeOption(selectedUsers[0]);
-        }
+                url: share_url,
+                type: 'POST',
+                async: true,
+                data: {
+                    'selected_users[]': selectedUsers,
+                    'edit_perm': edit_perm,
+                    csrfmiddlewaretoken: '{{csrf_token}}'
+                },
+            });
+            while(selectedUsers.length!=0){
+                t_select.removeOption(selectedUsers[0]);
+            }
         });
     </script>
 {% endblock %}

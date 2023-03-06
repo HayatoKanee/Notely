@@ -1,5 +1,6 @@
 import json
 import base64
+import os
 
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
@@ -24,7 +25,6 @@ from django.utils import timezone
 from google_auth_oauthlib.flow import Flow
 from django.conf import settings
 from django.core.mail import send_mail
-import os
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 import sendgrid
