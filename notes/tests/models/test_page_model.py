@@ -65,6 +65,16 @@ class NotebookModelTestCase(TestCase):
         self.assertEqual(before - 1, after)
         self.assertEqual(notebook.last_page, page)
 
+    def test_get_all_tag_ids_if_there_is_one(self):
+        self.assertEqual(self.page.get_all_tags_id(), "1")
+
+    def test_get_all_tag_ids_if_there_is_none(self):
+        self.page.tags.all().delete()
+        self.assertEqual(self.page.get_all_tags_id(), "")
+
+    def test_get_page_number(self):
+        self.assertEqual(self.page.get_page_number(), 1)
+
     # Validation (helpers)
     def _assert_page_is_valid(self):
         try:
