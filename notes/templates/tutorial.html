@@ -12,9 +12,9 @@
 			<p><h3>How to start our website</h3></p>
 			<ol>
 				<li>Find the<a href="{% url 'log_in' %}"></a><button class="logIn">"login"</button>(in your upper right corner),<br />If you do not have an account, please go to the<a href="{% url 'sign_up' %}"><button class="signUp">"sign up"</button></a>page.</li><br />
-				{% static "images/tutorial/home/signlogin_homepage.jpg" %}
+				<div><img src= "{% static "home/signlogin_homepage.jpg" %}" style="width:300px;height:200px;"></div>
 				<li>After logging in, you will enter the notebook home page.</li>
-				<div><img src="#.jpg"></div>
+				<div><img src= "{% static "notebook/notebook home/login_homepage.png" %}" style="width:300px;height:200px;"></div>
 			</ol>
 		</div>
 		<div>
@@ -23,64 +23,72 @@
 				<li>Add folder / notebook.</li>
 					<ol>
 						<li>You will see the "New" button, click on it.</li>
-						<div><img src="#.jpg"></div>
+						<div><img src= "{% static "notebook/notebook home/Add_folderNotebook_page.png" %}" style="width:300px;height:200px;"> <img src= "{% static "/" %}" style="width:300px;height:200px;"> </div>
 						<li>Then you will find a pop-up window indicating whether to add a "folder" or a "notebook".</li>
-						<div><img src="#.jpg"></div>
+						<div><img src= "{% static "notebook/notebook home/Add_newFolder.png" %}" style="width:300px;height:200px;"> <img src= "{% static "notebook/notebook home/Add_newNotebook.png" %}" style="width:300px;height:200px;"></div>
 					</ol>
 				<li>folder options / notebook options.</li>
 					<ol>
 						<li>You can see there is delete to delete folder or notebook.</li>
-						<div><img src="#.jpg"></div>
+						<div><img src= "{% static "notebook/notebook home/Folder_options_home.png" %}" style="width:300px;height:200px;">
 						<li>Also you can link pages.</li>
-						<div><img src="#.jpg"></div>
+						<div><img src= "{% static "notebook/notebook home/Notebook_options_home.png" %}" style="width:300px;height:200px;">
 					</ol>
 			</ul>
 		</div>
 		<div>
 			<p><h3>In the note page</h3></p>
+			<img src= "{% static "notebook/inNote/Notes_page.png" %}" style="width:300px;height:200px;">
 			<ul>
 				<li>Pen button</li>
+				<img src= "{% static "notebook/inNote/pen_button.png" %}" style="width:300px;height:200px;">
 					<ol>
 						<li>Select color</li>
-						<div><img src="#.jpg"></div>
+						<img src= "{% static "notebook/inNote/penbutton_select_pencolor.png" %}" style="width:300px;height:200px;">
 						<li>Select pen style</li>
-						<div><img src="#.jpg"></div>
+						<img src= "{% static "notebook/inNote/penbutton_select_pentype.png" %}" style="width:300px;height:200px;">
 					</ol>
 				<li>Text button</li>
+				<img src= "{% static "notebook/inNote/text_button.png" %}" style="width:300px;height:200px;">
 					<ol>
 						<li>Select text color</li>
-						<div><img src="#.jpg"></div>
+						<img src= "{% static "notebook/inNote/textbutton_select_color.png" %}" style="width:300px;height:200px;">
 						<li>Text filed</li>
-						<div><img src="#.jpg"></div>
+						<img src= "{% static "notebook/inNote/textbutton_textFiled_input.png" %}" style="width:300px;height:200px;">
 					</ol>
 				<li>Table button</li>
+				<img src= "{% static "notebook/inNote/table_button.png" %}" style="width:300px;height:200px;">
 					<ol>
 						<li>Create table</li>
-						<div><img src="#.jpg"></div>
+						<img src= "{% static "notebook/inNote/tablebutton_create_table.png" %}" style="width:300px;height:200px;">
 						<li>Resize the table</li>
-						<div><img src="#.jpg"></div>
+						<img src= "{% static "notebook/inNote/tablebutton_resize_table.png" %}" style="width:300px;height:200px;">
 					</ol>
 				<li>Codeditor button</li>
+				<img src= "{% static "notebook/inNote/codeeditor_button.png" %}" style="width:300px;height:200px;">
 					<ol>
 						<li>Plus button</li>
-						<div><img src="#.jpg"></div>
+						<img src= "{% static "notebook/inNote/codeeditor_plus_button.png" %}" style="width:300px;height:200px;">
 					</ol>
 				<li>Image button</li>
+				<img src= "{% static "notebook/inNote/image_button.png" %}" style="width:300px;height:200px;">
 					<ol>
 						<li>Select file</li>
-						<div><img src="#.jpg"></div>
+						<img src= "{% static "notebook/inNote/imagebutton_select_file.png" %}" style="width:300px;height:200px;">
 					</ol>
 				<li>Download button</li>
+				<img src= "{% static "notebook/inNote/download_button.png" %}" style="width:300px;height:200px;">
 					<ol>
 						<li>Download prompt</li>
-						<div><img src="#.jpg"></div>
+						<img src= "{% static "notebook/inNote/downloadbutton_download_prompt.png" %}" style="width:300px;height:200px;">
 					</ol>
 				<li>Notebook sidebar</li>
+				<img src= "{% static "notebook/inNote/notes_page_sidebar.png" %}" style="width:300px;height:200px;">
 					<ol>
 						<li>Add pages</li>
-						<div><img src="#.jpg"></div>
+						<img src= "{% static "notebook/inNote/add_page_plus_button.png" %}" style="width:300px;height:200px;">
 						<li>Dropdown menu</li>
-						<div><img src="#.jpg"></div>
+						<img src= "{% static "notebook/inNote/notespagesidebar_dropdown_menu.png" %}" style="width:300px;height:200px;">
 					</ol>
 			</ul>
 		</div>
@@ -91,66 +99,68 @@
 				<p>You will see:</p>
 					<ul>
 						<li>Monthly calendar</li>
-						<div><img src="#.jpg"></div>
+						<img src= "{% static "calendar/Calendar_page_month.png" %}" style="width:300px;height:200px;">
 						<li>Weekly calendar</li>
-						<div><img src="#.jpg"></div>
+						<img src= "{% static "calendar/calendar_page_week.png" %}" style="width:300px;height:200px;">
 						<li>Day calendar</li>
-						<div><img src="#.jpg"></div>
+						<img src= "{% static "calendar/calendar_page_day.png" %}" style="width:300px;height:200px;">
 						<li>List</li>
-						<div><img src="#.jpg"></div>
+						<img src= "{% static "calendar/create_event_inCalendar_list.png" %}" style="width:300px;height:200px;">
 					</ul>
 				</li>
 				<li>
 					<p>How to create new event</p>
 					<ol>
 						<li>Click the "Add New Event" in your lower left corner. Then you will see a form pop up.</li>
-						<div><img src="#.jpg"></div>
+						<img src= "{% static "calendar/Add_new_event.png" %}" style="width:300px;height:200px;">
 						<li>Write down the details you want to record.</li>
-						<div><img src="#.jpg"></div>
 						<li>Selecting your date and time.</li>
-						<div><img src="#.jpg"></div>
-						<div><img src="#.jpg"></div>
+						<img src= "{% static "calendar/select_date.png" %}" style="width:300px;height:200px;">
+						<img src= "{% static "calendar/select_time.png" %}" style="width:300px;height:200px;">
 						<li>Add tag (If you don't have a tag on the form, go to "How to create a tag")</li>
-						<div><img src="#.jpg"></div>
 						<li>Choose page</li>
-						<div><img src="#.jpg"></div>
 						<li>Set a reminder</li>
-						<div><img src="#.jpg"></div>
 						<li>Finally, press the "Create event" button</li>
-						<div><img src="#.jpg"></div>
 					</ol>
 				</li>
 				<li>
 					<p>How to create new tag</p>
 					<ol>
 						<li>Click the "Add New Event".</li>
-						<div><img src="#.jpg"></div>
 						<li>Scroll to the bottom of the form, click the "New tag".</li>
-						<div><img src="#.jpg"></div>
+						<img src= "{% static "calendar/Add_new_event.png" %}" style="width:300px;height:200px;">
 						<li>Then you will see a form for adding tags.</li>
-						<div><img src="#.jpg"></div>
+						<img src= "{% static "calendar/Add_new_tag.png" %}" style="width:300px;height:200px;">
 						<li>Fill in the title and color you want.</li>
-						<div><img src="#.jpg"></div>
 						<li>click the "Create tag".</li>
-						<div><img src="#.jpg"></div>
 					</ol>
 				</li>
 				<li>
 					<p>After you create an event</p>
 					<ul>
 						<li>you can find events on each calendar.</li>
-						<div><img src="#.jpg"></div>
+						<div>
+						<img src= "{% static "calendar/create_event_inCalendar_day.png" %}" style="width:300px;height:200px;"> <img src= "{% static "calendar/create_event_inCalendar_month.png" %}" style="width:300px;height:200px;">
+						<img src= "{% static "calendar/create_event_inCalendar_week.png" %}" style="width:300px;height:200px;"> <img src= "{% static "calendar/create_event_inCalendar_list.png" %}" style="width:300px;height:200px;">
+						</div>
 						<li>
 							<p>Clicking an event on the calendar will pop up the details of the event.</p>
-							<div><img src="#.jpg"></div>
+							<img src= "{% static "calendar/Show_event_detail.png" %}" style="width:300px;height:200px;">
 							<ul>
 								<li>You can click "Edit" to modify the file.</li>
-								<div><img src="#.jpg"></div>
 								<li>Delete the event.</li>
-								<div><img src="#.jpg"></div>
 							</ul>
 						</li>
 					</ul>
+				</li>
+				<li>
+					<p>How to share event</p>
+					<ol>
+						<li>Click the "Share event" in your lower left corner. Then you will see a form pop up.</li>
+						<img src= "{% static "calendar/share_event.png" %}" style="width:300px;height:200px;">
+						<li>Write down the email of the person you want to send and the message you want to write.</li>
+						<li>Click the "Share event".</li>
+					</ol>
 				</li>
 			</ol>
 		</div>
@@ -158,27 +168,23 @@
 			<p><h3>Go to profile</h3></p>
 			<ul>
 				<li>You can fill in your personal information on the profile and make changes at any time. Just click "Edit".</li>
-				<div><img src="#.jpg"></div>
+				<img src= "{% static "other/Profile.png" %}" style="width:300px;height:200px;">
 				<li>
 					<p>If you would like to change your profile picture.</p>
 					<ol>
 						<li>Go to the upper right corner and click your profile.</li>
-						<div><img src="#.jpg"></div>
 						<li>Choose "Change gravatar"</li>
-						<div><img src="#.jpg"></div>
 						<li>Then you will be redirected to a web page.</li>
-						<div><img src="#.jpg"></div>
+						<img src= "{% static "other/create_your_gravatar_website.png" %}" style="width:300px;height:200px;">
 						<li>Click "Sign in". (Please make sure your registered email is the same as Notely email)</li>
-						<div><img src="#.jpg"></div>
 					</ol>
 				</li>
 				<li>
 					<p>If you would like to change your password.</p>
 					<ol>
 						<li>Go to the upper right corner and click your profile.</li>
-						<div><img src="#.jpg"></div>
 						<li>Choose "Change password"</li>
-						<div><img src="#.jpg"></div>
+						<img src= "{% static "other/Change_password.png" %}" style="width:300px;height:200px;">
 					</ol>
 				</li>
 
