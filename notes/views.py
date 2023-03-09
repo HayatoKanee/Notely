@@ -92,7 +92,8 @@ def folders_tab(request):
     items = sort_items_by_created_time(folders, notebooks)
     return render(request, 'folders_tab.html',
                   {'items': items, 'folder_form': folder_form,
-                   'notebook_form': notebook_form})
+                   'notebook_form': notebook_form,
+                   'can_edit': True})
 
 
 @login_required
@@ -100,7 +101,10 @@ def folders_tab(request):
 def sub_folders_tab(request, folder_id):
     user = request.user
     folder = Folder.objects.get(id=folder_id)
+    can_edit = request.user.has_perm('dg_edit_folder', folder)
     if request.method == "POST":
+        if not can_edit:
+            raise PermissionDenied
         return save_folder_notebook_forms(request, user, folder)
     else:
         folder_form = FolderForm()
@@ -110,9 +114,11 @@ def sub_folders_tab(request, folder_id):
     notebooks = get_objects_for_user(user, 'dg_view_notebook', klass=Notebook)
     notebooks = notebooks.filter(folder=folder)
     items = sort_items_by_created_time(folders, notebooks)
+
     return render(request, 'folders_tab.html',
                   {'items': items, 'folder_form': folder_form,
-                   'notebook_form': notebook_form, 'folder': folder})
+                   'notebook_form': notebook_form, 'folder': folder,
+                   'can_edit': can_edit})
 
 
 @login_required

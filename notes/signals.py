@@ -85,6 +85,8 @@ def give_perm_folder(sender, instance, created, **kwargs):
         assign_perm('dg_view_folder', instance.user, instance)
         assign_perm('dg_edit_folder', instance.user, instance)
         assign_perm('dg_delete_folder', instance.user, instance)
+        assign_perm('dg_view_all_folder', instance.user, instance)
+        assign_perm('dg_edit_all_folder', instance.user, instance)
         if instance.parent:
             viewable_users = get_users_with_perms(instance.parent, only_with_perms_in=['dg_view_all_folder'])
             editable_users = get_users_with_perms(instance.parent, only_with_perms_in=['dg_edit_all_folder'])
@@ -102,6 +104,8 @@ def give_perm_notebook(sender, instance, created, **kwargs):
         assign_perm('dg_view_notebook', instance.user, instance)
         assign_perm('dg_edit_notebook', instance.user, instance)
         assign_perm('dg_delete_notebook', instance.user, instance)
+        assign_perm('dg_view_all_notebook', instance.user, instance)
+        assign_perm('dg_edit_all_notebook', instance.user, instance)
         if instance.folder:
             viewable_users = get_users_with_perms(instance.folder, only_with_perms_in=['dg_view_all_folder'])
             editable_users = get_users_with_perms(instance.folder, only_with_perms_in=['dg_edit_all_folder'])

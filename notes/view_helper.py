@@ -98,6 +98,7 @@ def assign_perm_notebook(user, notebook, can_edit=False):
         assign_perm('dg_view_page', user, page)
     if can_edit:
         assign_perm('dg_edit_notebook', user, notebook)
+        assign_perm('dg_edit_all_notebook', user, notebook)
         for page in notebook.pages.all():
             assign_perm('dg_edit_page', user, page)
     folder = notebook.folder
