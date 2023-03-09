@@ -22,14 +22,6 @@ def save_age(sender, instance, **kwargs):
         instance.age = calculate_age(instance.dob)
 
 
-@receiver(post_save, sender=Notebook)
-def create_page(sender, instance, created, **kwargs):
-    if created:
-        new_page = Page.objects.create(notebook=instance)
-        instance.last_page = new_page
-        instance.save()
-
-
 @receiver(post_save, sender=Reminder)
 def schedule_reminder(sender, instance, created, **kwargs):
     event_start_time = timezone.localtime(instance.event.start_time)
@@ -115,6 +107,9 @@ def give_perm_notebook(sender, instance, created, **kwargs):
             for user in editable_users:
                 assign_perm('dg_edit_notebook', user, instance)
                 assign_perm('dg_edit_all_notebook', user, instance)
+        new_page = Page.objects.create(notebook=instance)
+        instance.last_page = new_page
+        instance.save()
 
 
 @receiver(post_save, sender=Event)
