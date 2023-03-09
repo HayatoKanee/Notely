@@ -220,8 +220,8 @@
             }
         }
 
-        var socket = new WebSocket(wsStart + window.location.host + "/ws/calendar");
-        socket.onmessage = function(event) {
+        var event_socket = new WebSocket(wsStart + window.location.host + "/ws/calendar");
+        event_socket.onmessage = function(event) {
             var data = JSON.parse(event.data);
             if (data.type === "show_notification") {
                 // Create a notification with the message received from the server

@@ -270,7 +270,36 @@ def page(request, page_id):
     users_without_perms = User.objects.exclude(pk__in=users_with_perms).exclude(username='AnonymousUser')
     can_edit = request.user.has_perm('dg_edit_page', page)
     can_edit_notebook = request.user.has_perm('dg_edit_notebook', page.notebook)
+    event_form = EventForm(request.user)
+    tags = set()
+    for event in events:
+
+        for tag in event.tags.all():
+            tags.add(tag)
+
     if request.method == 'POST':
+        if 'event_submit' in request.POST:
+            event_form = EventForm(request.user, request.POST)
+            if event_form.is_valid():
+
+                page_data = event_form.cleaned_data['page']
+                event = event_form.save()
+
+
+                if page_data:
+                    page_id = page_data.id
+                    page = Page.objects.get(id=page_id)
+                    event.save()  # Save the event after adding the page to the many-to-many relationship
+                    event.pages.set([page])
+                else:
+                    event.save()  # Save the event without adding the page to the many-to-many relationship
+
+
+                if int(event_form.cleaned_data['reminder']) > -1:
+                    Reminder.objects.create(event=event, reminder_time=int(event_form.cleaned_data['reminder']))
+                    messages.add_message(request, messages.SUCCESS, "Reminder Created!")
+                messages.add_message(request, messages.SUCCESS, "Event Created!")
+                return redirect('page', page.id)
         if 'page_tag_submit' in request.POST:
             page_tag_form = PageTagForm(request.POST)
             if page_tag_form.is_valid():
