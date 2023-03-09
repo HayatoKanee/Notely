@@ -93,6 +93,7 @@ def get_options(obj, perm_name):
 
 def assign_perm_notebook(user, notebook, can_edit=False):
     assign_perm('dg_view_notebook', user, notebook)
+    assign_perm('dg_view_all_notebook', user, notebook)
     for page in notebook.pages.all():
         assign_perm('dg_view_page', user, page)
     if can_edit:
@@ -106,17 +107,22 @@ def assign_perm_notebook(user, notebook, can_edit=False):
 
 
 def assign_perm_folder(user, folder, can_edit=False):
-    assign_perm('dg_view_folder', user, folder)
-    if can_edit:
-        assign_perm('dg_edit_folder', user, folder)
-    for notebook in folder.notebooks.all():
-        assign_perm_notebook(user, notebook, can_edit)
-    for sub_folder in folder.sub_folders.all():
-        assign_perm_folder(user, sub_folder, can_edit)
+    stack = [folder]
+    while stack:
+        current_folder = stack.pop()
+        assign_perm('dg_view_folder', user, current_folder)
+        assign_perm('dg_view_all_folder', user, current_folder)
+        if can_edit:
+            assign_perm('dg_edit_folder', user, current_folder)
+            assign_perm('dg_edit_all_folder', user, current_folder)
+        for notebook in current_folder.notebooks.all():
+            assign_perm_notebook(user, notebook, can_edit)
+        for sub_folder in current_folder.sub_folders.all():
+            stack.append(sub_folder)
     parent = folder.parent
     while parent:
         assign_perm('dg_view_folder', user, parent)
-        parent = folder.parent
+        parent = parent.parent
 
 
 def share_obj(request, obj):
