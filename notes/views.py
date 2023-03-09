@@ -253,6 +253,16 @@ def gravatar(request):
 @check_perm('dg_view_page', Page)
 def page(request, page_id):
     page = Page.objects.get(id=page_id)
+    events = Event.objects.all()
+    related_events = []
+    for event in events:
+        
+        for related_page in event.pages.all():
+            print(related_page)
+            if related_page.id == page.id:
+                related_events.append(event)
+                print(event)
+    print(related_events)
     page_tag_form = PageTagForm()
     tags = PageTag.objects.all()
     viewable_pages = get_objects_for_user(request.user, 'dg_view_page', klass=Page).filter(notebook=page.notebook)
@@ -278,11 +288,11 @@ def page(request, page_id):
             assign_perm('dg_delete_page', request.user, new_page)
             return redirect('page', new_page.id)
         if 'search_page_submit' in request.POST:
-            new_page = Page.obejects.get(id=page_id)
+            new_page = Page.objects.get(id=page_id)
             return redirect('page', new_page.id)
     return render(request, 'page.html',
                   {'page': page, 'page_tag_form': page_tag_form, 'tags': tags, 'users': users_without_perms,
-                   'viewable_pages': viewable_pages, 'can_edit': can_edit, 'can_edit_notebook': can_edit_notebook})
+                   'viewable_pages': viewable_pages, 'can_edit': can_edit, 'can_edit_notebook': can_edit_notebook, 'events': related_events})
 
 
 
