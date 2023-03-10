@@ -1,16 +1,22 @@
-<div class="offcanvas offcanvas-start" data-bs-scroll="true" id="sidebar" aria-labelledby="sidebarLabel" data-bs-backdrop="false"
-     data-bs-keyboard="false" aria-hidden="true" aria-labelledby="symbolsLabel" tabindex="-1" style="color: rgb(245, 93, 66);">
-    <div class="offcanvas-header"  style="font-size: 22px; color: rgb(245, 93, 66); text-align: center; line-height: 70px; background: rgb(245, 93, 66, 0.1); user-select: none; color: rgb(245, 93, 66);">
-        <h5 class="offcanvas-title" id="sidebarLabel">{{ page.notebook.notebook_name}}
+<div class="offcanvas offcanvas-start" data-bs-scroll="true" id="sidebar" aria-labelledby="sidebarLabel"
+     data-bs-backdrop="false"
+     data-bs-keyboard="false" aria-hidden="true" aria-labelledby="symbolsLabel" tabindex="-1"
+     style="color: rgb(245, 93, 66);">
+    <div class="offcanvas-header"
+         style="font-size: 22px; color: rgb(245, 93, 66); text-align: center; line-height: 70px; background: rgb(245, 93, 66, 0.1); user-select: none; color: rgb(245, 93, 66);">
+        <h5 class="offcanvas-title" id="sidebarLabel">{{ page.notebook.notebook_name }}
             {% if user != page.notebook.user %}(shared by {{ page.notebook.user.username }}){% endif %}</h5>
-        <nav class="navbar navbar-expand-lg" >
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <nav class="navbar navbar-expand-lg">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
 
                 <select id="search-bar" multiple placeholder="Type to search a page...." autocomplete="off"></select>
-                <button class="btn btn-outline-secondary" type="submit" name="page_search_submit" id="search-button" >Search</button>
+                <button class="btn btn-outline-secondary" type="submit" name="page_search_submit" id="search-button">
+                    Search
+                </button>
             </div>
         </nav>
 
@@ -23,25 +29,29 @@
                     <div class="col">
                         <form action="{% url 'page' page.id %}" method="post">
                             {% csrf_token %}
-                            <button class="plus" type="submit" name="add_page_submit" ></button>
+                            <button class="plus" type="submit" name="add_page_submit"></button>
                         </form>
                     </div>
-                {% endif%}
+                {% endif %}
                 {% for page in viewable_pages %}
-                    <div class="col page" data-tag-id = {{ page.get_all_tags_id }}; data-page2-id = {{ page.id }}>
+                    <div class="col page" data-tag-id={{ page.get_all_tags_id }}; data-page2-id= {{ page.id }}>
                         <div class="dropdown">
-                            <a href="{% url 'page' page.id %}" style="color: rgb(245, 93, 66,0.9);">
+                            <a href="{% url 'page' page.id %}" style="color: rgb(245, 93, 66,0.9);" data-page-num = {{ forloop.counter }}>
                                 <span style="color: {{ p.tags.first.color }}">&#x25CF{% if page.thumbnail %}
                                     <img src="{{ page.thumbnail.url }}">
                                 {% else %}
                                     {% load static %}
-                                    <img src={% static 'images/default_thumbnail.jpeg'%}>
+                                    <img src={% static 'images/default_thumbnail.jpeg' %}>
                                 {% endif %} page {{ forloop.counter }}</span></a>
                             {% if can_edit_notebook %}
-                                <button class="page dropdown-toggle" type="button" id="dropdownMenu" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                                <button class="page dropdown-toggle" type="button" id="dropdownMenu"
+                                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenu">
-                                    <button class="dropdown-item add-tags" type="button" data-page-id="{{ page.id }}">Add tags</button>
-                                    <button class="dropdown-item" type="button"><a href="{% url 'delete_page'  page.id  %}">Delete</a></button>
+                                    <button class="dropdown-item add-tags" type="button" data-page-id="{{ page.id }}">
+                                        Add tags
+                                    </button>
+                                    <button class="dropdown-item" type="button"><a
+                                            href="{% url 'delete_page'  page.id %}">Delete</a></button>
                                     <button class="dropdown-item" type="button"></button>
                                     <button class="dropdown-item" type="button"></button>
                                 </div>
@@ -54,18 +64,21 @@
     </div>
     {% if can_edit_notebook %}
         <div class="offcanva-footer">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"> New Tag </button>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"> New
+                Tag
+            </button>
         </div>
     {% endif %}
     <div class="tag-buttons">
         <button class="show-all-tags-button">All</button>
         {% for tag in tags %}
-            <span style="color: {{ tag.color }}">&#x25CF<button class="tag-button" data-tag-id="{{ tag.id }}">tag</button></span>
+            <span style="color: {{ tag.color }}">&#x25CF<button class="tag-button"
+                                                                data-tag-id="{{ tag.id }}">tag</button></span>
         {% endfor %}
     </div>
 </div>
 
-<div class="modal fade" id="exampleModal" >
+<div class="modal fade" id="exampleModal">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -77,7 +90,7 @@
                 <form action="{% url 'page' page.id %}" method="post">
                     {% csrf_token %}
                     {% include 'partials/bootstrap_form.html' with form=page_tag_form %}
-                    <input type="submit" name="page_tag_submit" value ="Create tag" class="btn btn-primary">
+                    <input type="submit" name="page_tag_submit" value="Create tag" class="btn btn-primary">
                 </form>
             </div>
         </div>
@@ -95,10 +108,10 @@
             const page_id = button.getAttribute('data-page-id');
             $.ajax({
                 url: "{% url 'page_detail' 0 %}".replace("0", page_id),
-                success: function(data) {
+                success: function (data) {
                     $('#detail').html(data.html);
                 },
-                error: function() {
+                error: function () {
                     alert('Error retrieving event detail');
                 }
             });
@@ -110,7 +123,7 @@
         button.addEventListener('click', event => {
             const tag_id = button.getAttribute('data-tag-id');
             $(".page").hide();
-            $(".page[data-tag-id*=" + tag_id+"]").show();
+            $(".page[data-tag-id*=" + tag_id + "]").show();
         });
     });
 
@@ -125,7 +138,7 @@
     .page {
         transition-duration: 0.4s;
         font-size: 16px;
-        background:none;
+        background: none;
     }
 
     .page:hover {
@@ -165,7 +178,6 @@
     }
 
     .plus:after,
-
     .plus:before {
         content: '';
         position: absolute;
@@ -176,7 +188,6 @@
     }
 
     .plus:hover:before,
-
     .plus:hover:after {
         background: rgb(245, 93, 66, 0.8);
         transition: 0.2s;
@@ -192,5 +203,7 @@
         border: none;
     }
 
-    #sidebarLabel { text-align: center; }
+    #sidebarLabel {
+        text-align: center;
+    }
 </style>

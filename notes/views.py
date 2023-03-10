@@ -92,7 +92,8 @@ def folders_tab(request):
     items = sort_items_by_created_time(folders, notebooks)
     return render(request, 'folders_tab.html',
                   {'items': items, 'folder_form': folder_form,
-                   'notebook_form': notebook_form})
+                   'notebook_form': notebook_form,
+                   'can_edit': True})
 
 
 @login_required
@@ -100,7 +101,10 @@ def folders_tab(request):
 def sub_folders_tab(request, folder_id):
     user = request.user
     folder = Folder.objects.get(id=folder_id)
+    can_edit = request.user.has_perm('dg_edit_folder', folder)
     if request.method == "POST":
+        if not can_edit:
+            raise PermissionDenied
         return save_folder_notebook_forms(request, user, folder)
     else:
         folder_form = FolderForm()
@@ -110,9 +114,11 @@ def sub_folders_tab(request, folder_id):
     notebooks = get_objects_for_user(user, 'dg_view_notebook', klass=Notebook)
     notebooks = notebooks.filter(folder=folder)
     items = sort_items_by_created_time(folders, notebooks)
+
     return render(request, 'folders_tab.html',
                   {'items': items, 'folder_form': folder_form,
-                   'notebook_form': notebook_form, 'folder': folder})
+                   'notebook_form': notebook_form, 'folder': folder,
+                   'can_edit': can_edit})
 
 
 @login_required
@@ -141,8 +147,6 @@ def calendar_tab(request):
                 page_data = event_form.cleaned_data['page']
                 event = event_form.save()
 
-                
-
                 if page_data:
                     page_id = page_data.id
                     page = Page.objects.get(id=page_id)
@@ -150,7 +154,6 @@ def calendar_tab(request):
                     event.pages.set([page])
                 else:
                     event.save()  # Save the event without adding the page to the many-to-many relationship
-
 
                 if int(event_form.cleaned_data['reminder']) > -1:
                     Reminder.objects.create(event=event, reminder_time=int(event_form.cleaned_data['reminder']))
@@ -170,7 +173,7 @@ def calendar_tab(request):
         if 'shareEvent_submit' in request.POST:
             shareEvent_form = ShareEventForm(request.POST)
             if shareEvent_form.is_valid():
-                
+
                 email = shareEvent_form.cleaned_data['email']
                 message = shareEvent_form.cleaned_data['message']
                 user = request.user.username
@@ -190,11 +193,11 @@ def calendar_tab(request):
                     to_emails=email,
                     subject=subject,
                     html_content=html_content)
-                
+
                 try:
                     sg = SendGridAPIClient(
                         api_key=settings.EMAIL_HOST_PASSWORD
-                        )
+                    )
                     response = sg.send(mail)
                     print(response.status_code)
                     print(response.body)
@@ -312,9 +315,6 @@ def page(request, page_id):
             if not request.user.has_perm('dg_edit_notebook', page.notebook):
                 raise PermissionDenied
             new_page = Page.objects.create(notebook=page.notebook)
-            assign_perm('dg_view_page', request.user, new_page)
-            assign_perm('dg_edit_page', request.user, new_page)
-            assign_perm('dg_delete_page', request.user, new_page)
             return redirect('page', new_page.id)
         if 'search_page_submit' in request.POST:
             new_page = Page.objects.get(id=page_id)
@@ -322,7 +322,6 @@ def page(request, page_id):
     return render(request, 'page.html',
                   {'page': page, 'page_tag_form': page_tag_form, 'tags': tags, 'users': users_without_perms,
                    'viewable_pages': viewable_pages, 'can_edit': can_edit, 'can_edit_notebook': can_edit_notebook, 'events': related_events})
-
 
 
 @login_required
@@ -387,7 +386,6 @@ def delete_page(request, page_id):
 
 @login_required
 def event_detail(request, event_id):
-
     event = Event.objects.get(id=event_id)
     notebook_name = None
     page_number = None
@@ -397,7 +395,7 @@ def event_detail(request, event_id):
         page = Page.objects.get(id=page_id)
         print(event.pages.all(), event.pages.all()[0].id)
         page_number = page.get_page_number()
-        
+
     if request.method == 'POST':
         if not request.user.has_perm('dg_edit_event', event):
             raise PermissionDenied
@@ -407,14 +405,14 @@ def event_detail(request, event_id):
             form.save()
             messages.add_message(request, messages.SUCCESS, "event updated!")
             return redirect('calendar_tab')
-        
+
     else:
         form = EventForm(request.user, instance=event)
-    html = render_to_string('partials/event_detail.html', 
-                            {'form': form, 'event': event, 
-                            'notebook_name': notebook_name,
-                            'page_number':page_number
-                                                            }, request=request)
+    html = render_to_string('partials/event_detail.html',
+                            {'form': form, 'event': event,
+                             'notebook_name': notebook_name,
+                             'page_number': page_number
+                             }, request=request)
     print(event.user.id)
     print(request.user.id)
     return JsonResponse({'html': html, 'event_user_id': event.user.id})
@@ -440,7 +438,7 @@ def update_event(request, event_id):
     if request.method == 'POST':
         event = Event.objects.get(id=event_id)
         if not request.user.has_perm('dg_edit_event', event):
-                raise PermissionDenied
+            raise PermissionDenied
         start_time = request.POST.get('start')
         end_time = request.POST.get('end')
         event.start_time = datetime.fromisoformat(start_time[:-1] + '+00:00')

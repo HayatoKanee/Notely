@@ -1,6 +1,6 @@
 from django.dispatch import receiver
 from django.db.models.signals import post_save, pre_save
-from guardian.shortcuts import assign_perm
+from guardian.shortcuts import assign_perm, get_users_with_perms
 from notes.helpers import calculate_age
 from notes.models import User, Profile, Notebook, Page, Editor, Reminder, Event, Folder
 from notes.tasks import send_notification
@@ -20,14 +20,6 @@ def save_age(sender, instance, **kwargs):
     # when date of birth is saved in the profile, calculate and save the age
     if instance.dob:
         instance.age = calculate_age(instance.dob)
-
-
-@receiver(post_save, sender=Notebook)
-def create_page(sender, instance, created, **kwargs):
-    if created:
-        new_page = Page.objects.create(notebook=instance)
-        instance.last_page = new_page
-        instance.save()
 
 
 @receiver(post_save, sender=Reminder)
@@ -68,8 +60,14 @@ def create_editor(sender, instance, created, **kwargs):
 @receiver(post_save, sender=Page)
 def give_perm_page(sender, instance, created, **kwargs):
     if created:
+        viewable_users = get_users_with_perms(instance.notebook, only_with_perms_in=['dg_view_all_notebook'])
+        editable_users = get_users_with_perms(instance.notebook, only_with_perms_in=['dg_edit_all_notebook'])
         assign_perm('dg_view_page', instance.notebook.user, instance)
+        for user in viewable_users:
+            assign_perm('dg_view_page', user, instance)
         assign_perm('dg_edit_page', instance.notebook.user, instance)
+        for user in editable_users:
+            assign_perm('dg_edit_page', user, instance)
         assign_perm('dg_delete_page', instance.notebook.user, instance)
 
 
@@ -79,6 +77,17 @@ def give_perm_folder(sender, instance, created, **kwargs):
         assign_perm('dg_view_folder', instance.user, instance)
         assign_perm('dg_edit_folder', instance.user, instance)
         assign_perm('dg_delete_folder', instance.user, instance)
+        assign_perm('dg_view_all_folder', instance.user, instance)
+        assign_perm('dg_edit_all_folder', instance.user, instance)
+        if instance.parent:
+            viewable_users = get_users_with_perms(instance.parent, only_with_perms_in=['dg_view_all_folder'])
+            editable_users = get_users_with_perms(instance.parent, only_with_perms_in=['dg_edit_all_folder'])
+            for user in viewable_users:
+                assign_perm('dg_view_folder', user, instance)
+                assign_perm('dg_view_all_folder', user, instance)
+            for user in editable_users:
+                assign_perm('dg_edit_folder', user, instance)
+                assign_perm('dg_edit_all_folder', user, instance)
 
 
 @receiver(post_save, sender=Notebook)
@@ -87,6 +96,20 @@ def give_perm_notebook(sender, instance, created, **kwargs):
         assign_perm('dg_view_notebook', instance.user, instance)
         assign_perm('dg_edit_notebook', instance.user, instance)
         assign_perm('dg_delete_notebook', instance.user, instance)
+        assign_perm('dg_view_all_notebook', instance.user, instance)
+        assign_perm('dg_edit_all_notebook', instance.user, instance)
+        if instance.folder:
+            viewable_users = get_users_with_perms(instance.folder, only_with_perms_in=['dg_view_all_folder'])
+            editable_users = get_users_with_perms(instance.folder, only_with_perms_in=['dg_edit_all_folder'])
+            for user in viewable_users:
+                assign_perm('dg_view_notebook', user, instance)
+                assign_perm('dg_view_all_notebook', user, instance)
+            for user in editable_users:
+                assign_perm('dg_edit_notebook', user, instance)
+                assign_perm('dg_edit_all_notebook', user, instance)
+        new_page = Page.objects.create(notebook=instance)
+        instance.last_page = new_page
+        instance.save()
 
 
 @receiver(post_save, sender=Event)

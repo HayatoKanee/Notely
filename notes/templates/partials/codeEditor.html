@@ -35,21 +35,6 @@
                         </div>
                     {% endfor %}
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background-color: rgb(245, 93, 66, 0.1); border-color: rgb(245, 93, 66); width: 100px; color: rgb(245, 93, 66);">Cancel</button>
-            </div>
-            <div class="modal-body">
-                <div class="tab-content">
-                    <div class="tab-pane active" id="tab1" role="tabpanel">
-                        <div id="code1"></div>
-                    </div>
-                    {% for editor in page.editors.all|slice:"1:" %}
-                        <div class="tab-pane" id="tab{{ forloop.counter|add:"1" }}" role="tabpanel">
-                            <div id="code{{ forloop.counter|add:"1" }}"></div>
-                        </div>
-                    {% endfor %}
-                </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" id="help_btn" style="background-color: rgb(245, 93, 66, 0.1); border-color: rgb(245, 93, 66); width: 100px; color: rgb(245, 93, 66);">Help</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background-color: rgb(245, 93, 66, 0.1); border-color: rgb(245, 93, 66); width: 100px; color: rgb(245, 93, 66);">Cancel</button>

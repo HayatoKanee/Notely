@@ -1,13 +1,12 @@
-
 const initCanvas = (id) => {
     return new fabric.Canvas(id, {
-    width: window.innerWidth,
-    height: window.innerHeight,
-    backgroundColor: 'rgba(250,250,250,1)'
-        });
+        width: window.innerWidth,
+        height: window.innerHeight,
+        backgroundColor: 'rgba(250,250,250,1)'
+    });
 
 }
-if (can_edit==="True") {
+if (can_edit === "True") {
     function clearCanvas(canvas) {
         canvas.getObjects().forEach((obj) => {
             if (obj !== canvas.backgroundImage) {
@@ -211,19 +210,35 @@ if (can_edit==="True") {
         })
     }
 }
-    let currentMode;
+let currentMode;
 const canvas = initCanvas('canvas');
-if (can_edit==="True") {
-    canvas.loadFromJSON(drawing, function(){
-        canvas.getObjects().forEach(function(obj) {
-        if (obj.link) {
-          obj.on('mousedown', function(e) {
-              if(currentMode=='select') {
-                  window.location.href = this.link;
-              }
-          });
-        }
-      });
+function loaddata(drwaing){
+
+}
+if (can_edit === "True") {
+    canvas.loadFromJSON(drawing, function () {
+        canvas.getObjects().forEach(function (obj) {
+            if (obj.link) {
+                obj.on('mousedown', function (e) {
+                    if (currentMode === 'select') {
+                        window.location.href = this.link;
+                    }
+                });
+                obj.on('mouseover', function () {
+                    obj.item(2).set({
+                        visible: true
+                    });
+                    canvas.renderAll();
+                });
+
+                obj.on('mouseout', function () {
+                    obj.item(2).set({
+                        visible: false
+                    });
+                    canvas.renderAll();
+                });
+            }
+        });
         canvas.renderAll();
     });
 
@@ -282,7 +297,7 @@ if (can_edit==="True") {
     });
 
     document.onkeydown = function (e) {
-        if (e.keyCode == 46) {
+        if (e.keyCode === 46) {
             const selection = canvas.getActiveObject();
             if (selection.type === 'activeSelection') {
                 selection.forEachObject(function (element) {
@@ -295,41 +310,44 @@ if (can_edit==="True") {
         }
     }
 }
-function getThumbnail(){
+
+function getThumbnail() {
     const thumbnail = document.createElement('canvas')
     thumbnail.width = 100;
     thumbnail.height = 100;
 
     const context = thumbnail.getContext('2d');
-    context.drawImage(canvas.getElement(), 0,0,thumbnail.width,thumbnail.height);
+    context.drawImage(canvas.getElement(), 0, 0, thumbnail.width, thumbnail.height);
     return thumbnail.toDataURL('image/jpeg');
 }
-function save(sync){
+
+function save(sync) {
     const editorsData = [];
     const aElements = document.querySelectorAll('.editorTab a');
     for (let i = 0; i < editors.length; i++) {
         const editor = editors[i];
         const code = editor.state.doc.toString();
         const aElement = aElements.item(i);
-        const title = aElement.textContent.trim().slice(0,-1);
+        const title = aElement.textContent.trim().slice(0, -1);
         editorsData.push({
-          title: title,
-          code: code
+            title: title,
+            code: code
         });
-  }
+    }
     $.ajax({
-        type:"POST",
-        async:sync,
-        url: "/save_page/"+page_id,
+        type: "POST",
+        async: sync,
+        url: "/save_page/" + page_id,
         data: {
             canvas: JSON.stringify(canvas.toDatalessJSON(['link'])),
             editors: JSON.stringify(editorsData),
-            thumbnail:getThumbnail(),
+            thumbnail: getThumbnail(),
             csrfmiddlewaretoken: csrf
         }
     });
 }
-if(can_edit==="True") {
+
+if (can_edit === "True") {
     window.setInterval(function () {
         save(false);
     }, 50000);
@@ -338,19 +356,11 @@ if(can_edit==="True") {
         save(false);
         return "";
     };
-}
-else{
-    canvas.loadFromJSON(drawing, function(){
-        canvas.getObjects().forEach(function(obj) {
-        if (obj.link) {
-          obj.on('mousedown', function(e) {
-              if(currentMode=='select') {
-                  window.location.href = this.link;
-              }
-          });
-        }
-        obj.set('selectable', false);
-      });
+} else {
+    canvas.loadFromJSON(drawing, function () {
+        canvas.getObjects().forEach(function (obj) {
+            obj.set('selectable', false);
+        });
         canvas.renderAll();
     });
 }

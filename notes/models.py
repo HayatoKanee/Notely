@@ -74,7 +74,9 @@ class Folder(models.Model):
         permissions = [
             ("dg_view_folder", "can view folder"),
             ("dg_edit_folder", "can edit folder"),
-            ("dg_delete_folder", "can delete folder")
+            ("dg_delete_folder", "can delete folder"),
+            ("dg_view_all_folder", "can view all content in the folder"),
+            ("dg_edit_all_folder", "can edit all content in the folder")
         ]
 
     def get_type(self):
@@ -100,7 +102,9 @@ class Notebook(models.Model):
         permissions = [
             ("dg_view_notebook", "can view notebook"),
             ("dg_edit_notebook", "can edit notebook"),
-            ("dg_delete_notebook", "can delete notebook")
+            ("dg_delete_notebook", "can delete notebook"),
+            ("dg_view_all_notebook", "can view all content in the notebook"),
+            ("dg_edit_all_notebook", "can view all content in the notebook")
         ]
 
     def get_type(self):

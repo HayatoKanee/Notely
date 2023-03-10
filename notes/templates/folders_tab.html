@@ -15,11 +15,13 @@
                     Name
                 </div>
             </div>
+            {% if can_edit %}
             <div class="col" style="margin-right: 60px;">
                 <button id="addChoice" data-bs-toggle="modal" data-bs-target="#add" style="margin-right: 40px; color: rgb(245, 93, 66);">
                     <span style="margin-left: 23px;">New</span>
                 </button>
             </div>
+            {% endif %}
         </div>
     </div>
     <div style="height: 800px;">
