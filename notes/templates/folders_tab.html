@@ -1,23 +1,23 @@
 {% extends 'base_content.html' %}
 {% block content %}
-    <div class="folder-path" style="color: rgb(245, 93, 66); margin-left: 30px; height: 50px;">
-        ><a href="{%url 'folders_tab' %}" style="margin-left: 20px;"><button class="folder-button" style="font-size: 20px; background-color: white; border: none; color: rgb(245, 93, 66); margin-top: 8px; margin-right: 18px;">Home</button></a>
+    <div class="folder-path" style="color: rgb(60, 120, 216); margin-left: 30px; height: 50px;">
+        ><a href="{%url 'folders_tab' %}" style="margin-left: 20px;"><button class="folder-button" style="font-size: 20px; background-color: white; border: none; color: rgb(60, 120, 216); margin-top: 8px; margin-right: 18px;">Home</button></a>
         {% if folder %}
             {% for item in folder.get_path %}
-                ><a href="{% url 'sub_folders_tab' item.id%}" style="margin-left: 18px; color: rgb(245, 93, 66);"><button class="folder-button" style="font-size: 20px; background-color: white; border: none; color: rgb(245, 93, 66);">{{item.folder_name}}</button></a>
+                ><a href="{% url 'sub_folders_tab' item.id%}" style="margin-left: 18px; color: rgb(60, 120, 216);"><button class="folder-button" style="font-size: 20px; background-color: white; border: none; color: rgb(60, 120, 216);">{{item.folder_name}}</button></a>
             {% endfor %}
         {% endif %}
     </div>
     <div class="row">
-        <div class="folder-nav" style="height: 50px; color: rgb(245, 93, 66);">
+        <div class="folder-nav" style="height: 50px; color: rgb(60, 120, 216);">
             <div class="col">
-                <div style="background-color: white; font-size:23px; margin-left: 60px; color: rgb(245, 93, 66);">
+                <div style="background-color: white; font-size:23px; margin-left: 60px; color: rgb(60, 120, 216);">
                     Name
                 </div>
             </div>
             {% if can_edit %}
             <div class="col" style="margin-right: 60px;">
-                <button id="addChoice" data-bs-toggle="modal" data-bs-target="#add" style="margin-right: 40px; color: rgb(245, 93, 66);">
+                <button id="addChoice" data-bs-toggle="modal" data-bs-target="#add" style="margin-right: 40px; color: rgb(60, 120, 216);">
                     <span style="margin-left: 23px;">New</span>
                 </button>
             </div>
@@ -34,9 +34,9 @@
                                 <form action="{% url 'sub_folders_tab' item.id %}" method="get">
                                     <button id = "folder_img" style="margin-left:-5px;">
                                         {% if item.user == user%}
-                                        <span style="margin-left: 80px; color: rgb(245, 93, 66);">{{ item.folder_name }}</span>
+                                        <span style="margin-left: 80px; color: rgb(60, 120, 216);">{{ item.folder_name }}</span>
                                         {% else %}
-                                        <span style="margin-left: 80px; color: rgb(245, 93, 66);">{{ item.folder_name }} (shared by {{item.user.username}})</span>
+                                        <span style="margin-left: 80px; color: rgb(60, 120, 216);">{{ item.folder_name }} (shared by {{item.user.username}})</span>
                                         {% endif %}
                                     </button>
                                 </form>
@@ -44,9 +44,9 @@
                                 <form action="{% url 'page' item.last_page.id %}" method="get">
                                     <button id="notebook_img" style="text-align: left;">
                                         {% if item.user == user%}
-                                        <span style="margin-left: 75px; color: rgb(245, 93, 66);">{{ item.notebook_name }}</span>
+                                        <span style="margin-left: 75px; color: rgb(60, 120, 216);">{{ item.notebook_name }}</span>
                                         {% else %}
-                                          <span style="margin-left: 75px; color: rgb(245, 93, 66);">{{ item.notebook_name }} (shared by {{item.user.username}})</span>
+                                          <span style="margin-left: 75px; color: rgb(60, 120, 216);">{{ item.notebook_name }} (shared by {{item.user.username}})</span>
                                         {% endif %}
                                     </button>
                                 </form>
@@ -56,25 +56,25 @@
                         <div class="col col-lg-9" style="height: 100px;">
                             {% if item.get_type == "Folder" %}
                                 <div class="dropdown">
-                                    <button class="dropbtn" style="color: rgb(245, 93, 66);">Options</button>
+                                    <button class="dropbtn" style="color: rgb(60, 120, 216);">Options</button>
                                     <div class="dropdown-content">
-                                        <a href="{% url 'delete_folder_tab' item.id %}" style="color: rgb(245, 93, 66);">Delete</a>
+                                        <a href="{% url 'delete_folder_tab' item.id %}" style="color: rgb(60, 120, 216);">Delete</a>
                                         <a class="share" type="button" data-bs-toggle="modal" data-bs-target="#shareModal"
                                            data-options-url="{% url 'get_options_folder' item.id %}"
-                                            data-share-url="{% url 'share_folder' item.id%}">Share</a>
-                                        <a href="#" style="color: rgb(245, 93, 66);">Link 3</a>
+                                            data-share-url="{% url 'share_folder' item.id%}" style="color: rgb(60, 120, 216);">Share</a>
+                                        <a href="#" style="color: rgb(60, 120, 216);">Link 3</a>
                                     </div>
                                 </div>
                             {% else %}
                                 <div>
                                     <div class="dropdown">
-                                        <button class="dropbtn" style="color: rgb(245, 93, 66);">Options</button>
+                                        <button class="dropbtn" style="color: rgb(60, 120, 216);">Options</button>
                                         <div class="dropdown-content">
-                                            <a href="{% url 'delete_notebook_tab' item.id %}" style="color: rgb(245, 93, 66);">Delete</a>
+                                            <a href="{% url 'delete_notebook_tab' item.id %}" style="color: rgb(60, 120, 216);">Delete</a>
                                             <a class="share" type="button" data-bs-toggle="modal" data-bs-target="#shareModal"
                                              data-options-url="{% url 'get_options_notebook' item.id %}"
-                                                data-share-url="{% url 'share_notebook' item.id%}">Share</a>
-                                            <a href="#" style="color: rgb(245, 93, 66);">Link 3</a>
+                                                data-share-url="{% url 'share_notebook' item.id%}" style="color: rgb(60, 120, 216);">Share</a>
+                                            <a href="#" style="color: rgb(60, 120, 216);">Link 3</a>
                                         </div>
                                     </div>
                                 </div>

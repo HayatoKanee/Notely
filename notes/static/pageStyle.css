@@ -14,7 +14,7 @@
     border: none;
 }
 
-#select.active { background-color: rgb(245, 93, 66, 0.2); }
+#select.active { background-color: rgb(60, 120, 216, 0.2); }
 
 #select {
     background: url("images/select.png") no-repeat;
@@ -24,7 +24,7 @@
     border: none;
 }
 
-#draw.active { background-color: rgb(245, 93, 66, 0.2); }
+#draw.active { background-color: rgb(60, 120, 216, 0.2); }
 
 #text {
     background: url("images/text.png") no-repeat;
@@ -34,7 +34,7 @@
     border: none;
 }
 
-#text.active { background-color: rgb(245, 93, 66, 0.2); }
+#text.active { background-color: rgb(60, 120, 216, 0.2); }
 .toolbox { margin: 20px; }
 
 #upload {
@@ -45,7 +45,7 @@
     border: none;
 }
 
-#upload.active { background-color: rgb(245, 93, 66, 0.2); }
+#upload.active { background-color: rgb(60, 120, 216, 0.2); }
 #navbarcontainer { background-color: rgb(255, 174, 159, 0.6); }
 
 #erase {
@@ -56,7 +56,7 @@
     border: none;
 }
 
-#erase.active { background-color: rgb(245, 93, 66, 0.2); }
+#erase.active { background-color: rgb(60, 120, 216, 0.2); }
 
 #undo {
     background: url("images/undo.png") no-repeat;
