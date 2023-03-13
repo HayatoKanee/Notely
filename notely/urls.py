@@ -44,6 +44,7 @@ urlpatterns = [
     path('page_detail/<page_id>', views.page_detail, name='page_detail'),
     path('delete_page/<page_id>', views.delete_page, name='delete_page'),
     path('inbox/notifications/', include(notifications.urls, namespace='notifications')),
+    path(r'^update_notifications/$', views.update_notifications, name='update_notifications'),
 
 ]
 

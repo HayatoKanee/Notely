@@ -109,6 +109,10 @@ def sub_folders_tab(request, folder_id):
                   {'items': items, 'folder_form': folder_form,
                    'notebook_form': notebook_form, 'folder': folder})
 
+@login_required
+def update_notifications(request):
+    request.user.notifications.mark_all_as_read() 
+    return JsonResponse({'status': 'success'})
 
 @login_required
 def calendar_tab(request):

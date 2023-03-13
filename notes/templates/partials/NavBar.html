@@ -11,7 +11,7 @@
            <ul class="navbar-nav ms-auto mb-2 mb-lg-0" style="margin-right: 13px;">
             <li class="nav-item dropdown">
               <a class="nav-link position-relative" href="#"  id="bell" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <span class="position-absolute top-10 start-74 translate-middle badge rounded-pill bg-danger">{% live_notify_badge %}</span>
+                {% live_notify_badge %}
                 <span class="bell-icon"></span>
               </a>
               <ul>
@@ -58,6 +58,19 @@
 </nav>
 <script>
   const name = JSON.parse(document.getElementById('name-data').textContent);
+  function custom_notification_badge(data) {
+    var badges = document.getElementsByClassName(notify_badge_class);
+    if (badges) {
+      if(data.unread_count==0){
+        badges[0].innerHTML = "" ; 
+      }else{
+        for(var i = 0; i < badges.length; i++){
+            badges[i].innerHTML =`<span class="position-absolute top-10 start-74 translate-middle badge rounded-pill bg-danger"> ${data.unread_count} </span>`
+            ;
+        }
+    }
+  }
+  }
   function custom_notification_callback(data) {
     var menus = document.getElementsByClassName(notify_menu_class);
     if (menus) {
@@ -95,6 +108,26 @@
     }
   }
 }
+let cookie = document.cookie
+let csrfToken = cookie.substring(cookie.indexOf('=') + 1)
+$(document).ready(function() {
+  $('#bell').click(function() {
+      $.ajax({
+          url: '{% url "update_notifications" %}',
+          type: 'GET', 
+          data: {
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+                    },
+          dataType: 'json',
+          success: function(data) {
+              console.log(data.status);
+          },
+          error: function(xhr, status, error) {
+              console.log(xhr.responseText);
+          }
+      });
+  });
+});
 </script>
-{% register_notify_callbacks callbacks='fill_notification_badge,custom_notification_callback' %}
+{% register_notify_callbacks callbacks='custom_notification_badge,custom_notification_callback' %}
 
