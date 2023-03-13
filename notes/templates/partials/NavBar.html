@@ -1,7 +1,6 @@
 {% include 'partials/sidebar.html' %}
 {% load notifications_tags %}
 {% notifications_unread as unread_count %}
-
 <nav class="navbar navbar-expand-lg bg-nav shadow-sm">
   <div class="container-fluid">
       <img class="logo img-fluid">
@@ -11,8 +10,8 @@
       <div class="container-fluid collapse navbar-collapse" id="navbarSupportedContent">
            <ul class="navbar-nav ms-auto mb-2 mb-lg-0" style="margin-right: 13px;">
             <li class="nav-item dropdown">
-              <a class="nav-link position-relative" href="#" id="bell" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <span class="position-absolute top-10 start-74 translate-middle badge rounded-pill bg-danger">{{ unread_count }}</span>
+              <a class="nav-link position-relative" href="#"  id="bell" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <span class="position-absolute top-10 start-74 translate-middle badge rounded-pill bg-danger">{% live_notify_badge %}</span>
                 <span class="bell-icon"></span>
               </a>
               <ul>
@@ -21,22 +20,9 @@
                     <div class="notification-header">
                       <h5>Notifications</h5>
                     </div>
-                    {% for notification in user.notifications.unread %}
-                    <div class="notification-item">
-                      <div class="d-flex flex-column justify-content-center flex-grow-1">
-                        <h6>{{ notification.verb }}</h6>
-                        <p>{{ notification.description }}</p>
-                        <small>{{ notification.actor }}</small>
-                      </div>
-                      <div class="ml-2">
-                        <small>{{ notification.timestamp|timesince }} ago</small>
-                      </div>
+                    <div class="noti_body">
+                      {% live_notify_list%}
                     </div>
-                    {% empty %}
-                    <div class="notification-item">
-                      <p class="text-muted">No notifications to display.</p>
-                    </div>
-                    {% endfor %}
                   </div>
                 </div>
                 
@@ -51,9 +37,9 @@
                  <li class="nav-item dropdown">
            <button class="nav-link dropdown-toggle fw-bold nav-link-style" id="user-account-dropdown" style="color: rgb(245, 93, 66, 0.9); font-size: 18px;" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               <tr>
-                <td>{{user.username}} </td>
+                <td>{{user.username|json_script:"name-data"}} </td>
               <td>
-                <img src="{{ user.profile.mini_gravatar }}" alt="Gravatar of {{ user.username }}" class="rounded-circle" >
+                <img src="{{ user.profile.mini_gravatar }}" alt="Gravatar of {{ user.username}}" class="rounded-circle" >
            </button>
                   <div class="nav-item dropdown">
           <div class="dropdown-menu" aria-labelledby="user-account-dropdown">
@@ -70,3 +56,45 @@
       </div>
   </div>
 </nav>
+<script>
+  const name = JSON.parse(document.getElementById('name-data').textContent);
+  function custom_notification_callback(data) {
+    var menus = document.getElementsByClassName(notify_menu_class);
+    if (menus) {
+      if (data.unread_list.length === 0) {
+        var messages = `
+          <div class="notification-item">
+            <p class="text-muted">No notifications to display.</p>
+          </div>
+        `;
+          menus[0].innerHTML = messages;
+      }else {
+        var messages = data.unread_list.map(function (item) {
+            var x = item.actor;
+            if (name==item.actor){
+              x = "System";
+            }
+            var message = `
+            <div class="notification-item">
+              <div class="d-flex flex-column justify-content-center flex-grow-1">
+                  <h6>${item.verb}</h6>
+                  <p>${item.description}</p>
+                  <small>${x}</small>
+              </div>
+              <div class="ml-2">
+                <small>${dayjs(item.timestamp).fromNow()}</small>
+              </div>
+            </div>
+          `;
+            return  message;
+        }).join('')
+
+        for (var i = 0; i < menus.length; i++){
+            menus[i].innerHTML = messages;
+        }
+    }
+  }
+}
+</script>
+{% register_notify_callbacks callbacks='fill_notification_badge,custom_notification_callback' %}
+

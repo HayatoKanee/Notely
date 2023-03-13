@@ -201,7 +201,7 @@ def calendar_tab(request):
                 return redirect('calendar_tab')
 
     return render(request, 'calendar_tab.html', {'event_form': event_form, 'tag_form': tag_form, 'events': events,
-                                                 'tags': tags, 'shareEvent_form': shareEvent_form})
+                                                 'tags': tags, 'shareEvent_form': shareEvent_form })
 
 
 @login_required

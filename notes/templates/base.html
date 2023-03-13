@@ -18,7 +18,12 @@
           {% load notifications_tags %}
           <script src="{% static 'notifications/notify.js' %}" type="text/javascript"></script>
           {% register_notify_callbacks callbacks='fill_notification_list,fill_notification_badge' %}
-    <title>Notely</title>
+          <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
+          <script>dayjs().format()</script>
+          <script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/relativeTime.js"></script>
+          <script>dayjs.extend(window.dayjs_plugin_relativeTime)</script>
+
+          <title>Notely</title>
 </head>
 <body>
     {%block body%}
