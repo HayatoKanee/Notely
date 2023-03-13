@@ -269,3 +269,12 @@ class ShareEventForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['event'].choices = [(event.id, f"{event.title}") for event in Event.objects.all()]
+
+
+class SharePageForm(forms.Form):
+    page = forms.ModelChoiceField(queryset=Page.objects.all(), required=True)
+    email = forms.EmailField(required=False)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['page'].choices = [(page.id, str(page)) for page in Page.objects.all()]

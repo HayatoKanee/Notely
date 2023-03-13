@@ -1,0 +1,18 @@
+        <div class="modal fade" id="sharePageExModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content" style="color: rgb(245, 93, 66)">
+                    <div class="modal-header">
+                        <h5 class="modal-title" style="color: rgb(245, 93, 66)">Share Page</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{% url 'page' page.id %}" method="post">
+                            {% csrf_token %}
+                            {{share_page_external_form.as_p}}
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <input type="submit" name="sharePage_submit" value ="Share page" class="btn btn-primary">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>

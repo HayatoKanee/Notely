@@ -25,14 +25,14 @@
     <div style="height: 800px;">
         <div class="folder-container">
             <div class="container">
-                <div class="row" >
+                <div class="row mb-4" style="margin-bottom: 10px;">
                     {% for item in items %}
-                        <div class="col" style="height: 100px;">
+                        <div class="col-md-4" style="height: 100px;  margin-bottom: 60px;">
                             {% if item.get_type == "Folder" %}
                                 <form action="{% url 'sub_folders_tab' item.id %}" method="get">
-                                    <button id = "folder_img" style="margin-left:-5px;">
+                                    <button id = "folder_img">
                                         {% if item.user == user%}
-                                        <span style="margin-left: 80px; color: rgb(245, 93, 66);">{{ item.folder_name }}</span>
+                                        <button type="button" class="btn btn-white">{{ item.folder_name }}</button>
                                         {% else %}
                                         <span style="margin-left: 80px; color: rgb(245, 93, 66);">{{ item.folder_name }} (shared by {{item.user.username}})</span>
                                         {% endif %}
@@ -42,7 +42,7 @@
                                 <form action="{% url 'page' item.last_page.id %}" method="get">
                                     <button id="notebook_img" style="text-align: left;">
                                         {% if item.user == user%}
-                                        <span style="margin-left: 75px; color: rgb(245, 93, 66);">{{ item.notebook_name }}</span>
+                                            <button type="button" class="btn btn-white">{{ item.notebook_name }}</button></span>
                                         {% else %}
                                           <span style="margin-left: 75px; color: rgb(245, 93, 66);">{{ item.notebook_name }} (shared by {{item.user.username}})</span>
                                         {% endif %}
@@ -51,7 +51,7 @@
                             {% endif %}
                         </div>
                         {% if item.user == user%}
-                        <div class="col col-lg-9" style="height: 100px;">
+                        <div class="col" style="height: 100px;">
                             {% if item.get_type == "Folder" %}
                                 <div class="dropdown">
                                     <button class="dropbtn" style="color: rgb(245, 93, 66);">Options</button>
@@ -79,7 +79,7 @@
                             {% endif %}
                         </div>
                         {% endif %}
-                        <div class="w-100"></div>
+
                     {% endfor %}
                 </div>
             </div>

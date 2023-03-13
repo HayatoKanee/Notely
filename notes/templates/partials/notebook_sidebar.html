@@ -1,3 +1,4 @@
+{% include 'partials/sharePageExternalModal.html' %}
 <div class="offcanvas offcanvas-start" data-bs-scroll="true" id="sidebar" aria-labelledby="sidebarLabel" data-bs-backdrop="false"
      data-bs-keyboard="false" aria-hidden="true" aria-labelledby="symbolsLabel" tabindex="-1" style="color: rgb(245, 93, 66);">
     <div class="offcanvas-header"  style="font-size: 22px; color: rgb(245, 93, 66); text-align: center; line-height: 70px; background: rgb(245, 93, 66, 0.1); user-select: none; color: rgb(245, 93, 66);">
@@ -8,12 +9,15 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-
                 <select id="search-bar" multiple placeholder="Type to search a page...." autocomplete="off"></select>
-                <button class="btn btn-outline-secondary" type="submit" name="page_search_submit" id="search-button" >Search</button>
+                <button class="btn btn-outline-secondary" id="search-button" >Search</button>
+            </div>
+            <div>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#sharePageExModal" data-bs-dismiss="modal">
+                    Share Page
+                </button>
             </div>
         </nav>
-
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close" id="closeBtn"></button>
     </div>
     <div class="offcanvas-body" style="background-color: white; transition: all .5s ease;">

@@ -6,12 +6,14 @@ from django.conf import settings
 from django.core.exceptions import PermissionDenied
 from django.core.files.base import ContentFile
 from django.http import JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404, resolve_url
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.db.models import Q
+from django.urls import reverse
+
 from .forms import SignUpForm, LogInForm, UserForm, ProfileForm, PasswordForm, FolderForm, NotebookForm, EventForm, \
-    EventTagForm, PageTagForm, PageForm, ShareEventForm
+    EventTagForm, PageTagForm, PageForm, ShareEventForm, SharePageForm
 from .models import User, Folder, Notebook, Page, Event, Editor, Reminder, Credential, PageTag
 from django.template.loader import render_to_string
 from django.contrib.auth.decorators import login_required
@@ -27,6 +29,7 @@ from django.conf import settings
 from django.core.mail import send_mail
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
+from django.core import signing
 import sendgrid
 from google.oauth2.credentials import Credentials
 from googleapiclient.errors import HttpError
@@ -252,6 +255,11 @@ def gravatar(request):
 @login_required
 @check_perm('dg_view_page', Page)
 def page(request, page_id):
+
+    try:
+        page_id = signing.loads(page_id)
+    except signing.BadSignature:
+        pass
     page = Page.objects.get(id=page_id)
     page_tag_form = PageTagForm()
     tags = PageTag.objects.all()
@@ -260,7 +268,9 @@ def page(request, page_id):
     users_without_perms = User.objects.exclude(pk__in=users_with_perms).exclude(username='AnonymousUser')
     can_edit = request.user.has_perm('dg_edit_page', page)
     can_edit_notebook = request.user.has_perm('dg_edit_notebook', page.notebook)
+
     if request.method == 'POST':
+        sharePage_form = SharePageForm(request.POST)
         if 'page_tag_submit' in request.POST:
             page_tag_form = PageTagForm(request.POST)
             if page_tag_form.is_valid():
@@ -277,12 +287,39 @@ def page(request, page_id):
             assign_perm('dg_edit_page', request.user, new_page)
             assign_perm('dg_delete_page', request.user, new_page)
             return redirect('page', new_page.id)
-        if 'search_page_submit' in request.POST:
-            new_page = Page.obejects.get(id=page_id)
-            return redirect('page', new_page.id)
+        if 'sharePage_submit' in request.POST:
+            new_page = Page.objects.get(id=page_id)
+            if sharePage_form.is_valid():
+                email = sharePage_form.cleaned_data['email']
+                user = request.user.username
+                encryped_id = signing.dumps(new_page.id)
+                base_url = f"{request.scheme}://{request.get_host()}"
+                new_url = f"{base_url}{reverse('page', args=[encryped_id])}"
+                subject = f'You have been shared with this page: {new_page}'
+                html_content = f'<p>You have been shared with this page: {new_url}\n</p> <p>by {user}\n</p>'
+                mail = Mail(
+                    from_email='winniethepooh.notely@gmail.com',
+                    to_emails=email,
+                    subject=subject,
+                    html_content=html_content)
+
+                try:
+                    sg = SendGridAPIClient(
+                        api_key=settings.EMAIL_HOST_PASSWORD
+                    )
+                    response = sg.send(mail)
+                    print(response.status_code)
+                    print(response.body)
+                    print(response.headers)
+                except Exception as ex:
+                    print("some exceptions")
+                messages.add_message(request, messages.SUCCESS, "Page Shared!")
+                return redirect('page', new_page.id)
+
     return render(request, 'page.html',
                   {'page': page, 'page_tag_form': page_tag_form, 'tags': tags, 'users': users_without_perms,
-                   'viewable_pages': viewable_pages, 'can_edit': can_edit, 'can_edit_notebook': can_edit_notebook})
+                   'viewable_pages': viewable_pages, 'can_edit': can_edit, 'can_edit_notebook': can_edit_notebook, 'share_page_external_form':SharePageForm()})
+
 
 
 
