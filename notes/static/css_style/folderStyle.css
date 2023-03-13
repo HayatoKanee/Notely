@@ -11,4 +11,6 @@
   background-color: black;
 } */
 
-#addChoice:hover { font-weight: bold; }
+#addChoice:hover {
+    font-weight: bold;
+}

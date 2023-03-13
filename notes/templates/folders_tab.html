@@ -1,85 +1,100 @@
 {% extends 'base_content.html' %}
 {% block content %}
-    <div class="folder-path" style="color: rgb(245, 93, 66); margin-left: 30px; height: 50px;">
-        ><a href="{%url 'folders_tab' %}" style="margin-left: 20px;"><button class="folder-button" style="font-size: 20px; background-color: white; border: none; color: rgb(245, 93, 66); margin-top: 8px; margin-right: 18px;">Home</button></a>
+    <div class="folder-path" style="color: rgb(60, 120, 216); margin-left: 30px; height: 50px;">
+        ><a href="{% url 'folders_tab' %}" style="margin-left: 20px;">
+        <button class="folder-button"
+                style="font-size: 20px; background-color: white; border: none; color: rgb(60, 120, 216); margin-top: 8px; margin-right: 18px;">
+            Home
+        </button>
+    </a>
         {% if folder %}
             {% for item in folder.get_path %}
-                ><a href="{% url 'sub_folders_tab' item.id%}" style="margin-left: 18px; color: rgb(245, 93, 66);"><button class="folder-button" style="font-size: 20px; background-color: white; border: none; color: rgb(245, 93, 66);">{{item.folder_name}}</button></a>
+                ><a href="{% url 'sub_folders_tab' item.id %}" style="margin-left: 18px; color: rgb(60, 120, 216);">
+                <button class="folder-button"
+                        style="font-size: 20px; background-color: white; border: none; color: rgb(60, 120, 216);">{{ item.folder_name }}</button>
+            </a>
             {% endfor %}
         {% endif %}
     </div>
     <div class="row">
-        <div class="folder-nav" style="height: 50px; color: rgb(245, 93, 66);">
+        <div class="folder-nav" style="height: 50px; color: rgb(60, 120, 216);">
             <div class="col">
-                <div style="background-color: white; font-size:23px; margin-left: 60px; color: rgb(245, 93, 66);">
+                <div style="background-color: white; font-size:23px; margin-left: 60px; color: rgb(60, 120, 216);">
                     Name
                 </div>
             </div>
             {% if can_edit %}
-            <div class="col" style="margin-right: 60px;">
-                <button id="addChoice" data-bs-toggle="modal" data-bs-target="#add" style="margin-right: 40px; color: rgb(245, 93, 66);">
-                    <span style="margin-left: 23px;">New</span>
-                </button>
-            </div>
+                <div class="col" style="margin-right: 60px;">
+                    <button id="addChoice" data-bs-toggle="modal" data-bs-target="#add"
+                            style="margin-right: 40px; color: rgb(60, 120, 216);">
+                        <span style="margin-left: 23px;">New</span>
+                    </button>
+                </div>
             {% endif %}
         </div>
     </div>
     <div style="height: 800px;">
         <div class="folder-container">
             <div class="container">
-                <div class="row" >
+                <div class="row">
                     {% for item in items %}
                         <div class="col" style="height: 100px;">
                             {% if item.get_type == "Folder" %}
                                 <form action="{% url 'sub_folders_tab' item.id %}" method="get">
-                                    <button id = "folder_img" style="margin-left:-5px;">
-                                        {% if item.user == user%}
-                                        <span style="margin-left: 80px; color: rgb(245, 93, 66);">{{ item.folder_name }}</span>
+                                    <button id="folder_img" style="margin-left:-5px;">
+                                        {% if item.user == user %}
+                                            <span style="margin-left: 80px; color: rgb(60, 120, 216);">{{ item.folder_name }}</span>
                                         {% else %}
-                                        <span style="margin-left: 80px; color: rgb(245, 93, 66);">{{ item.folder_name }} (shared by {{item.user.username}})</span>
+                                            <span style="margin-left: 80px; color: rgb(60, 120, 216);">{{ item.folder_name }} (shared by {{ item.user.username }})</span>
                                         {% endif %}
                                     </button>
                                 </form>
                             {% else %}
                                 <form action="{% url 'page' item.last_page.id %}" method="get">
                                     <button id="notebook_img" style="text-align: left;">
-                                        {% if item.user == user%}
-                                        <span style="margin-left: 75px; color: rgb(245, 93, 66);">{{ item.notebook_name }}</span>
+                                        {% if item.user == user %}
+                                            <span style="margin-left: 75px; color: rgb(60, 120, 216);">{{ item.notebook_name }}</span>
                                         {% else %}
-                                          <span style="margin-left: 75px; color: rgb(245, 93, 66);">{{ item.notebook_name }} (shared by {{item.user.username}})</span>
+                                            <span style="margin-left: 75px; color: rgb(60, 120, 216);">{{ item.notebook_name }} (shared by {{ item.user.username }})</span>
                                         {% endif %}
                                     </button>
                                 </form>
                             {% endif %}
                         </div>
-                        {% if item.user == user%}
-                        <div class="col col-lg-9" style="height: 100px;">
-                            {% if item.get_type == "Folder" %}
-                                <div class="dropdown">
-                                    <button class="dropbtn" style="color: rgb(245, 93, 66);">Options</button>
-                                    <div class="dropdown-content">
-                                        <a href="{% url 'delete_folder_tab' item.id %}" style="color: rgb(245, 93, 66);">Delete</a>
-                                        <a class="share" type="button" data-bs-toggle="modal" data-bs-target="#shareModal"
-                                           data-options-url="{% url 'get_options_folder' item.id %}"
-                                            data-share-url="{% url 'share_folder' item.id%}">Share</a>
-                                        <a href="#" style="color: rgb(245, 93, 66);">Link 3</a>
-                                    </div>
-                                </div>
-                            {% else %}
-                                <div>
+                        {% if item.user == user %}
+                            <div class="col col-lg-9" style="height: 100px;">
+                                {% if item.get_type == "Folder" %}
                                     <div class="dropdown">
-                                        <button class="dropbtn" style="color: rgb(245, 93, 66);">Options</button>
+                                        <button class="dropbtn" style="color: rgb(60, 120, 216);">Options</button>
                                         <div class="dropdown-content">
-                                            <a href="{% url 'delete_notebook_tab' item.id %}" style="color: rgb(245, 93, 66);">Delete</a>
-                                            <a class="share" type="button" data-bs-toggle="modal" data-bs-target="#shareModal"
-                                             data-options-url="{% url 'get_options_notebook' item.id %}"
-                                                data-share-url="{% url 'share_notebook' item.id%}">Share</a>
-                                            <a href="#" style="color: rgb(245, 93, 66);">Link 3</a>
+                                            <a href="{% url 'delete_folder_tab' item.id %}"
+                                               style="color: rgb(60, 120, 216);">Delete</a>
+                                            <a class="share" type="button" data-bs-toggle="modal"
+                                               data-bs-target="#shareModal"
+                                               data-options-url="{% url 'get_options_folder' item.id %}"
+                                               data-share-url="{% url 'share_folder' item.id %}"
+                                               style="color: rgb(60, 120, 216);">Share</a>
+                                            <a href="#" style="color: rgb(60, 120, 216);">Link 3</a>
                                         </div>
                                     </div>
-                                </div>
-                            {% endif %}
-                        </div>
+                                {% else %}
+                                    <div>
+                                        <div class="dropdown">
+                                            <button class="dropbtn" style="color: rgb(60, 120, 216);">Options</button>
+                                            <div class="dropdown-content">
+                                                <a href="{% url 'delete_notebook_tab' item.id %}"
+                                                   style="color: rgb(60, 120, 216);">Delete</a>
+                                                <a class="share" type="button" data-bs-toggle="modal"
+                                                   data-bs-target="#shareModal"
+                                                   data-options-url="{% url 'get_options_notebook' item.id %}"
+                                                   data-share-url="{% url 'share_notebook' item.id %}"
+                                                   style="color: rgb(60, 120, 216);">Share</a>
+                                                <a href="#" style="color: rgb(60, 120, 216);">Link 3</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
                         {% endif %}
                         <div class="w-100"></div>
                     {% endfor %}
@@ -107,7 +122,7 @@
             position: absolute;
             background-color: #f1f1f1;
             min-width: 160px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
             z-index: 1;
         }
 
@@ -118,9 +133,17 @@
             display: block;
         }
 
-        .dropdown-content a:hover {background-color: #ddd;}
-        .dropdown:hover .dropdown-content {display: block;}
-        .dropdown:hover .dropbtn {background-color: gray;}
+        .dropdown-content a:hover {
+            background-color: #ddd;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown:hover .dropbtn {
+            background-color: gray;
+        }
     </style>
     </div>
     {% include 'partials/addChoice.html' %}
@@ -140,14 +163,14 @@
             searchField: ['username', 'email'],
             options: [],
             render: {
-                item: function(item, escape) {
+                item: function (item, escape) {
                     return '<div>' +
                         (item.username ? '<span class="name">' + escape(item.username) + '</span>' : '') +
                         (item.email ? '<span class="email">' + escape(item.email) + '</span>' : '') +
                         '<span class="gravatar">' + '<img class="rounded-circle" src="' + item.gravatar + '"</img></span>' +
                         '</div>';
-                    },
-                option: function(item, escape) {
+                },
+                option: function (item, escape) {
                     var label = item.username || item.email;
                     var caption = item.username ? item.email : null;
                     return '<div class="row">' + '<div class="col">' +
@@ -160,22 +183,22 @@
             }
         });
         let share_url;
-        $('.share').click(function (){
+        $('.share').click(function () {
             share_url = this.getAttribute('data-share-url')
             $.ajax({
                 url: this.getAttribute('data-options-url'),
-                success: function (data){
+                success: function (data) {
                     t_select.clearOptions();
                     for (const option of data) {
                         t_select.addOption(option);
                     }
                 },
-                error: function (){
+                error: function () {
                     alert('Error retrieving data');
                 }
             });
         });
-        $('#shareBtn').click(function (){
+        $('#shareBtn').click(function () {
             const selectedUsers = t_select.getValue();
             const edit_perm = $('#editBox').prop('checked');
             $.ajax({
@@ -188,7 +211,7 @@
                     csrfmiddlewaretoken: '{{csrf_token}}'
                 },
             });
-            while(selectedUsers.length!=0){
+            while (selectedUsers.length != 0) {
                 t_select.removeOption(selectedUsers[0]);
             }
         });
