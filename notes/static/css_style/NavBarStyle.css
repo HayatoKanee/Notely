@@ -7,12 +7,14 @@ h1 {
 }
 
 /* Create a top navigation bar with a black background color  */
+
 .topnav {
   background-color: rgb(142, 139, 139);
   overflow: hidden;
 }
 
 /* Style the links inside the navigation bar */
+
 .topnav a {
   float: left;
   color: #f2f2f2;
@@ -23,21 +25,20 @@ h1 {
 }
 
 /* Change the color of links on hover */
+
 .topnav a:hover {
   background-color: #ddd;
   color: black;
 }
 
 /* Create a right-aligned (split) link inside the navigation bar */
+
 .topnav a.split {
   float: right;
   background-color: #04AA6D;
   color: white;
 }
 
-#cancel:hover {
-    font-weight: bold;
-}
 
 #cancel:hover {
     font-weight: bold;

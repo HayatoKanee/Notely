@@ -1,177 +1,348 @@
 {% extends 'base_content_without_footer.html' %}
 {% block content %}
+
     {% if page.notebook.folder %}
-     <a href={% url 'sub_folders_tab' page.notebook.folder.id %} style="color:#1b1b1b;margin-left:20px;"> <i class="bi bi-arrow-left" style="color: rgb(245, 93, 66);"></i> Go back</a>
+        <a href={% url 'sub_folders_tab' page.notebook.folder.id %} style="color:rgb(245,93,66);margin-left:20px;"> <i
+                class="bi bi-arrow-left"></i> Go back</a>
     {% else %}
-         <a href={% url 'folders_tab'%} style="color:rgb(245,93,66);margin-left:20px;font-size:18px;"> <i class="bi bi-arrow-left"></i> Go back</a>
+        <a href={% url 'folders_tab' %} style="color:rgb(245,93,66);margin-left:20px;font-size:18px;"> <i
+                class="bi bi-arrow-left"></i> Go back</a>
     {% endif %}
     <canvas id="canvas"></canvas>
     <nav class="navbar navbar-expand-lg fixed-bottom navbar-light bg-light">
-    <div class="container-fluid">
-        <ul class="navbar-nav mx-auto mt-2 mt-lg-0">
-        <li class="nav-item">
-            <button class="toolbox" id="clearAll" onclick="clearCanvas(canvas)" style="color: rgb(245, 93, 66);"></button>
-        </li>
-        <li class="nav-item">
-            <button class="toolbox" id="undo" onclick="undo(this)" style="color: rgb(245, 93, 66);"></button>
-        </li>
-        <li class="nav-item">
-            <button class="toolbox" id="redo" onclick="redo(this)" style="color: rgb(245, 93, 66);"></button>
-        </li>
-        <li class="nav-item">
-            <button class="toolbox" id="select" onclick="toggleSelect(this)"></button>
-         </li>
-        <li class="nav-item">
-         <button class="toolbox" id="draw" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePen" aria-expanded="false"
-                 aria-controls="collapsePen" onclick="toggleDraw(this)"></button>
-        </li>
-        <li class="nav-item">
-            <div style="min-height: 120px;">
-                <div class="collapse collapse-horizontal" id="collapsePen" style="color: rgb(245, 93, 66);">
-                <div class="card card-body" style="width: 300px;">
-                    <label>Pen Mode</label>
-                    <select id="chooseMode" style="color: rgb(245, 93, 66);">
-                        <option value="circle">Circle Brush</option>
-                        <option value="crayon">Crayon</option>
-                        <option value="ink">Ink Pen</option>
-                        <option value="fur">Fur Brush</option>
-                        <option value="longfur">Long Fur Brush</option>
-                        <option value="marker">Marker</option>
-                        <option value="ribbon">Ribbon Brush</option>
-                        <option value="shaded">Shaded Brush</option>
-                        <option value="sketchy">Sketchy Brush</option>
-                        <option value="spraypaint">Spray Paint</option>
-                        <option value="square">Square brush</option>
-                        <option value="web">Web Brush</option>
-                    </select>
-                    <label>Pen Colour</label>
-                    <input id='choosePenColor' value="#000000" data-jscolor="" style="color: rgb(245, 93, 66);">
-                    <label>Pen Width</label>
-                    <input id='chooseWidth' value='1' type=range min='1' max='20'>
-                </div>
-                </div>
-            </div>
-        </li>
-        <li class="nav-item">
-            <button class="toolbox" id="text" type="button" data-bs-toggle="collapse" data-bs-target="#collapseText" aria-expanded="false"
-                    aria-controls="collapseText" onclick="toggleText(this)" style="color: rgb(245, 93, 66);">
-            </button>
-        </li>
-        <li class="nav-item">
-            <div style="min-height: 120px;">
-                <div class="collapse collapse-horizontal" id="collapseText">
-                <div class="card card-body" style="width: 300px; color: rgb(245, 93, 66);">
-                    <label>Text Colour</label>
-                    <input id='chooseTextColor' value="#000000" data-jscolor="" style="color: rgb(245, 93, 66);">
-                </div>
-                </div>
-            </div>
-        </li>
-        <li class="nav-item">
-         <button class="toolbox" id="erase" type="button" onclick="toggleErase(this)" style="color: rgb(245, 93, 66);">
-         </button>
-        </li>
-        <li class="nav-item">
-            <button class="toolbox" id="upload" type="button" data-bs-toggle="collapse" data-bs-target="#collapseUpload" aria-expanded="false"
-                    aria-controls="collapseUpload" style="color: rgb(245, 93, 66);"></button>
-        </li>
-        <li class="nav-item">
-            <div style="min-height: 120px;">
-                <div class="collapse collapse-horizontal" id="collapseUpload" style="color: rgb(245, 93, 66);">
-                <div class="card card-body" style="width: 300px; color: rgb(245, 93, 66);">
-                    <input id="img" class="toolbox" type="file" accept="image/*">
-                </div>
-                </div>
-            </div>
-        </li>
-        <li class="nav-item">
-            <button class="toolbox" id="table" type="button"></button>
-                <div id="tableModal" class="modal">
-                <div class="modal-content">
-                <span class="close" style="color: rgb(245, 93, 66); margin-left: 20px;">&times;</span>
-                <form style="margin-top: 10px;">
-                    <label for="rows" style="color: rgb(245, 93, 66); margin-left: 20px;">Rows:</label>
-                    <input type="number" id="rows" name="rows" value="2" min="1" style="color: rgb(245, 93, 66);"><br><br>
-                    <label for="columns" style="color: rgb(245, 93, 66); margin-left: 20px;">Columns:</label>
-                    <input type="number" id="columns" name="columns" value="2" min="1" style="color: rgb(245, 93, 66);"><br><br>
-                    <input type="button" value="Submit" id="submitTable" style="background-color: rgb(245, 93, 66, 0.1); border-color: rgb(245, 93, 66, 0.5); width: 100px; color: rgb(245, 93, 66); margin-left: 20px; margin-bottom: 10px; border-radius: 5px;">
-                </form>
-                </div>
-                </div>
-            </li>
-            <li class="nav-item">
-                <button class="toolbox" id="showCodeEditor"  data-bs-toggle="modal" data-bs-target="#codeEditor" style="color: rgb(245, 93, 66);"></button>
-            </li>
-            <li class="nav-item">
-                <button class="toolbox" id="showSymbols"  data-bs-toggle="modal" data-bs-target="#symbols" style="color: rgb(245, 93, 66);"></button>
-            </li>
-            <li class="nav-item">
-                <button class="toolbox" id="linkPage"  data-bs-toggle="offcanvas" href="#sidebar" aria-controls="sidebar" style="color: rgb(245, 93, 66);"> Link Page</button>
-            </li>
-            <li class="nav-item">
-                <button class="toolbox" id="download" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDownload" aria-expanded="false"
-                        aria-controls="collapseDownload" style="color: rgb(245, 93, 66);"></button>
-            </li>
-            <li class="nav-item">
-                <div style="min-height: 120px;">
-                    <div class="collapse collapse-horizontal" id="collapseDownload" style="color: rgb(245, 93, 66);">
-                    <div class="card card-body" style="width: 300px; color: rgb(245, 93, 66);">
-                        <button id="downloadAsPic" type="button" >Download as PNG</button>
+        <div class="container-fluid">
+            <ul class="navbar-nav mx-auto mt-2 mt-lg-0">
+                {% if can_edit %}
+                    <li class="nav-item">
+                        <button class="toolbox" id="clearAll" onclick="clearCanvas(canvas)"
+                                style="color: rgb(245, 93, 66);"></button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="toolbox" id="undo" onclick="undo(this)"
+                                style="color: rgb(245, 93, 66);"></button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="toolbox" id="redo" onclick="redo(this)"
+                                style="color: rgb(245, 93, 66);"></button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="toolbox" id="select" onclick="toggleSelect(this)"></button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="toolbox" id="draw" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapsePen" aria-expanded="false"
+                                aria-controls="collapsePen" onclick="toggleDraw(this)"></button>
+                    </li>
+                    <li class="nav-item">
+                        <div style="min-height: 120px;">
+                            <div class="collapse collapse-horizontal" id="collapsePen" style="color: rgb(245, 93, 66);">
+                                <div class="card card-body" style="width: 300px;">
+                                    <label>Pen Mode</label>
+                                    <select id="chooseMode" style="color: rgb(245, 93, 66);">
+                                        <option value="circle">Circle Brush</option>
+                                        <option value="crayon">Crayon</option>
+                                        <option value="ink">Ink Pen</option>
+                                        <option value="fur">Fur Brush</option>
+                                        <option value="longfur">Long Fur Brush</option>
+                                        <option value="marker">Marker</option>
+                                        <option value="ribbon">Ribbon Brush</option>
+                                        <option value="shaded">Shaded Brush</option>
+                                        <option value="sketchy">Sketchy Brush</option>
+                                        <option value="spraypaint">Spray Paint</option>
+                                        <option value="square">Square brush</option>
+                                        <option value="web">Web Brush</option>
+                                    </select>
+                                    <label>Pen Colour</label>
+                                    <input id='choosePenColor' value="#000000" data-jscolor=""
+                                           style="color: rgb(245, 93, 66);">
+                                    <label>Pen Width</label>
+                                    <input id='chooseWidth' value='1' type=range min='1' max='20'>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <button class="toolbox" id="text" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapseText" aria-expanded="false"
+                                aria-controls="collapseText" onclick="toggleText(this)"
+                                style="color: rgb(245, 93, 66);">
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <div style="min-height: 120px;">
+                            <div class="collapse collapse-horizontal" id="collapseText">
+                                <div class="card card-body" style="width: 300px; color: rgb(245, 93, 66);">
+                                    <label>Text Colour</label>
+                                    <input id='chooseTextColor' value="#000000" data-jscolor=""
+                                           style="color: rgb(245, 93, 66);">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <button class="toolbox" id="erase" type="button" onclick="toggleErase(this)"
+                                style="color: rgb(245, 93, 66);">
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="toolbox" id="upload" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapseUpload" aria-expanded="false"
+                                aria-controls="collapseUpload" style="color: rgb(245, 93, 66);"></button>
+                    </li>
+                    <li class="nav-item">
+                        <div style="min-height: 120px;">
+                            <div class="collapse collapse-horizontal" id="collapseUpload"
+                                 style="color: rgb(245, 93, 66);">
+                                <div class="card card-body" style="width: 300px; color: rgb(245, 93, 66);">
+                                    <input id="img" class="toolbox" type="file" accept="image/*">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <button class="toolbox" id="table" type="button"></button>
+                        <div id="tableModal" class="modal">
+                            <div class="modal-content">
+                                <span class="close" style="color: rgb(245, 93, 66); margin-left: 20px;">&times;</span>
+                                <form style="margin-top: 10px;">
+                                    <label for="rows" style="color: rgb(245, 93, 66); margin-left: 20px;">Rows:</label>
+                                    <input type="number" id="rows" name="rows" value="2" min="1"
+                                           style="color: rgb(245, 93, 66);"><br><br>
+                                    <label for="columns"
+                                           style="color: rgb(245, 93, 66); margin-left: 20px;">Columns:</label>
+                                    <input type="number" id="columns" name="columns" value="2" min="1"
+                                           style="color: rgb(245, 93, 66);"><br><br>
+                                    <input type="button" value="Submit" id="submitTable"
+                                           style="background-color: rgb(245, 93, 66, 0.1); border-color: rgb(245, 93, 66, 0.5); width: 100px; color: rgb(245, 93, 66); margin-left: 20px; margin-bottom: 10px; border-radius: 5px;">
+                                </form>
+                            </div>
+                        </div>
+                    </li>
+                {% endif %}
+                <li class="nav-item">
+                    <button class="toolbox" id="showCodeEditor" data-bs-toggle="modal" data-bs-target="#codeEditor"
+                            style="color: rgb(245, 93, 66);"></button>
+                </li>
+                {% if can_edit %}
+                    <li class="nav-item">
+                        <button class="toolbox" id="showSymbols" data-bs-toggle="modal" data-bs-target="#symbols"
+                                style="color: rgb(245, 93, 66);"></button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="toolbox" id="linkPage" data-bs-toggle="offcanvas" href="#sidebar"
+                                aria-controls="sidebar" style="color: rgb(245, 93, 66);"> Link Page
+                        </button>
+                    </li>
+                {% endif %}
+                <li class="nav-item">
+                    <button class="toolbox" id="download" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseDownload" aria-expanded="false"
+                            aria-controls="collapseDownload" style="color: rgb(245, 93, 66);"></button>
+                </li>
+                <li class="nav-item">
+                    <div style="min-height: 120px;">
+                        <div class="collapse collapse-horizontal" id="collapseDownload"
+                             style="color: rgb(245, 93, 66);">
+                            <div class="card card-body" style="width: 300px; color: rgb(245, 93, 66);">
+                                <button id="downloadAsPic" type="button">Download as PNG</button>
+                            </div>
+                        </div>
                     </div>
-                    </div>
-                </div>
-            </li>
-    </ul>
+                </li>
+                {% if user == page.notebook.user %}
+                    <li class="nav-item">
+                        <button class="toolbox" id="share" type="button" data-bs-toggle="modal"
+                                data-bs-target="#shareModal" style="color: rgb(245, 93, 66);">Share
+                        </button>
+                    </li>
+                {% endif %}
+            </ul>
         </div>
     </nav>
-    {% include 'partials/codeEditor.html' %}
     {% include 'partials/symbols.html' %}
+    {% include 'partials/shareModal.html' %}
+    {% include 'partials/codeEditor.html' %}
 {% endblock %}
 {% block scripts %}
     <style>
-    .cm-scroller { overflow: auto; min-height: 200px;max-height: 350px }
-    .closeBtn { background: none;border: none}
-    .closeBtn:hover {background-color: #e0e0e0;}
+        .cm-scroller {
+            overflow: auto;
+            min-height: 200px;
+            max-height: 350px
+        }
+
+        .closeBtn {
+            background: none;
+            border: none
+        }
+
+        .closeBtn:hover {
+            background-color: #e0e0e0;
+        }
     </style>
     {% load static %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
-    <script src="{%static 'javascript/note-taking/fabric.min.js'%}"></script>
-        <script src="{%static 'javascript/note-taking/editor.bundle.js'%}"></script>
+    <script src="{% static 'javascript/note-taking/fabric.min.js' %}"></script>
+    <script src="{% static 'javascript/note-taking/editor.bundle.js' %}"></script>
     <script>
-    let counter = {{ page.editors.all|length|add:"1" }};
-    const editors = [];
-    {% for editor in page.editors.all %}
-        editors.push(cm6.createEditor('{{ editor.code|escapejs }}',"#code{{forloop.counter}}"))
-    {% endfor %}
-    const page_id = "{{ page.id }}";
-    const drawing = '{{ page.drawing|safe}}';
-    function getCookie(name) {
-        var cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            var cookies = document.cookie.split(';');
-            for (var i = 0; i < cookies.length; i++) {
-                var cookie = cookies[i].trim();
-                // Does this cookie string begin with the name we want?
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
+        const can_edit = "{{can_edit}}";
+        let counter = {{ page.editors.all|length|add:"1" }};
+        const editors = [];
+        {% for editor in page.editors.all %}
+            editors.push(cm6.createEditor('{{ editor.code|escapejs }}', "#code{{forloop.counter}}"))
+        {% endfor %}
+        const page_id = "{{ page.id }}";
+        const drawing = '{{ page.drawing|safe}}';
+
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
                 }
             }
+            return cookieValue;
         }
-        return cookieValue;
-    }
-    const csrf = getCookie('csrftoken');
 
+        const csrf = getCookie('csrftoken');
     </script>
     <script src="{% static 'javascript/note-taking/editor_modal.js' %}"></script>
-        <script src="{%static 'javascript/note-taking/draw.js'%}"></script>
-        <script src="{%static 'javascript/note-taking/jscolor.js'%}"></script>
+    <script src="{% static 'javascript/note-taking/draw.js' %}"></script>
+    <script src="{% static 'javascript/download.js' %}"></script>
+    <script src="{% static 'javascript/fileSaver.min.js' %}"></script>
+    <script src="{% static 'javascript/canvas-toBlob.js' %}"></script>
+    {% if can_edit %}
+        <script src="{% static 'javascript/note-taking/symbols.js' %}"></script>
+        <script src="{% static 'javascript/note-taking/linkPage.js' %}"></script>
+        <script src="{% static 'javascript/note-taking/table.js' %}"></script>
+        <script src="{% static 'javascript/note-taking/fabric.brushes.min.js' %}"></script>
+        <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+        <style>
+            .ts-wrapper.userEmail .ts-control > div .email {
+                opacity: 0.7;
+            }
 
-        <script src="{% static 'javascript/download.js'%}"></script>
-        <script src="{% static 'javascript/fileSaver.min.js'%}"></script>
-        <script src="{% static 'javascript/canvas-toBlob.js'%}"></script>
-        <script src="{%static 'javascript/note-taking/symbols.js'%}"></script>
-        <script src="{% static 'javascript/note-taking/linkPage.js'%}"></script>
-        <script src="{% static 'javascript/note-taking/table.js'%}"></script>
-        <script src="{%static 'javascript/note-taking/fabric.brushes.min.js'%}"></script>
+            .ts-wrapper.userEmail .ts-control > div .name + .email {
+                margin-left: 5px;
+            }
+
+            .ts-wrapper.userEmail .ts-control > div .email:before {
+                content: '<';
+            }
+
+            .ts-wrapper.userEmail .ts-control > div .email:after {
+                content: '>';
+            }
+
+            .ts-wrapper.userEmail .ts-dropdown .caption {
+                font-size: 12px;
+                display: block;
+                color: #a0a0a0;
+            }
+        </style>
+        <script>
+            const t_select = new TomSelect("#select-user", {
+                plugins: ['remove_button'],
+                persist: false,
+                maxItems: null,
+                valueField: 'email',
+                labelField: 'name',
+                searchField: ['username', 'email'],
+                options: [
+                    {% for user in users %}
+                        {
+                            email: "{{ user.email }}",
+                            username: "{{ user.username }}",
+                            gravatar: "{{ user.profile.mini_gravatar}}"
+                        },
+                    {% endfor %}
+                ],
+                render: {
+                    item: function (item, escape) {
+                        ;
+                        return '<div>' +
+                            (item.username ? '<span class="name">' + escape(item.username) + '</span>' : '') +
+                            (item.email ? '<span class="email">' + escape(item.email) + '</span>' : '') +
+                            '<span class="gravatar">' + '<img class="rounded-circle" src="' + item.gravatar + '"</img></span>' +
+                            '</div>';
+                    },
+                    option: function (item, escape) {
+                        var label = item.username || item.email;
+                        var caption = item.username ? item.email : null;
+                        return '<div class="row">' + '<div class="col">' +
+                            '<span class="label">' + escape(label) + '</span>' +
+                            (caption ? '<span class="caption">' + escape(caption) + '</span>' : '') + '</div>' + '<div class="col">' +
+                            '<span class="gravatar">' + '<img class="rounded-circle" src="' + item.gravatar + '"</img></span>' +
+                            '</div>' +
+                            '</div>';
+                    }
+                }
+            });
+            const t_select2 = new TomSelect('#search-bar', {
+                valueField: 'id',
+                searchField: 'id',
+                options: [
+                    {% for page in viewable_pages %}
+                        {% if page.thumbnail %}
+                            {id: "{{ page.id }}", image: "{{ page.thumbnail.url }}"},
+                        {% endif %}
+                    {% endfor %}
+                ],
+                render: {
+                    option: function (data, escape) {
+                        return '<div>' +
+                            '<span class="id">' + escape(data.id) + '</span>' +
+                            '<span>' + '<img src="' + escape(data.image) + '">' + '</span>' +
+                            '</div>';
+                    },
+                    item: function (data, escape) {
+                        return '<div>' + escape(data.id) + '</div>';
+                    }
+                }
+
+            });
+            $('#shareBtn').click(function () {
+                const selectedUsers = t_select.getValue();
+                const edit_perm = $('#editBox').prop('checked');
+                $.ajax({
+                    url: "{% url 'share_page' page.id %}",
+                    type: 'POST',
+                    async: true,
+                    data: {
+                        'selected_users[]': selectedUsers,
+                        'edit_perm': edit_perm,
+                        csrfmiddlewaretoken: csrf
+                    },
+                });
+                while (selectedUsers.length != 0) {
+                    t_select.removeOption(selectedUsers[0]);
+                }
+            });
+            $('#search-button').click(function () {
+                const selectedPages = t_select2.getValue();
+                $(".page").hide();
+                selectedPages.forEach(page => {
+
+                    $(".page[data-page2-id*=" + page + "]").show();
+                });
+            });
+            const loc = window.location;
+            let wsStart = 'ws://';
+            if (loc.protocol == 'https:') {
+                wsStart = 'wss://';
+            }
+            const socket = new WebSocket(wsStart + window.location.host + "/ws/page" + "/{{ page.id }}/");
+            socket.onopen = function () {
+                console.log('connected');
+            };
+        </script>
+        <script src="{% static 'javascript/note-taking/sync_page.js' %}"></script>
+    {% endif %}
 {% endblock %}

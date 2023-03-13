@@ -1,17 +1,17 @@
 <form action="{% url 'event_detail' event.id %}" method="post" class="collapse multi-collapse">
-          {% csrf_token %}
-          {% include 'partials/bootstrap_form.html' with form=form %}
-          <input type="submit" value="Save Changes" class="btn-chocolate fw-bold" style="color: rgb(245, 93, 66);">
-        </form>
+    {% csrf_token %}
+    {% include 'partials/bootstrap_form.html' with form=form %}
+    <input type="submit" value="Save Changes" class="btn-chocolate fw-bold" style="color: rgb(245, 93, 66);">
+</form>
+
 <div class="collapse multi-collapse show" style="font-size: 20px; word-wrap: break-word;">
-        <p id="title" style="font-size: 20px; color: rgb(245, 93, 66);">Title: {{ event.title }}</p>
-        <p id="description" style="font-size: 18px; color: rgb(245, 93, 66);">Description:{{ event.description }}</p>
-        <p id="start_time" style="font-size: 17px; color: rgb(245, 93, 66);">Start Time: {{ event.start_time }}</p>
-        <p id="end_time" style="font-size: 17px; color: rgb(245, 93, 66);">End Time: {{ event.end_time }}</p>
-        <p id="tag" style="font-size: 15px; color: rgb(245, 93, 66);">Tag: {% for tag in event.tags.all %}
-            <span style="color: {{ tag.color }}">&#x25CF</span>{{tag}}
-        {% endfor %}</p>
-        <p id="page" style="font-size: 15px; color: rgb(245, 93, 66)">Page: {% if notebook_name %}{{ notebook_name }} - {% endif %}{{ page_number }}</p>
-        <p id="sync" style="font-size: 15px; color: rgb(245, 93, 66)">Sync: {{ event.sync }}</p>
-        
+    <p id="title" style="font-size: 20px; color: rgb(245, 93, 66);">Title: {{ event.title }}</p>
+    <p id="description" style="font-size: 18px; color: rgb(245, 93, 66);">Description:{{ event.description }}</p>
+    <p id="start_time" style="font-size: 17px; color: rgb(245, 93, 66);">Start Time: {{ event.start_time }}</p>
+    <p id="end_time" style="font-size: 17px; color: rgb(245, 93, 66);">End Time: {{ event.end_time }}</p>
+    <p id="tag" style="font-size: 15px; color: rgb(245, 93, 66);">Tag: {% for tag in event.tags.all %}
+        <span style="color: {{ tag.color }}">&#x25CF</span>{{tag}}
+    {% endfor %}</p>
+    <p id="page" style="font-size: 15px; color: rgb(245, 93, 66)">Page: {% if notebook_name %}{{ notebook_name }} - {% endif %}{{ page_number }}</p>
+    <p id="sync" style="font-size: 15px; color: rgb(245, 93, 66)">Sync: {{ event.sync }}</p>
 </div>

@@ -38,13 +38,9 @@ body {
     padding: 0;
 }
 
-.container > p {
-    margin: 0;
-}
+.container > p { margin: 0; }
 
-.container > a {
-    color: rgba(197,81,58,0.8);
-}
+.container > a { color: rgba(197,81,58,0.8); }
 
 input {
     width: 50px;/*元素的宽度*/
@@ -92,9 +88,7 @@ input {
     letter-spacing: 1px;/*文本中字符之间的间距*/
 }
 
-.box .input-box > input > input:focus {
-    border: 1px solid rgba(197,81,58,0.8);/*元素边框的样式、宽度和颜色*/
-}
+.box .input-box > input > input:focus { border: 1px solid rgba(197,81,58,0.8);/*元素边框的样式、宽度和颜色*/ }
 
 .box .btn-box {
     width: 250px;/*元素的宽度*/
@@ -130,6 +124,4 @@ input {
   justify-content: center;
 }
 
-#reg:hover{
-    font-weight: bold;
-}
+#reg:hover{ font-weight: bold; }

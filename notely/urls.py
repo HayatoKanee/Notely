@@ -45,7 +45,13 @@ urlpatterns = [
     path('delete_page/<page_id>', views.delete_page, name='delete_page'),
     path('inbox/notifications/', include(notifications.urls, namespace='notifications')),
     path(r'^update_notifications/$', views.update_notifications, name='update_notifications'),
-
+    path('share_page/<page_id>', views.share_page, name='share_page'),
+    path('get_options_notebook/<notebook_id>', views.get_options_notebook, name='get_options_notebook'),
+    path('get_options_folder/<folder_id>', views.get_options_folder, name='get_options_folder'),
+    path('share_folder/<folder_id>', views.share_folder, name='share_folder'),
+    path('share_notebook/<notebook_id>', views.share_notebook, name='share_notebook'),
+    path('share_event/<event_id>/', views.share_event, name='share_event'),
+    path('get_options_event/<event_id>', views.get_options_event, name='get_options_event'),
 ]
 
 if settings.DEBUG:

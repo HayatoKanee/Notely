@@ -11,7 +11,6 @@ from django.conf import settings
 from notifications.signals import notify
 
 
-
 async def send_to_group(group_name, message):
     channel_layer = get_channel_layer()
     await channel_layer.group_send(
@@ -67,18 +66,18 @@ def send_notification_email(reminder):
         to_emails=email,
         subject=subject,
         html_content=html_content)
-    
+
     try:
         sg = SendGridAPIClient(
             api_key=settings.EMAIL_HOST_PASSWORD
-            )
+        )
         response = sg.send(mail)
         print(response.status_code)
         print(response.body)
         print(response.headers)
     except Exception as ex:
         print("a")
-    
+
 
 @shared_task
 def send_notification(reminder_id):

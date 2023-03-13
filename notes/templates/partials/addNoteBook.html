@@ -1,24 +1,24 @@
 <div class="modal fade" id="addNotebook" aria-hidden="true" aria-labelledby="addNotebookLabel" tabindex="-1" style="color: rgb(245, 93, 66);">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="addNotebookLabel" style="color: rgb(245, 93, 66);">New Notebook</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-        {% if folder %}
-         <form action="{% url 'sub_folders_tab' folder.id %}" method="post">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="addNotebookLabel" style="color: rgb(245, 93, 66);">New Notebook</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            {% if folder %}
+                <form action="{% url 'sub_folders_tab' folder.id %}" method="post">
             {% else %}
-            <form action="{% url 'folders_tab' %}" method="post">
-        {% endif %}
-      <div class="modal-body">
-                {% csrf_token %}
-                {% include 'partials/bootstrap_form.html' with form=notebook_form %}
+                <form action="{% url 'folders_tab' %}" method="post">
+            {% endif %}
+            <div class="modal-body">
+          {% csrf_token %}
+          {% include 'partials/bootstrap_form.html' with form=notebook_form %}
       </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary" data-bs-target="#add" data-bs-toggle="modal" data-bs-dismiss="modal">Back</button>
+            <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-target="#add" data-bs-toggle="modal" data-bs-dismiss="modal">Back</button>
           <button type="submit" class="btn btn-primary">Create</button>
       </div>
-         </form>
+            </form>
+        </div>
     </div>
-  </div>
 </div>

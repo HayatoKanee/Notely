@@ -56,5 +56,25 @@
             "event_id": 2,
             "reminder_time": "5"
         }
+    },
+      {
+        "model": "notes.EventTag",
+        "pk": 2,
+        "fields": {
+            "user_id": 2,
+            "color": "#0000FF",
+            "title": "work",
+            "events": [2]
+        }
+    },
+    {
+        "model": "notes.PageTag",
+        "pk": 2,
+        "fields": {
+            "user_id": 2,
+            "color": "#0000FF",
+            "title": "FC",
+            "pages": [2]
+        }
     }
 ]
