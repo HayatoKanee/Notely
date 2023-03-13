@@ -29,11 +29,11 @@
                 <div class="card"
                      style="width: 600px; margin-left: 100px; box-shadow: 2px 2px 4px grey; margin-top: 30px;">
                     <div style="margin-left: 30px;">
-                    <p class="profile-email h6" style="font-size: 22px; margin-top: 13px;">
-                        <em>Email: {{ user.email }}</em></p>
-                    <p class="profile-email h6" style="font-size: 22px; margin-top: 15px;">
-                        <em>Last log in: {{ user.last_login }}</em></p>
-                </div>
+                        <p class="profile-email h6" style="font-size: 22px; margin-top: 13px;">
+                            <em>Email: {{ user.email }}</em></p>
+                        <p class="profile-email h6" style="font-size: 22px; margin-top: 15px;">
+                            <em>Last log in: {{ user.last_login }}</em></p>
+                    </div>
                 </div>
 
                 <div class="card"
@@ -50,7 +50,8 @@
                                            style="color: rgb(60, 120, 216)">
                                 </form>
                             </div>
-                            <div id="personalDetails" class="collapse multi-collapse show" style="font-size: 22px; margin-top: 12px;">
+                            <div id="personalDetails" class="collapse multi-collapse show"
+                                 style="font-size: 22px; margin-top: 12px;">
                                 <p>First Name: {{ user.first_name }} </p>
                                 <p>Last Name: {{ user.last_name }}</p>
                                 <p>Date of Birth: {{ user.profile.dob }}</p>
@@ -63,7 +64,8 @@
                      style="width: 600px; margin-left: 100px; box-shadow: 2px 2px 4px grey; margin-top: 30px;">
                     <div style="margin-left: 30px;">
                         <div class="profile">
-                            <div id="personalDetails" class="collapse multi-collapse show" style="font-size: 22px; margin-top: 12px;">
+                            <div id="personalDetails" class="collapse multi-collapse show"
+                                 style="font-size: 22px; margin-top: 12px;">
                                 <p>Address: {{ user.profile.address }}</p>
                                 <p>Date joined: {{ user.date_joined }}</p>
                             </div>

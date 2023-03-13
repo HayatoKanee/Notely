@@ -36,7 +36,8 @@
                 {% for page in viewable_pages %}
                     <div class="col page" data-tag-id={{ page.get_all_tags_id }}; data-page2-id= {{ page.id }}>
                         <div class="dropdown">
-                            <a href="{% url 'page' page.id %}" style="color: rgb(60, 120, 216,0.9);" data-page-num = {{ forloop.counter }}>
+                            <a href="{% url 'page' page.id %}" style="color: rgb(60, 120, 216,0.9);"
+                               data-page-num= {{ forloop.counter }}>
                                 <span style="color: {{ p.tags.first.color }}">&#x25CF{% if page.thumbnail %}
                                     <img src="{{ page.thumbnail.url }}">
                                 {% else %}
