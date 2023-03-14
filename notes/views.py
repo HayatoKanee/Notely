@@ -10,7 +10,7 @@ from django.shortcuts import render, redirect, get_object_or_404, resolve_url
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.db.models import Q
-from django.urls import reverse
+from django.urls import reverse, resolve
 
 from .forms import SignUpForm, LogInForm, UserForm, ProfileForm, PasswordForm, FolderForm, NotebookForm, EventForm, \
     EventTagForm, PageTagForm, PageForm, ShareEventForm, SharePageForm
@@ -30,6 +30,7 @@ from django.core.mail import send_mail
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 from django.core import signing
+import re
 import sendgrid
 from google.oauth2.credentials import Credentials
 from googleapiclient.errors import HttpError
@@ -39,15 +40,25 @@ SCOPES = ['https://www.googleapis.com/auth/calendar']
 
 @login_prohibited
 def sign_up(request):
+    next_url = request.GET.get('next') or ''
+
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
             user = form.save()
             login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-            return redirect('log_in')
+            next_url = request.POST.get('next') or 'log_in'
+            resolver_match = resolve(next_url)
+            print(resolver_match)
+            page_id_en = resolver_match.kwargs['page_id']
+            page_id = signing.loads(page_id_en)
+            print(page_id)
+            page = Page.objects.get(id=page_id)
+            assign_perm('dg_view_page', request.user, page)
+            return redirect('page', page_id)
     else:
         form = SignUpForm()
-    return render(request, 'sign_up.html', {'form': form})
+    return render(request, 'sign_up.html', {'form': form, 'next': next_url})
 
 
 @login_prohibited
@@ -144,8 +155,6 @@ def calendar_tab(request):
                 page_data = event_form.cleaned_data['page']
                 event = event_form.save()
 
-                
-
                 if page_data:
                     page_id = page_data.id
                     page = Page.objects.get(id=page_id)
@@ -153,7 +162,6 @@ def calendar_tab(request):
                     event.pages.set([page])
                 else:
                     event.save()  # Save the event without adding the page to the many-to-many relationship
-
 
                 if int(event_form.cleaned_data['reminder']) > -1:
                     Reminder.objects.create(event=event, reminder_time=int(event_form.cleaned_data['reminder']))
@@ -173,7 +181,7 @@ def calendar_tab(request):
         if 'shareEvent_submit' in request.POST:
             shareEvent_form = ShareEventForm(request.POST)
             if shareEvent_form.is_valid():
-                
+
                 email = shareEvent_form.cleaned_data['email']
                 message = shareEvent_form.cleaned_data['message']
                 user = request.user.username
@@ -193,11 +201,11 @@ def calendar_tab(request):
                     to_emails=email,
                     subject=subject,
                     html_content=html_content)
-                
+
                 try:
                     sg = SendGridAPIClient(
                         api_key=settings.EMAIL_HOST_PASSWORD
-                        )
+                    )
                     response = sg.send(mail)
                     print(response.status_code)
                     print(response.body)
@@ -252,10 +260,9 @@ def gravatar(request):
     return redirect("https://en.gravatar.com/")
 
 
-@login_required
+@login_required(login_url='/sign_up/')
 @check_perm('dg_view_page', Page)
 def page(request, page_id):
-
     try:
         page_id = signing.loads(page_id)
     except signing.BadSignature:
@@ -318,9 +325,8 @@ def page(request, page_id):
 
     return render(request, 'page.html',
                   {'page': page, 'page_tag_form': page_tag_form, 'tags': tags, 'users': users_without_perms,
-                   'viewable_pages': viewable_pages, 'can_edit': can_edit, 'can_edit_notebook': can_edit_notebook, 'share_page_external_form':SharePageForm()})
-
-
+                   'viewable_pages': viewable_pages, 'can_edit': can_edit, 'can_edit_notebook': can_edit_notebook,
+                   'share_page_external_form': SharePageForm()})
 
 
 @login_required
@@ -385,7 +391,6 @@ def delete_page(request, page_id):
 
 @login_required
 def event_detail(request, event_id):
-
     event = Event.objects.get(id=event_id)
     notebook_name = None
     page_number = None
@@ -395,7 +400,7 @@ def event_detail(request, event_id):
         page = Page.objects.get(id=page_id)
         print(event.pages.all(), event.pages.all()[0].id)
         page_number = page.get_page_number()
-        
+
     if request.method == 'POST':
         if not request.user.has_perm('dg_edit_event', event):
             raise PermissionDenied
@@ -405,14 +410,14 @@ def event_detail(request, event_id):
             form.save()
             messages.add_message(request, messages.SUCCESS, "event updated!")
             return redirect('calendar_tab')
-        
+
     else:
         form = EventForm(request.user, instance=event)
-    html = render_to_string('partials/event_detail.html', 
-                            {'form': form, 'event': event, 
-                            'notebook_name': notebook_name,
-                            'page_number':page_number
-                                                            }, request=request)
+    html = render_to_string('partials/event_detail.html',
+                            {'form': form, 'event': event,
+                             'notebook_name': notebook_name,
+                             'page_number': page_number
+                             }, request=request)
     print(event.user.id)
     print(request.user.id)
     return JsonResponse({'html': html, 'event_user_id': event.user.id})
@@ -438,7 +443,7 @@ def update_event(request, event_id):
     if request.method == 'POST':
         event = Event.objects.get(id=event_id)
         if not request.user.has_perm('dg_edit_event', event):
-                raise PermissionDenied
+            raise PermissionDenied
         start_time = request.POST.get('start')
         end_time = request.POST.get('end')
         event.start_time = datetime.fromisoformat(start_time[:-1] + '+00:00')
