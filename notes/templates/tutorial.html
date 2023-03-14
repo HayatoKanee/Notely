@@ -192,15 +192,15 @@
 
 			</ul>
 		</div>
-		<div class="modal" id="myModal">
+		<div class="imageF" id="myImage">
       		<span class="close" onclick="closeModal()">&times;</span>
-      		<img class="modal-content" id="img01">
+      		<img class="image-content" id="imgSample">
     	</div>
 
 		<script>
-      		var modal = document.getElementById("myModal");
+      		var modal = document.getElementById("myImage");
 
-      		var img = document.getElementById("img01");
+      		var img = document.getElementById("imgSample");
       		function popupImage(image) {
         		modal.style.display = "block";
         		img.src = image.src;
@@ -219,7 +219,7 @@
         	cursor: pointer;
       	}
 
-      	.modal {
+      	.imageF {
         	display: none;
         	position: fixed;
         	z-index: 1;
@@ -232,11 +232,11 @@
         	background-color: rgba(0, 0, 0, 0.8);
       	}
 
-      	.modal-content {
+      	.image-content {
         	display: block;
         	margin: auto;
-        	max-width: 700px;
-        	max-height: 700px;
+        	max-width: 1000px;
+        	max-height: 1000px;
       	}
 
       	.close {
@@ -244,7 +244,7 @@
        	 	position: absolute;
         	top: 10px;
         	right: 25px;
-        	font-size: 35px;
+        	font-size: 50px;
         	font-weight: bold;
         	transition: all 0.3s;
         	cursor: pointer;
