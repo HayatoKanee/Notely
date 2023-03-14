@@ -11,7 +11,7 @@
 		<div>
 			<p><h3>How to start our website</h3></p>
 			<ol>
-				<li>Find the<a href="{% url 'log_in' %}"></a><button class="logIn">"login"</button>(in your upper right corner),<br />If you do not have an account, please go to the<a href="{% url 'sign_up' %}"><button class="signUp">"sign up"</button></a>page.</li><br />
+				<li>Find the<a href="{% url 'log_in' %}"><button class="logIn">"login"</button></a>(in your upper right corner),<br />If you do not have an account, please go to the<a href="{% url 'sign_up' %}"><button class="signUp">"sign up"</button></a>page.</li><br />
 				<div><img class="imageT" src= "{% static "home/signlogin_homepage.jpg" %}" onclick="popupImage(this)"></div>
 				<li>After logging in, you will enter the notebook home page.</li>
 				<div><img class="imageT" src= "{% static "notebook/notebook home/login_homepage.png" %}" onclick="popupImage(this)"></div>
@@ -214,7 +214,7 @@
 
 	<style>
 		.imageT {
-        	width: 200px;
+        	width: 350px;
         	height: 200px;
         	cursor: pointer;
       	}
@@ -260,6 +260,22 @@
       	.page{
       		padding-left: 20px;
       	}
+
+      	.logIn {
+	  		background-color: #fff;
+	  		color: #00008B;
+	  		border: none;
+	  		border-radius: 5px;
+	  		font-size: 16px;
+		}
+
+		.signUp {
+	  		background-color: #fff;
+	  		color: #00008B;
+	  		border: none;
+	  		border-radius: 5px;
+	  		font-size: 16px;
+		}
 	</style>
 </html>
 
