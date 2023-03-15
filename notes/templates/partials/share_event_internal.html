@@ -1,39 +1,48 @@
-<div class="modal fade" id="shareEventModalInternal" aria-hidden="true" aria-labelledby="shareEventModalInternalLabel" tabindex="-1">
+<div class="modal fade" id="shareEventModalInternal" aria-hidden="true" aria-labelledby="shareEventModalInternalLabel"
+     tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5"style="color: rgb(245, 93, 66)">Share</h1>
+                <h1 class="modal-title fs-5" style="color: rgb(60, 120, 216)">Share</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p id="title" style="font-size: 20px; color: rgb(245, 93, 66);">Event to be shared: {{ event.title }}</p>
+                <p id="title" style="font-size: 20px; color: rgb(60, 120, 216);">Event to be
+                    shared: {{ event.title }}</p>
                 <select id="select-user" class="userEmail" placeholder="Enter username or email" autocomplete="off">
                 </select>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" id="share_btn"> Share</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background-color: rgb(245, 93, 66, 0.1); border-color: rgb(245, 93, 66); width: 100px; color: rgb(245, 93, 66);">Cancel</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                        style="background-color: rgb(60, 120, 216, 0.1); border-color: rgb(60, 120, 216); width: 100px; color: rgb(60, 120, 216);">
+                    Cancel
+                </button>
             </div>
         </div>
     </div>
 </div>
-  
-  
+
+
 <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
 <style>
     .ts-wrapper.userEmail .ts-control > div .email {
         opacity: 0.7;
     }
+
     .ts-wrapper.userEmail .ts-control > div .name + .email {
         margin-left: 5px;
     }
+
     .ts-wrapper.userEmail .ts-control > div .email:before {
         content: '<';
     }
+
     .ts-wrapper.userEmail .ts-control > div .email:after {
         content: '>';
     }
+
     .ts-wrapper.userEmail .ts-dropdown .caption {
         font-size: 12px;
         display: block;
@@ -51,26 +60,31 @@
         searchField: ['username', 'email'],
         options: [
             {% for user in users %}
-                {email: "{{ user.email }}", username: "{{ user.username }}", gravatar: "{{ user.profile.mini_gravatar}}"},
+                {
+                    email: "{{ user.email }}",
+                    username: "{{ user.username }}",
+                    gravatar: "{{ user.profile.mini_gravatar}}"
+                },
             {% endfor %}
         ],
         render: {
-            item: function(item, escape) {;
+            item: function (item, escape) {
+                ;
                 return '<div>' +
                     (item.username ? '<span class="name">' + escape(item.username) + '</span>' : '') +
                     (item.email ? '<span class="email">' + escape(item.email) + '</span>' : '') +
-                    '<span class="gravatar">' + '<img class="rounded-circle" src="'+ item.gravatar + '"</img></span>'+
+                    '<span class="gravatar">' + '<img class="rounded-circle" src="' + item.gravatar + '"</img></span>' +
                     '</div>';
 
             },
-            option: function(item, escape) {
+            option: function (item, escape) {
                 var label = item.username || item.email;
                 var caption = item.username ? item.email : null;
                 return '<div class="row">' + '<div class="col">' +
                     '<span class="label">' + escape(label) + '</span>' +
-                    (caption ? '<span class="caption">' + escape(caption) + '</span>' : '') + '</div>'+ '<div class="col">'+
-                    '<span class="gravatar">' + '<img class="rounded-circle" src="'+ item.gravatar + '"</img></span>' +
-                    '</div>'+
+                    (caption ? '<span class="caption">' + escape(caption) + '</span>' : '') + '</div>' + '<div class="col">' +
+                    '<span class="gravatar">' + '<img class="rounded-circle" src="' + item.gravatar + '"</img></span>' +
+                    '</div>' +
                     '</div>';
             }
         }
@@ -81,7 +95,7 @@
         const selectedUsers = t_select.getValue();
         const csrf = $('input[name="csrfmiddlewaretoken"]').val();
         const url = "{% url 'share_event' 0 %}".replace("0", event_id);
-  
+
         $.ajax({
             url: url,
             type: 'POST',

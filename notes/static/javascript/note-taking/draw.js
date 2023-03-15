@@ -212,9 +212,11 @@ if (can_edit === "True") {
 }
 let currentMode;
 const canvas = initCanvas('canvas');
-function loaddata(drwaing){
+
+function loaddata(drwaing) {
 
 }
+
 if (can_edit === "True") {
     canvas.loadFromJSON(drawing, function () {
         canvas.getObjects().forEach(function (obj) {
@@ -236,6 +238,21 @@ if (can_edit === "True") {
                         visible: false
                     });
                     canvas.renderAll();
+                });
+            }
+            if (obj.is_table) {
+                obj.on('mousedblclick', function (option) {
+                    const pointer = canvas.getPointer(option.e);
+                    const normalized_pointer = canvas._normalizePointer(obj, pointer)
+                    console.log(normalized_pointer)
+                    let target;
+                    obj.forEachObject(function (o) {
+                        if (canvas._checkTarget(normalized_pointer, o)) {
+                            target = o;
+                        }
+                    });
+                    canvas.setActiveObject(target.item(1));
+                    target.item(1).enterEditing();
                 });
             }
         });
@@ -339,7 +356,7 @@ function save(sync) {
         async: sync,
         url: "/save_page/" + page_id,
         data: {
-            canvas: JSON.stringify(canvas.toDatalessJSON(['link'])),
+            canvas: JSON.stringify(canvas.toDatalessJSON(['link', 'is_table'])),
             editors: JSON.stringify(editorsData),
             thumbnail: getThumbnail(),
             csrfmiddlewaretoken: csrf

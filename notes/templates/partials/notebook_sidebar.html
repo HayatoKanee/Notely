@@ -1,9 +1,9 @@
 <div class="offcanvas offcanvas-start" data-bs-scroll="true" id="sidebar" aria-labelledby="sidebarLabel"
      data-bs-backdrop="false"
      data-bs-keyboard="false" aria-hidden="true" aria-labelledby="symbolsLabel" tabindex="-1"
-     style="color: rgb(245, 93, 66);">
+     style="color: rgb(60, 120, 216);">
     <div class="offcanvas-header"
-         style="font-size: 22px; color: rgb(245, 93, 66); text-align: center; line-height: 70px; background: rgb(245, 93, 66, 0.1); user-select: none; color: rgb(245, 93, 66);">
+         style="font-size: 22px; color: rgb(60, 120, 216); text-align: center; line-height: 70px; background: rgb(60, 120, 216, 0.1); user-select: none; color: rgb(60, 120, 216);">
         <h5 class="offcanvas-title" id="sidebarLabel">{{ page.notebook.notebook_name }}
             {% if user != page.notebook.user %}(shared by {{ page.notebook.user.username }}){% endif %}</h5>
         <nav class="navbar navbar-expand-lg">
@@ -36,7 +36,8 @@
                 {% for page in viewable_pages %}
                     <div class="col page" data-tag-id={{ page.get_all_tags_id }}; data-page2-id= {{ page.id }}>
                         <div class="dropdown">
-                            <a href="{% url 'page' page.id %}" style="color: rgb(245, 93, 66,0.9);" data-page-num = {{ forloop.counter }}>
+                            <a href="{% url 'page' page.id %}" style="color: rgb(60, 120, 216,0.9);"
+                               data-page-num= {{ forloop.counter }}>
                                 <span style="color: {{ p.tags.first.color }}">&#x25CF{% if page.thumbnail %}
                                     <img src="{{ page.thumbnail.url }}">
                                 {% else %}
@@ -142,7 +143,7 @@
     }
 
     .page:hover {
-        background-color: rgb(245, 93, 66, 0.1);
+        background-color: rgb(60, 120, 216, 0.1);
         border-radius: 50%;
         padding-right: 20px;
     }
@@ -151,9 +152,9 @@
         position: absolute;
         width: 35px;
         height: 35px;
-        background: rgb(245, 93, 66, 0.02);
+        background: rgb(60, 120, 216, 0.02);
         cursor: pointer;
-        border: 2px solid rgb(245, 93, 66, 0.5);
+        border: 2px solid rgb(60, 120, 216, 0.5);
     }
 
     .plus:after {
@@ -161,7 +162,7 @@
         position: absolute;
         height: 4px;
         width: 50%;
-        background: rgb(245, 93, 66, 0.8);
+        background: rgb(60, 120, 216, 0.8);
         top: 50%;
         left: 50%;
     }
@@ -172,7 +173,7 @@
         height: 50%;
         width: 4px;
         transform: translate(-50%, -50%);
-        background: rgb(245, 93, 66, 0.8);
+        background: rgb(60, 120, 216, 0.8);
         top: 50%;
         left: 50%;
     }
@@ -189,12 +190,12 @@
 
     .plus:hover:before,
     .plus:hover:after {
-        background: rgb(245, 93, 66, 0.8);
+        background: rgb(60, 120, 216, 0.8);
         transition: 0.2s;
     }
 
     .plus:hover {
-        background-color: rgb(245, 93, 66, 0.08);
+        background-color: rgb(60, 120, 216, 0.08);
         transition: 0.2s;
     }
 
