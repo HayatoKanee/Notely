@@ -230,6 +230,7 @@ class Event(models.Model):
     google_id = models.CharField(blank=True, max_length=200)
     sync = models.BooleanField(blank=False, default=False)
     pages = models.ManyToManyField('Page', blank=True, related_name='events')
+    cred = models.ForeignKey('Credential', related_name="events", on_delete=models.SET_NULL, blank=True, null=True)
 
     class Meta:
         permissions = [
@@ -241,12 +242,10 @@ class Event(models.Model):
     def save(
             self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
-        if self.sync:
-            try:
-                credential = Credential.objects.get(user=self.user)
-            except Credential.DoesNotExist:
-                return super().save()
-            creds = Credentials.from_authorized_user_info(info=json.loads(credential.google_cred))
+        if self.sync and self.cred:
+            print(self.title);
+            print(self.cred.google_email)
+            creds = Credentials.from_authorized_user_info(info=json.loads(self.cred.google_cred))
             # Create a service object to interact with the Google Calendar API
             service = build('calendar', 'v3', credentials=creds)
             g_event = {
@@ -265,7 +264,7 @@ class Event(models.Model):
                 try:
                     service.events().update(calendarId='primary', eventId=self.google_id, body=g_event).execute()
                 except HttpError:
-                    return
+                    return super().save()
             else:
                 created_event = service.events().insert(calendarId='primary', body=g_event).execute()
                 self.google_id = created_event['id']
@@ -273,12 +272,8 @@ class Event(models.Model):
         super().save()
 
     def delete(self, using=None, keep_parents=False):
-        if self.sync:
-            try:
-                credential = Credential.objects.get(user=self.user)
-            except Credential.DoesNotExist:
-                return super().delete(using=using, keep_parents=keep_parents)
-            creds = Credentials.from_authorized_user_info(info=json.loads(credential.google_cred))
+        if self.sync and self.cred:
+            creds = Credentials.from_authorized_user_info(info=json.loads(self.cred.google_cred))
             # Create a service object to interact with the Google Calendar API
             service = build('calendar', 'v3', credentials=creds)
             if self.google_id:
@@ -317,3 +312,4 @@ class Reminder(models.Model):
 class Credential(models.Model):
     user = models.ForeignKey(User, related_name="creds", on_delete=models.CASCADE)
     google_cred = models.TextField(blank=True)
+    google_email = models.EmailField(unique=True)
