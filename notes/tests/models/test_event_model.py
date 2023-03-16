@@ -61,8 +61,10 @@ class EventModelTestCase(TestCase):
         mock_service.events.return_value = mock_events
         mock_build.return_value = mock_service
         self.event.sync = True
-        Credential.objects.create(user=self.event.user, google_cred='{"access_token": "test_token"}')
+        cred = Credential.objects.create(user=self.event.user, google_cred='{"access_token": "test_token"}')
+        self.event.cred = cred
         self.event.save()
+        self.event.refresh_from_db()
         self.assertEqual(self.event.google_id, 'test_id')
 
     @mock.patch('notes.models.Credentials.from_authorized_user_info')
@@ -78,7 +80,8 @@ class EventModelTestCase(TestCase):
         self.event.sync = True
         self.event.google_id = 'test_id'
         self.event.description = 'test'
-        Credential.objects.create(user=self.event.user, google_cred='{"access_token": "test_token"}')
+        cred = Credential.objects.create(user=self.event.user, google_cred='{"access_token": "test_token"}')
+        self.event.cred = cred
         self.event.save()
         self.event.refresh_from_db()
         self.assertNotEqual(self.event.description, 'test')
@@ -89,7 +92,8 @@ class EventModelTestCase(TestCase):
         self.event.sync = True
         self.event.google_id = 'test_id'
         self.event.description = 'test'
-        Credential.objects.create(user=self.event.user, google_cred='{"access_token": "test_token"}')
+        cred = Credential.objects.create(user=self.event.user, google_cred='{"access_token": "test_token"}')
+        self.event.cred = cred
         self.event.save()
         self.event.refresh_from_db()
         self.assertEqual(self.event.description, 'test')
@@ -124,7 +128,8 @@ class EventModelTestCase(TestCase):
         mock_build.return_value = mock_service
         self.event.sync = True
         self.event.google_id = 'test_id'
-        Credential.objects.create(user=self.event.user, google_cred='{"access_token": "test_token"}')
+        cred = Credential.objects.create(user=self.event.user, google_cred='{"access_token": "test_token"}')
+        self.event.cred = cred
         user = self.event.user
         before = user.events.count()
         with self.assertRaises(HttpError):
@@ -143,7 +148,8 @@ class EventModelTestCase(TestCase):
         mock_build.return_value = mock_service
         self.event.sync = True
         self.event.google_id = 'test_id'
-        Credential.objects.create(user=self.event.user, google_cred='{"access_token": "test_token"}')
+        cred = Credential.objects.create(user=self.event.user, google_cred='{"access_token": "test_token"}')
+        self.event.cred = cred
         user = self.event.user
         before = user.events.count()
         with self.assertRaises(HttpError):
