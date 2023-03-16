@@ -59,7 +59,8 @@
                                         <a href="{% url 'delete_folder_tab' item.id %}" style="color: rgb(245, 93, 66);">Delete</a>
                                         <a class="share" type="button" data-bs-toggle="modal" data-bs-target="#shareModal"
                                            data-options-url="{% url 'get_options_folder' item.id %}"
-                                            data-share-url="{% url 'share_folder' item.id%}">Share</a>
+                                            data-share-url="{% url 'share_folder' item.id%}"
+                                           data-share-ex-url="{% url 'share_folder_ex' item.id%}">Share</a>
                                         <a href="#" style="color: rgb(245, 93, 66);">Link 3</a>
                                     </div>
                                 </div>
@@ -71,7 +72,8 @@
                                             <a href="{% url 'delete_notebook_tab' item.id %}" style="color: rgb(245, 93, 66);">Delete</a>
                                             <a class="share" type="button" data-bs-toggle="modal" data-bs-target="#shareModal"
                                              data-options-url="{% url 'get_options_notebook' item.id %}"
-                                                data-share-url="{% url 'share_notebook' item.id%}">Share</a>
+                                                data-share-url="{% url 'share_notebook' item.id%}"
+                                            data-share-ex-url="{% url 'share_notebook_ex' item.id%}">Share</a>
                                             <a href="#" style="color: rgb(245, 93, 66);">Link 3</a>
                                         </div>
                                     </div>
@@ -130,6 +132,7 @@
     <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
     <script>
         const t_select = new TomSelect("#select-user", {
+            create: true,
             plugins: ['remove_button'],
             persist: false,
             maxItems: null,
@@ -160,6 +163,7 @@
         let share_url;
         $('.share').click(function (){
             share_url = this.getAttribute('data-share-url')
+            share_url_2 = this.getAttribute('data-share-ex-url')
             $.ajax({
                 url: this.getAttribute('data-options-url'),
                 success: function (data){
@@ -173,19 +177,42 @@
                 }
             });
         });
-        $('#shareBtn').click(function (){
-            const selectedUsers = t_select.getValue();
+
+        let createdUsers = [];
+        t_select.on('item_add', function(value, $item) {
+        let user = t_select.options[value];
+        createdUsers.push(user);
+        console.log('User added:', user);
+        });
+
+        $('#shareBtn').click(function () {
+            let selectedUsers = t_select.getValue();
             const edit_perm = $('#editBox').prop('checked');
-            $.ajax({
-                url: share_url,
-                type: 'POST',
-                async: true,
-                data: {
-                    'selected_users[]': selectedUsers,
-                    'edit_perm': edit_perm,
-                    csrfmiddlewaretoken: '{{csrf_token}}'
-                },
-            });
+            selectedUsers = selectedUsers.filter((item) => !createdUsers.includes(item));
+
+                    $.ajax({
+                        url: share_url,
+                        type: 'POST',
+                        async: true,
+                        data: {
+                            'selected_users[]': selectedUsers,
+                            'edit_perm': edit_perm,
+                            csrfmiddlewaretoken: '{{csrf_token}}'
+                        },
+                    });
+
+                    $.ajax({
+                        url: share_url_2,
+                        type: 'POST',
+                        async: true,
+                        data: {
+                            'createdUsers[]': createdUsers,
+                            'edit_perm': edit_perm,
+                            csrfmiddlewaretoken: '{{csrf_token}}'
+                        },
+                    });
+
+
             while(selectedUsers.length!=0){
                 t_select.removeOption(selectedUsers[0]);
             }

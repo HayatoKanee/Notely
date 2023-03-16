@@ -91,6 +91,17 @@ def get_options(obj, perm_name):
             users_without_perms]
 
 
+def assign_perm_page(user, page, can_edit=False):
+    assign_perm('dg_view_notebook', user, page.notebook)
+    assign_perm('dg_view_page', user, page)
+    if can_edit:
+        assign_perm('dg_edit_page', user, page)
+    folder = page.notebook.folder
+    while folder:
+        assign_perm('dg_view_folder', user, folder)
+        folder = folder.parent
+
+
 def assign_perm_notebook(user, notebook, can_edit=False):
     assign_perm('dg_view_notebook', user, notebook)
     for page in notebook.pages.all():
@@ -130,6 +141,11 @@ def share_obj(request, obj):
     edit_perm = request.POST.get('edit_perm')
     can_edit = edit_perm == "true"
     for email in selected_users:
-        user = User.objects.get(email=email)
-        assign_perm_func(user, obj, can_edit)
+        try:
+            user = User.objects.get(email=email)
+            assign_perm_func(user, obj, can_edit)
+        except User.DoesNotExist:
+            print("do have this user!")
+            # share_folder_ex(request, obj.id)
+
     return JsonResponse({'status': 'success'})

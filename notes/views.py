@@ -1,6 +1,7 @@
 import json
 import base64
 import os
+from urllib.parse import urlencode
 
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
@@ -21,7 +22,7 @@ from .helpers import login_prohibited, check_perm
 from django.contrib.auth.hashers import check_password
 from guardian.shortcuts import get_objects_for_user, get_users_with_perms, assign_perm
 from .view_helper import sort_items_by_created_time, save_folder_notebook_forms, get_or_create_event_from_google, \
-    get_options, assign_perm_notebook, assign_perm_folder, share_obj
+    get_options, assign_perm_notebook, assign_perm_folder, share_obj, assign_perm_page
 from datetime import datetime
 from django.utils import timezone
 from google_auth_oauthlib.flow import Flow
@@ -51,10 +52,14 @@ def sign_up(request):
             resolver_match = resolve(next_url)
             print(resolver_match)
             page_id_en = resolver_match.kwargs['page_id']
+            user_id = request.user.id
             page_id = signing.loads(page_id_en)
             print(page_id)
             page = Page.objects.get(id=page_id)
+            print(page)
+            share_page(request, page_id)
             assign_perm('dg_view_page', request.user, page)
+            assign_perm_page(request.user, page, can_edit=True)
             return redirect('page', page_id)
     else:
         form = SignUpForm()
@@ -298,18 +303,18 @@ def page(request, page_id):
             new_page = Page.objects.get(id=page_id)
             if sharePage_form.is_valid():
                 email = sharePage_form.cleaned_data['email']
+                page = sharePage_form.cleaned_data['page']
                 user = request.user.username
-                encryped_id = signing.dumps(new_page.id)
+                encryped_id = signing.dumps(page.id)
                 base_url = f"{request.scheme}://{request.get_host()}"
                 new_url = f"{base_url}{reverse('page', args=[encryped_id])}"
-                subject = f'You have been shared with this page: {new_page}'
+                subject = f'You have been shared with this page: {page}'
                 html_content = f'<p>You have been shared with this page: {new_url}\n</p> <p>by {user}\n</p>'
                 mail = Mail(
                     from_email='winniethepooh.notely@gmail.com',
                     to_emails=email,
                     subject=subject,
                     html_content=html_content)
-
                 try:
                     sg = SendGridAPIClient(
                         api_key=settings.EMAIL_HOST_PASSWORD
@@ -536,6 +541,83 @@ def share_folder(request, folder_id):
         return share_obj(request, folder)
     except Page.DoesNotExist:
         return JsonResponse({'status': 'fail'})
+
+
+@login_required(login_url='/sign_up/')
+def share_folder_ex(request, folder_id):
+    try:
+        folder_id = signing.loads(folder_id)
+        print("yuzebai hello")
+    except signing.BadSignature:
+        pass
+    folder = Folder.objects.get(id=folder_id)
+    if request.method == 'POST':
+        selected_emails = request.POST.getlist('selected_emails[]')
+        if selected_emails:
+            email = selected_emails[0]
+        else:
+            email = None
+        user = request.user.username
+        encryped_id = signing.dumps(folder_id)
+        base_url = f"{request.scheme}://{request.get_host()}"
+        new_url = f"{base_url}{reverse('page', args=[encryped_id])}"
+        subject = f'You have been shared with this page: {folder}'
+        html_content = f'<p>You have been shared with this page: {new_url}\n</p> <p>by {user}\n</p>'
+        mail = Mail(
+            from_email='winniethepooh.notely@gmail.com',
+            to_emails=email,
+            subject=subject,
+            html_content=html_content)
+        try:
+            sg = SendGridAPIClient(
+                api_key=settings.EMAIL_HOST_PASSWORD
+            )
+            response = sg.send(mail)
+            print(response.status_code)
+            print(response.body)
+            print(response.headers)
+        except Exception as ex:
+            print("some exceptions")
+        messages.add_message(request, messages.SUCCESS, "Folder Shared!")
+    return redirect('folder', folder.id)
+
+
+@login_required(login_url='/sign_up/')
+def share_notebook_ex(request, notebook_id):
+    try:
+        notebook_id = signing.loads(notebook_id)
+    except signing.BadSignature:
+        pass
+    notebook = Notebook.objects.get(id=notebook_id)
+    if request.method == 'POST':
+        selected_emails = request.POST.getlist('selected_emails[]')
+        if selected_emails:
+            email = selected_emails[0]
+        else:
+            email = None
+        user = request.user.username
+        encryped_id = signing.dumps(notebook_id)
+        base_url = f"{request.scheme}://{request.get_host()}"
+        new_url = f"{base_url}{reverse('notebook', args=[encryped_id])}"
+        subject = f'You have been shared with this notebook: {notebook}'
+        html_content = f'<p>You have been shared with this page: {new_url}\n</p> <p>by {user}\n</p>'
+        mail = Mail(
+            from_email='winniethepooh.notely@gmail.com',
+            to_emails=email,
+            subject=subject,
+            html_content=html_content)
+        try:
+            sg = SendGridAPIClient(
+                api_key=settings.EMAIL_HOST_PASSWORD
+            )
+            response = sg.send(mail)
+            print(response.status_code)
+            print(response.body)
+            print(response.headers)
+        except Exception as ex:
+            print("some exceptions")
+        messages.add_message(request, messages.SUCCESS, "Notebook Shared!")
+    return redirect('folder', notebook.id)
 
 
 @login_required
