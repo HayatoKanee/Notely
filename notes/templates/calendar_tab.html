@@ -110,7 +110,7 @@
                 $.ajax({
                     url: "{% url 'event_detail' 0 %}".replace("0", e.event.id),
                     success: function(data) {
-                        $('#detail').html(data.html);
+                        $('#edetail').html(data.html);
                         if (data.event_user_id !== {{user.id}}){
                             $('#eventModalFooter').hide();
                         }

@@ -321,7 +321,8 @@ def page(request, page_id):
             return redirect('page', new_page.id)
     return render(request, 'page.html',
                   {'page': page, 'page_tag_form': page_tag_form, 'tags': tags, 'users': users_without_perms,
-                   'viewable_pages': viewable_pages, 'can_edit': can_edit, 'can_edit_notebook': can_edit_notebook, 'events': related_events})
+                   'viewable_pages': viewable_pages, 'can_edit': can_edit, 'can_edit_notebook': can_edit_notebook, 'events': related_events,
+                   'event_form': event_form})
 
 
 @login_required
