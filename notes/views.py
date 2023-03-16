@@ -14,7 +14,7 @@ from oauthlib.oauth2 import AccessDeniedError
 
 from .forms import SignUpForm, LogInForm, UserForm, ProfileForm, PasswordForm, FolderForm, NotebookForm, EventForm, \
     EventTagForm, PageTagForm, PageForm, ShareEventForm
-from .models import User, Folder, Notebook, Page, Event, Editor, Reminder, Credential, PageTag
+from .models import User, Folder, Notebook, Page, Event, Editor, Reminder, Credential, PageTag, Template
 from django.template.loader import render_to_string
 from django.contrib.auth.decorators import login_required
 from .helpers import login_prohibited, check_perm
@@ -289,7 +289,8 @@ def page(request, page_id):
             return redirect('page', new_page.id)
     return render(request, 'page.html',
                   {'page': page, 'page_tag_form': page_tag_form, 'tags': tags, 'users': users_without_perms,
-                   'viewable_pages': viewable_pages, 'can_edit': can_edit, 'can_edit_notebook': can_edit_notebook})
+                   'viewable_pages': viewable_pages, 'can_edit': can_edit, 'can_edit_notebook': can_edit_notebook,
+                   'templates': page.templates.all()})
 
 
 @login_required
@@ -454,7 +455,8 @@ def google_auth_callback(request):
     google_service = build('people', 'v1', credentials=flow.credentials)
     google_profile = google_service.people().get(resourceName='people/me', personFields='emailAddresses').execute()
     google_email = google_profile.get('emailAddresses', [])[0].get('value', '')
-    Credential.objects.update_or_create(google_email=google_email, defaults={'google_cred': credentials, 'user': request.user})
+    Credential.objects.update_or_create(google_email=google_email,
+                                        defaults={'google_cred': credentials, 'user': request.user})
     return redirect('calendar_tab')
 
 
@@ -535,4 +537,16 @@ def get_options_event(request, event_id):
         event = Event.objects.get(id=event_id)
         return JsonResponse(get_options(event, 'dg_view_event'), safe=False)
     except Event.DoesNotExist:
+        return JsonResponse({'status': 'fail'})
+
+
+@login_required
+@check_perm('dg_edit_page', Page)
+def save_template(request, page_id):
+    try:
+        page = Page.objects.get(id=page_id)
+        template_content = request.POST.get('template_content')
+        Template.objects.create(page=page, content=template_content)
+        return JsonResponse({'status': 'success'})
+    except Page.DoesNotExist:
         return JsonResponse({'status': 'fail'})

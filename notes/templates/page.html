@@ -133,6 +133,10 @@
                                 aria-controls="sidebar" style="color: rgb(245, 93, 66);"> Link Page
                         </button>
                     </li>
+                    <li class="nav-item">
+                        <button class="toolbox" id="template" type="button" data-bs-toggle="modal"
+                                data-bs-target="#templateModal" style="color: rgb(245, 93, 66);"> template</button>
+                    </li>
                 {% endif %}
                 <li class="nav-item">
                     <button class="toolbox" id="download" type="button" data-bs-toggle="collapse"
@@ -149,6 +153,7 @@
                         </div>
                     </div>
                 </li>
+
                 {% if user == page.notebook.user %}
                     <li class="nav-item">
                         <button class="toolbox" id="share" type="button" data-bs-toggle="modal"
@@ -160,6 +165,7 @@
         </div>
     </nav>
     {% include 'partials/symbols.html' %}
+    {% include 'partials/templateModal.html' %}
     {% include 'partials/shareModal.html' %}
     {% include 'partials/codeEditor.html' %}
 {% endblock %}
@@ -193,6 +199,7 @@
         {% endfor %}
         const page_id = "{{ page.id }}";
         const drawing = '{{ page.drawing|safe}}';
+        const template_url = "{% url 'save_template' 0 %}".replace("0", page_id);
 
         function getCookie(name) {
             var cookieValue = null;
@@ -215,6 +222,7 @@
     <script src="{% static 'javascript/note-taking/editor_modal.js' %}"></script>
     <script src="{% static 'javascript/note-taking/draw.js' %}"></script>
     <script src="{% static 'javascript/download.js' %}"></script>
+    <script src="{% static 'javascript/note-taking/template.js' %}"></script>
     <script src="{% static 'javascript/fileSaver.min.js' %}"></script>
     <script src="{% static 'javascript/canvas-toBlob.js' %}"></script>
     {% if can_edit %}
