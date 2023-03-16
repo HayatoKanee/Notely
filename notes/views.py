@@ -10,6 +10,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.db.models import Q
+from oauthlib.oauth2 import AccessDeniedError
+
 from .forms import SignUpForm, LogInForm, UserForm, ProfileForm, PasswordForm, FolderForm, NotebookForm, EventForm, \
     EventTagForm, PageTagForm, PageForm, ShareEventForm
 from .models import User, Folder, Notebook, Page, Event, Editor, Reminder, Credential, PageTag
@@ -30,8 +32,13 @@ from sendgrid.helpers.mail import Mail
 import sendgrid
 from google.oauth2.credentials import Credentials
 from googleapiclient.errors import HttpError
+from googleapiclient.discovery import build
 
-SCOPES = ['https://www.googleapis.com/auth/calendar']
+SCOPES = ['https://www.googleapis.com/auth/calendar',
+          'https://www.googleapis.com/auth/userinfo.email',
+          'https://www.googleapis.com/auth/contacts.readonly',
+          'openid',
+          'https://www.googleapis.com/auth/userinfo.profile']
 
 
 @login_prohibited
@@ -457,7 +464,8 @@ def google_auth(request):
     )
     authorization_url, state = flow.authorization_url(
         access_type='offline',
-        include_granted_scopes='true'
+        include_granted_scopes='true',
+        prompt='consent'
     )
     return redirect(authorization_url)
 
@@ -470,12 +478,21 @@ def google_auth_callback(request):
         scopes=SCOPES, redirect_uri=request.build_absolute_uri('/google_auth_callback/')
     )
 
-    # Exchange authorization code for access token
-    flow.fetch_token(authorization_response=request.build_absolute_uri(), state=state)
+    try:
+        # Exchange authorization code for access token
+        flow.fetch_token(authorization_response=request.build_absolute_uri(), state=state)
+    except AccessDeniedError as e:
+        messages.add_message(request, messages.ERROR, "Access denied. Please grant the requested permissions.")
+    except Warning as e:
+        messages.add_message(request, messages.ERROR, "Access denied. Please grant the requested permissions.")
+        return redirect('calendar_tab')
 
     # Get the user's credentials and store them in the database
     credentials = flow.credentials.to_json()
-    Credential.objects.update_or_create(user=request.user, defaults={'google_cred': credentials})
+    google_service = build('people', 'v1', credentials=flow.credentials)
+    google_profile = google_service.people().get(resourceName='people/me', personFields='emailAddresses').execute()
+    google_email = google_profile.get('emailAddresses', [])[0].get('value', '')
+    Credential.objects.update_or_create(google_email=google_email, defaults={'google_cred': credentials, 'user': request.user})
     return redirect('calendar_tab')
 
 
