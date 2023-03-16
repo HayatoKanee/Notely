@@ -521,8 +521,12 @@ def share_event(request, event_id):
             return JsonResponse({'status': 'fail'})
         selected_users = request.POST.getlist('selected_users[]')
         for email in selected_users:
-            user = User.objects.get(email=email)
-            assign_perm('dg_view_event', user, event)
+            try:
+                user = User.objects.get(email=email)
+                assign_perm('dg_view_event', user, event)
+            except:
+                print("User with email {} does not exist.".format(email))
+                return JsonResponse({'status': 'fail'})
         html = render_to_string('partials/share_event_internal.html', {'event': event}, request=request)
         return JsonResponse({'status': 'success', 'html': html})
     except Event.DoesNotExist:
