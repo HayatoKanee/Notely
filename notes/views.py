@@ -372,6 +372,8 @@ def event_detail(request, event_id):
         if form.is_valid():
             form.save()
             messages.add_message(request, messages.SUCCESS, "event updated!")
+            if int(form.cleaned_data['reminder']) > -1:
+                Reminder.objects.create(event=event, reminder_time=int(form.cleaned_data['reminder']))
             return redirect('calendar_tab')
 
     else:

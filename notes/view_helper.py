@@ -2,6 +2,7 @@ import datetime
 import json
 
 from django.http import JsonResponse
+from google.auth.transport.requests import Request
 from guardian.shortcuts import get_users_with_perms, assign_perm
 from notes.forms import FolderForm, NotebookForm
 from django.contrib import messages
@@ -41,6 +42,16 @@ def get_or_create_event_from_google(request):
     credentials = request.user.creds.all()
     for credential in credentials:
         creds = Credentials.from_authorized_user_info(info=json.loads(credential.google_cred))
+        print(credential.google_cred)
+        if creds.expired:
+            try:
+                creds.refresh(Request())
+                # Update the credentials in the database
+                credential.google_cred = creds.to_json()
+                credential.save()
+            except Exception as e:
+                messages.add_message(request, messages.ERROR, "Failed to refresh the credentials: {}".format(e))
+                continue
         # Create a service object to interact with the Google Calendar API
         service = build('calendar', 'v3', credentials=creds)
 

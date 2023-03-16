@@ -243,8 +243,6 @@ class Event(models.Model):
             self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         if self.sync and self.cred:
-            print(self.title);
-            print(self.cred.google_email)
             creds = Credentials.from_authorized_user_info(info=json.loads(self.cred.google_cred))
             # Create a service object to interact with the Google Calendar API
             service = build('calendar', 'v3', credentials=creds)
@@ -264,7 +262,7 @@ class Event(models.Model):
                 try:
                     service.events().update(calendarId='primary', eventId=self.google_id, body=g_event).execute()
                 except HttpError:
-                    return super().save()
+                    return
             else:
                 created_event = service.events().insert(calendarId='primary', body=g_event).execute()
                 self.google_id = created_event['id']
