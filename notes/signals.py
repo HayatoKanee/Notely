@@ -38,7 +38,10 @@ def schedule_reminder(sender, instance, created, **kwargs):
 @receiver(pre_save, sender=Event)
 def update_reminder(sender, instance, **kwargs):
     if instance.pk:
-        old_instance = Event.objects.get(pk=instance.pk)
+        try:
+            old_instance = Event.objects.get(pk=instance.pk)
+        except Event.DoesNotExist:
+            return
         if old_instance.start_time != instance.start_time:
             for reminder in instance.reminders.all():
                 event_start_time = timezone.localtime(instance.start_time)
