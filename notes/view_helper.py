@@ -145,7 +145,7 @@ def share_obj(request, obj):
             user = User.objects.get(email=email)
             assign_perm_func(user, obj, can_edit)
         except User.DoesNotExist:
-            print("do have this user!")
+            print("dont have this user!")
             # share_folder_ex(request, obj.id)
 
     return JsonResponse({'status': 'success'})

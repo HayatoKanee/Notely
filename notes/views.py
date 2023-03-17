@@ -99,6 +99,7 @@ def home(request):
 @login_required
 def folders_tab(request):
     user = request.user
+    users = User.objects.all()
     if request.method == "POST":
         return save_folder_notebook_forms(request, user)
     else:
@@ -111,7 +112,7 @@ def folders_tab(request):
     items = sort_items_by_created_time(folders, notebooks)
     return render(request, 'folders_tab.html',
                   {'items': items, 'folder_form': folder_form,
-                   'notebook_form': notebook_form})
+                   'notebook_form': notebook_form, 'users': users})
 
 
 @login_required
@@ -545,6 +546,7 @@ def share_folder(request, folder_id):
 
 @login_required(login_url='/sign_up/')
 def share_folder_ex(request, folder_id):
+    print(folder_id)
     try:
         folder_id = signing.loads(folder_id)
         print("yuzebai hello")
@@ -552,17 +554,20 @@ def share_folder_ex(request, folder_id):
         pass
     folder = Folder.objects.get(id=folder_id)
     if request.method == 'POST':
-        selected_emails = request.POST.getlist('selected_emails[]')
+        selected_emails = request.POST.getlist('selected_users[]')
+        print(selected_emails)
         if selected_emails:
             email = selected_emails[0]
+            print(email)
         else:
             email = None
+            print(email)
         user = request.user.username
         encryped_id = signing.dumps(folder_id)
         base_url = f"{request.scheme}://{request.get_host()}"
-        new_url = f"{base_url}{reverse('page', args=[encryped_id])}"
+        # new_url = f"{base_url}{reverse('page', args=[encryped_id])}"
         subject = f'You have been shared with this page: {folder}'
-        html_content = f'<p>You have been shared with this page: {new_url}\n</p> <p>by {user}\n</p>'
+        html_content = f'<p>You have been shared with this page: {"hi"}\n</p> <p>by {user}\n</p>'
         mail = Mail(
             from_email='winniethepooh.notely@gmail.com',
             to_emails=email,
@@ -578,14 +583,16 @@ def share_folder_ex(request, folder_id):
             print(response.headers)
         except Exception as ex:
             print("some exceptions")
+            print(ex)
         messages.add_message(request, messages.SUCCESS, "Folder Shared!")
-    return redirect('folder', folder.id)
+    return redirect('folders_tab')
 
 
 @login_required(login_url='/sign_up/')
 def share_notebook_ex(request, notebook_id):
     try:
         notebook_id = signing.loads(notebook_id)
+        print("hello")
     except signing.BadSignature:
         pass
     notebook = Notebook.objects.get(id=notebook_id)

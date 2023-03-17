@@ -33,11 +33,13 @@ def check_perm(perm, obj_type):
     def decorator(view_function):
         def modified_view_function(request, *args, **kwargs):
             for k, v in kwargs.items():
+                print("hello" + v)
                 try:
                     # check if the page_id value is encrypted
                     page_id = signing.loads(v)
                 except signing.BadSignature:
                     page_id = v
+                print("hello"+page_id)
                 obj = get_object_or_404(obj_type, id=page_id)
                 if not request.user.has_perm(perm, obj):
                     raise PermissionDenied
