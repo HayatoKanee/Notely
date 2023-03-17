@@ -1,4 +1,4 @@
-{%load static%}
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,11 +22,10 @@
           <script>dayjs().format()</script>
           <script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/relativeTime.js"></script>
           <script>dayjs.extend(window.dayjs_plugin_relativeTime)</script>
-
           <title>Notely</title>
 </head>
 <body>
-{%block body%}
-{%endblock%}
+{% block body %}
+{% endblock %}
 </body>
 </html>

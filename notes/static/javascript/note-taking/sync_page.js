@@ -2,7 +2,7 @@ const objectChangedCallback = function () {
     // send a message to the channel using websockets
     const message = {
         type: 'update_canvas',
-        data: canvas.toDatalessJSON(['link'])
+        data: canvas.toDatalessJSON(['link', 'is_table'])
     };
     socket.send(JSON.stringify(message));
 }
@@ -12,6 +12,7 @@ function set_send_message() {
     canvas.on('object:modified', objectChangedCallback);
     canvas.on('object:removed', objectChangedCallback);
 }
+
 set_send_message();
 socket.onmessage = function (event) {
     const data = JSON.parse(event.data);
@@ -39,6 +40,21 @@ socket.onmessage = function (event) {
                             visible: false
                         });
                         canvas.renderAll();
+                    });
+                }
+                if (obj.is_table) {
+                    obj.on('mousedblclick', function (option) {
+                        const pointer = canvas.getPointer(option.e);
+                        const normalized_pointer = canvas._normalizePointer(obj, pointer)
+                        console.log(normalized_pointer)
+                        let target;
+                        obj.forEachObject(function (o) {
+                            if (canvas._checkTarget(normalized_pointer, o)) {
+                                target = o;
+                            }
+                        });
+                        canvas.setActiveObject(target.item(1));
+                        target.item(1).enterEditing();
                     });
                 }
             });

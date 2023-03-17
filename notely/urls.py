@@ -52,6 +52,7 @@ urlpatterns = [
     path('share_notebook/<notebook_id>', views.share_notebook, name='share_notebook'),
     path('share_event/<event_id>/', views.share_event, name='share_event'),
     path('get_options_event/<event_id>', views.get_options_event, name='get_options_event'),
+    path('save_template/<page_id>', views.save_template, name='save_template'),
 ]
 
 if settings.DEBUG:

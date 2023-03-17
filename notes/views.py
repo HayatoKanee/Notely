@@ -10,9 +10,11 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.db.models import Q
+from oauthlib.oauth2 import AccessDeniedError
+
 from .forms import SignUpForm, LogInForm, UserForm, ProfileForm, PasswordForm, FolderForm, NotebookForm, EventForm, \
     EventTagForm, PageTagForm, PageForm, ShareEventForm
-from .models import User, Folder, Notebook, Page, Event, Editor, Reminder, Credential, PageTag
+from .models import User, Folder, Notebook, Page, Event, Editor, Reminder, Credential, PageTag, Template
 from django.template.loader import render_to_string
 from django.contrib.auth.decorators import login_required
 from .helpers import login_prohibited, check_perm
@@ -30,8 +32,13 @@ from sendgrid.helpers.mail import Mail
 import sendgrid
 from google.oauth2.credentials import Credentials
 from googleapiclient.errors import HttpError
+from googleapiclient.discovery import build
 
-SCOPES = ['https://www.googleapis.com/auth/calendar']
+SCOPES = ['https://www.googleapis.com/auth/calendar',
+          'https://www.googleapis.com/auth/userinfo.email',
+          'https://www.googleapis.com/auth/contacts.readonly',
+          'openid',
+          'https://www.googleapis.com/auth/userinfo.profile']
 
 
 @login_prohibited
@@ -286,7 +293,8 @@ def page(request, page_id):
             return redirect('page', new_page.id)
     return render(request, 'page.html',
                   {'page': page, 'page_tag_form': page_tag_form, 'tags': tags, 'users': users_without_perms,
-                   'viewable_pages': viewable_pages, 'can_edit': can_edit, 'can_edit_notebook': can_edit_notebook})
+                   'viewable_pages': viewable_pages, 'can_edit': can_edit, 'can_edit_notebook': can_edit_notebook,
+                   'templates': page.templates.all()})
 
 
 @login_required
@@ -369,6 +377,8 @@ def event_detail(request, event_id):
         if form.is_valid():
             form.save()
             messages.add_message(request, messages.SUCCESS, "event updated!")
+            if int(form.cleaned_data['reminder']) > -1:
+                Reminder.objects.create(event=event, reminder_time=int(form.cleaned_data['reminder']))
             return redirect('calendar_tab')
 
     else:
@@ -421,7 +431,8 @@ def google_auth(request):
     )
     authorization_url, state = flow.authorization_url(
         access_type='offline',
-        include_granted_scopes='true'
+        include_granted_scopes='true',
+        prompt='consent'
     )
     return redirect(authorization_url)
 
@@ -434,12 +445,22 @@ def google_auth_callback(request):
         scopes=SCOPES, redirect_uri=request.build_absolute_uri('/google_auth_callback/')
     )
 
-    # Exchange authorization code for access token
-    flow.fetch_token(authorization_response=request.build_absolute_uri(), state=state)
+    try:
+        # Exchange authorization code for access token
+        flow.fetch_token(authorization_response=request.build_absolute_uri(), state=state)
+    except AccessDeniedError as e:
+        messages.add_message(request, messages.ERROR, "Access denied. Please grant the requested permissions.")
+    except Warning as e:
+        messages.add_message(request, messages.ERROR, "Access denied. Please grant the requested permissions.")
+        return redirect('calendar_tab')
 
     # Get the user's credentials and store them in the database
     credentials = flow.credentials.to_json()
-    Credential.objects.update_or_create(user=request.user, defaults={'google_cred': credentials})
+    google_service = build('people', 'v1', credentials=flow.credentials)
+    google_profile = google_service.people().get(resourceName='people/me', personFields='emailAddresses').execute()
+    google_email = google_profile.get('emailAddresses', [])[0].get('value', '')
+    Credential.objects.update_or_create(google_email=google_email,
+                                        defaults={'google_cred': credentials, 'user': request.user})
     return redirect('calendar_tab')
 
 
@@ -506,10 +527,38 @@ def share_event(request, event_id):
             return JsonResponse({'status': 'fail'})
         selected_users = request.POST.getlist('selected_users[]')
         for email in selected_users:
-            user = User.objects.get(email=email)
-            assign_perm('dg_view_event', user, event)
-        html = render_to_string('partials/share_event_internal.html', {'event': event}, request=request)
-        return JsonResponse({'status': 'success', 'html': html})
+            try:
+                user = User.objects.get(email=email)
+                assign_perm('dg_view_event', user, event)
+                html = render_to_string('partials/share_event_internal.html', {'event': event}, request=request)
+                return JsonResponse({'status': 'success', 'html': html})
+            except:
+                user = request.user.username
+
+                title = event.title
+                description = event.description
+                start_time = event.start_time
+                end_time = event.end_time
+
+                subject = f'You have been invited to the following event: {title}'
+
+                html_content = f'<p>You have been invited to the following event: {title}\n</p> <p>by {user}\n</p> <p>Please see below event details:\n</p> <p>description: {description}\n</p> <p>start time: {start_time}\n</p> <p>end time: {end_time}</p>'
+
+                mail = Mail(
+                    from_email='winniethepooh.notely@gmail.com',
+                    to_emails=email,
+                    subject=subject,
+                    html_content=html_content)
+
+                try:
+                    sg = SendGridAPIClient(
+                        api_key=settings.EMAIL_HOST_PASSWORD
+                    )
+                    response = sg.send(mail)
+                except Exception as ex:
+                    print("failed to share externally")
+                messages.add_message(request, messages.SUCCESS, "Event Shared!")
+                return JsonResponse({'status': 'fail'})
     except Event.DoesNotExist:
         return JsonResponse({'status': 'fail'})
 
@@ -520,4 +569,16 @@ def get_options_event(request, event_id):
         event = Event.objects.get(id=event_id)
         return JsonResponse(get_options(event, 'dg_view_event'), safe=False)
     except Event.DoesNotExist:
+        return JsonResponse({'status': 'fail'})
+
+
+@login_required
+@check_perm('dg_edit_page', Page)
+def save_template(request, page_id):
+    try:
+        page = Page.objects.get(id=page_id)
+        template_content = request.POST.get('template_content')
+        Template.objects.create(page=page, content=template_content)
+        return JsonResponse({'status': 'success'})
+    except Page.DoesNotExist:
         return JsonResponse({'status': 'fail'})

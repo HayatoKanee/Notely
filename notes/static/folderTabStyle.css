@@ -9,14 +9,18 @@
     margin-left: 900px;
 }
 
-#addChoice:hover { font-weight: bold; }
+#addChoice:hover {
+    font-weight: bold;
+}
 
 .add {
     background-color: transparent;
     border: none;
 }
 
-.add:hover { font-weight: bold; }
+.add:hover {
+    font-weight: bold;
+}
 
 #notebook_img {
     background: url("images/brownnotebook.png") no-repeat;
@@ -43,16 +47,16 @@
 }
 
 .folder-button {
-  font-weight: bold;
-  box-shadow: None!important;
+    font-weight: bold;
+    box-shadow: None !important;
 }
 
 .folder-container {
-  margin-bottom: 10px;
-  width: 100%;
-  padding: 20px;
-  height: 800px;
-  overflow: scroll;
+    margin-bottom: 10px;
+    width: 100%;
+    padding: 20px;
+    height: 800px;
+    overflow: scroll;
 }
 
 .folder-nav {
@@ -61,7 +65,7 @@
     display: flex;
     align-items: center;
     width: 100%;
-    box-shadow: 0 0 10px 2px rgba(0,0,0,0.2);
+    box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.2);
     z-index: 2;
 }
 
@@ -71,18 +75,20 @@
     margin-right: 500px;
 }
 
-.folder-path { width: 100%; }
+.folder-path {
+    width: 100%;
+}
 
 #goback-button {
-  position: absolute;
-  bottom: 90px;
-  left: -20px;
-  margin: 20px;
-  background: url("images/goback.png") no-repeat;
-  background-size: contain;
-  background-position: left;
-  border: none;
-  width: 100%;
-  height: 40px;
-  display: block;
+    position: absolute;
+    bottom: 90px;
+    left: -20px;
+    margin: 20px;
+    background: url("images/goback.png") no-repeat;
+    background-size: contain;
+    background-position: left;
+    border: none;
+    width: 100%;
+    height: 40px;
+    display: block;
 }

@@ -7,6 +7,7 @@ from notes.tasks import send_notification
 from django.core.mail import send_mail
 from datetime import datetime, timedelta
 from django.utils import timezone
+from notely.celery import app
 
 
 @receiver(post_save, sender=User)
@@ -32,6 +33,26 @@ def schedule_reminder(sender, instance, created, **kwargs):
         instance.exact_time = target_time
         instance.task_id = task.id
         instance.save()
+
+
+@receiver(pre_save, sender=Event)
+def update_reminder(sender, instance, **kwargs):
+    if instance.pk:
+        try:
+            old_instance = Event.objects.get(pk=instance.pk)
+        except Event.DoesNotExist:
+            return
+        if old_instance.start_time != instance.start_time:
+            for reminder in instance.reminders.all():
+                event_start_time = timezone.localtime(instance.start_time)
+                reminder_time = reminder.reminder_time
+                target_time = event_start_time - timedelta(minutes=reminder_time)
+                reminder.exact_time = target_time
+                app.control.revoke(reminder.task_id, terminate=True)
+                task = send_notification.apply_async(args=[reminder.id], eta=target_time)
+                reminder.exact_time = target_time
+                reminder.task_id = task.id
+                reminder.save()
 
 
 @receiver(post_save, sender=Page)

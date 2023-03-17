@@ -2,6 +2,7 @@ import datetime
 import json
 
 from django.http import JsonResponse
+from google.auth.transport.requests import Request
 from guardian.shortcuts import get_users_with_perms, assign_perm
 from notes.forms import FolderForm, NotebookForm
 from django.contrib import messages
@@ -38,50 +39,59 @@ def sort_items_by_created_time(*args):
 
 
 def get_or_create_event_from_google(request):
-    try:
-        credential = Credential.objects.get(user=request.user)
-    except Credential.DoesNotExist:
-        return None
-    creds = Credentials.from_authorized_user_info(info=json.loads(credential.google_cred))
-    # Create a service object to interact with the Google Calendar API
-    service = build('calendar', 'v3', credentials=creds)
+    credentials = request.user.creds.all()
+    for credential in credentials:
+        creds = Credentials.from_authorized_user_info(info=json.loads(credential.google_cred))
+        print(credential.google_cred)
+        if creds.expired:
+            try:
+                creds.refresh(Request())
+                # Update the credentials in the database
+                credential.google_cred = creds.to_json()
+                credential.save()
+            except Exception as e:
+                messages.add_message(request, messages.ERROR, "Failed to refresh the credentials: {}".format(e))
+                continue
+        # Create a service object to interact with the Google Calendar API
+        service = build('calendar', 'v3', credentials=creds)
 
-    # Call the Calendar API to get the upcoming events
-    now = datetime.datetime.utcnow().isoformat() + 'Z'
-    events_result = service.events().list(calendarId='primary', timeMin=now,
-                                          maxResults=10, singleEvents=True,
-                                          orderBy='startTime').execute()
-    events = events_result.get('items', [])
-    for event in events:
-        start = event['start'].get('dateTime', event['start'].get('date'))
-        end = event['end'].get('dateTime', event['end'].get('date'))
-        if start.endswith('Z'):
-            start = start[:-1] + '+00:00'
-        if end.endswith('Z'):
-            end = end[:-1] + '+00:00'
-        start = datetime.datetime.fromisoformat(start)
-        end = datetime.datetime.fromisoformat(end)
-        title = event['summary']
-        google_id = event.get('id')
-        description = event.get('description', '')
-        try:
-            # Check if the event already exists in the GoogleEvent model
-            google_event = Event.objects.get(google_id=google_id)
-            google_event.title = title
-            google_event.start_time = start
-            google_event.end_time = end
-            google_event.description = description
-            google_event.save()
-        except Event.DoesNotExist:
-            google_event = Event.objects.create(
-                user=request.user,
-                google_id=google_id,
-                title=title,
-                description=description,
-                start_time=start,
-                end_time=end,
-                sync=True
-            )
+        # Call the Calendar API to get the upcoming events
+        now = datetime.datetime.utcnow().isoformat() + 'Z'
+        events_result = service.events().list(calendarId='primary', timeMin=now,
+                                              maxResults=10, singleEvents=True,
+                                              orderBy='startTime').execute()
+        events = events_result.get('items', [])
+        for event in events:
+            start = event['start'].get('dateTime', event['start'].get('date'))
+            end = event['end'].get('dateTime', event['end'].get('date'))
+            if start.endswith('Z'):
+                start = start[:-1] + '+00:00'
+            if end.endswith('Z'):
+                end = end[:-1] + '+00:00'
+            start = datetime.datetime.fromisoformat(start)
+            end = datetime.datetime.fromisoformat(end)
+            title = event['summary']
+            google_id = event.get('id')
+            description = event.get('description', '')
+            try:
+                # Check if the event already exists in the GoogleEvent model
+                google_event = Event.objects.get(google_id=google_id)
+                google_event.title = title
+                google_event.start_time = start
+                google_event.end_time = end
+                google_event.description = description
+                google_event.save()
+            except Event.DoesNotExist:
+                google_event = Event.objects.create(
+                    user=request.user,
+                    google_id=google_id,
+                    title=title,
+                    description=description,
+                    start_time=start,
+                    end_time=end,
+                    sync=True,
+                    cred=credential
+                )
 
 
 def get_options(obj, perm_name):
