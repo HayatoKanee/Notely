@@ -1,2 +1,7 @@
-#reg:hover { font-weight: bold; }
-profile-content .input:hover { font-weight: bold; }
+#reg:hover {
+    font-weight: bold;
+}
+
+profile-content .input:hover {
+    font-weight: bold;
+}

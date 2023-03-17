@@ -2,17 +2,56 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5"style="color: rgb(245, 93, 66)">Share</h1>
+                <h1 class="modal-title fs-5" style="color: rgb(60, 120, 216)">Share</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <select id="select-user" class="userEmail" placeholder="Enter username or email" autocomplete="off">
                 </select>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="viewBox" checked disabled>
+                    <label class="form-check-label" for="checkbox">
+                        View
+                    </label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="editBox">
+                    <label class="form-check-label" for="checkbox">
+                        Edit
+                    </label>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" id="shareBtn"> Share</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background-color: rgb(245, 93, 66, 0.1); border-color: rgb(245, 93, 66); width: 100px; color: rgb(245, 93, 66);">Cancel</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                        style="background-color: rgb(60, 120, 216, 0.1); border-color: rgb(60, 120, 216); width: 100px; color: rgb(60, 120, 216);">
+                    Cancel
+                </button>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    .ts-wrapper.userEmail .ts-control > div .email {
+        opacity: 0.7;
+    }
+
+    .ts-wrapper.userEmail .ts-control > div .name + .email {
+        margin-left: 5px;
+    }
+
+    .ts-wrapper.userEmail .ts-control > div .email:before {
+        content: '<';
+    }
+
+    .ts-wrapper.userEmail .ts-control > div .email:after {
+        content: '>';
+    }
+
+    .ts-wrapper.userEmail .ts-dropdown .caption {
+        font-size: 12px;
+        display: block;
+        color: #a0a0a0;
+    }
+</style>
