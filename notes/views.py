@@ -42,7 +42,6 @@ SCOPES = ['https://www.googleapis.com/auth/calendar']
 @login_prohibited
 def sign_up(request):
     next_url = request.GET.get('next') or ''
-
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
@@ -115,11 +114,18 @@ def folders_tab(request):
                    'notebook_form': notebook_form, 'users': users})
 
 
-@login_required
+@login_required(login_url='/sign_up/')
 @check_perm('dg_view_folder', Folder)
 def sub_folders_tab(request, folder_id):
     user = request.user
-    folder = Folder.objects.get(id=folder_id)
+    try:
+        folder_id = signing.loads(folder_id)
+    except signing.BadSignature:
+        pass
+    try:
+        folder = Folder.objects.get(id=folder_id)
+    except Folder.DoesNotExist:
+        pass
     if request.method == "POST":
         return save_folder_notebook_forms(request, user, folder)
     else:
@@ -544,7 +550,7 @@ def share_folder(request, folder_id):
         return JsonResponse({'status': 'fail'})
 
 
-@login_required(login_url='/sign_up/')
+# @login_required(login_url='/sign_up/')
 def share_folder_ex(request, folder_id):
     print(folder_id)
     try:
@@ -554,20 +560,18 @@ def share_folder_ex(request, folder_id):
         pass
     folder = Folder.objects.get(id=folder_id)
     if request.method == 'POST':
-        selected_emails = request.POST.getlist('selected_users[]')
+        selected_emails = request.POST.getlist('createdUsers[]')
         print(selected_emails)
         if selected_emails:
             email = selected_emails[0]
-            print(email)
         else:
             email = None
-            print(email)
         user = request.user.username
         encryped_id = signing.dumps(folder_id)
         base_url = f"{request.scheme}://{request.get_host()}"
-        # new_url = f"{base_url}{reverse('page', args=[encryped_id])}"
-        subject = f'You have been shared with this page: {folder}'
-        html_content = f'<p>You have been shared with this page: {"hi"}\n</p> <p>by {user}\n</p>'
+        new_url = f"{base_url}{reverse('sub_folders_tab', args=[encryped_id])}"
+        subject = f'You have been shared with this folder: {folder}'
+        html_content = f'<p>You have been shared with this page: {new_url}\n</p> <p>by {user}\n</p>'
         mail = Mail(
             from_email='winniethepooh.notely@gmail.com',
             to_emails=email,

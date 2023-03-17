@@ -131,9 +131,13 @@
     <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
     <script>
-        var users = "{{ users }}";
+        let createdUsers = [];
         const t_select = new TomSelect("#select-user", {
             create: true,
+            createOnBlur: true,
+            createFilter: function (input) {
+                return input.trim().length > 0;
+            },
             plugins: ['remove_button'],
             persist: false,
             maxItems: null,
@@ -159,10 +163,24 @@
                         '</div>' +
                         '</div>';
                 }
-            }
+            },
+            item_added: function (value, $item) {
+                createdUsers = this.options[value];
+                console.log(value)
+                const isCreatedItem = value === option.text;
+                if (isCreatedItem) {
+                    console.log('Newly created item added:', value);
+                    // Your custom logic when a newly created item is added
+                }
+        },
+        });
+        t_select.on('item_add', function(value, $item) {
+            console.log('New item added:', value);
+            createdUsers.push(value);
         });
         let share_url;
         $('.share').click(function (){
+            console.log("hello")
             share_url = this.getAttribute('data-share-url')
             share_url_2 = this.getAttribute('data-share-ex-url')
             $.ajax({
@@ -170,7 +188,8 @@
                 success: function (data){
                     t_select.clearOptions();
                     for (const option of data) {
-                        t_select.addOption(option);
+                            t_select.addOption(option);
+
                     }
                 },
                 error: function (){
@@ -182,32 +201,33 @@
         $('#shareBtn').click(function () {
             let selectedUsers = t_select.getValue();
             const edit_perm = $('#editBox').prop('checked');
-            const createdUsers = [];
             selectedUsers = selectedUsers.filter((item) => !createdUsers.includes(item));
             console.log(selectedUsers);
-            console.log(users[0]);
-            //need to add a if to to seprate this two conditions and also fix bugs.
-                    $.ajax({
-                        url: share_url_2,
-                        type: 'POST',
-                        async: true,
-                        data: {
-                            'selected_users[]': selectedUsers,
-                            'edit_perm': edit_perm,
-                            csrfmiddlewaretoken: '{{csrf_token}}'
-                        },
-                    });
-
-                    // $.ajax({
-                    //     url: share_url_2,
-                    //     type: 'POST',
-                    //     async: true,
-                    //     data: {
-                    //         'createdUsers[]': selectedUsers,
-                    //         'edit_perm': edit_perm,
-                    //         csrfmiddlewaretoken: '{{csrf_token}}'
-                    //     },
-                    // });
+            console.log(createdUsers);
+            if(selectedUsers.length > 0) {
+                $.ajax({
+                    url: share_url,
+                    type: 'POST',
+                    async: true,
+                    data: {
+                        'selected_users[]': selectedUsers,
+                        'edit_perm': edit_perm,
+                        csrfmiddlewaretoken: '{{csrf_token}}'
+                    },
+                });
+            }
+            if(createdUsers.length > 0) {
+                $.ajax({
+                    url: share_url_2,
+                    type: 'POST',
+                    async: true,
+                    data: {
+                        'createdUsers[]': createdUsers,
+                        'edit_perm': edit_perm,
+                        csrfmiddlewaretoken: '{{csrf_token}}'
+                    },
+                });
+            }
             while(selectedUsers.length!=0){
                 t_select.removeOption(selectedUsers[0]);
             }
