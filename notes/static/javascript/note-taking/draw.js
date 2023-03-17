@@ -213,10 +213,6 @@ if (can_edit === "True") {
 let currentMode;
 const canvas = initCanvas('canvas');
 
-function loaddata(drwaing) {
-
-}
-
 if (can_edit === "True") {
     canvas.loadFromJSON(drawing, function () {
         canvas.getObjects().forEach(function (obj) {

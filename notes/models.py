@@ -311,3 +311,8 @@ class Credential(models.Model):
     user = models.ForeignKey(User, related_name="creds", on_delete=models.CASCADE)
     google_cred = models.TextField(blank=True)
     google_email = models.EmailField(unique=True)
+
+
+class Template(models.Model):
+    page = models.ForeignKey(Page, related_name="templates", on_delete=models.CASCADE)
+    content = models.TextField()
