@@ -7,32 +7,9 @@
         </button>
 
         <a href="{% url 'google_auth' %}" class="btn btn-google" style="color: rgb(60, 120, 216);">
-            <i class="fa fa-google"></i> Sign in with Google
+            <i class="fa fa-google"></i> Sync with Google
         </a>
 
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#shareEventModal" data-bs-dismiss="modal">
-            Share Event
-        </button>
-
-        <div class="modal fade" id="shareEventModal" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content" style="color: rgb(60, 120, 216);">
-                    <div class="modal-header">
-                        <h5 class="modal-title" style="color: rgb(60, 120, 216)">Share Event</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form action="{% url 'calendar_tab' %}" method="post">
-                            {% csrf_token %}
-                            {% comment %} {% include 'partials/bootstrap_form.html' with form=shareEvent_form %} {% endcomment %}
-                            {{shareEvent_form.as_p}}
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <input type="submit" name="shareEvent_submit" value ="Share event" class="btn btn-primary">
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 
     <div class="modal fade" id="eventModal" tabindex="-1">

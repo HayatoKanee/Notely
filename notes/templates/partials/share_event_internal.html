@@ -67,6 +67,7 @@
                 },
             {% endfor %}
         ],
+        create: true,
         render: {
             item: function (item, escape) {
                 ;
@@ -96,6 +97,7 @@
         const csrf = $('input[name="csrfmiddlewaretoken"]').val();
         const url = "{% url 'share_event' 0 %}".replace("0", event_id);
 
+        {% if user%}
         $.ajax({
             url: url,
             type: 'POST',
@@ -108,5 +110,9 @@
                 $('#shareEventModalInternal').modal('hide');
             }
         });
+        {% else %}
+        console.log("false")
+        {% endif %}
+        
     });
 </script>
