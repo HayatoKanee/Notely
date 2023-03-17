@@ -44,8 +44,8 @@
                             style="color: rgb(245, 93, 66, 0.9); font-size: 18px;" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">
                         <tr>
+                            <td>{{user.username}}</td>
                             <td>{{user.username|json_script:"name-data"}}</td>
-                            <td>
                                 <img src="{{ user.profile.mini_gravatar }}" alt="Gravatar of {{ user.username}}"
                                      class="rounded-circle">
                     </button>
