@@ -3,8 +3,8 @@
      data-bs-keyboard="false" aria-hidden="true" aria-labelledby="symbolsLabel" tabindex="-1"
      style="color: rgb(60, 120, 216);">
     <div class="offcanvas-header"
-         style="font-size: 22px; color: rgb(60, 120, 216); text-align: center; line-height: 70px; background: rgb(60, 120, 216, 0.1); user-select: none; color: rgb(60, 120, 216);">
-        <h5 class="offcanvas-title" id="sidebarLabel">{{ page.notebook.notebook_name }}
+         style="font-size: 20px; color: rgb(60, 120, 216); text-align: center; line-height: 70px; background: rgb(60, 120, 216, 0.1); user-select: none; color: rgb(60, 120, 216);">
+        <h5 class="offcanvas-title" style="font-size: 30px;" id="sidebarLabel">{{ page.notebook.notebook_name }}
             {% if user != page.notebook.user %}(shared by {{ page.notebook.user.username }}){% endif %}</h5>
         <nav class="navbar navbar-expand-lg">
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
@@ -12,14 +12,22 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-
-                <select id="search-bar" multiple placeholder="Type to search a page...." autocomplete="off"></select>
-                <button class="btn btn-outline-secondary" type="submit" name="page_search_submit" id="search-button">
-                    Search
-                </button>
+                <div class="d-flex">
+                    <select id="search-bar" multiple placeholder="Type to search a page...." autocomplete="off"
+                            class="form-select me-2"></select>
+                    <button class="btn btn-outline-secondary" type="submit" name="page_search_submit"
+                            id="search-button">Search
+                    </button>
+                </div>
             </div>
-        </nav>
 
+            <style>
+                #search-bar {
+                    height: 2rem;
+                }
+            </style>
+
+        </nav>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close" id="closeBtn"></button>
     </div>
     <div class="offcanvas-body" style="background-color: white; transition: all .5s ease;">
@@ -63,21 +71,53 @@
             </div>
         </div>
     </div>
-    {% if can_edit_notebook %}
-        <div class="offcanva-footer">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"> New
-                Tag
+    <div class="tag-buttons" style="display: flex;">
+        {% if can_edit_notebook %}
+            <div class="offcanva-footer">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                        style="font-size: 16px; border-radius: 5px; background-color: rgb(60, 120, 216); color:white; margin-bottom: 10px;">
+                    New Tag
+                </button>
+            </div>
+        {% endif %}
+        <div class="tag-buttons">
+            <button class="show-all-tags-button"
+                    style="font-size: 16px; background-color: rgb(60, 120, 216); color: white; margin-bottom: 10px; border-radius: 5px; border: none;">
+                All
             </button>
+            {% for tag in tags %}
+                <span style="color: {{ tag.color }}">&#x25CF;<button class="tag-button"
+                                                                     data-tag-id="{{ tag.id }}">tag</button></span>
+            {% endfor %}
         </div>
-    {% endif %}
-    <div class="tag-buttons">
-        <button class="show-all-tags-button">All</button>
-        {% for tag in tags %}
-            <span style="color: {{ tag.color }}">&#x25CF<button class="tag-button"
-                                                                data-tag-id="{{ tag.id }}">tag</button></span>
-        {% endfor %}
     </div>
 </div>
+
+<style>
+    .tag-buttons {
+        display: flex;
+    }
+
+    .tag-buttons button {
+        margin-left: 45px;
+        font-size: 16px;
+        background-color: rgb(60, 120, 216);
+        color: white;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        border: none;
+        width: 150px; /* 设置宽度 */
+    }
+
+    .offcanva-footer button {
+        margin-right: 10px;
+    }
+
+    .tag-buttons .show-all-tags-button {
+        margin-left: auto; /* 靠右对齐 */
+    }
+
+</style>
 
 <div class="modal fade" id="exampleModal">
     <div class="modal-dialog modal-dialog-centered">
