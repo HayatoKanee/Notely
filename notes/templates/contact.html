@@ -1,0 +1,146 @@
+{% extends 'base_content.html' %}
+{% block content %}
+{% load static %}
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>contact</title>
+	</head>
+	<body>
+		<div class="container">
+			<h1>Notely</h1>
+			<p>Notely is a note-taking application that aims to help students take notes during their studies.</p>
+			<h2>Our team members</h2>
+			<p>The members of the team are:</p>
+			<ul>
+				<li>Paul Cheung</li>
+				<li>Ziwen Wang</li>
+				<li>Wenxuan Wang</li>
+				<li>Yuze Bai</li>
+				<li>Ryan Tsoi</li>
+				<li>Heli Ip</li>
+				<li>Jeremy Lin</li>
+			</ul>
+			<h2>Deployed version of the application</h2>
+			<p>
+				The deployed version of the application can be found at *<>*.
+				The admin interface can be found at *<>*
+			</p>
+			<h2>Installation instructions</h2>
+			<p>
+				To install the software and use it in your local development environment, you must first set up and activate a local development environment.  From the root of the project:
+			</p>
+			<pre>
+				<code>$ virtualenv venv</code>
+				<code>$ source venv/bin/activate</code>
+			</pre>
+			<p>
+				Install all required packages:
+			</P>
+			<pre>
+				<code>$ pip3 install -r requirements.txt</code>
+			</pre>
+			<p>
+				Migrate the database:
+			</p>
+			<pre>
+				<code>$ python3 manage.py migrate</code>
+			</pre>
+			<p>
+				Seed the development database with:
+			</p>
+			<pre>
+				<code>$ python3 manage.py seed</code>
+			</pre>
+			<p>
+				Run all tests with:
+			</p>
+			<pre>
+				<code>$ python3 manage.py test</code>
+			</pre>
+			<p>
+				Collect all static files with:
+			</p>
+			<pre>
+				<code>$ python3 manage.py collectstatic</code>
+			</pre>
+			<p>
+				Redis is required for the ASGI set up. You can install redis by:
+			</p>
+			<pre>
+				<code>$ sudo apt install redis-server</code>
+			</pre>
+			<p>
+				Run server with(for development and testing ONLY):
+			</p>
+			<pre>
+				<code>$ daphne -e ssl:8000:privateKey=key.pem:certKey=cert.pem notely.asgi:application</code>
+				<code>$ celery -A notely worker -l INFO</code>
+			</pre>
+			<p>
+				*The above instructions should work in your version of the application.  If there are deviations, declare those here in bold.  Otherwise, remove this line.*
+			</p>
+		</div>
+		<div class="move">
+			<h2>Sources</h2>
+			<p>
+				The packages used by this application are specified in `requirements.txt`
+			</p>
+		</div>
+		<div class="move">
+			<h2>JavaScript Library</h2>
+			<p>[Fabric](http://fabricjs.com/)</p>
+			<p>[CodeMirror](https://codemirror.net/)</p>
+			<p>[Bootstrap](https://getbootstrap.com/)</p>
+			<p>[jQuery](https://jquery.com/)</p>
+			<p>[jQuery UI](https://jqueryui.com/)</p>
+			<p>[FullCalendar](https://fullcalendar.io/)</p>
+		</div>
+		<div class="move">
+			<h2>Images</h2>
+			<p>signup_login.jpg:https://www.wikihow.com/Take-Better-Notes</p>
+			<p>select.png:https://www.flaticon.com/free-icon/click_2767163?term=select&page=1&position=12&origin=search&related_id=2767163</p>
+			<p>pen.png:https://www.flaticon.com/free-icon/pen_1860115</p>
+			<p>addFolder.png:https://www.flaticon.com/free-icon/new-folder_9517944?term=add&page=1&position=8&origin=search&related_id=9517944</p>
+			<p>folder.png:https://www.flaticon.com/free-icon/folder_1383970?term=folder&page=1&position=2&origin=search&related_id=1383970</p>
+			<p>notebook.png:https://www.flaticon.com/free-icon/notebook_2904859?term=notebook&page=1&position=2&origin=search&related_id=2904859</p>
+			<p>erase.png:https://www.clipartmax.com/middle/m2i8Z5K9b1m2m2N4_eraser-icon-eraser-icon-png/</p>
+		</div>
+	</body>
+
+	<style>
+      	body {
+			background-color: #F5F5F5;
+			font-family: Arial, sans-serif;
+			margin: 0;
+			padding: 0;
+		}
+
+		h1 {
+			text-align: center;
+		}
+
+		h2 {
+			color: #004D40;
+			font-size: 24px;
+			margin-bottom: 10px;
+		}
+
+		p {
+			color: #212121;
+			font-size: 16px;
+			margin-bottom: 10px;
+		}
+
+		.container {
+			margin: 0 auto;
+			max-width: 800px;
+			padding: 20px;
+		}
+
+		.move{
+			text-align: center;
+		}
+	</style>
+</html>
+{% endblock %}

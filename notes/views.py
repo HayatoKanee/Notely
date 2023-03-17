@@ -553,3 +553,6 @@ def save_template(request, page_id):
     except Page.DoesNotExist:
         return JsonResponse({'status': 'fail'})
 
+def contact(request):
+    return render(request,'contact.html')
+
