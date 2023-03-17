@@ -17,7 +17,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
 from notes import views
-from django.urls import path, include
+from django.urls import path, include, re_path
 import notifications.urls
 
 urlpatterns = [
@@ -44,7 +44,7 @@ urlpatterns = [
     path('page_detail/<page_id>', views.page_detail, name='page_detail'),
     path('delete_page/<page_id>', views.delete_page, name='delete_page'),
     path('inbox/notifications/', include(notifications.urls, namespace='notifications')),
-    path(r'^update_notifications/$', views.update_notifications, name='update_notifications'),
+    re_path(r'^update_notifications/$', views.update_notifications, name='update_notifications'),
     path('share_page/<page_id>', views.share_page, name='share_page'),
     path('get_options_notebook/<notebook_id>', views.get_options_notebook, name='get_options_notebook'),
     path('get_options_folder/<folder_id>', views.get_options_folder, name='get_options_folder'),

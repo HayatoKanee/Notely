@@ -16,5 +16,4 @@ google-auth-oauthlib
 celery
 channels-redis
 sendgrid
-django.contrib.auth
-django-notification
+django-notifications-hq

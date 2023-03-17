@@ -21,17 +21,15 @@ async def send_to_group(group_name, message):
         },
     )
 
+
 def send_internal_reminder(reminder, remind_time):
     notify.send(
-                    sender = reminder.event.user,
-                    recipient= reminder.event.user,
-                    verb= 'Reminder',
-                    actor="System",
-                    description = f"{reminder.event.title} will start at {remind_time}",
-                )
-            
-
-
+        sender=reminder.event.user,
+        recipient=reminder.event.user,
+        verb='Reminder',
+        actor="System",
+        description=f"{reminder.event.title} will start at {remind_time}",
+    )
 
 
 def send_notification_email(reminder):
