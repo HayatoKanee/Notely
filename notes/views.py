@@ -524,11 +524,35 @@ def share_event(request, event_id):
             try:
                 user = User.objects.get(email=email)
                 assign_perm('dg_view_event', user, event)
+                html = render_to_string('partials/share_event_internal.html', {'event': event}, request=request)
+                return JsonResponse({'status': 'success', 'html': html})
             except:
-                print("User with email {} does not exist.".format(email))
+                user = request.user.username
+
+                title = event.title
+                description = event.description
+                start_time = event.start_time
+                end_time = event.end_time
+
+                subject = f'You have been invited to the following event: {title}'
+
+                html_content = f'<p>You have been invited to the following event: {title}\n</p> <p>by {user}\n</p> <p>Please see below event details:\n</p> <p>description: {description}\n</p> <p>start time: {start_time}\n</p> <p>end time: {end_time}</p>'
+
+                mail = Mail(
+                    from_email='winniethepooh.notely@gmail.com',
+                    to_emails=email,
+                    subject=subject,
+                    html_content=html_content)
+
+                try:
+                    sg = SendGridAPIClient(
+                        api_key=settings.EMAIL_HOST_PASSWORD
+                    )
+                    response = sg.send(mail)
+                except Exception as ex:
+                    print("failed to share externally")
+                messages.add_message(request, messages.SUCCESS, "Event Shared!")
                 return JsonResponse({'status': 'fail'})
-        html = render_to_string('partials/share_event_internal.html', {'event': event}, request=request)
-        return JsonResponse({'status': 'success', 'html': html})
     except Event.DoesNotExist:
         return JsonResponse({'status': 'fail'})
 
