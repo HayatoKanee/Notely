@@ -345,6 +345,7 @@ def delete_event(request, event_id):
 
 
 @login_required
+@check_perm('dg_delete_page', Page)
 def delete_page(request, page_id):
     page = Page.objects.get(id=page_id)
     notebook = page.notebook
