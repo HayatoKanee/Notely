@@ -46,7 +46,6 @@ socket.onmessage = function (event) {
                     obj.on('mousedblclick', function (option) {
                         const pointer = canvas.getPointer(option.e);
                         const normalized_pointer = canvas._normalizePointer(obj, pointer)
-                        console.log(normalized_pointer)
                         let target;
                         obj.forEachObject(function (o) {
                             if (canvas._checkTarget(normalized_pointer, o)) {
@@ -60,6 +59,12 @@ socket.onmessage = function (event) {
             });
             canvas.renderAll();
             set_send_message();
+            canvas.on('object:added', function () {
+                if (!_redo) {
+                    canvasObj = [];
+                }
+                _redo = false;
+            });
         });
     }
 }

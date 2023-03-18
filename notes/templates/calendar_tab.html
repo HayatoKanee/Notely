@@ -87,7 +87,7 @@
                 $.ajax({
                     url: "{% url 'event_detail' 0 %}".replace("0", e.event.id),
                     success: function(data) {
-                        $('#detail').html(data.html);
+                        $('#edetail').html(data.html);
                         if (data.event_user_id !== {{user.id}}){
                             $('#eventModalFooter').hide();
                         }
@@ -197,8 +197,8 @@
             }
         }
 
-        var socket = new WebSocket(wsStart + window.location.host + "/ws/calendar");
-        socket.onmessage = function(event) {
+        var event_socket = new WebSocket(wsStart + window.location.host + "/ws/calendar");
+        event_socket.onmessage = function(event) {
             var data = JSON.parse(event.data);
             if (data.type === "show_notification") {
                 // Create a notification with the message received from the server

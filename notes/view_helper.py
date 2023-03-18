@@ -4,12 +4,15 @@ import json
 from django.http import JsonResponse
 from google.auth.transport.requests import Request
 from guardian.shortcuts import get_users_with_perms, assign_perm
+from notifications.models import Notification
+from notifications.signals import notify
+
 from notes.forms import FolderForm, NotebookForm
 from django.contrib import messages
 from django.shortcuts import redirect
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
-from notes.models import Credential, Event, Notebook, User
+from notes.models import Credential, Event, Notebook, User, Page, Folder
 
 
 def save_folder_notebook_forms(request, user, folder=None):
@@ -101,6 +104,17 @@ def get_options(obj, perm_name):
             users_without_perms]
 
 
+def assign_perm_page(user, page, can_edit=False):
+    assign_perm('dg_view_page', user, page)
+    if can_edit:
+        assign_perm('dg_edit_page', user, page)
+    assign_perm('dg_view_notebook', user, page.notebook)
+    folder = page.notebook.folder
+    while folder:
+        assign_perm('dg_view_folder', user, folder)
+        folder = folder.parent
+
+
 def assign_perm_notebook(user, notebook, can_edit=False):
     assign_perm('dg_view_notebook', user, notebook)
     assign_perm('dg_view_all_notebook', user, notebook)
@@ -136,17 +150,56 @@ def assign_perm_folder(user, folder, can_edit=False):
         parent = parent.parent
 
 
+def confirm_share_obj(request, obj_id, obj_type):
+    if request.method == 'POST':
+        try:
+            edit_perm = request.POST.get('edit_perm')
+            obj = obj_type.objects.get(id=obj_id)
+
+            notification = Notification.objects.filter(
+                recipient=request.user,
+                verb='Share',
+            )
+            if not notification.exists():
+                return JsonResponse({'status': 'fail', 'message': 'No notification found'})
+            assign_perm_functions = {
+                Page: assign_perm_page,
+                Notebook: assign_perm_notebook,
+                Folder: assign_perm_folder
+            }
+            if obj_type in assign_perm_functions:
+                assign_perm_functions[obj_type](request.user, obj, can_edit=edit_perm == "true")
+            else:
+                return JsonResponse({'status': 'fail', 'message': 'Invalid object type'})
+            return JsonResponse({'status': 'success'})
+        except obj_type.DoesNotExist:
+            return JsonResponse({'status': 'fail', 'message': 'Page not found'})
+    else:
+        return JsonResponse({'status': 'fail', 'message': 'Invalid request method'})
+
+
 def share_obj(request, obj):
-    if obj.get_type() == 'Notebook':
-        assign_perm_func = assign_perm_notebook
-    elif obj.get_type() == 'Folder':
-        assign_perm_func = assign_perm_folder
-    if obj.user != request.user:
+    if obj.get_owner() != request.user:
         return JsonResponse({'status': 'fail'})
     selected_users = request.POST.getlist('selected_users[]')
     edit_perm = request.POST.get('edit_perm')
-    can_edit = edit_perm == "true"
+    target = []
     for email in selected_users:
         user = User.objects.get(email=email)
-        assign_perm_func(user, obj, can_edit)
+        target.append(user)
+    send_share_obj_noti(request.user, target, obj.id, obj.__class__.__name__, edit_perm == "true")
     return JsonResponse({'status': 'success'})
+
+
+def send_share_obj_noti(sender, recipient, obj_id, obj_type, edit_perm):
+    notify.send(
+        sender=sender,
+        recipient=recipient,
+        verb='Share',
+        description=f"{sender.username} share a {obj_type} to you",
+        extra={
+            'obj_id': obj_id,
+            'obj_type': obj_type,
+            'edit_perm': edit_perm,
+        }
+    )

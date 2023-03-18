@@ -17,6 +17,8 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
 from notes import views
+from django.urls import path, include, re_path
+import notifications.urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -41,6 +43,8 @@ urlpatterns = [
     path('google_auth_callback/', views.google_auth_callback, name='google_auth_callback'),
     path('page_detail/<page_id>', views.page_detail, name='page_detail'),
     path('delete_page/<page_id>', views.delete_page, name='delete_page'),
+    path('inbox/notifications/', include(notifications.urls, namespace='notifications')),
+    re_path(r'^update_notifications/$', views.update_notifications, name='update_notifications'),
     path('share_page/<page_id>', views.share_page, name='share_page'),
     path('get_options_notebook/<notebook_id>', views.get_options_notebook, name='get_options_notebook'),
     path('get_options_folder/<folder_id>', views.get_options_folder, name='get_options_folder'),
@@ -49,6 +53,9 @@ urlpatterns = [
     path('share_event/<event_id>/', views.share_event, name='share_event'),
     path('get_options_event/<event_id>', views.get_options_event, name='get_options_event'),
     path('save_template/<page_id>', views.save_template, name='save_template'),
+    path('confirm_share_page/<page_id>', views.confirm_share_page, name='confirm_share_page'),
+    path('confirm_share_notebook/<notebook_id>', views.confirm_share_notebook, name='confirm_share_notebook'),
+    path('confirm_share_folder/<folder_id>', views.confirm_share_folder, name='confirm_share_folder')
 ]
 
 if settings.DEBUG:
