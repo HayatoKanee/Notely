@@ -10,6 +10,7 @@ from celery import shared_task
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 from django.conf import settings
+from notifications.signals import notify
 
 
 async def send_to_group(group_name, message):
@@ -20,6 +21,16 @@ async def send_to_group(group_name, message):
             "type": "show_notification",
             "message": message
         },
+    )
+
+
+def send_internal_reminder(reminder, remind_time, recipient):
+    notify.send(
+        sender=reminder.event.user,
+        recipient=recipient,
+        verb='Reminder',
+        actor="System",
+        description=f"{reminder.event.title} will start at {remind_time}",
     )
 
 
@@ -83,9 +94,10 @@ def send_notification(reminder_id):
         2880: "at the day after tomorrow",
         10080: "at next week",
     }
-
+    remind_text = reminder_dict.get(reminder_time)
     send_notification_email(reminder)
     users_with_perms = get_users_with_perms(reminder.event, only_with_perms_in=['dg_view_event'])
+    send_internal_reminder(reminder, remind_text, users_with_perms)
     for user in users_with_perms:
         async_to_sync(send_to_group)(f"user_{user.id}",
                                      f"{reminder.event.title} will start {reminder_dict.get(reminder_time)} .")

@@ -15,8 +15,7 @@ class ReminderConsumer(AsyncWebsocketConsumer):
 
     async def show_notification(self, event):
         # Send a WebSocket message to the user's browser to show the reminder notification
-        await self.send(json.dumps(event))
-
+        await self.send(text_data=json.dumps({"type": "show_notification", "message": event["message"]}))
 
 class CanvasConsumer(AsyncWebsocketConsumer):
     async def connect(self):

@@ -51,7 +51,7 @@
 </style>
 
 <script>
-    const t_select = new TomSelect("#select-user", {
+    {% comment %} const t_select = new TomSelect("#select-user",{
         plugins: ['remove_button'],
         persist: false,
         maxItems: null,
@@ -89,9 +89,9 @@
                     '</div>';
             }
         }
-    });
-
-
+    }); {% endcomment %}
+  
+  
     $('#share_btn').click(function () {
         const selectedUsers = t_select.getValue();
         const csrf = $('input[name="csrfmiddlewaretoken"]').val();
