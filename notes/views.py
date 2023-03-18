@@ -280,7 +280,7 @@ def page(request, page_id):
     users_without_perms = User.objects.exclude(pk__in=users_with_perms).exclude(username='AnonymousUser')
     can_edit = request.user.has_perm('dg_edit_page', page)
     can_edit_notebook = request.user.has_perm('dg_edit_notebook', page.notebook)
-    event_form = EventForm(request.user)
+    event_form = EventForm(request.user, initial={'page': page})
     tags = set()
     for event in events:
 

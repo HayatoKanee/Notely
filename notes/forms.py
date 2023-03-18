@@ -162,18 +162,24 @@ class EventForm(forms.ModelForm):
         }
 
     def __init__(self, user, *args, **kwargs):
+        initial = kwargs.pop('initial', {})
         super().__init__(*args, **kwargs)
         self.user = user
         self.fields['tag'].widget = EventTagSelectWidget()
         self.fields['tag'].queryset = user.event_tags.all()
 
-        notebook_choices = []
+        notebook_choices = [('', 'No page')]
         notebooks = Notebook.objects.filter(user=user)
         for notebook in notebooks:
             for i, page in enumerate(notebook.pages.all()):
                 notebook_choices.append((page.id, f"{notebook.notebook_name}: {i + 1}"))
 
         self.fields['page'].choices = notebook_choices
+        if 'page' in initial:
+            default_page = initial['page']
+            self.fields['page'].initial = default_page
+        else:
+            self.fields['page'].initial = ''
 
     def clean(self):
         super().clean()
