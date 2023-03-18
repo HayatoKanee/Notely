@@ -60,6 +60,12 @@ socket.onmessage = function (event) {
             });
             canvas.renderAll();
             set_send_message();
+            canvas.on('object:added', function () {
+                if (!_redo) {
+                    canvasObj = [];
+                }
+                _redo = false;
+            });
         });
     }
 }
