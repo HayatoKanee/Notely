@@ -90,6 +90,9 @@ class Folder(models.Model):
             current = current.parent
         return path
 
+    def get_owner(self):
+        return self.user
+
 
 class Notebook(models.Model):
     user = models.ForeignKey(User, related_name="notebooks", on_delete=models.CASCADE)
@@ -109,6 +112,9 @@ class Notebook(models.Model):
 
     def get_type(self):
         return 'Notebook'
+
+    def get_owner(self):
+        return self.user
 
 
 class Page(models.Model):
@@ -154,6 +160,9 @@ class Page(models.Model):
         page_number = index + 1
 
         return page_number
+
+    def get_owner(self):
+        return self.notebook.user
 
 
 class Editor(models.Model):

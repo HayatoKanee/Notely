@@ -53,6 +53,9 @@ urlpatterns = [
     path('share_event/<event_id>/', views.share_event, name='share_event'),
     path('get_options_event/<event_id>', views.get_options_event, name='get_options_event'),
     path('save_template/<page_id>', views.save_template, name='save_template'),
+    path('confirm_share_page/<page_id>', views.confirm_share_page, name='confirm_share_page'),
+    path('confirm_share_notebook/<notebook_id>', views.confirm_share_notebook, name='confirm_share_notebook'),
+    path('confirm_share_folder/<folder_id>', views.confirm_share_folder, name='confirm_share_folder')
 ]
 
 if settings.DEBUG:

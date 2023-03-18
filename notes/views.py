@@ -10,6 +10,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.db.models import Q
+from notifications.models import Notification
 from oauthlib.oauth2 import AccessDeniedError
 
 from .forms import SignUpForm, LogInForm, UserForm, ProfileForm, PasswordForm, FolderForm, NotebookForm, EventForm, \
@@ -21,7 +22,7 @@ from .helpers import login_prohibited, check_perm
 from django.contrib.auth.hashers import check_password
 from guardian.shortcuts import get_objects_for_user, get_users_with_perms, assign_perm
 from .view_helper import sort_items_by_created_time, save_folder_notebook_forms, get_or_create_event_from_google, \
-    get_options, assign_perm_notebook, assign_perm_folder, share_obj
+    get_options, assign_perm_notebook, assign_perm_folder, share_obj, send_share_obj_noti, confirm_share_obj
 from datetime import datetime
 from django.utils import timezone
 from google_auth_oauthlib.flow import Flow
@@ -127,10 +128,12 @@ def sub_folders_tab(request, folder_id):
                    'notebook_form': notebook_form, 'folder': folder,
                    'can_edit': can_edit})
 
+
 @login_required
 def update_notifications(request):
-    request.user.notifications.mark_all_as_read() 
+    request.user.notifications.mark_all_as_read()
     return JsonResponse({'status': 'success'})
+
 
 @login_required
 @check_perm('dg_view_event', Event)
@@ -219,7 +222,7 @@ def calendar_tab(request):
                 return redirect('calendar_tab')
 
     return render(request, 'calendar_tab.html', {'event_form': event_form, 'tag_form': tag_form, 'events': events,
-                                                 'tags': tags, 'shareEvent_form': shareEvent_form })
+                                                 'tags': tags, 'shareEvent_form': shareEvent_form})
 
 
 @login_required
@@ -468,17 +471,7 @@ def google_auth_callback(request):
 def share_page(request, page_id):
     try:
         page = Page.objects.get(id=page_id)
-        if page.notebook.user != request.user:
-            return JsonResponse({'status': 'fail'})
-        selected_users = request.POST.getlist('selected_users[]')
-        edit_perm = request.POST.get('edit_perm')
-        for email in selected_users:
-            user = User.objects.get(email=email)
-            assign_perm('dg_view_page', user, page)
-            if edit_perm == "true":
-                assign_perm('dg_edit_page', user, page)
-            assign_perm('dg_view_notebook', user, page.notebook)
-        return JsonResponse({'status': 'success'})
+        return share_obj(request, page)
     except Page.DoesNotExist:
         return JsonResponse({'status': 'fail'})
 
@@ -582,3 +575,18 @@ def save_template(request, page_id):
         return JsonResponse({'status': 'success'})
     except Page.DoesNotExist:
         return JsonResponse({'status': 'fail'})
+
+
+@login_required
+def confirm_share_page(request, page_id):
+    return confirm_share_obj(request, page_id, Page)
+
+
+@login_required
+def confirm_share_notebook(request, notebook_id):
+    return confirm_share_obj(request, notebook_id, Notebook)
+
+
+@login_required
+def confirm_share_folder(request, folder_id):
+    return confirm_share_obj(request, folder_id, Folder)

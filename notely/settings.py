@@ -160,7 +160,6 @@ MESSAGE_TAGS = {
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 GOOGLE_CREDENTIALS_PATH = os.path.join(BASE_DIR, 'notes', 'assets', 'credentials.json')
 
-
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 EMAIL_HOST = 'smtp.sendgrid.net'
@@ -175,3 +174,5 @@ MEDIA_URL = '/media/'
 
 CELERY_BROKER_URL = "redis://localhost:6379"
 CELERY_RESULT_BACKEND = "redis://localhost:6379"
+
+DJANGO_NOTIFICATIONS_CONFIG = {'USE_JSONFIELD': True}
