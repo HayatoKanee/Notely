@@ -270,6 +270,16 @@ def gravatar(request):
 @check_perm('dg_view_page', Page)
 def page(request, page_id):
     page = Page.objects.get(id=page_id)
+    events = Event.objects.all()
+    related_events = []
+    for event in events:
+
+        for related_page in event.pages.all():
+            print(related_page)
+            if related_page.id == page.id:
+                related_events.append(event)
+                print(event)
+    print(related_events)
     page_tag_form = PageTagForm()
     tags = PageTag.objects.all()
     viewable_pages = get_objects_for_user(request.user, 'dg_view_page', klass=Page).filter(notebook=page.notebook)
@@ -277,7 +287,34 @@ def page(request, page_id):
     users_without_perms = User.objects.exclude(pk__in=users_with_perms).exclude(username='AnonymousUser')
     can_edit = request.user.has_perm('dg_edit_page', page)
     can_edit_notebook = request.user.has_perm('dg_edit_notebook', page.notebook)
+    event_form = EventForm(request.user, initial={'page': page})
+    tags = set()
+    for event in events:
+
+        for tag in event.tags.all():
+            tags.add(tag)
+
     if request.method == 'POST':
+        if 'event_submit' in request.POST:
+            event_form = EventForm(request.user, request.POST)
+            if event_form.is_valid():
+
+                page_data = event_form.cleaned_data['page']
+                event = event_form.save()
+
+                if page_data:
+                    page_id = page_data.id
+                    page = Page.objects.get(id=page_id)
+                    event.save()  # Save the event after adding the page to the many-to-many relationship
+                    event.pages.set([page])
+                else:
+                    event.save()  # Save the event without adding the page to the many-to-many relationship
+
+                if int(event_form.cleaned_data['reminder']) > -1:
+                    Reminder.objects.create(event=event, reminder_time=int(event_form.cleaned_data['reminder']))
+                    messages.add_message(request, messages.SUCCESS, "Reminder Created!")
+                messages.add_message(request, messages.SUCCESS, "Event Created!")
+                return redirect('page', page.id)
         if 'page_tag_submit' in request.POST:
             page_tag_form = PageTagForm(request.POST)
             if page_tag_form.is_valid():
@@ -292,12 +329,13 @@ def page(request, page_id):
             new_page = Page.objects.create(notebook=page.notebook)
             return redirect('page', new_page.id)
         if 'search_page_submit' in request.POST:
-            new_page = Page.obejects.get(id=page_id)
+            new_page = Page.objects.get(id=page_id)
             return redirect('page', new_page.id)
     return render(request, 'page.html',
                   {'page': page, 'page_tag_form': page_tag_form, 'tags': tags, 'users': users_without_perms,
                    'viewable_pages': viewable_pages, 'can_edit': can_edit, 'can_edit_notebook': can_edit_notebook,
-                   'templates': page.templates.all()})
+                   'events': related_events, 'templates': page.templates.all(),
+                   'event_form': event_form})
 
 
 @login_required

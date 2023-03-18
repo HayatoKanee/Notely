@@ -160,10 +160,18 @@
                                 data-bs-target="#shareModal" style="color: rgb(245, 93, 66);">Share
                         </button>
                     </li>
+
+                    <li class="nav-item">
+                        <button class="toolbox" id="event" type="button" data-bs-toggle="modal"
+                                data-bs-target="#pageEventModal" style="color: rgb(245, 93, 66);">Events
+                        </button>
+                    </li>
+
                 {% endif %}
             </ul>
         </div>
     </nav>
+    {% include 'partials/pageEventModal.html' %}
     {% include 'partials/symbols.html' %}
     {% include 'partials/templateModal.html' %}
     {% include 'partials/shareModal.html' %}
@@ -350,7 +358,87 @@
             socket.onopen = function () {
                 console.log('connected');
             };
+
         </script>
         <script src="{% static 'javascript/note-taking/sync_page.js' %}"></script>
     {% endif %}
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.4/index.global.min.js'></script>
+    <script>
+        console.log(document.getElementById('calendar'));
+        let event_id;
+        const calendarEl = document.getElementById('calendar');
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+            headerToolbar: false,
+            initialView: 'listWeek',
+            events: [
+                {% for event in events %}
+                    {
+                        id: "{{event.id}}",
+                        title: "{{ event.title}}",
+                        start: '{{ event.start_time|date:"Y-m-d H:i:s" }}',
+                        end: '{{ event.end_time|date:"Y-m-d H:i:s" }}',
+                        backgroundColor: '{{ event.tags.first.color }}',
+                        tags: "{% for tag in event.tags.all %}{{ tag.title }},{% endfor %}".slice(0, -1),
+                    },
+                {% endfor %}
+            ],
+
+            eventClick: function (e) {
+                event_id = e.event.id;
+                $.ajax({
+                    url: "{% url 'event_detail' 0 %}".replace("0", e.event.id),
+                    success: function (data) {
+                        $('#edetail').html(data.html);
+                        if (data.event_user_id !== {{user.id}}) {
+                            $('#eventModalFooter').hide();
+                        }
+                        console.log("data_euser", data.event_user_id)
+                        console.log("data_user", {{user.id}})
+                        console.log(e.event.id)
+                    },
+                    error: function () {
+                        alert('Error retrieving event detail');
+                    }
+                });
+                $.ajax({
+                    url: "{% url 'get_options_event' 0 %}".replace("0", e.event.id),
+                    success: function (data) {
+                        t_select.clearOptions();
+                        for (const option of data) {
+                            t_select.addOption(option);
+                        }
+                    },
+                    error: function () {
+                        alert('Error retrieving data');
+                    }
+                });
+                $('#eventDetail').modal('show');
+                $('#delete_link').attr('href', "{% url 'delete_event' 0 %}".replace("0", e.event.id))
+            },
+            editable: true,
+            eventDrop: function (info) {
+                const event = info.event;
+                const start = event.start.toISOString();
+                const end = event.end.toISOString();
+                // send updated start and end times to server to update database
+                $.ajax({
+                    url: "{% url 'update_event' 0 %}".replace("0", event.id),
+                    type: 'POST',
+                    data: {
+                        start: start,
+                        end: end,
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                    }
+                });
+            },
+        });
+
+        calendar.render();
+        $(document).ready(function () {
+            $('.modal-draggable .modal-dialog').draggable({
+                handle: ".modal-header"
+            });
+        });
+    </script>
+
 {% endblock %}
