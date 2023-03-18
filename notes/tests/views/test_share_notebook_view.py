@@ -1,9 +1,8 @@
 """Tests of the share notebook view"""
-from django.test import TestCase
+from django.test import TestCase, Client
 from django.urls import reverse
 from notes.models import Notebook, User, Folder
 from unittest.mock import patch
-from rest_framework.test import APIClient
 
 class ShareNotebookViewTestCase(TestCase):
     """Tests for share notebook view"""
@@ -15,7 +14,7 @@ class ShareNotebookViewTestCase(TestCase):
 
 
     def setUp(self):
-        self.client = APIClient()
+        self.client = Client()
         self.user = User.objects.get(pk=1)
         self.notebook = Notebook.objects.get(pk=1)
 

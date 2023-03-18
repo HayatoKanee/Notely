@@ -1,9 +1,8 @@
 """Tests of the share folder view"""
-from django.test import TestCase
+from django.test import TestCase, Client
 from django.urls import reverse
 from notes.models import User, Folder
 from unittest.mock import patch
-from rest_framework.test import APIClient
 
 class ShareFolderViewTestCase(TestCase):
     """Tests for share folder view"""
@@ -15,7 +14,7 @@ class ShareFolderViewTestCase(TestCase):
 
 
     def setUp(self):
-        self.client = APIClient()
+        self.client = Client()
         self.user = User.objects.get(pk=1)
         self.folder = Folder.objects.get(pk=1)
 

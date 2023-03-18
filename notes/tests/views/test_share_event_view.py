@@ -4,7 +4,6 @@ from django.urls import reverse
 from django.utils import timezone
 from notes.models import User, Event
 from unittest.mock import patch
-from rest_framework.authtoken.models import Token
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 
