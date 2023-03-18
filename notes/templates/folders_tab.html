@@ -132,6 +132,7 @@
     <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
     <script>
         var users = "{{ users }}";
+         let createdUser = [];
         const t_select = new TomSelect("#select-user", {
             create: true,
             plugins: ['remove_button'],
@@ -159,7 +160,7 @@
                         '</div>' +
                         '</div>';
                 }
-            }
+            },
         });
         let share_url;
         $('.share').click(function (){
@@ -182,13 +183,13 @@
         $('#shareBtn').click(function () {
             let selectedUsers = t_select.getValue();
             const edit_perm = $('#editBox').prop('checked');
-            const createdUsers = [];
             selectedUsers = selectedUsers.filter((item) => !createdUsers.includes(item));
-            console.log(selectedUsers);
+            console.log(createdUser);
             console.log(users[0]);
+
             //need to add a if to to seprate this two conditions and also fix bugs.
                     $.ajax({
-                        url: share_url_2,
+                        url: share_url,
                         type: 'POST',
                         async: true,
                         data: {
@@ -198,16 +199,16 @@
                         },
                     });
 
-                    // $.ajax({
-                    //     url: share_url_2,
-                    //     type: 'POST',
-                    //     async: true,
-                    //     data: {
-                    //         'createdUsers[]': selectedUsers,
-                    //         'edit_perm': edit_perm,
-                    //         csrfmiddlewaretoken: '{{csrf_token}}'
-                    //     },
-                    // });
+                    $.ajax({
+                        url: share_url_2,
+                        type: 'POST',
+                        async: true,
+                        data: {
+                            'createdUsers[]': createdUser,
+                            'edit_perm': edit_perm,
+                            csrfmiddlewaretoken: '{{csrf_token}}'
+                        },
+                    });
             while(selectedUsers.length!=0){
                 t_select.removeOption(selectedUsers[0]);
             }
