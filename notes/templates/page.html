@@ -135,7 +135,8 @@
                     </li>
                     <li class="nav-item">
                         <button class="toolbox" id="template" type="button" data-bs-toggle="modal"
-                                data-bs-target="#templateModal" style="color: rgb(245, 93, 66);"> template</button>
+                                data-bs-target="#templateModal" style="color: rgb(245, 93, 66);"> template
+                        </button>
                     </li>
                 {% endif %}
                 <li class="nav-item">
@@ -359,6 +360,70 @@
                 console.log('connected');
             };
 
+            const t_select_event = new TomSelect("#select-user-internal", {
+                plugins: ['remove_button'],
+                persist: false,
+                maxItems: null,
+                valueField: 'email',
+                labelField: 'name',
+                searchField: ['username', 'email'],
+                options: [
+                    {% for user in users %}
+                        {
+                            email: "{{ user.email }}",
+                            username: "{{ user.username }}",
+                            gravatar: "{{ user.profile.mini_gravatar}}"
+                        },
+                    {% endfor %}
+                ],
+                create: true,
+                render: {
+                    item: function (item, escape) {
+                        ;
+                        return '<div>' +
+                            (item.username ? '<span class="name">' + escape(item.username) + '</span>' : '') +
+                            (item.email ? '<span class="email">' + escape(item.email) + '</span>' : '') +
+                            '<span class="gravatar">' + '<img class="rounded-circle" src="' + item.gravatar + '"</img></span>' +
+                            '</div>';
+
+                    },
+                    option: function (item, escape) {
+                        var label = item.username || item.email;
+                        var caption = item.username ? item.email : null;
+                        return '<div class="row">' + '<div class="col">' +
+                            '<span class="label">' + escape(label) + '</span>' +
+                            (caption ? '<span class="caption">' + escape(caption) + '</span>' : '') + '</div>' + '<div class="col">' +
+                            '<span class="gravatar">' + '<img class="rounded-circle" src="' + item.gravatar + '"</img></span>' +
+                            '</div>' +
+                            '</div>';
+                    }
+                }
+            });
+
+
+            $('#share_btn').click(function () {
+                const selectedUsers = t_select_event.getValue();
+                const csrf = $('input[name="csrfmiddlewaretoken"]').val();
+                const url = "{% url 'share_event' 0 %}".replace("0", event_id);
+
+                {% if user%}
+                    $.ajax({
+                        url: url,
+                        type: 'POST',
+                        async: true,
+                        data: {
+                            'selected_users[]': selectedUsers,
+                            'csrfmiddlewaretoken': csrf
+                        },
+                        success: function (data) {
+                            $('#shareEventModalInternal').modal('hide');
+                        }
+                    });
+                {% else %}
+                    console.log("false")
+                {% endif %}
+
+            });
         </script>
         <script src="{% static 'javascript/note-taking/sync_page.js' %}"></script>
     {% endif %}
