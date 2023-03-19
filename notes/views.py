@@ -54,14 +54,15 @@ def sign_up(request):
             user = form.save()
             login(request, user, backend='django.contrib.auth.backends.ModelBackend')
             if next:
-                resolver_match = resolve(next)
-                print(resolver_match)
+                print(next)
                 obj_type = {'page': Page, 'notebook': Notebook, 'folder': Folder}
-                assign_perm_after_sign_up(obj_type, resolver_match, user)
+                assign_perm_after_sign_up(obj_type, next, user)
             return redirect('log_in')
     else:
         next = request.GET.get('next') or ''
         form = SignUpForm()
+    next_url_parts = next.split('/')
+    print(next_url_parts)
     return render(request, 'sign_up.html', {'form': form, 'next': next})
 
 
@@ -643,20 +644,19 @@ def confirm_share_folder(request, folder_id):
 @login_required
 def share_page_ex(request, page_id):
     try:
-        page_id = signing.loads(page_id)
-    except signing.BadSignature:
-        pass
-    page = Page.objects.get(id=page_id)
+        page = Page.objects.get(id=page_id)
+    except Page.DoesNotExist:
+        return JsonResponse({'status': 'fail'})
+    if page.notebook.user != request.user:
+        return JsonResponse({'status': 'fail'})
     if request.method == 'POST':
         selected_emails = request.POST.getlist('selected_users[]')
-        print(selected_emails)
+        edit_perm = request.POST.get('edit_perm')
         for email in selected_emails:
-            print(email)
             user = request.user.username
             encryped_id = signing.dumps(page.id)
             base_url = f"{request.scheme}://{request.get_host()}"
-            page_url = f"{reverse('page', args=[encryped_id])}"
-            sign_up_url = f"{base_url}{reverse('sign_up')}?next={page_url}"
+            sign_up_url = f"{base_url}{reverse('sign_up')}?next=/page/{encryped_id}/{edit_perm}"
             subject = f'You have been shared with this page: {page}'
             html_content = f'<p>You have been shared with this page: {sign_up_url}\n</p> <p>by {user}\n</p>'
             mail = Mail(
