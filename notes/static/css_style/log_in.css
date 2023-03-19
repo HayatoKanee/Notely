@@ -11,7 +11,7 @@ body {
     justify-content: center; /*flex容器中子元素在主轴（row或column）上的对齐方式*/
     align-items: center; /*flex容器中子元素在交叉轴（row或column）上的对齐方式*/
     height: 100vh; /*元素的高度*/
-    background: url('signup_login.JPG'); /*元素的背景颜色*/
+    background: url('../images/signup_login.JPG'); /*元素的背景颜色*/
     background-size: contain; /*背景图片的大小*/
 }
 
