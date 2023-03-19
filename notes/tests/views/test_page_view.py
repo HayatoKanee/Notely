@@ -59,4 +59,16 @@ class PageViewTestCase(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(self.notebook.pages.count(), 2)
 
+    def test_page_view_search_page_on_form_submission(self):
+        self.client.login(username='johndoe', password='Password123')
+        response = self.client.post(reverse('page', args=[self.page.id]), {'search_page_submit': ''})
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(self.notebook.pages.count(), 1)
+
+    def test_page_view_create_event_on_form_submission(self):
+        self.client.login(username='johndoe', password='Password123')
+        response = self.client.post(reverse('page', args=[self.page.id]), {'event_submit': ''})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(self.notebook.pages.count(), 1)
+
     
