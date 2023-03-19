@@ -76,7 +76,6 @@ label #cancel {
 #check:checked ~ section { margin-left: 250px; }
 
 section {
-    background: url(bg.jpeg) no-repeat; /* (bg is a picture name)*/
     background-position: center;
     background-size: cover;
     height: 100vh;
