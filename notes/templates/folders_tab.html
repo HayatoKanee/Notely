@@ -195,7 +195,7 @@
                 url: this.getAttribute('data-options-url'),
                 success: function (data) {
                     t_select.clearOptions();
-                    for (const option of data) {
+                    for (const option of data.options) {
                         t_select.addOption(option);
                     }
                     createdUsers = [];
