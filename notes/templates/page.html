@@ -265,7 +265,10 @@
             }
         </style>
         <script>
+            const createdUsers = [];
             const t_select = new TomSelect("#select-user", {
+                create: true,
+                createFilter: /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/,
                 plugins: ['remove_button'],
                 persist: false,
                 maxItems: null,
@@ -302,6 +305,12 @@
                     }
                 }
             });
+            const originalList = JSON.parse(JSON.stringify(t_select.options));
+            t_select.on('item_add', function (value, item) {
+                if (!(value in originalList)) {
+                    createdUsers.push(value)
+                }
+            });
             const t_select2 = new TomSelect('#search-bar', {
                 valueField: 'id',
                 searchField: 'id',
@@ -327,17 +336,33 @@
             });
             $('#shareBtn').click(function () {
                 const selectedUsers = t_select.getValue();
+                const existingUsers = selectedUsers.filter(user => !createdUsers.includes(user));
+                const nonExistingUsers = selectedUsers.filter(user => createdUsers.includes(user));
                 const edit_perm = $('#editBox').prop('checked');
-                $.ajax({
-                    url: "{% url 'share_page' page.id %}",
-                    type: 'POST',
-                    async: true,
-                    data: {
-                        'selected_users[]': selectedUsers,
-                        'edit_perm': edit_perm,
-                        csrfmiddlewaretoken: csrf
-                    },
-                });
+                if (existingUsers.length !== 0) {
+                    $.ajax({
+                        url: "{% url 'share_page' page.id %}",
+                        type: 'POST',
+                        async: true,
+                        data: {
+                            'selected_users[]': existingUsers,
+                            'edit_perm': edit_perm,
+                            csrfmiddlewaretoken: csrf
+                        },
+                    });
+                }
+                if (nonExistingUsers.length !== 0) {
+                    $.ajax({
+                        url: "{% url 'share_page_ex' page.id %}",
+                        type: 'POST',
+                        async: true,
+                        data: {
+                            'selected_users[]': nonExistingUsers,
+                            'edit_perm': edit_perm,
+                            csrfmiddlewaretoken: csrf
+                        },
+                    });
+                }
                 while (selectedUsers.length != 0) {
                     t_select.removeOption(selectedUsers[0]);
                 }

@@ -1,6 +1,7 @@
 import datetime
 import json
 
+from django.core import signing
 from django.http import JsonResponse
 from google.auth.transport.requests import Request
 from guardian.shortcuts import get_users_with_perms, assign_perm
@@ -203,3 +204,18 @@ def send_share_obj_noti(sender, recipient, obj_id, obj_type, edit_perm):
             'edit_perm': edit_perm,
         }
     )
+
+
+def assign_perm_after_sign_up(obj_type, resolver_match, user):
+    for obj_key, obj_class in obj_type.items():
+        if f'{obj_key}_id' in resolver_match.kwargs:
+            obj_id_en = resolver_match.kwargs[f'{obj_key}_id']
+            obj_id = signing.loads(obj_id_en)
+            obj = obj_class.objects.get(id=obj_id)
+            assign_perm_functions = {
+                Page: assign_perm_page,
+                Notebook: assign_perm_notebook,
+                Folder: assign_perm_folder
+            }
+            if obj_class in assign_perm_functions:
+                assign_perm_functions[obj_class](user, obj)

@@ -276,6 +276,7 @@
                 {% endfor %}
             ],
             create: true,
+            createFilter: /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/,
             render: {
                 item: function (item, escape) {
                     ;
@@ -298,7 +299,6 @@
                 }
             }
         });
-
 
         $('#share_btn').click(function () {
             const selectedUsers = t_select.getValue();

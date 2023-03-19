@@ -3,6 +3,7 @@ import base64
 import os
 
 from django.conf import settings
+from django.core import signing
 from django.core.exceptions import PermissionDenied
 from django.core.files.base import ContentFile
 from django.http import JsonResponse
@@ -10,6 +11,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.db.models import Q
+from django.urls import reverse, resolve
 from notifications.models import Notification
 from oauthlib.oauth2 import AccessDeniedError
 
@@ -22,7 +24,8 @@ from .helpers import login_prohibited, check_perm
 from django.contrib.auth.hashers import check_password
 from guardian.shortcuts import get_objects_for_user, get_users_with_perms, assign_perm
 from .view_helper import sort_items_by_created_time, save_folder_notebook_forms, get_or_create_event_from_google, \
-    get_options, assign_perm_notebook, assign_perm_folder, share_obj, send_share_obj_noti, confirm_share_obj
+    get_options, assign_perm_notebook, assign_perm_folder, share_obj, send_share_obj_noti, confirm_share_obj, \
+    assign_perm_after_sign_up
 from datetime import datetime
 from django.utils import timezone
 from google_auth_oauthlib.flow import Flow
@@ -46,13 +49,20 @@ SCOPES = ['https://www.googleapis.com/auth/calendar',
 def sign_up(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
+        next = request.POST.get('next') or ''
         if form.is_valid():
             user = form.save()
             login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+            if next:
+                resolver_match = resolve(next)
+                print(resolver_match)
+                obj_type = {'page': Page, 'notebook': Notebook, 'folder': Folder}
+                assign_perm_after_sign_up(obj_type, resolver_match, user)
             return redirect('log_in')
     else:
+        next = request.GET.get('next') or ''
         form = SignUpForm()
-    return render(request, 'sign_up.html', {'form': form})
+    return render(request, 'sign_up.html', {'form': form, 'next': next})
 
 
 @login_prohibited
@@ -589,7 +599,7 @@ def share_event(request, event_id):
                 except Exception as ex:
                     print("failed to share externally")
                 messages.add_message(request, messages.SUCCESS, "Event Shared!")
-                return JsonResponse({'status': 'fail'})
+                return JsonResponse({'status': 'success'})
     except Event.DoesNotExist:
         return JsonResponse({'status': 'fail'})
 
@@ -628,3 +638,41 @@ def confirm_share_notebook(request, notebook_id):
 @login_required
 def confirm_share_folder(request, folder_id):
     return confirm_share_obj(request, folder_id, Folder)
+
+
+@login_required
+def share_page_ex(request, page_id):
+    try:
+        page_id = signing.loads(page_id)
+    except signing.BadSignature:
+        pass
+    page = Page.objects.get(id=page_id)
+    if request.method == 'POST':
+        selected_emails = request.POST.getlist('selected_users[]')
+        print(selected_emails)
+        for email in selected_emails:
+            print(email)
+            user = request.user.username
+            encryped_id = signing.dumps(page.id)
+            base_url = f"{request.scheme}://{request.get_host()}"
+            page_url = f"{reverse('page', args=[encryped_id])}"
+            sign_up_url = f"{base_url}{reverse('sign_up')}?next={page_url}"
+            subject = f'You have been shared with this page: {page}'
+            html_content = f'<p>You have been shared with this page: {sign_up_url}\n</p> <p>by {user}\n</p>'
+            mail = Mail(
+                from_email='winniethepooh.notely@gmail.com',
+                to_emails=email,
+                subject=subject,
+                html_content=html_content)
+            try:
+                sg = SendGridAPIClient(
+                    api_key=settings.EMAIL_HOST_PASSWORD
+                )
+                response = sg.send(mail)
+                print(response.status_code)
+                print(response.body)
+                print(response.headers)
+            except Exception as ex:
+                print("some exceptions")
+        messages.add_message(request, messages.SUCCESS, "Page Shared!")
+        return JsonResponse({'status': 'success'})
