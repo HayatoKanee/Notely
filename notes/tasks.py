@@ -1,6 +1,8 @@
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.utils import timezone
+from guardian.shortcuts import get_users_with_perms
+
 from notes.models import Reminder
 from notes.consumer import ReminderConsumer
 from datetime import datetime, timedelta
@@ -8,7 +10,7 @@ from celery import shared_task
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 from django.conf import settings
-
+from notifications.signals import notify
 
 
 async def send_to_group(group_name, message):
@@ -19,6 +21,16 @@ async def send_to_group(group_name, message):
             "type": "show_notification",
             "message": message
         },
+    )
+
+
+def send_internal_reminder(reminder, remind_time, recipient):
+    notify.send(
+        sender=reminder.event.user,
+        recipient=recipient,
+        verb='Reminder',
+        actor="System",
+        description=f"{reminder.event.title} will start at {remind_time}",
     )
 
 
@@ -36,36 +48,35 @@ def send_notification_email(reminder):
         2880: "at the day after tomorrow",
         10080: "at next week",
     }
+    users_with_perms = get_users_with_perms(reminder.event, only_with_perms_in=['dg_view_event'])
+    for user in users_with_perms:
+        email = user.email
+        event = reminder.event
+        title = event.title
+        description = event.description
+        start_time = event.start_time
+        end_time = event.end_time
 
-    email = reminder.event.user.email
+        subject = f"{title} will start {reminder_dict.get(reminder_time)} ."
 
-    event = reminder.event
-    title = event.title
-    description = event.description
-    start_time = event.start_time
-    end_time = event.end_time
+        html_content = f'<p>{title} will start {reminder_dict.get(reminder_time)} .\n</p> <p>Please see below event details:\n</p> <p>description: {description}\n</p> <p>start time: {start_time}\n</p> <p>end time: {end_time}</p>'
+        mail = Mail(
+            from_email='winniethepooh.notely@gmail.com',
+            to_emails=email,
+            subject=subject,
+            html_content=html_content)
 
-    subject = f"{title} will start {reminder_dict.get(reminder_time)} ."
-
-    html_content = f'<p>{title} will start {reminder_dict.get(reminder_time)} .\n</p> <p>Please see below event details:\n</p> <p>description: {description}\n</p> <p>start time: {start_time}\n</p> <p>end time: {end_time}</p>'
-
-    mail = Mail(
-        from_email='winniethepooh.notely@gmail.com',
-        to_emails=email,
-        subject=subject,
-        html_content=html_content)
-    
-    try:
-        sg = SendGridAPIClient(
-            api_key=settings.EMAIL_HOST_PASSWORD
+        try:
+            sg = SendGridAPIClient(
+                api_key=settings.EMAIL_HOST_PASSWORD
             )
-        response = sg.send(mail)
-        print(response.status_code)
-        print(response.body)
-        print(response.headers)
-    except Exception as ex:
-        print("a")
-    
+            response = sg.send(mail)
+            print(response.status_code)
+            print(response.body)
+            print(response.headers)
+        except Exception as ex:
+            print("a")
+
 
 @shared_task
 def send_notification(reminder_id):
@@ -83,8 +94,10 @@ def send_notification(reminder_id):
         2880: "at the day after tomorrow",
         10080: "at next week",
     }
-
+    remind_text = reminder_dict.get(reminder_time)
     send_notification_email(reminder)
-
-    async_to_sync(send_to_group)(f"user_{reminder.event.user.id}",
-                                 f"{reminder.event.title} will start {reminder_dict.get(reminder_time)} .")
+    users_with_perms = get_users_with_perms(reminder.event, only_with_perms_in=['dg_view_event'])
+    send_internal_reminder(reminder, remind_text, users_with_perms)
+    for user in users_with_perms:
+        async_to_sync(send_to_group)(f"user_{user.id}",
+                                     f"{reminder.event.title} will start {reminder_dict.get(reminder_time)} .")

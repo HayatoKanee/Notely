@@ -1,12 +1,22 @@
 import datetime
 import json
+import re
 
+from django.core import signing
+from django.http import JsonResponse
+from django.urls import reverse
+from google.auth.transport.requests import Request
+from guardian.shortcuts import get_users_with_perms, assign_perm
+from notifications.models import Notification
+from notifications.signals import notify
+from sendgrid import Mail, SendGridAPIClient
+from django.conf import settings
 from notes.forms import FolderForm, NotebookForm
 from django.contrib import messages
 from django.shortcuts import redirect
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
-from notes.models import Credential, Event
+from notes.models import Credential, Event, Notebook, User, Page, Folder
 
 
 def save_folder_notebook_forms(request, user, folder=None):
@@ -36,47 +46,217 @@ def sort_items_by_created_time(*args):
 
 
 def get_or_create_event_from_google(request):
-    try:
-        credential = Credential.objects.get(user=request.user)
-    except Credential.DoesNotExist:
-        return None
-    creds = Credentials.from_authorized_user_info(info=json.loads(credential.google_cred))
-    # Create a service object to interact with the Google Calendar API
-    service = build('calendar', 'v3', credentials=creds)
+    credentials = request.user.creds.all()
+    for credential in credentials:
+        creds = Credentials.from_authorized_user_info(info=json.loads(credential.google_cred))
+        print(credential.google_cred)
+        if creds.expired:
+            try:
+                creds.refresh(Request())
+                # Update the credentials in the database
+                credential.google_cred = creds.to_json()
+                credential.save()
+            except Exception as e:
+                messages.add_message(request, messages.ERROR, "Failed to refresh the credentials: {}".format(e))
+                continue
+        # Create a service object to interact with the Google Calendar API
+        service = build('calendar', 'v3', credentials=creds)
 
-    # Call the Calendar API to get the upcoming events
-    now = datetime.datetime.utcnow().isoformat() + 'Z'
-    events_result = service.events().list(calendarId='primary', timeMin=now,
-                                          maxResults=10, singleEvents=True,
-                                          orderBy='startTime').execute()
-    events = events_result.get('items', [])
-    for event in events:
-        start = event['start'].get('dateTime', event['start'].get('date'))
-        end = event['end'].get('dateTime', event['end'].get('date'))
-        if start.endswith('Z'):
-            start = start[:-1] + '+00:00'
-        if end.endswith('Z'):
-            end = end[:-1] + '+00:00'
-        start = datetime.datetime.fromisoformat(start)
-        end = datetime.datetime.fromisoformat(end)
-        title = event['summary']
-        google_id = event.get('id')
-        description = event.get('description', '')
+        # Call the Calendar API to get the upcoming events
+        now = datetime.datetime.utcnow().isoformat() + 'Z'
+        events_result = service.events().list(calendarId='primary', timeMin=now,
+                                              maxResults=10, singleEvents=True,
+                                              orderBy='startTime').execute()
+        events = events_result.get('items', [])
+        for event in events:
+            start = event['start'].get('dateTime', event['start'].get('date'))
+            end = event['end'].get('dateTime', event['end'].get('date'))
+            if start.endswith('Z'):
+                start = start[:-1] + '+00:00'
+            if end.endswith('Z'):
+                end = end[:-1] + '+00:00'
+            start = datetime.datetime.fromisoformat(start)
+            end = datetime.datetime.fromisoformat(end)
+            title = event['summary']
+            google_id = event.get('id')
+            description = event.get('description', '')
+            try:
+                # Check if the event already exists in the GoogleEvent model
+                google_event = Event.objects.get(google_id=google_id)
+                google_event.title = title
+                google_event.start_time = start
+                google_event.end_time = end
+                google_event.description = description
+                google_event.save()
+            except Event.DoesNotExist:
+                google_event = Event.objects.create(
+                    user=request.user,
+                    google_id=google_id,
+                    title=title,
+                    description=description,
+                    start_time=start,
+                    end_time=end,
+                    sync=True,
+                    cred=credential
+                )
+
+
+def get_options(obj, perm_name):
+    users_with_perms = get_users_with_perms(obj, only_with_perms_in=[perm_name])
+    users_without_perms = User.objects.exclude(pk__in=users_with_perms).exclude(username='AnonymousUser')
+    return [{'username': user.username, 'email': user.email, 'gravatar': user.profile.mini_gravatar()} for user in
+            users_without_perms]
+
+
+def assign_perm_page(user, page, can_edit=False):
+    assign_perm('dg_view_page', user, page)
+    if can_edit:
+        assign_perm('dg_edit_page', user, page)
+    assign_perm('dg_view_notebook', user, page.notebook)
+    folder = page.notebook.folder
+    while folder:
+        assign_perm('dg_view_folder', user, folder)
+        folder = folder.parent
+
+
+def assign_perm_notebook(user, notebook, can_edit=False):
+    assign_perm('dg_view_notebook', user, notebook)
+    assign_perm('dg_view_all_notebook', user, notebook)
+    for page in notebook.pages.all():
+        assign_perm('dg_view_page', user, page)
+    if can_edit:
+        assign_perm('dg_edit_notebook', user, notebook)
+        assign_perm('dg_edit_all_notebook', user, notebook)
+        for page in notebook.pages.all():
+            assign_perm('dg_edit_page', user, page)
+    folder = notebook.folder
+    while folder:
+        assign_perm('dg_view_folder', user, folder)
+        folder = folder.parent
+
+
+def assign_perm_folder(user, folder, can_edit=False):
+    stack = [folder]
+    while stack:
+        current_folder = stack.pop()
+        assign_perm('dg_view_folder', user, current_folder)
+        assign_perm('dg_view_all_folder', user, current_folder)
+        if can_edit:
+            assign_perm('dg_edit_folder', user, current_folder)
+            assign_perm('dg_edit_all_folder', user, current_folder)
+        for notebook in current_folder.notebooks.all():
+            assign_perm_notebook(user, notebook, can_edit)
+        for sub_folder in current_folder.sub_folders.all():
+            stack.append(sub_folder)
+    parent = folder.parent
+    while parent:
+        assign_perm('dg_view_folder', user, parent)
+        parent = parent.parent
+
+
+def confirm_share_obj(request, obj_id, obj_type):
+    if request.method == 'POST':
         try:
-            # Check if the event already exists in the GoogleEvent model
-            google_event = Event.objects.get(google_id=google_id)
-            google_event.title = title
-            google_event.start_time = start
-            google_event.end_time = end
-            google_event.description = description
-            google_event.save()
-        except Event.DoesNotExist:
-            google_event = Event.objects.create(
-                user=request.user,
-                google_id=google_id,
-                title=title,
-                description=description,
-                start_time=start,
-                end_time=end,
-                sync=True
+            edit_perm = request.POST.get('edit_perm')
+            obj = obj_type.objects.get(id=obj_id)
+
+            notification = Notification.objects.filter(
+                recipient=request.user,
+                verb='Share',
             )
+            if not notification.exists():
+                return JsonResponse({'status': 'fail', 'message': 'No notification found'})
+            assign_perm_functions = {
+                Page: assign_perm_page,
+                Notebook: assign_perm_notebook,
+                Folder: assign_perm_folder
+            }
+            if obj_type in assign_perm_functions:
+                assign_perm_functions[obj_type](request.user, obj, can_edit=edit_perm == "true")
+            else:
+                return JsonResponse({'status': 'fail', 'message': 'Invalid object type'})
+            return JsonResponse({'status': 'success'})
+        except obj_type.DoesNotExist:
+            return JsonResponse({'status': 'fail', 'message': 'Page not found'})
+    else:
+        return JsonResponse({'status': 'fail', 'message': 'Invalid request method'})
+
+
+def share_obj(request, obj):
+    if obj.get_owner() != request.user:
+        return JsonResponse({'status': 'fail'})
+    selected_users = request.POST.getlist('selected_users[]')
+    edit_perm = request.POST.get('edit_perm')
+    target = []
+    for email in selected_users:
+        user = User.objects.get(email=email)
+        target.append(user)
+    send_share_obj_noti(request.user, target, obj.id, obj.__class__.__name__, edit_perm == "true")
+    return JsonResponse({'status': 'success'})
+
+
+def send_share_obj_noti(sender, recipient, obj_id, obj_type, edit_perm):
+    notify.send(
+        sender=sender,
+        recipient=recipient,
+        verb='Share',
+        description=f"{sender.username} share a {obj_type} to you",
+        extra={
+            'obj_id': obj_id,
+            'obj_type': obj_type,
+            'edit_perm': edit_perm,
+        }
+    )
+
+
+def assign_perm_after_sign_up(obj_type, next, user):
+    next_url_parts = next.split('/')
+    obj_key = next_url_parts[1]
+    obj_id_en = next_url_parts[2]
+    edit_perm = next_url_parts[3] == 'true'
+    obj_class = obj_type.get(obj_key)
+    obj_id = signing.loads(obj_id_en)
+    obj = obj_class.objects.get(id=obj_id)
+    assign_perm_functions = {
+        Page: assign_perm_page,
+        Notebook: assign_perm_notebook,
+        Folder: assign_perm_folder
+    }
+    if obj_class in assign_perm_functions:
+        assign_perm_functions[obj_class](user, obj, edit_perm)
+
+
+def share_obj_external(request, obj_id, obj_type, obj_type_str):
+    try:
+        obj = obj_type.objects.get(id=obj_id)
+    except obj_type.DoesNotExist:
+        return JsonResponse({'status': 'fail'})
+    if obj.get_owner() != request.user:
+        return JsonResponse({'status': 'fail'})
+    if request.method == 'POST':
+        selected_emails = request.POST.getlist('selected_users[]')
+        edit_perm = request.POST.get('edit_perm')
+        for email in selected_emails:
+            user = request.user.username
+            encryped_id = signing.dumps(obj.id)
+            base_url = f"{request.scheme}://{request.get_host()}"
+            sign_up_url = f"{base_url}{reverse('sign_up')}?next=/{obj_type_str}/{encryped_id}/{edit_perm}"
+            subject = f'You have been shared with this {obj_type_str}: {obj}'
+            html_content = f'<p>You have been shared with this {obj_type_str}: {sign_up_url}\n</p> <p>by {user}\n</p>'
+            mail = Mail(
+                from_email='winniethepooh.notely@gmail.com',
+                to_emails=email,
+                subject=subject,
+                html_content=html_content)
+            try:
+                sg = SendGridAPIClient(
+                    api_key=settings.EMAIL_HOST_PASSWORD
+                )
+                response = sg.send(mail)
+                print(response.status_code)
+                print(response.body)
+                print(response.headers)
+            except Exception as ex:
+                print("some exceptions")
+        messages.add_message(request, messages.SUCCESS, "Page Shared!")
+        return JsonResponse({'status': 'success'})

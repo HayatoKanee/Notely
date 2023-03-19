@@ -1,32 +1,65 @@
 {% include 'partials/sidebar.html' %}
+{% load notifications_tags %}
+{% notifications_unread as unread_count %}
 <nav class="navbar navbar-expand-lg bg-nav shadow-sm">
     <div class="container-fluid">
         <img class="logo img-fluid">
-        <a class="navbar-brand fw-bold brand" id='sideBtn' data-bs-toggle="offcanvas" href="#sidebar" role="button" aria-controls="sidebar">
+        <a class="navbar-brand fw-bold brand" id='sideBtn' data-bs-toggle="offcanvas" href="#sidebar" role="button"
+           aria-controls="sidebar">
             <span class="navbar-toggler-icon"></span>
         </a>
         <div class="container-fluid collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0" style="margin-right: 13px;">
-                <li class="nav-item ">
-                    <a class="nav-link active bold-hover" href="{% url 'folders_tab' %}" style="color: rgb(245, 93, 66); font-size: 20px;" >Notes</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link position-relative" href="#" id="bell" role="button" data-bs-toggle="dropdown"
+                       aria-expanded="false">
+                        {% live_notify_badge %}
+                        <span class="bell-icon"></span>
+                    </a>
+                    <ul>
+                        <div class="dropdown-menu dropdown-menu-start notification-content"
+                             aria-labelledby="navbarDropdownMenuLink">
+                            <div class="notification-list">
+                                <div class="notification-header">
+                                    <h5>Notifications</h5>
+                                </div>
+                                <div class="noti_body">
+                                    {% live_notify_list %}
+                                </div>
+                            </div>
+                        </div>
+
+                    </ul>
                 </li>
                 <li class="nav-item ">
-                    <a class="nav-link active bold-hover" href="{% url 'calendar_tab'%}" style="color: rgb(245, 93, 66); font-size: 20px; margin-right: 10px;" >Calendar</a>
+                    <a class="nav-link active" href="{% url 'folders_tab' %}"
+                       style="color: rgb(60, 120, 216); font-size: 20px;">Notes</a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link active" href="{% url 'calendar_tab' %}"
+                       style="color: rgb(60, 120, 216); font-size: 20px; margin-right: 10px;">Calendar</a>
                 </li>
                 <li class="nav-item dropdown">
-                    <button class="nav-link dropdown-toggle fw-bold nav-link-style" id="user-account-dropdown" style="color: rgb(245, 93, 66, 0.9); font-size: 18px;" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <button class="nav-link dropdown-toggle fw-bold nav-link-style" id="user-account-dropdown"
+                            style="color: rgb(60, 120, 216, 0.9); font-size: 18px;" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
                         <tr>
-                            <td>{{user.username}} </td>
-                            <td>
-                                <img src="{{ user.profile.mini_gravatar }}" alt="Gravatar of {{ user.username }}" class="rounded-circle" >
+                            <td>{{ user.username }}</td>
+                            <td>{{ user.username|json_script:"name-data" }}</td>
+                            <img src="{{ user.profile.mini_gravatar }}" alt="Gravatar of {{ user.username }}"
+                                 class="rounded-circle">
                     </button>
                     <div class="nav-item dropdown">
                         <div class="dropdown-menu" aria-labelledby="user-account-dropdown">
-                            <a class="dropdown-item nav-link nav-link-drop px-2 " href="{% url 'profile_tab' %}" style="color: rgb(245, 93, 66, 0.8);">Profile</a>
-                            <a class="dropdown-item nav-link nav-link-drop px-2 " href="{% url 'gravatar' %}"  target="_blank" style="color: rgb(245, 93, 66, 0.8);">Change Gravatar</a>
-                            <a class="dropdown-item nav-link nav-link-drop px-2 " href="{% url 'password_tab' %}" style="color: rgb(245, 93, 66, 0.8);">Change Password</a>
+                            <a class="dropdown-item nav-link nav-link-drop px-2 " href="{% url 'profile_tab' %}"
+                               style="color: rgb(60, 120, 216, 0.8);">Profile</a>
+                            <a class="dropdown-item nav-link nav-link-drop px-2 " href="{% url 'gravatar' %}"
+                               target="_blank" style="color: rgb(60, 120, 216, 0.8);">Change Gravatar</a>
+                            <a class="dropdown-item nav-link nav-link-drop px-2 " href="{% url 'password_tab' %}"
+                               style="color: rgb(60, 120, 216, 0.8);">Change Password</a>
                             <hr class="dropdown-divider">
-                            <a class="dropdown-item nav-link nav-link-drop px-2 " href="{% url 'log_out' %}" style="color: rgb(245, 93, 66, 0.8);">Log out</a>
+                            <a class="dropdown-item nav-link nav-link-drop px-2 " href="{% url 'log_out' %}"
+                               style="color: rgb(60, 120, 216, 0.8);">Log out</a>
                         </div>
                     </div>
                     </tr>
@@ -35,9 +68,128 @@
         </div>
     </div>
 </nav>
+<script>
+    const name = JSON.parse(document.getElementById('name-data').textContent);
 
-<style>
-    .bold-hover:hover {
-        font-weight: bold;
+    function custom_notification_badge(data) {
+        var badges = document.getElementsByClassName(notify_badge_class);
+        if (badges) {
+            if (data.unread_count == 0) {
+                badges[0].innerHTML = "";
+            } else {
+                for (var i = 0; i < badges.length; i++) {
+                    badges[i].innerHTML = `<span class="position-absolute top-10 start-74 translate-middle badge rounded-pill bg-danger"> ${data.unread_count} </span>`
+                    ;
+                }
+            }
+        }
     }
-</style>
+
+    function confirmShare(obj_id, edit_perm, obj_type) {
+        const urlMappings = {
+            'Page': '{% url "confirm_share_page" 0 %}',
+            'Notebook': '{% url "confirm_share_notebook" 0 %}',
+            'Folder': '{% url "confirm_share_folder" 0 %}'
+        };
+        if (obj_type in urlMappings) {
+            const url = urlMappings[obj_type].replace('0', obj_id);
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: {
+                    'edit_perm': edit_perm,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                success: function (data) {
+                    if (data.status === 'success') {
+                        location.reload();
+                    } else {
+                        console.log(data.message);
+                    }
+                },
+                error: function (error) {
+                    console.log(data.message);
+                }
+            });
+        } else {
+            console.log('Invalid object type');
+        }
+    }
+
+
+    function custom_notification_callback(data) {
+        var menus = document.getElementsByClassName(notify_menu_class);
+        if (menus) {
+            if (data.unread_list.length === 0) {
+                var messages = `
+          <div class="notification-item">
+            <p class="text-muted">No notifications to display.</p>
+          </div>
+        `;
+                menus[0].innerHTML = messages;
+            } else {
+                var messages = data.unread_list.map(function (item) {
+                    var x = item.actor;
+                    if (name == item.actor) {
+                        x = "System";
+                    }
+                    if (item.verb === 'Share') {
+                        var message = `
+                        <div class="notification-item">
+                            <div class="d-flex flex-column justify-content-center flex-grow-1">
+                                <h6>${item.verb}</h6>
+                                <p>${item.description}</p>
+                            </div>
+                            <div class="ml-2">
+                                <small>${dayjs(item.timestamp).fromNow()}</small>
+                            </div>
+                              <button class="btn btn-sm btn-primary" onclick="confirmShare(${item.data.extra.obj_id},${item.data.extra.edit_perm}, '${item.data.extra.obj_type}')">Confirm</button>
+                        </div>`;
+                    } else {
+                        var message = `
+            <div class="notification-item">
+              <div class="d-flex flex-column justify-content-center flex-grow-1">
+                  <h6>${item.verb}</h6>
+                  <p>${item.description}</p>
+                  <small>${x}</small>
+              </div>
+              <div class="ml-2">
+                <small>${dayjs(item.timestamp).fromNow()}</small>
+              </div>
+            </div>
+          `;
+                    }
+                    return message;
+                }).join('')
+
+                for (var i = 0; i < menus.length; i++) {
+                    menus[i].innerHTML = messages;
+                }
+            }
+        }
+    }
+
+    let cookie = document.cookie
+    let csrfToken = cookie.substring(cookie.indexOf('=') + 1)
+    $(document).ready(function () {
+        $('#bell').click(function () {
+            $.ajax({
+                url: '{% url "update_notifications" %}',
+                type: 'GET',
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                dataType: 'json',
+                success: function (data) {
+                    console.log(data.status);
+                },
+                error: function (xhr, status, error) {
+                    console.log(xhr.responseText);
+                }
+            });
+        });
+    });
+</script>
+{% register_notify_callbacks callbacks='custom_notification_badge,custom_notification_callback' %}
+

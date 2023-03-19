@@ -1,55 +1,23 @@
 {% extends 'base_content.html' %}
-<<<<<<< HEAD
 {% block content %}
     <div class="container">
-        <div id='calendar' style="color: rgb(245, 93, 66); margin-top: 10px;"></div>
-=======
- {% block content %}
-     <div class="container">
-      <div id='calendar' style="color: rgb(245, 93, 66);"></div>
-              <button onclick="checkPermission()" id="addEvent" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#eventModal">
-                Add New Event
-          </button>
->>>>>>> feature/calendar
-
-        <a href="{% url 'google_auth' %}" class="btn btn-google" style="color: rgb(245, 93, 66);">
-            <i class="fa fa-google"></i> Sign in with Google
-        </a>
-
-        <button id="addEvent" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#eventModal">
+        <div id='calendar' style="color: rgb(60, 120, 216);"></div>
+        <button onclick="checkPermission()" id="addEvent" type="button" class="btn btn-primary" data-bs-toggle="modal"
+                data-bs-target="#eventModal">
             Add New Event
         </button>
 
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#shareEventModal" data-bs-dismiss="modal">
-            Share Event
-        </button>
+        <a href="{% url 'google_auth' %}" class="btn btn-google" style="color: rgb(60, 120, 216);">
+            <i class="fa fa-google"></i> Sync with Google
+        </a>
 
-        <div class="modal fade" id="shareEventModal" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content" style="color: rgb(245, 93, 66)">
-                    <div class="modal-header">
-                        <h5 class="modal-title" style="color: rgb(245, 93, 66)">Share Event</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form action="{% url 'calendar_tab' %}" method="post">
-                            {% csrf_token %}
-                            {% comment %} {% include 'partials/bootstrap_form.html' with form=shareEvent_form %} {% endcomment %}
-                            {{shareEvent_form.as_p}}
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <input type="submit" name="shareEvent_submit" value ="Share event" class="btn btn-primary">
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 
     <div class="modal fade" id="eventModal" tabindex="-1">
         <div class="modal-dialog">
-            <div class="modal-content" style="color: rgb(245, 93, 66);">
+            <div class="modal-content" style="color: rgb(60, 120, 216);">
                 <div class="modal-header">
-                    <h5 class="modal-title" style="color: rgb(245, 93, 66);">Event Modal</h5>
+                    <h5 class="modal-title" style="color: rgb(60, 120, 216);">Event Modal</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -58,9 +26,11 @@
                         {% csrf_token %}
                         {% include 'partials/bootstrap_form.html' with form=event_form %}
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <input type="submit" name="event_submit" value ="Create event" class="btn btn-primary" style="margin-left: 3px;">
+                        <input type="submit" name="event_submit" value="Create event" class="btn btn-primary"
+                               style="margin-left: 3px;">
                     </form>
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tagModal" data-bs-dismiss="modal" style="margin-top: 7px;">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tagModal"
+                            data-bs-dismiss="modal" style="margin-top: 7px;">
                         New tag
                     </button>
                 </div>
@@ -72,16 +42,17 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" style="color: rgb(245, 93, 66);">New Tag</h5>
+                    <h5 class="modal-title" style="color: rgb(60, 120, 216);">New Tag</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body" style="color: rgb(245, 93, 66);">
+                <div class="modal-body" style="color: rgb(60, 120, 216);">
                     {{ tag_form.media }}
                     <form action="{% url 'calendar_tab' %}" method="post">
                         {% csrf_token %}
                         {% include 'partials/bootstrap_form.html' with form=tag_form %}
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <input type="submit" name="tag_submit" value ="Create tag" class="btn btn-primary" style="margin-left: 3px;">
+                        <input type="submit" name="tag_submit" value="Create tag" class="btn btn-primary"
+                               style="margin-left: 3px;">
                     </form>
                 </div>
             </div>
@@ -90,11 +61,11 @@
     {% include 'partials/eventModal.html' %}
 
 {% endblock %}
-
 {% block scripts %}
-    {% load static%}
+    {% load static %}
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.4/index.global.min.js'></script>
     <script>
+        let event_id;
         const calendarEl = document.getElementById('calendar');
         const calendar = new FullCalendar.Calendar(calendarEl, {
             headerToolbar: {
@@ -111,30 +82,46 @@
                         start: '{{ event.start_time|date:"Y-m-d H:i:s" }}',
                         end: '{{ event.end_time|date:"Y-m-d H:i:s" }}',
                         backgroundColor: '{{ event.tags.first.color }}',
-                        tags: "{% for tag in event.tags.all %}{{ tag.title }},{% endfor %}".slice(0,-1),
+                        tags: "{% for tag in event.tags.all %}{{ tag.title }},{% endfor %}".slice(0, -1),
                     },
                 {% endfor %}
             ],
-            eventClick: function(e) {
+            eventClick: function (e) {
+                event_id = e.event.id;
                 $.ajax({
                     url: "{% url 'event_detail' 0 %}".replace("0", e.event.id),
-                    success: function(data) {
-                        $('#detail').html(data.html);
-
+                    success: function (data) {
+                        $('#edetail').html(data.html);
+                        if (data.event_user_id !== {{user.id}}) {
+                            $('#eventModalFooter').hide();
+                        }
+                        console.log("data_euser", data.event_user_id)
+                        console.log("data_user", {{user.id}})
                     },
-                    error: function() {
+                    error: function () {
                         alert('Error retrieving event detail');
+                    }
+                });
+                $.ajax({
+                    url: "{% url 'get_options_event' 0 %}".replace("0", e.event.id),
+                    success: function (data) {
+                        t_select.clearOptions();
+                        for (const option of data) {
+                            t_select.addOption(option);
+                        }
+                    },
+                    error: function () {
+                        alert('Error retrieving data');
                     }
                 });
                 $('#eventDetail').modal('show');
                 $('#delete_link').attr('href', "{% url 'delete_event' 0 %}".replace("0", e.event.id))
             },
             editable: true,
-            dateClick: function(info) {
+            dateClick: function (info) {
                 calendar.changeView('timeGridDay', info.dateStr);
-
             },
-            eventDrop: function(info) {
+            eventDrop: function (info) {
                 const event = info.event;
                 const start = event.start.toISOString();
                 const end = event.end.toISOString();
@@ -148,13 +135,12 @@
                         csrfmiddlewaretoken: '{{ csrf_token }}'
                     }
                 });
-
             },
             customButtons: {
-                selectAll:{
+                selectAll: {
                     text: '•All',
-                    click: function() {
-                        calendar.getEvents().forEach(function(event) {
+                    click: function () {
+                        calendar.getEvents().forEach(function (event) {
                             event.setProp('display', 'auto');
                         });
                     }
@@ -162,9 +148,12 @@
         {% for tag in tags %}
             {{ forloop.counter }}: {
             text: '•{{ tag }}',
-                click: function() {
+                click
+        :
+
+            function () {
                 const tag = '{{ tag.title }}';
-                calendar.getEvents().forEach(function(event) {
+                calendar.getEvents().forEach(function (event) {
                     if (event.extendedProps.tags.includes(tag)) {
                         event.setProp('display', 'auto');
                     } else {
@@ -174,14 +163,22 @@
                 calendar.rerenderEvents();
             }
         },
+
         {% endfor %}
+
         },
         footerToolbar:{
             start: '',
-                center: '',
-                end: "selectAll {% for tag in tags %}{{ forloop.counter }} {% endfor %}".slice(0, -1)
-        },
-        });
+                center
+        :
+            '',
+                end
+        :
+            "selectAll {% for tag in tags %}{{ forloop.counter }} {% endfor %}".slice(0, -1)
+        }
+        ,
+        })
+        ;
         calendar.render();
         {% for tag in tags %}
             console.log($('.fc-{{ forloop.counter }}-button'));
@@ -201,37 +198,130 @@
             wsStart = 'wss://';
         }
 
+        function checkPermission() {
+            if (!("Notification" in window)) {
+                console.log("This browser does not support desktop notification");
+            } else if (Notification.permission === "granted") {
+                console.log("granted permission");
+            } else if (Notification.permission !== "denied") {
+                Notification.requestPermission();
+            }
+        }
 
-  function checkPermission() {
-    if (!("Notification" in window)) {
-      console.log("This browser does not support desktop notification");
-    } else if (Notification.permission === "granted") {
-      console.log("granted permission");
-    } else if (Notification.permission !== "denied") {
-      Notification.requestPermission();
-    }
-  }
-
-  var socket = new WebSocket(wsStart + window.location.host + "/ws/calendar");
-  socket.onmessage = function(event) {
-      var data = JSON.parse(event.data);
-      if (data.type === "show_notification") {
-          // Create a notification with the message received from the server
-          var notification = new Notification("Event Reminder", {
-              body: data.message,
-          });
-          console.log(data.message);
-      }
-  };
+        var event_socket = new WebSocket(wsStart + window.location.host + "/ws/calendar");
+        event_socket.onmessage = function (event) {
+            var data = JSON.parse(event.data);
+            if (data.type === "show_notification") {
+                // Create a notification with the message received from the server
+                var notification = new Notification("Event Reminder", {
+                    body: data.message,
+                });
+                console.log(data.message);
+            }
+        };
     </script>
+
     <script type="text/javascript"
-        src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js">
+            src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js">
     </script>
     <script type="text/javascript">
-    (function(){
-        emailjs.init("service_7fj9to5");
-    })();
+        (function () {
+            emailjs.init("service_7fj9to5");
+        })();
     </script>
+    <link rel="stylesheet" href="{% static 'css_style/calendarTabStyle.css' %}"/>
 
-    <link rel="stylesheet" href="{%static 'css_style/calendarTabStyle.css' %}"/>
+
+    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+    <style>
+        .ts-wrapper.userEmail .ts-control > div .email {
+            opacity: 0.7;
+        }
+
+        .ts-wrapper.userEmail .ts-control > div .name + .email {
+            margin-left: 5px;
+        }
+
+        .ts-wrapper.userEmail .ts-control > div .email:before {
+            content: '<';
+        }
+
+        .ts-wrapper.userEmail .ts-control > div .email:after {
+            content: '>';
+        }
+
+        .ts-wrapper.userEmail .ts-dropdown .caption {
+            font-size: 12px;
+            display: block;
+            color: #a0a0a0;
+        }
+    </style>
+
+    <script>
+        const t_select = new TomSelect("#select-user-internal", {
+            plugins: ['remove_button'],
+            persist: false,
+            maxItems: null,
+            valueField: 'email',
+            labelField: 'name',
+            searchField: ['username', 'email'],
+            options: [
+                {% for user in users %}
+                    {
+                        email: "{{ user.email }}",
+                        username: "{{ user.username }}",
+                        gravatar: "{{ user.profile.mini_gravatar}}"
+                    },
+                {% endfor %}
+            ],
+            create: true,
+            createFilter: /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/,
+            render: {
+                item: function (item, escape) {
+                    ;
+                    return '<div>' +
+                        (item.username ? '<span class="name">' + escape(item.username) + '</span>' : '') +
+                        (item.email ? '<span class="email">' + escape(item.email) + '</span>' : '') +
+                        '<span class="gravatar">' + '<img class="rounded-circle" src="' + item.gravatar + '"</img></span>' +
+                        '</div>';
+
+                },
+                option: function (item, escape) {
+                    var label = item.username || item.email;
+                    var caption = item.username ? item.email : null;
+                    return '<div class="row">' + '<div class="col">' +
+                        '<span class="label">' + escape(label) + '</span>' +
+                        (caption ? '<span class="caption">' + escape(caption) + '</span>' : '') + '</div>' + '<div class="col">' +
+                        '<span class="gravatar">' + '<img class="rounded-circle" src="' + item.gravatar + '"</img></span>' +
+                        '</div>' +
+                        '</div>';
+                }
+            }
+        });
+
+        $('#share_btn').click(function () {
+            const selectedUsers = t_select.getValue();
+            const csrf = $('input[name="csrfmiddlewaretoken"]').val();
+            const url = "{% url 'share_event' 0 %}".replace("0", event_id);
+
+            {% if user%}
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    async: true,
+                    data: {
+                        'selected_users[]': selectedUsers,
+                        'csrfmiddlewaretoken': csrf
+                    },
+                    success: function (data) {
+                        $('#shareEventModalInternal').modal('hide');
+                    }
+                });
+            {% else %}
+                console.log("false")
+            {% endif %}
+
+        });
+    </script>
 {% endblock %}

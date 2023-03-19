@@ -1,0 +1,32 @@
+<div class="modal fade" id="templateModal" data-bs-backdrop="false"
+     data-bs-keyboard="false" tabindex="-1" aria-labelledby="templateModalLabel" aria-hidden="true"
+     style="pointer-events: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="templateModalLabel">Select a Template</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="max-height: 300px;overflow-y: auto; ">
+                <div id="templateList" class="row" style="min-height: 200px">
+                    {% for template in templates %}
+                        <div type='button' class="col template-item" data-content='{{ template.content }}'
+                             style="margin-top: 20px"></div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="addTemplate">Add Template</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#templateModal").draggable({
+            handle: ".modal-header"
+        });
+    });
+</script>

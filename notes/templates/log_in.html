@@ -2,7 +2,7 @@
 {% load static %}
 {% block content %}
     <head>
-        <link href="{%static 'sign_up.css'%}" rel="stylesheet"/>
+        <link href="{% static 'sign_up.css' %}" rel="stylesheet"/>
     </head>
     <div id="log">
         <div class="box" style="height: 400px; color: rgb(245, 93, 66); border-color: rgb(245, 93, 66);">
@@ -11,13 +11,16 @@
                 <div class="container">
                     <form action="{% url 'log_in' %}" method="post">
                         {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ next }}">
                         {% include 'partials/bootstrap_form.html' with form=form %}
-                        <input type="submit" value="Log In" class="my-button" style="font-size: 15px; text-align: center" />
+                        <input type="submit" value="Log In" class="my-button"
+                               style="font-size: 15px; text-align: center"/>
                     </form>
                 </div>
                 <div class="container" style="text-align: end">
                     <small>Don't have an account?</small>
-                    <a href="{% url 'sign_up' %}" id="reg" class="nav-link" style="color: rgb(242, 69, 39);text-align: end;">Sign up here</a>
+                    <a href="{% url 'sign_up' %}" id="reg" class="nav-link"
+                       style="color: rgb(242, 69, 39);text-align: end;">Sign up here</a>
                     <br><br>
                 </div>
             </div>

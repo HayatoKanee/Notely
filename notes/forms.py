@@ -107,9 +107,6 @@ class FolderForm(forms.ModelForm):
             parent=parent,
             folder_name=self.cleaned_data.get('folder_name'),
         )
-        assign_perm('dg_view_folder', user, folder)
-        assign_perm('dg_edit_folder', user, folder)
-        assign_perm('dg_delete_folder', user, folder)
         return folder
 
 
@@ -165,27 +162,32 @@ class EventForm(forms.ModelForm):
         }
 
     def __init__(self, user, *args, **kwargs):
+        initial = kwargs.pop('initial', {})
         super().__init__(*args, **kwargs)
         self.user = user
         self.fields['tag'].widget = EventTagSelectWidget()
         self.fields['tag'].queryset = user.event_tags.all()
 
-
-
-        notebook_choices = []
+        notebook_choices = [('', 'No page')]
         notebooks = Notebook.objects.filter(user=user)
         for notebook in notebooks:
             for i, page in enumerate(notebook.pages.all()):
-                notebook_choices.append((page.id, f"{notebook.notebook_name}: {i+1}"))
+                notebook_choices.append((page.id, f"{notebook.notebook_name}: {i + 1}"))
 
         self.fields['page'].choices = notebook_choices
+        if 'page' in initial:
+            default_page = initial['page']
+            self.fields['page'].initial = default_page
+        else:
+            self.fields['page'].initial = ''
 
     def clean(self):
         super().clean()
         start_time = self.cleaned_data.get('start_time')
         end_time = self.cleaned_data.get('end_time')
-        if end_time < start_time:
-            self.add_error('end_time', 'End Time cannot be less that Start Time')
+        if start_time is not None and end_time is not None:
+            if end_time < start_time:
+                self.add_error('end_time', 'End Time cannot be less that Start Time')
 
     def save(self):
         event = super().save(commit=False)
@@ -194,10 +196,10 @@ class EventForm(forms.ModelForm):
         if self.cleaned_data.get('tag'):
             event.tags.set(self.cleaned_data['tag'])
         if self.cleaned_data.get('page'):
-            page_id = self.cleaned_data['page']
-            page = self.cleaned_data['page']
-            event.pages.add(page)
-            self.save_m2m()
+            page_id = self.cleaned_data['page'].id
+            page = Page.objects.get(id=page_id)
+            event.save()  # Save the event after adding the page to the many-to-many relationship
+            event.pages.set([page])
         if self.cleaned_data.get('sync'):
             event.sync = True
         self.save_m2m()
@@ -229,9 +231,6 @@ class NotebookForm(forms.ModelForm):
             folder=folder,
             notebook_name=self.cleaned_data.get('notebook_name'),
         )
-        assign_perm('dg_view_notebook', user, notebook)
-        assign_perm('dg_edit_notebook', user, notebook)
-        assign_perm('dg_delete_notebook', user, notebook)
         return notebook
 
 
@@ -260,22 +259,19 @@ class PageForm(forms.ModelForm):  # The form for linking the tag and the page.
         self.fields['tag'].widget = PageTagSelectWidget()
         self.fields['tag'].queryset = PageTag.objects.all()
 
-    def save(self):
-        tag = super().save(commit=False)
+    def save(self, commit=True):
+        page = super().save(commit=False)
         if self.cleaned_data.get('tag'):
-            tag.tags.set(self.cleaned_data['tag'])
-        tag.save()
-        return tag
+            page.tags.set(self.cleaned_data['tag'])
+        page.save()
+        return page
 
 
 class ShareEventForm(forms.Form):
-    event = forms.ModelChoiceField(queryset=Event.objects.all(), required=False)
+    event = forms.ModelChoiceField(queryset=Event.objects.all(), required=True)
     email = forms.EmailField(required=False)
-    message = forms.CharField(widget=forms.Textarea, required=False)
+    message = forms.CharField(widget=forms.Textarea, required=False, max_length=200)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        
         self.fields['event'].choices = [(event.id, f"{event.title}") for event in Event.objects.all()]
-
-    
