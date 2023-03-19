@@ -17,6 +17,7 @@ class ReminderConsumer(AsyncWebsocketConsumer):
         # Send a WebSocket message to the user's browser to show the reminder notification
         await self.send(text_data=json.dumps({"type": "show_notification", "message": event["message"]}))
 
+
 class CanvasConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         await self.channel_layer.group_add(f"page_{self.scope['url_route']['kwargs']['page_id']}", self.channel_name)
