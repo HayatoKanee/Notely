@@ -1,282 +1,326 @@
 {% extends 'base_content.html' %}
 {% block content %}
-{% load static %}
-<html>
-	<head>
-		<meta charset="utf-8">
-		<title>Tutorial</title>
-	</head>
-	<body class="page">
-		<h1>Tutorial</h1><br />
-		<div>
-			<p><h3>How to start our website</h3></p>
-			<ol>
-				<li>Find the<a href="{% url 'log_in' %}"><button class="logIn">"login"</button></a>(in your upper right corner),<br />If you do not have an account, please go to the<a href="{% url 'sign_up' %}"><button class="signUp">"sign up"</button></a>page.</li><br />
-				<div><img class="imageT" src= "{% static "home/signlogin_homepage.jpg" %}" onclick="popupImage(this)"></div>
-				<li>After logging in, you will enter the notebook home page.</li>
-				<div><img class="imageT" src= "{% static "notebook/notebook home/login_homepage.png" %}" onclick="popupImage(this)"></div>
-			</ol>
-		</div>
-		<div>
-			<p><h3>In the notebook home page</h3></p>
-			<ul>
-				<li>Add folder / notebook.</li>
-					<ol>
-						<li>You will see the "New" button, click on it.</li>
-						<div><img class="imageT" src= "{% static "notebook/notebook home/newButton.png" %}" onclick="popupImage(this)"> </div>
-						<li>Then you will find a pop-up window indicating whether to add a "Folder" or a "Notebook".</li>
-						<div><img class="imageT" src= "{% static "notebook/notebook home/Add_folderNotebook_page.png" %}" onclick="popupImage(this)"></div>
-						<li>Type Folder name / Notebook name.</li>
-						<div><img class="imageT" src= "{% static "notebook/notebook home/Add_newFolder.png" %}" onclick="popupImage(this)"> <img class="imageT" src= "{% static "notebook/notebook home/Add_newNotebook.png" %}" onclick="popupImage(this)"></div>
-					</ol>
-				<li>folder options / notebook options.</li>
-					<ol>
-						<li>You can see there is delete to delete folder or notebook.</li>
-						<div><img class="imageT" src= "{% static "notebook/notebook home/Folder_options_home.png" %}" onclick="popupImage(this)">
-						<li>Also you can link pages.</li>
-						<div><img class="imageT" src= "{% static "notebook/notebook home/Notebook_options_home.png" %}" onclick="popupImage(this)">
-					</ol>
-			</ul>
-		</div>
-		<div>
-			<p><h3>In the note page</h3></p>
-			<img class="imageT" src= "{% static "notebook/inNote/Notes_page.png" %}" onclick="popupImage(this)">
-			<ul>
-				<li>Pen button</li>
-				<img class="imageT" src= "{% static "notebook/inNote/pen_bbuttob.png" %}" onclick="popupImage(this)">
-					<ol>
-						<li>Select color</li>
-						<img class="imageT" src= "{% static "notebook/inNote/penbutton_select_pencolor.png" %}" onclick="popupImage(this)">
-						<li>Select pen style</li>
-						<img class="imageT" src= "{% static "notebook/inNote/penbutton_select_pentype.png" %}" onclick="popupImage(this)">
-					</ol>
-				<li>Text button</li>
-				<img class="imageT" src= "{% static "notebook/inNote/text_button.png" %}" onclick="popupImage(this)">
-					<ol>
-						<li>Select text color</li>
-						<img class="imageT" src= "{% static "notebook/inNote/textbutton_select_color.png" %}" onclick="popupImage(this)">
-						<li>Text filed</li>
-						<img class="imageT" src= "{% static "notebook/inNote/textbutton_textFiled_input.png" %}" onclick="popupImage(this)">
-					</ol>
-				<li>Table button</li>
-				<img class="imageT" src= "{% static "notebook/inNote/table_button.png" %}" onclick="popupImage(this)">
-					<ol>
-						<li>Create table</li>
-						<img class="imageT" src= "{% static "notebook/inNote/tablebutton_createtable.png" %}" onclick="popupImage(this)">
-						<li>Resize the table</li>
-						<img class="imageT" src= "{% static "notebook/inNote/tablebutton_resize_table.png" %}" onclick="popupImage(this)">
-					</ol>
-				<li>Codeditor button</li>
-				<img class="imageT" src= "{% static "notebook/inNote/codeeditor_button.png" %}" onclick="popupImage(this)">
-					<ol>
-						<li>Plus button</li>
-						<img class="imageT" src= "{% static "notebook/inNote/codeeditor_plus_button.png" %}" onclick="popupImage(this)">
-					</ol>
-				<li>Image button</li>
-				<img class="imageT" src= "{% static "notebook/inNote/image_button.png" %}" onclick="popupImage(this)">
-					<ol>
-						<li>Select file</li>
-						<img class="imageT" src= "{% static "notebook/inNote/imagebutton_select_file.png" %}" onclick="popupImage(this)">
-					</ol>
-				<li>Download button</li>
-				<img class="imageT" src= "{% static "notebook/inNote/download_button.png" %}" onclick="popupImage(this)">
-					<ol>
-						<li>Download prompt</li>
-						<img class="imageT" src= "{% static "notebook/inNote/downloadbutton_download_prompt.png" %}" onclick="popupImage(this)">
-					</ol>
-				<li>Notebook sidebar</li>
-				<img class="imageT" src= "{% static "notebook/inNote/notes_page_sidebar.png" %}" onclick="popupImage(this)">
-					<ol>
-						<li>Add pages</li>
-						<img class="imageT" src= "{% static "notebook/inNote/add_page_plus_button.png" %}" onclick="popupImage(this)">
-						<li>Dropdown menu</li>
-						<img class="imageT" src= "{% static "notebook/inNote/nsidbar_dropdown.png" %}" onclick="popupImage(this)">
-					</ol>
-			</ul>
-		</div>
-		<div>
-			<p><h3>In the calendar</h3></p>
-			<ol>
-				<li>
-				<p>You will see:</p>
-					<ul>
-						<li>Monthly calendar</li>
-						<img class="imageT" src= "{% static "calendar/Calendar_page_month.png" %}" onclick="popupImage(this)">
-						<li>Weekly calendar</li>
-						<img class="imageT" src= "{% static "calendar/calendar_page_week.png" %}" onclick="popupImage(this)">
-						<li>Day calendar</li>
-						<img class="imageT" src= "{% static "calendar/calendar_page_day.png" %}" onclick="popupImage(this)">
-						<li>List</li>
-						<img class="imageT" src= "{% static "calendar/create_event_inCalendar_list.png" %}" onclick="popupImage(this)">
-					</ul>
-				</li>
-				<li>
-					<p>How to create new event</p>
-					<ol>
-						<li>Click the "Add New Event" in your lower left corner. Then you will see a form pop up.</li>
-						<img class="imageT" src= "{% static "calendar/Add_new_event.png" %}" onclick="popupImage(this)">
-						<li>Write down the details you want to record.</li>
-						<li>Selecting your date and time.</li>
-						<img class="imageT" src= "{% static "calendar/select_date.png" %}" onclick="popupImage(this)">
-						<img class="imageT" src= "{% static "calendar/select_time.png" %}" onclick="popupImage(this)">
-						<li>Add tag (If you don't have a tag on the form, go to "How to create a tag")</li>
-						<li>Choose page</li>
-						<li>Set a reminder</li>
-						<li>Finally, press the "Create event" button</li>
-					</ol>
-				</li>
-				<li>
-					<p>How to create new tag</p>
-					<ol>
-						<li>Click the "Add New Event".</li>
-						<li>Scroll to the bottom of the form, click the "New tag".</li>
-						<img class="imageT" src= "{% static "calendar/Add_new_event.png" %}" onclick="popupImage(this)">
-						<li>Then you will see a form for adding tags.</li>
-						<img class="imageT" src= "{% static "calendar/Add_new_tag.png" %}" onclick="popupImage(this)">
-						<li>Fill in the title and color you want.</li>
-						<li>click the "Create tag".</li>
-					</ol>
-				</li>
-				<li>
-					<p>After you create an event</p>
-					<ul>
-						<li>you can find events on each calendar.</li>
-						<div>
-						<img class="imageT" src= "{% static "calendar/create_event_inCalendar_day.png" %}" onclick="popupImage(this)"> <img class="imageT" src= "{% static "calendar/create_event_inCalendar_month.png" %}" onclick="popupImage(this)">
-						<img class="imageT" src= "{% static "calendar/create_event_inCalendar_week.png" %}" onclick="popupImage(this)"> <img class="imageT" src= "{% static "calendar/create_event_inCalendar_list.png" %}" onclick="popupImage(this)">
-						</div>
-						<li>
-							<p>Clicking an event on the calendar will pop up the details of the event.</p>
-							<img class="imageT" src= "{% static "calendar/Show_event_detail.png" %}" onclick="popupImage(this)">
-							<ul>
-								<li>You can click "Edit" to modify the file.</li>
-								<li>Delete the event.</li>
-							</ul>
-						</li>
-					</ul>
-				</li>
-				<li>
-					<p>How to share event</p>
-					<ol>
-						<li>Click the "Share event" in your lower left corner. Then you will see a form pop up.</li>
-						<img class="imageT" src= "{% static "calendar/share_event.png" %}" onclick="popupImage(this)">
-						<li>Write down the email of the person you want to send and the message you want to write.</li>
-						<li>Click the "Share event".</li>
-					</ol>
-				</li>
-			</ol>
-		</div>
-		<div>
-			<p><h3>Go to profile</h3></p>
-			<ul>
-				<li>You can fill in your personal information on the profile and make changes at any time. Just click "Edit".</li>
-				<img class="imageT" src= "{% static "other/Profile.png" %}" onclick="popupImage(this)">
-				<li>
-					<p>If you would like to change your profile picture.</p>
-					<ol>
-						<li>Go to the upper right corner and click your profile.</li>
-						<li>Choose "Change gravatar"</li>
-						<li>Then you will be redirected to a web page.</li>
-						<img class="imageT" src= "{% static "other/create_your_gravatar_website.png" %}" onclick="popupImage(this)">
-						<li>Click "Sign in". (Please make sure your registered email is the same as Notely email)</li>
-					</ol>
-				</li>
-				<li>
-					<p>If you would like to change your password.</p>
-					<ol>
-						<li>Go to the upper right corner and click your profile.</li>
-						<li>Choose "Change password"</li>
-						<img class="imageT" src= "{% static "other/Change_password.png" %}" onclick="popupImage(this)">
-					</ol>
-				</li>
+    {% load static %}
+    <html>
+    <head>
+        <meta charset="utf-8">
+        <title>Tutorial</title>
+    </head>
+    <body class="page">
+    <h1>Tutorial</h1><br/>
+    <div>
+        <p>
+        <h3>How to start our website</h3></p>
+        <ol>
+            <li>Find the<a href="{% url 'log_in' %}">
+                <button class="logIn">"login"</button>
+            </a>(in your upper right corner),<br/>If you do not have an account, please go to the<a
+                    href="{% url 'sign_up' %}">
+                <button class="signUp">"sign up"</button>
+            </a>page.
+            </li>
+            <br/>
+            <div><img class="imageT" src="{% static "home/signlogin_homepage.jpg" %}" onclick="popupImage(this)"></div>
+            <li>After logging in, you will enter the notebook home page.</li>
+            <div><img class="imageT" src="{% static "notebook/notebook home/login_homepage.png" %}"
+                      onclick="popupImage(this)"></div>
+        </ol>
+    </div>
+    <div>
+        <p>
+        <h3>In the notebook home page</h3></p>
+        <ul>
+            <li>Add folder / notebook.</li>
+            <ol>
+                <li>You will see the "New" button, click on it.</li>
+                <div><img class="imageT" src="{% static "notebook/notebook home/newButton.png" %}"
+                          onclick="popupImage(this)"></div>
+                <li>Then you will find a pop-up window indicating whether to add a "Folder" or a "Notebook".</li>
+                <div><img class="imageT" src="{% static "notebook/notebook home/Add_folderNotebook_page.png" %}"
+                          onclick="popupImage(this)"></div>
+                <li>Type Folder name / Notebook name.</li>
+                <div><img class="imageT" src="{% static "notebook/notebook home/Add_newFolder.png" %}"
+                          onclick="popupImage(this)"> <img class="imageT"
+                                                           src="{% static "notebook/notebook home/Add_newNotebook.png" %}"
+                                                           onclick="popupImage(this)"></div>
+            </ol>
+            <li>folder options / notebook options.</li>
+            <ol>
+                <li>You can see there is delete to delete folder or notebook.</li>
+                <div><img class="imageT" src="{% static "notebook/notebook home/Folder_options_home.png" %}"
+                          onclick="popupImage(this)">
+                    <li>Also you can link pages.</li>
+                    <div><img class="imageT" src="{% static "notebook/notebook home/Notebook_options_home.png" %}"
+                              onclick="popupImage(this)">
+            </ol>
+        </ul>
+    </div>
+    <div>
+        <p>
+        <h3>In the note page</h3></p>
+        <img class="imageT" src="{% static "notebook/inNote/Notes_page.png" %}" onclick="popupImage(this)">
+        <ul>
+            <li>Pen button</li>
+            <img class="imageT" src="{% static "notebook/inNote/pen_bbuttob.png" %}" onclick="popupImage(this)">
+            <ol>
+                <li>Select color</li>
+                <img class="imageT" src="{% static "notebook/inNote/penbutton_select_pencolor.png" %}"
+                     onclick="popupImage(this)">
+                <li>Select pen style</li>
+                <img class="imageT" src="{% static "notebook/inNote/penbutton_select_pentype.png" %}"
+                     onclick="popupImage(this)">
+            </ol>
+            <li>Text button</li>
+            <img class="imageT" src="{% static "notebook/inNote/text_button.png" %}" onclick="popupImage(this)">
+            <ol>
+                <li>Select text color</li>
+                <img class="imageT" src="{% static "notebook/inNote/textbutton_select_color.png" %}"
+                     onclick="popupImage(this)">
+                <li>Text filed</li>
+                <img class="imageT" src="{% static "notebook/inNote/textbutton_textFiled_input.png" %}"
+                     onclick="popupImage(this)">
+            </ol>
+            <li>Table button</li>
+            <img class="imageT" src="{% static "notebook/inNote/table_button.png" %}" onclick="popupImage(this)">
+            <ol>
+                <li>Create table</li>
+                <img class="imageT" src="{% static "notebook/inNote/tablebutton_createtable.png" %}"
+                     onclick="popupImage(this)">
+                <li>Resize the table</li>
+                <img class="imageT" src="{% static "notebook/inNote/tablebutton_resize_table.png" %}"
+                     onclick="popupImage(this)">
+            </ol>
+            <li>Codeditor button</li>
+            <img class="imageT" src="{% static "notebook/inNote/codeeditor_button.png" %}" onclick="popupImage(this)">
+            <ol>
+                <li>Plus button</li>
+                <img class="imageT" src="{% static "notebook/inNote/codeeditor_plus_button.png" %}"
+                     onclick="popupImage(this)">
+            </ol>
+            <li>Image button</li>
+            <img class="imageT" src="{% static "notebook/inNote/image_button.png" %}" onclick="popupImage(this)">
+            <ol>
+                <li>Select file</li>
+                <img class="imageT" src="{% static "notebook/inNote/imagebutton_select_file.png" %}"
+                     onclick="popupImage(this)">
+            </ol>
+            <li>Download button</li>
+            <img class="imageT" src="{% static "notebook/inNote/download_button.png" %}" onclick="popupImage(this)">
+            <ol>
+                <li>Download prompt</li>
+                <img class="imageT" src="{% static "notebook/inNote/downloadbutton_download_prompt.png" %}"
+                     onclick="popupImage(this)">
+            </ol>
+            <li>Notebook sidebar</li>
+            <img class="imageT" src="{% static "notebook/inNote/notes_page_sidebar.png" %}" onclick="popupImage(this)">
+            <ol>
+                <li>Add pages</li>
+                <img class="imageT" src="{% static "notebook/inNote/add_page_plus_button.png" %}"
+                     onclick="popupImage(this)">
+                <li>Dropdown menu</li>
+                <img class="imageT" src="{% static "notebook/inNote/nsidbar_dropdown.png" %}"
+                     onclick="popupImage(this)">
+            </ol>
+        </ul>
+    </div>
+    <div>
+        <p>
+        <h3>In the calendar</h3></p>
+        <ol>
+            <li>
+                <p>You will see:</p>
+                <ul>
+                    <li>Monthly calendar</li>
+                    <img class="imageT" src="{% static "calendar/Calendar_page_month.png" %}"
+                         onclick="popupImage(this)">
+                    <li>Weekly calendar</li>
+                    <img class="imageT" src="{% static "calendar/calendar_page_week.png" %}" onclick="popupImage(this)">
+                    <li>Day calendar</li>
+                    <img class="imageT" src="{% static "calendar/calendar_page_day.png" %}" onclick="popupImage(this)">
+                    <li>List</li>
+                    <img class="imageT" src="{% static "calendar/create_event_inCalendar_list.png" %}"
+                         onclick="popupImage(this)">
+                </ul>
+            </li>
+            <li>
+                <p>How to create new event</p>
+                <ol>
+                    <li>Click the "Add New Event" in your lower left corner. Then you will see a form pop up.</li>
+                    <img class="imageT" src="{% static "calendar/Add_new_event.png" %}" onclick="popupImage(this)">
+                    <li>Write down the details you want to record.</li>
+                    <li>Selecting your date and time.</li>
+                    <img class="imageT" src="{% static "calendar/select_date.png" %}" onclick="popupImage(this)">
+                    <img class="imageT" src="{% static "calendar/select_time.png" %}" onclick="popupImage(this)">
+                    <li>Add tag (If you don't have a tag on the form, go to "How to create a tag")</li>
+                    <li>Choose page</li>
+                    <li>Set a reminder</li>
+                    <li>Finally, press the "Create event" button</li>
+                </ol>
+            </li>
+            <li>
+                <p>How to create new tag</p>
+                <ol>
+                    <li>Click the "Add New Event".</li>
+                    <li>Scroll to the bottom of the form, click the "New tag".</li>
+                    <img class="imageT" src="{% static "calendar/Add_new_event.png" %}" onclick="popupImage(this)">
+                    <li>Then you will see a form for adding tags.</li>
+                    <img class="imageT" src="{% static "calendar/Add_new_tag.png" %}" onclick="popupImage(this)">
+                    <li>Fill in the title and color you want.</li>
+                    <li>click the "Create tag".</li>
+                </ol>
+            </li>
+            <li>
+                <p>After you create an event</p>
+                <ul>
+                    <li>you can find events on each calendar.</li>
+                    <div>
+                        <img class="imageT" src="{% static "calendar/create_event_inCalendar_day.png" %}"
+                             onclick="popupImage(this)"> <img class="imageT"
+                                                              src="{% static "calendar/create_event_inCalendar_month.png" %}"
+                                                              onclick="popupImage(this)">
+                        <img class="imageT" src="{% static "calendar/create_event_inCalendar_week.png" %}"
+                             onclick="popupImage(this)"> <img class="imageT"
+                                                              src="{% static "calendar/create_event_inCalendar_list.png" %}"
+                                                              onclick="popupImage(this)">
+                    </div>
+                    <li>
+                        <p>Clicking an event on the calendar will pop up the details of the event.</p>
+                        <img class="imageT" src="{% static "calendar/Show_event_detail.png" %}"
+                             onclick="popupImage(this)">
+                        <ul>
+                            <li>You can click "Edit" to modify the file.</li>
+                            <li>Delete the event.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <p>How to share event</p>
+                <ol>
+                    <li>Click the "Share event" in your lower left corner. Then you will see a form pop up.</li>
+                    <img class="imageT" src="{% static "calendar/share_event.png" %}" onclick="popupImage(this)">
+                    <li>Write down the email of the person you want to send and the message you want to write.</li>
+                    <li>Click the "Share event".</li>
+                </ol>
+            </li>
+        </ol>
+    </div>
+    <div>
+        <p>
+        <h3>Go to profile</h3></p>
+        <ul>
+            <li>You can fill in your personal information on the profile and make changes at any time. Just click
+                "Edit".
+            </li>
+            <img class="imageT" src="{% static "other/Profile.png" %}" onclick="popupImage(this)">
+            <li>
+                <p>If you would like to change your profile picture.</p>
+                <ol>
+                    <li>Go to the upper right corner and click your profile.</li>
+                    <li>Choose "Change gravatar"</li>
+                    <li>Then you will be redirected to a web page.</li>
+                    <img class="imageT" src="{% static "other/create_your_gravatar_website.png" %}"
+                         onclick="popupImage(this)">
+                    <li>Click "Sign in". (Please make sure your registered email is the same as Notely email)</li>
+                </ol>
+            </li>
+            <li>
+                <p>If you would like to change your password.</p>
+                <ol>
+                    <li>Go to the upper right corner and click your profile.</li>
+                    <li>Choose "Change password"</li>
+                    <img class="imageT" src="{% static "other/Change_password.png" %}" onclick="popupImage(this)">
+                </ol>
+            </li>
 
-			</ul>
-		</div>
-		<div class="imageF" id="myImage">
-      		<span class="close" onclick="closeModal()">&times;</span>
-      		<img class="image-content" id="imgSample">
-    	</div>
+        </ul>
+    </div>
+    <div class="imageF" id="myImage">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <img class="image-content" id="imgSample">
+    </div>
 
-		<script>
-      		var modal = document.getElementById("myImage");
+    <script>
+        var modal = document.getElementById("myImage");
 
-      		var img = document.getElementById("imgSample");
-      		function popupImage(image) {
-        		modal.style.display = "block";
-        		img.src = image.src;
-      		}
+        var img = document.getElementById("imgSample");
 
-      		function closeModal() {
-        		modal.style.display = "none";
-      		}
-    	</script>
-	</body>
+        function popupImage(image) {
+            modal.style.display = "block";
+            img.src = image.src;
+        }
 
-	<style>
-		.imageT {
-        	width: 350px;
-        	height: 200px;
-        	cursor: pointer;
-      	}
+        function closeModal() {
+            modal.style.display = "none";
+        }
+    </script>
+    </body>
 
-      	.imageF {
-        	display: none;
-        	position: fixed;
-        	z-index: 1;
-        	padding-top: 100px;
-        	left: 0;
-        	top: 0;
-        	width: 100%;
-        	height: 100%;
-        	overflow: auto;
-        	background-color: rgba(0, 0, 0, 0.8);
-      	}
+    <style>
+        .imageT {
+            width: 350px;
+            height: 200px;
+            cursor: pointer;
+        }
 
-      	.image-content {
-        	display: block;
-        	margin: auto;
-        	max-width: 1000px;
-        	max-height: 1000px;
-      	}
+        .imageF {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            padding-top: 100px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.8);
+        }
 
-      	.close {
-        	color: #fff;
-       	 	position: absolute;
-        	top: 10px;
-        	right: 25px;
-        	font-size: 50px;
-        	font-weight: bold;
-        	transition: all 0.3s;
-        	cursor: pointer;
-      	}
+        .image-content {
+            display: block;
+            margin: auto;
+            max-width: 1000px;
+            max-height: 1000px;
+        }
 
-      	.close:hover,
-      	.close:focus {
-        	color: #bbb;
-        	text-decoration: none;
-        	cursor: pointer;
-      	}
+        .close {
+            color: #fff;
+            position: absolute;
+            top: 10px;
+            right: 25px;
+            font-size: 50px;
+            font-weight: bold;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
 
-      	.page{
-      		padding-left: 20px;
-      	}
+        .close:hover,
+        .close:focus {
+            color: #bbb;
+            text-decoration: none;
+            cursor: pointer;
+        }
 
-      	.logIn {
-	  		background-color: #fff;
-	  		color: #00008B;
-	  		border: none;
-	  		border-radius: 5px;
-	  		font-size: 16px;
-		}
+        .page {
+            padding-left: 20px;
+        }
 
-		.signUp {
-	  		background-color: #fff;
-	  		color: #00008B;
-	  		border: none;
-	  		border-radius: 5px;
-	  		font-size: 16px;
-		}
-	</style>
-</html>
+        .logIn {
+            background-color: #fff;
+            color: #00008B;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .signUp {
+            background-color: #fff;
+            color: #00008B;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+    </style>
+    </html>
 
 {% endblock %}
