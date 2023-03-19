@@ -400,6 +400,7 @@ def delete_event(request, event_id):
 
 
 @login_required
+@check_perm('dg_delete_page', Page)
 def delete_page(request, page_id):
     page = Page.objects.get(id=page_id)
     notebook = page.notebook
@@ -528,7 +529,10 @@ def share_page(request, page_id):
 def get_options_notebook(request, notebook_id):
     try:
         notebook = Notebook.objects.get(id=notebook_id)
-        return JsonResponse(get_options(notebook, 'dg_view_notebook'), safe=False)
+        return JsonResponse({
+            'status': 'success',
+            'options': get_options(notebook, 'dg_view_notebook')
+        }, safe=False)
     except Notebook.DoesNotExist:
         return JsonResponse({'status': 'fail'})
 
@@ -537,7 +541,10 @@ def get_options_notebook(request, notebook_id):
 def get_options_folder(request, folder_id):
     try:
         folder = Folder.objects.get(id=folder_id)
-        return JsonResponse(get_options(folder, 'dg_view_folder'), safe=False)
+        return JsonResponse({
+            'status': 'success',
+            'options': get_options(folder, 'dg_view_folder')
+        }, safe=False)
     except Notebook.DoesNotExist:
         return JsonResponse({'status': 'fail'})
 
@@ -608,7 +615,10 @@ def share_event(request, event_id):
 def get_options_event(request, event_id):
     try:
         event = Event.objects.get(id=event_id)
-        return JsonResponse(get_options(event, 'dg_view_event'), safe=False)
+        return JsonResponse({
+            'status': 'success',
+            'options': get_options(event, 'dg_view_event')
+        }, safe=False)
     except Event.DoesNotExist:
         return JsonResponse({'status': 'fail'})
 

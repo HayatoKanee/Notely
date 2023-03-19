@@ -2,10 +2,10 @@
 {% block content %}
 
     {% if page.notebook.folder %}
-        <a href={% url 'sub_folders_tab' page.notebook.folder.id %} style="color:rgb(245,93,66);margin-left:20px;"> <i
+        <a href={% url 'sub_folders_tab' page.notebook.folder.id %} style="color:rgb(60,120,216);margin-left:20px;"> <i
                 class="bi bi-arrow-left"></i> Go back</a>
     {% else %}
-        <a href={% url 'folders_tab' %} style="color:rgb(245,93,66);margin-left:20px;font-size:18px;"> <i
+        <a href={% url 'folders_tab' %} style="color:rgb(60,120,216);margin-left:20px;font-size:18px;"> <i
                 class="bi bi-arrow-left"></i> Go back</a>
     {% endif %}
     <canvas id="canvas"></canvas>
@@ -15,15 +15,15 @@
                 {% if can_edit %}
                     <li class="nav-item">
                         <button class="toolbox" id="clearAll" onclick="clearCanvas(canvas)"
-                                style="color: rgb(245, 93, 66);"></button>
+                                style="color: rgb(60, 120, 216);"></button>
                     </li>
                     <li class="nav-item">
                         <button class="toolbox" id="undo" onclick="undo(this)"
-                                style="color: rgb(245, 93, 66);"></button>
+                                style="color: rgb(60, 120, 216);"></button>
                     </li>
                     <li class="nav-item">
                         <button class="toolbox" id="redo" onclick="redo(this)"
-                                style="color: rgb(245, 93, 66);"></button>
+                                style="color: rgb(60, 120, 216);"></button>
                     </li>
                     <li class="nav-item">
                         <button class="toolbox" id="select" onclick="toggleSelect(this)"></button>
@@ -35,10 +35,11 @@
                     </li>
                     <li class="nav-item">
                         <div style="min-height: 120px;">
-                            <div class="collapse collapse-horizontal" id="collapsePen" style="color: rgb(245, 93, 66);">
+                            <div class="collapse collapse-horizontal" id="collapsePen"
+                                 style="color: rgb(60, 120, 216);">
                                 <div class="card card-body" style="width: 300px;">
                                     <label>Pen Mode</label>
-                                    <select id="chooseMode" style="color: rgb(245, 93, 66);">
+                                    <select id="chooseMode" style="color: rgb(60, 120, 216);">
                                         <option value="circle">Circle Brush</option>
                                         <option value="crayon">Crayon</option>
                                         <option value="ink">Ink Pen</option>
@@ -54,7 +55,7 @@
                                     </select>
                                     <label>Pen Colour</label>
                                     <input id='choosePenColor' value="#000000" data-jscolor=""
-                                           style="color: rgb(245, 93, 66);">
+                                           style="color: rgb(60, 120, 216);">
                                     <label>Pen Width</label>
                                     <input id='chooseWidth' value='1' type=range min='1' max='20'>
                                 </div>
@@ -65,35 +66,35 @@
                         <button class="toolbox" id="text" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapseText" aria-expanded="false"
                                 aria-controls="collapseText" onclick="toggleText(this)"
-                                style="color: rgb(245, 93, 66);">
+                                style="color: rgb(60, 120, 216);">
                         </button>
                     </li>
                     <li class="nav-item">
                         <div style="min-height: 120px;">
                             <div class="collapse collapse-horizontal" id="collapseText">
-                                <div class="card card-body" style="width: 300px; color: rgb(245, 93, 66);">
+                                <div class="card card-body" style="width: 300px; color: rgb(60, 120, 216);">
                                     <label>Text Colour</label>
                                     <input id='chooseTextColor' value="#000000" data-jscolor=""
-                                           style="color: rgb(245, 93, 66);">
+                                           style="color: rgb(60, 120, 216);">
                                 </div>
                             </div>
                         </div>
                     </li>
                     <li class="nav-item">
                         <button class="toolbox" id="erase" type="button" onclick="toggleErase(this)"
-                                style="color: rgb(245, 93, 66);">
+                                style="color: rgb(60, 120, 216);">
                         </button>
                     </li>
                     <li class="nav-item">
                         <button class="toolbox" id="upload" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapseUpload" aria-expanded="false"
-                                aria-controls="collapseUpload" style="color: rgb(245, 93, 66);"></button>
+                                aria-controls="collapseUpload" style="color: rgb(60, 120, 216);"></button>
                     </li>
                     <li class="nav-item">
                         <div style="min-height: 120px;">
                             <div class="collapse collapse-horizontal" id="collapseUpload"
-                                 style="color: rgb(245, 93, 66);">
-                                <div class="card card-body" style="width: 300px; color: rgb(245, 93, 66);">
+                                 style="color: rgb(60, 120, 216);">
+                                <div class="card card-body" style="width: 300px; color: rgb(60, 120, 216);">
                                     <input id="img" class="toolbox" type="file" accept="image/*">
                                 </div>
                             </div>
@@ -103,17 +104,17 @@
                         <button class="toolbox" id="table" type="button"></button>
                         <div id="tableModal" class="modal">
                             <div class="modal-content">
-                                <span class="close" style="color: rgb(245, 93, 66); margin-left: 20px;">&times;</span>
+                                <span class="close" style="color: rgb(60, 120, 216); margin-left: 20px;">&times;</span>
                                 <form style="margin-top: 10px;">
-                                    <label for="rows" style="color: rgb(245, 93, 66); margin-left: 20px;">Rows:</label>
+                                    <label for="rows" style="color: rgb(60, 120, 216); margin-left: 20px;">Rows:</label>
                                     <input type="number" id="rows" name="rows" value="2" min="1"
-                                           style="color: rgb(245, 93, 66);"><br><br>
+                                           style="color: rgb(60, 120, 216);"><br><br>
                                     <label for="columns"
-                                           style="color: rgb(245, 93, 66); margin-left: 20px;">Columns:</label>
+                                           style="color: rgb(60, 120, 216); margin-left: 20px;">Columns:</label>
                                     <input type="number" id="columns" name="columns" value="2" min="1"
-                                           style="color: rgb(245, 93, 66);"><br><br>
+                                           style="color: rgb(60, 120, 216);"><br><br>
                                     <input type="button" value="Submit" id="submitTable"
-                                           style="background-color: rgb(245, 93, 66, 0.1); border-color: rgb(245, 93, 66, 0.5); width: 100px; color: rgb(245, 93, 66); margin-left: 20px; margin-bottom: 10px; border-radius: 5px;">
+                                           style="background-color: rgb(60, 120, 216, 0.1); border-color: rgb(60, 120, 216, 0.5); width: 100px; color: rgb(60, 120, 216); margin-left: 20px; margin-bottom: 10px; border-radius: 5px;">
                                 </form>
                             </div>
                         </div>
@@ -121,34 +122,34 @@
                 {% endif %}
                 <li class="nav-item">
                     <button class="toolbox" id="showCodeEditor" data-bs-toggle="modal" data-bs-target="#codeEditor"
-                            style="color: rgb(245, 93, 66);"></button>
+                            style="color: rgb(60, 120, 216);"></button>
                 </li>
                 {% if can_edit %}
                     <li class="nav-item">
                         <button class="toolbox" id="showSymbols" data-bs-toggle="modal" data-bs-target="#symbols"
-                                style="color: rgb(245, 93, 66);"></button>
+                                style="color: rgb(60, 120, 216);"></button>
                     </li>
                     <li class="nav-item">
                         <button class="toolbox" id="linkPage" data-bs-toggle="offcanvas" href="#sidebar"
-                                aria-controls="sidebar" style="color: rgb(245, 93, 66);"> Link Page
+                                aria-controls="sidebar" style="color: rgb(60, 120, 216);"> Link Page
                         </button>
                     </li>
                     <li class="nav-item">
                         <button class="toolbox" id="template" type="button" data-bs-toggle="modal"
-                                data-bs-target="#templateModal" style="color: rgb(245, 93, 66);"> template
+                                data-bs-target="#templateModal" style="color: rgb(60, 120, 216);"> template
                         </button>
                     </li>
                 {% endif %}
                 <li class="nav-item">
                     <button class="toolbox" id="download" type="button" data-bs-toggle="collapse"
                             data-bs-target="#collapseDownload" aria-expanded="false"
-                            aria-controls="collapseDownload" style="color: rgb(245, 93, 66);"></button>
+                            aria-controls="collapseDownload" style="color: rgb(60, 120, 216);"></button>
                 </li>
                 <li class="nav-item">
                     <div style="min-height: 120px;">
                         <div class="collapse collapse-horizontal" id="collapseDownload"
-                             style="color: rgb(245, 93, 66);">
-                            <div class="card card-body" style="width: 300px; color: rgb(245, 93, 66);">
+                             style="color: rgb(60, 120, 216);">
+                            <div class="card card-body" style="width: 300px; color: rgb(60, 120, 216);">
                                 <button id="downloadAsPic" type="button">Download as PNG</button>
                             </div>
                         </div>
@@ -158,13 +159,13 @@
                 {% if user == page.notebook.user %}
                     <li class="nav-item">
                         <button class="toolbox" id="share" type="button" data-bs-toggle="modal"
-                                data-bs-target="#shareModal" style="color: rgb(245, 93, 66);">Share
+                                data-bs-target="#shareModal" style="color: rgb(60, 120, 216);">Share
                         </button>
                     </li>
 
                     <li class="nav-item">
                         <button class="toolbox" id="event" type="button" data-bs-toggle="modal"
-                                data-bs-target="#pageEventModal" style="color: rgb(245, 93, 66);">Events
+                                data-bs-target="#pageEventModal" style="color: rgb(60, 120, 216);">Events
                         </button>
                     </li>
 
