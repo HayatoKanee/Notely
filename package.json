@@ -1,0 +1,24 @@
+{
+  "name": "notely",
+  "version": "1.0.0",
+  "description": "Notely is a note-taking application that aims to help students take notes during their studies.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HayatoKanee/Notely.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HayatoKanee/Notely/issues"
+  },
+  "homepage": "https://github.com/HayatoKanee/Notely#readme",
+  "dependencies": {
+    "popper.js": "^1.16.1",
+    "shepherd.js": "^11.0.1"
+  }
+}

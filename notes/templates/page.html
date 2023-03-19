@@ -5,6 +5,7 @@
     {% else %}
          <a href={% url 'folders_tab'%} style="color:rgb(245,93,66);margin-left:20px;font-size:20px;"> <i class="bi bi-arrow-left"></i> Go back</a>
     {% endif %}
+    <button style="color: rgb(245, 93, 66)" onclick="startTour();">Start Tour</button>
     <canvas id="canvas"></canvas>
     <nav class="navbar navbar-expand-lg fixed-bottom navbar-light bg-light">
     <div class="container-fluid">
@@ -161,6 +162,370 @@
     }
     const csrf = getCookie('csrftoken');
     </script>
+    <script>
+        $(document).click(function(e) {
+            if ($("#draw").is(e.target)) {
+                sessionStorage.setItem("currentTool", "draw");
+            }
+
+            if ($("#text").is(e.target)) {
+                sessionStorage.setItem("currentTool", "text");
+            }
+
+            if (!$("#draw").is(e.target) && !$("#draw").has(e.target).length) {
+                if ($("#draw").attr("aria-expanded") == 'true') {
+                    document.querySelector('#draw').click();
+                }
+            }
+
+            if (!$("#text").is(e.target) && !$("#text").has(e.target).length) {
+                if ($("#text").attr("aria-expanded") == 'true') {
+                    document.querySelector('#text').click();
+                }
+            }
+
+            if ($("#undo").is(e.target)) {
+                if (sessionStorage.getItem("currentTool") == 'draw') {
+                    document.querySelector('#draw').click();
+                } else if (sessionStorage.getItem("currentTool") == 'text') {
+                    document.querySelector('#text').click();
+                }
+            }
+
+            if ($("#redo").is(e.target)) {
+                if (sessionStorage.getItem("currentTool") == 'draw') {
+                    document.querySelector('#draw').click();
+                } else if (sessionStorage.getItem("currentTool") == 'text') {
+                    document.querySelector('#text').click();
+                }
+            }
+
+        });
+    </script>
+    <script>
+    const tour = new Shepherd.Tour({
+        useModalOverlay: true,
+        defaultStepOptions: {
+            exitOnEsc: true
+        }
+    });
+
+    tour.addStep({
+        id: 'begin',
+        text: "Welcome to the tutorial, this will help you to understand features in Notely's pages. Press Esc at any time to quit this tutorial",
+        scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+        },
+        buttons: [
+            {
+                 text: 'Next',
+                 action: tour.next
+            }
+        ],
+    });
+
+    tour.addStep({
+        id: 'clearAll',
+        text: 'This button clears the whole page.',
+        scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+        },
+        attachTo: {
+            element: '#clearAll',
+            on: 'top'
+        },
+        buttons: [
+            {
+                 text: 'Back',
+                 action: tour.back
+            },
+            {
+                 text: 'Next',
+                 action: tour.next
+            }
+        ],
+    });
+
+    tour.addStep({
+        id: 'undo',
+        text: 'This button undo the page.',
+        scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+        },
+        attachTo: {
+            element: '#undo',
+            on: 'top'
+        },
+        buttons: [
+            {
+                 text: 'Back',
+                 action: tour.back
+            },
+            {
+                 text: 'Next',
+                 action: tour.next
+            }
+        ],
+    });
+
+    tour.addStep({
+        id: 'redo',
+        text: 'This button redo the page.',
+        scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+        },
+        attachTo: {
+            element: '#redo',
+            on: 'top'
+        },
+        buttons: [
+            {
+                 text: 'Back',
+                 action: tour.back
+            },
+            {
+                 text: 'Next',
+                 action: tour.next
+            }
+        ],
+    });
+
+    tour.addStep({
+        id: 'select',
+        text: 'This button gives mouse the ability to select all included inputs.',
+        scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+        },
+        attachTo: {
+            element: '#select',
+            on: 'top'
+        },
+        buttons: [
+            {
+                 text: 'Back',
+                 action: tour.back
+            },
+            {
+                 text: 'Next',
+                 action: tour.next
+            }
+        ],
+    });
+
+    tour.addStep({
+        id: 'draw',
+        text: 'This button gives the mouse the ability to draw on the canvas.',
+        scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+        },
+        attachTo: {
+            element: '#draw',
+            on: 'top'
+        },
+        buttons: [
+            {
+                 text: 'Back',
+                 action: tour.back
+            },
+            {
+                 text: 'Next',
+                 action: tour.next
+            }
+        ],
+    });
+
+    tour.addStep({
+        id: 'text',
+        text: 'This button gives the mouse the ability to create a text field.',
+        scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+        },
+        attachTo: {
+            element: '#text',
+            on: 'top'
+        },
+        buttons: [
+            {
+                 text: 'Back',
+                 action: tour.back
+            },
+            {
+                 text: 'Next',
+                 action: tour.next
+            }
+        ],
+    });
+
+    tour.addStep({
+        id: 'erase',
+        text: 'This button gives mouse the ability to erase pixels.',
+        scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+        },
+        attachTo: {
+            element: '#erase',
+            on: 'top'
+        },
+        buttons: [
+            {
+                 text: 'Back',
+                 action: tour.back
+            },
+            {
+                 text: 'Next',
+                 action: tour.next
+            }
+        ],
+    });
+
+    tour.addStep({
+        id: 'upload',
+        text: 'This button imports a selected image into the canvas.',
+        scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+        },
+        attachTo: {
+            element: '#upload',
+            on: 'top'
+        },
+        buttons: [
+            {
+                 text: 'Back',
+                 action: tour.back
+            },
+            {
+                 text: 'Next',
+                 action: tour.next
+            }
+        ],
+    });
+
+    tour.addStep({
+        id: 'table',
+        text: 'This button insert a table into the canvas.',
+        scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+        },
+        attachTo: {
+            element: '#table',
+            on: 'top'
+        },
+        buttons: [
+            {
+                 text: 'Back',
+                 action: tour.back
+            },
+            {
+                 text: 'Next',
+                 action: tour.next
+            }
+        ],
+    });
+
+    tour.addStep({
+        id: 'showCodeEditor',
+        text: 'This button creates a code editor on the canvas.',
+        scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+        },
+        attachTo: {
+            element: '#showCodeEditor',
+            on: 'top'
+        },
+        buttons: [
+            {
+                 text: 'Back',
+                 action: tour.back
+            },
+            {
+                 text: 'Next',
+                 action: tour.next
+            }
+        ],
+
+    });
+
+    tour.addStep({
+        id: 'codeEditor',
+        text: 'Features about the Code Editor... To be continue',
+        scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+        },
+        attachTo: {
+            element: '#codeEditor > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h1:nth-child(1)',
+            on: 'top'
+        },
+        beforeShowPromise: function() {
+            return new Promise(function(resolve) {
+                document.querySelector('#showCodeEditor').click();
+                resolve();
+            });
+        },
+        buttons: [
+            {
+                 text: 'Back',
+                 action: tour.back
+            },
+            {
+                 text: 'Next',
+                 action: tour.next
+            }
+        ],
+    });
+
+    tour.addStep({
+        id: 'tutorial',
+        text: 'That is the end of the tutorial, if you want to watch it again please click this button',
+        scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+        },
+        attachTo: {
+            element: 'body > button:nth-child(5)',
+            on: 'bottom'
+        },
+        beforeShowPromise: function() {
+            return new Promise(function(resolve) {
+                document.querySelector('#codeEditor > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > button:nth-child(2)').click();
+                resolve();
+            });
+        },
+        buttons: [
+            {
+                 text: 'Back',
+                 action: tour.back
+            },
+            {
+                 text: 'Done',
+                 action: tour.next
+            }
+        ],
+    });
+
+
+    if (localStorage.getItem("seen_tour") == null) {
+        tour.start();
+        localStorage.setItem("seen_tour", "true");
+    }
+
+    function startTour(){
+        tour.start();
+    }
+
+    </script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
         <script src="{%static 'javascript/note-taking/draw.js'%}"></script>
         <script src="{%static 'javascript/note-taking/jscolor.js'%}"></script>
@@ -178,4 +543,7 @@
         <script src="{% static 'javascript/note-taking/linkPage.js'%}"></script>
         <script src="{% static 'javascript/note-taking/table.js'%}"></script>
         <script src="{%static 'javascript/note-taking/fabric.brushes.min.js'%}"></script>
+
+
+
 {% endblock %}

@@ -1,29 +1,25 @@
 {% extends 'base_content.html' %}
  {% block content %}
-<div class="wrapper">
-    <div class="filter">
-        <h3>Filter</h3>
-        <div class="event_filter_wrapper">
-            <input id="noTag" class="event_filter" name="event_filter_select" type="checkbox" value="noTag" data-type="tags" />
-            <label for="noTag"> No Tag </label>
-        </div>
-        {% for tag in tags %}
-        <div class="event_filter_wrapper">
-            <input id="{{tag.title}}" class="event_filter" name="event_filter_select" type="checkbox" value="{{tag.title}}" data-type="tags" />
-            <label for="{{tag.title}}"> {{tag.title}} </label>
-        </div>
-        {% endfor %}
-    </div>
-</div>
      <div class="container">
-      <div id='calendar' style="color: rgb(245, 93, 66)"></div>
-              <button id="addEvent" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#eventModal">
-                Add New Event
-          </button>
-             <div class="g-signin2" data-onsuccess="googleSignIn"></div>
-
-
-   </div>
+            <div class="filter">
+                <h3>Filter</h3>
+                <div class="event_filter_wrapper">
+                    <input id="noTag" class="event_filter" name="event_filter_select" type="checkbox" value="noTag" data-type="tags" />
+                    <label for="noTag"> No Tag </label>
+                </div>
+                {% for tag in tags %}
+                <div class="event_filter_wrapper">
+                    <input id="{{tag.title}}" class="event_filter" name="event_filter_select" type="checkbox" value="{{tag.title}}" data-type="tags" />
+                    <label for="{{tag.title}}"> {{tag.title}} </label>
+                </div>
+                {% endfor %}
+            </div>
+            <div id='calendar' style="color: rgb(245, 93, 66)"></div>
+                <button id="addEvent" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#eventModal" onclick="applyTemp()">
+                    Add New Event
+                </button>
+            <div class="g-signin2" data-onsuccess="googleSignIn"></div>
+     </div>
           <div class="modal fade" id="eventModal" tabindex="-1">
             <div class="modal-dialog">
                 <div class="modal-content" style="color: rgb(245, 93, 66)">
@@ -36,10 +32,10 @@
                         <form action="{% url 'calendar_tab' %}" method="post">
                             {% csrf_token %}
                             {% include 'partials/bootstrap_form.html' with form=event_form %}
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="tempEvent()">Close</button>
                             <input type="submit" name="event_submit" value ="Create event" class="btn btn-primary">
                         </form>
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tagModal" data-bs-dismiss="modal">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tagModal" data-bs-dismiss="modal" onclick="tempEvent()">
                           New tag
                         </button>
                       </div>
@@ -100,7 +96,7 @@
     const tagList = [];
     const calendar = new FullCalendar.Calendar(calendarEl, {
         headerToolbar: {
-        left: 'today prev,next',
+        left: 'today prev,next tutorial',
         center: 'title',
         right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
         },
@@ -177,6 +173,12 @@
             });
           },
          customButtons: {
+            tutorial: {
+                text: 'tutorial',
+                click: function() {
+                    tourCalendar.start();
+                }
+            },
             selectAll:{
                 text: '•All',
                  click: function() {
@@ -195,7 +197,7 @@
                         $(this).text('No Tag');
                     } else {
                         tagList.push(tag);
-                        $(this).text('No Tag *');
+                        $(this).text('No Tag');
                     }
 
                     calendar.getEvents().forEach(function(event) {
@@ -219,7 +221,7 @@
                 $(this).text('•{{ tag }}');
              } else {
                 tagList.push(tag);
-                $(this).text('•{{ tag }} *');
+                $(this).text('•{{ tag }}');
              }
           calendar.getEvents().forEach(function(event) {
              if (tagList.some(r=> event.extendedProps.tags.includes(r))) {
@@ -267,9 +269,253 @@
     var bsModal = bootstrap.Modal.getInstance(eventModal)
     bsModal.show()
   });
+
+  const tourCalendar = new Shepherd.Tour({
+        useModalOverlay: true,
+        defaultStepOptions: {
+            exitOnEsc: true
+        }
+    });
+
+    tourCalendar.addStep({
+        id: 'begin',
+        text: "Welcome to the tutorial, this will help you to understand features in Notely's calendar. Press Esc at any time to quit this tutorial",
+        scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+        },
+        buttons: [
+            {
+                 text: 'Next',
+                 action: tourCalendar.next
+            }
+        ],
+    });
+
+    tourCalendar.addStep({
+        id: 'filter',
+        text: "By choosing checkbox all the relavent events will be shown. When no checkbox clicked then all events will be shown",
+        scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+        },
+        attachTo: {
+            element: '.filter > h3:nth-child(1)',
+            on: 'right'
+        },
+        buttons: [
+            {
+                 text: 'Back',
+                 action: tourCalendar.back
+            },
+            {
+                 text: 'Next',
+                 action: tourCalendar.next
+            }
+        ],
+    });
+
+    tourCalendar.addStep({
+        id: 'left',
+        text: "This allows you to change respected time range",
+        scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+        },
+        attachTo: {
+            element: '.fc-header-toolbar > div:nth-child(1)',
+            on: 'bottom'
+        },
+        buttons: [
+            {
+                 text: 'Back',
+                 action: tourCalendar.back
+            },
+            {
+                 text: 'Next',
+                 action: tourCalendar.next
+            }
+        ],
+    });
+
+    tourCalendar.addStep({
+        id: 'month',
+        text: "This is where you can view the calendar in respected range",
+        scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+        },
+        attachTo: {
+            element: 'div.fc-button-group:nth-child(1)',
+            on: 'bottom'
+        },
+        buttons: [
+            {
+                 text: 'Back',
+                 action: tourCalendar.back
+            },
+            {
+                 text: 'Next',
+                 action: tourCalendar.next
+            }
+        ],
+    });
+
+    tourCalendar.addStep({
+        id: 'newEvent',
+        text: "To create new event, press this",
+        scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+        },
+        attachTo: {
+            element: '#addEvent',
+            on: 'top'
+        },
+        buttons: [
+            {
+                 text: 'Back',
+                 action: tourCalendar.back
+            },
+            {
+                 text: 'Next',
+                 action: tourCalendar.next
+            }
+        ],
+    });
+
+    tourCalendar.addStep({
+        id: 'eventModal',
+        text: "This is the form to complete. Title, Start Time and End Time are needed for the form to be valid",
+        scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+        },
+        attachTo: {
+            element: '#eventModal > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h5:nth-child(1)',
+            on: 'bottom'
+        },
+        beforeShowPromise: function() {
+            return new Promise(function(resolve) {
+                document.querySelector('#addEvent').click();
+                resolve();
+            });
+        },
+        buttons: [
+            {
+                 text: 'Back',
+                 action: tourCalendar.back
+            },
+            {
+                 text: 'Next',
+                 action: tourCalendar.next
+            }
+        ],
+    });
+
+    tourCalendar.addStep({
+        id: 'tags',
+        text: "To select multiple tags, click on desired tags while pressing Ctrl on the keyboard",
+        scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+        },
+        attachTo: {
+            element: '#id_tag',
+            on: 'top'
+        },
+        buttons: [
+            {
+                 text: 'Back',
+                 action: tourCalendar.back
+            },
+            {
+                 text: 'Next',
+                 action: tourCalendar.next
+            }
+        ],
+    });
+
+    tourCalendar.addStep({
+        id: 'newTag',
+        text: "To create a new tag, press this button",
+        scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+        },
+        attachTo: {
+            element: 'button.btn-primary:nth-child(8)',
+            on: 'top'
+        },
+        buttons: [
+            {
+                 text: 'Back',
+                 action: tourCalendar.back
+            },
+            {
+                 text: 'Next',
+                 action: tourCalendar.next
+            }
+        ],
+    });
+
+    tourCalendar.addStep({
+        id: 'tutorial',
+        text: "this is the end of the tutorial, if you want to watch it again please click this button",
+        scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+        },
+        attachTo: {
+            element: '.fc-tutorial-button',
+            on: 'bottom'
+        },
+        beforeShowPromise: function() {
+            return new Promise(function(resolve) {
+                document.querySelector('#eventModal > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > button:nth-child(2)').click();
+                resolve();
+            });
+        },
+        buttons: [
+            {
+                 text: 'Back',
+                 action: tourCalendar.back
+            },
+            {
+                 text: 'Done',
+                 action: tourCalendar.next
+            }
+        ],
+    });
+
+    if (localStorage.getItem("seen_tour_calendar") == null) {
+        tourCalendar.start();
+        localStorage.setItem("seen_tour_calendar", "true");
+    }
+
+    function tempEvent() {
+        var tempTitle = document.querySelector('#id_title').value;
+        var tempDesc = document.querySelector('#id_description').value;
+        var tempStart = document.querySelector('#id_start_time').value;
+        var tempEnd = document.querySelector('#id_end_time').value;
+        sessionStorage.setItem("title", tempTitle);
+        sessionStorage.setItem("description", tempDesc);
+        sessionStorage.setItem("start", tempStart);
+        sessionStorage.setItem("end", tempEnd);
+    }
+
+    function applyTemp() {
+        if (sessionStorage.getItem("title")) {
+            document.getElementById("id_title").value = sessionStorage.getItem("title");
+            document.getElementById("id_description").value = sessionStorage.getItem("description");
+            document.getElementById("id_start_time").value = sessionStorage.getItem("start");
+            document.getElementById("id_end_time").value = sessionStorage.getItem("end");
+        }
+    }
+
     </script>
     <link rel="stylesheet" href="{%static 'css_style/calendarTabStyle.css' %}"/>
-    <link rel="filter" href="{%static 'css_style/calendarEventFilter.css' %}"/>
+    <link rel="stylesheet" href="{%static 'css_style/calendarEventFilter.css' %}"/>
     <script src="https://apis.google.com/js/api.js"></script>
     <script src="{%static 'javascript/calendar/syncGoogleCalendar.js'%}"></script>
 {% endblock %}

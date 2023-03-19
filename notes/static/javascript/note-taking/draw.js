@@ -23,8 +23,8 @@ function undo(btn){
      canvas.renderAll();
     }
 }
-  
-function redo(btn){ 
+
+function redo(btn){
     selectBtn(btn);
     if(canvasObj.length>0){
       _redo = true;
