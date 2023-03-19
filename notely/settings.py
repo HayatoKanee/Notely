@@ -200,3 +200,4 @@ CELERY_RESULT_BACKEND = "redis://localhost:6379"
 DJANGO_NOTIFICATIONS_CONFIG = {'USE_JSONFIELD': True}
 
 CSRF_TRUSTED_ORIGINS = ['https://notely-winnie.herokuapp.com']
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
