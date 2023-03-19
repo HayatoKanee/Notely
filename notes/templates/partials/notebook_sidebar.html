@@ -68,25 +68,6 @@
         {% endfor %}
     </div>
 </div>
-
-<div class="modal fade" id="exampleModal" >
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">New Tag</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                {{ page_tag_form.media }}
-                <form action="{% url 'page' page.id %}" method="post">
-                    {% csrf_token %}
-                    {% include 'partials/bootstrap_form.html' with form=page_tag_form %}
-                    <input type="submit" name="page_tag_submit" value ="Create tag" class="btn btn-primary">
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
 {% include 'partials/pageModal.html' %}
 
 <script>

@@ -132,9 +132,13 @@
     <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
     <script>
         var users = "{{ users }}";
-         let createdUser = [];
+        let createdUsers = [];
         const t_select = new TomSelect("#select-user", {
             create: true,
+            createOnBlur: true,
+            createFilter: function (input) {
+                return input.trim().length > 0;
+            },
             plugins: ['remove_button'],
             persist: false,
             maxItems: null,
@@ -143,14 +147,14 @@
             searchField: ['username', 'email'],
             options: [],
             render: {
-                item: function(item, escape) {
+                item: function (item, escape) {
                     return '<div>' +
                         (item.username ? '<span class="name">' + escape(item.username) + '</span>' : '') +
                         (item.email ? '<span class="email">' + escape(item.email) + '</span>' : '') +
                         '<span class="gravatar">' + '<img class="rounded-circle" src="' + item.gravatar + '"</img></span>' +
                         '</div>';
-                    },
-                option: function(item, escape) {
+                },
+                option: function (item, escape) {
                     var label = item.username || item.email;
                     var caption = item.username ? item.email : null;
                     return '<div class="row">' + '<div class="col">' +
@@ -160,10 +164,18 @@
                         '</div>' +
                         '</div>';
                 }
-            },
+            }
+        });
+        t_select.on('item_add', function(value, $item) {
+            if (!t_select.options[value]) {
+                console.log('New item added:', value);
+                createdUsers.push(value);
+            }
+
         });
         let share_url;
         $('.share').click(function (){
+            console.log("hello")
             share_url = this.getAttribute('data-share-url')
             share_url_2 = this.getAttribute('data-share-ex-url')
             $.ajax({
@@ -171,7 +183,8 @@
                 success: function (data){
                     t_select.clearOptions();
                     for (const option of data) {
-                        t_select.addOption(option);
+                            t_select.addOption(option);
+
                     }
                 },
                 error: function (){
@@ -184,7 +197,7 @@
             let selectedUsers = t_select.getValue();
             const edit_perm = $('#editBox').prop('checked');
             selectedUsers = selectedUsers.filter((item) => !createdUsers.includes(item));
-            console.log(createdUser);
+            console.log(createdUsers);
             console.log(users[0]);
 
             //need to add a if to to seprate this two conditions and also fix bugs.
@@ -204,13 +217,17 @@
                         type: 'POST',
                         async: true,
                         data: {
-                            'createdUsers[]': createdUser,
+                            'createdUsers[]': createdUsers,
                             'edit_perm': edit_perm,
                             csrfmiddlewaretoken: '{{csrf_token}}'
                         },
                     });
             while(selectedUsers.length!=0){
                 t_select.removeOption(selectedUsers[0]);
+            }
+            while(createdUsers.length!=0){
+                console.log(createdUsers[0]);
+                t_select.removeOption(createdUsers[0]);
             }
         });
     </script>

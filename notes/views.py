@@ -42,7 +42,6 @@ SCOPES = ['https://www.googleapis.com/auth/calendar']
 @login_prohibited
 def sign_up(request):
     next_url = request.GET.get('next') or ''
-
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
@@ -51,16 +50,32 @@ def sign_up(request):
             next_url = request.POST.get('next') or 'log_in'
             resolver_match = resolve(next_url)
             print(resolver_match)
-            page_id_en = resolver_match.kwargs['page_id']
-            user_id = request.user.id
-            page_id = signing.loads(page_id_en)
-            print(page_id)
-            page = Page.objects.get(id=page_id)
-            print(page)
-            share_page(request, page_id)
-            assign_perm('dg_view_page', request.user, page)
-            assign_perm_page(request.user, page, can_edit=True)
-            return redirect('page', page_id)
+            if 'page_id' in resolver_match.kwargs:
+                obj_id_en = resolver_match.kwargs['page_id']
+                page_id = signing.loads(obj_id_en)
+                page = Page.objects.get(id=page_id)
+                share_page(request, page_id)
+                assign_perm('dg_view_page', request.user, page)
+                assign_perm_page(request.user, page, can_edit=True)
+                return redirect('page', page_id)
+            elif 'folder_id' in resolver_match.kwargs:
+                obj_id_en = resolver_match.kwargs['folder_id']
+                folder_id = signing.loads(obj_id_en)
+                folder = Folder.objects.get(id=folder_id)
+                share_folder(request, folder_id)
+                assign_perm('dg_view_folder', request.user, folder)
+                assign_perm_folder(request.user, folder, can_edit=True)
+                return redirect('folders_tab')
+            elif 'notebook_id' in resolver_match.kwargs:
+                obj_id_en = resolver_match.kwargs['notebook_id']
+                notebook_id = signing.loads(obj_id_en)
+                notebook = Notebook.objects.get(id=notebook_id)
+                share_notebook(request, notebook_id)
+                assign_perm('dg_view_notebook', request.user, notebook)
+                assign_perm_notebook(request.user, notebook, can_edit=True)
+                return redirect('folders_tab')
+            else:
+                obj_id_en = None
     else:
         form = SignUpForm()
     return render(request, 'sign_up.html', {'form': form, 'next': next_url})
@@ -115,11 +130,15 @@ def folders_tab(request):
                    'notebook_form': notebook_form, 'users': users})
 
 
-@login_required
+@login_required(login_url='/sign_up/')
 @check_perm('dg_view_folder', Folder)
 def sub_folders_tab(request, folder_id):
     user = request.user
-    folder = Folder.objects.get(id=folder_id)
+    try:
+        folder_id = signing.loads(folder_id)
+    except signing.BadSignature:
+        pass
+
     if request.method == "POST":
         return save_folder_notebook_forms(request, user, folder)
     else:
@@ -273,17 +292,26 @@ def page(request, page_id):
         page_id = signing.loads(page_id)
     except signing.BadSignature:
         pass
-    page = Page.objects.get(id=page_id)
+    try:
+        page = Page.objects.get(id=page_id)
+    except ValueError as e:
+        page = None
+        print("Passing an external email!")
     page_tag_form = PageTagForm()
     tags = PageTag.objects.all()
-    viewable_pages = get_objects_for_user(request.user, 'dg_view_page', klass=Page).filter(notebook=page.notebook)
-    users_with_perms = get_users_with_perms(page, only_with_perms_in=['dg_view_page'])
-    users_without_perms = User.objects.exclude(pk__in=users_with_perms).exclude(username='AnonymousUser')
-    can_edit = request.user.has_perm('dg_edit_page', page)
-    can_edit_notebook = request.user.has_perm('dg_edit_notebook', page.notebook)
-
+    if page:
+        viewable_pages = get_objects_for_user(request.user, 'dg_view_page', klass=Page).filter(notebook=page.notebook)
+        users_with_perms = get_users_with_perms(page, only_with_perms_in=['dg_view_page'])
+        users_without_perms = User.objects.exclude(pk__in=users_with_perms).exclude(username='AnonymousUser')
+        can_edit = request.user.has_perm('dg_edit_page', page)
+        can_edit_notebook = request.user.has_perm('dg_edit_notebook', page.notebook)
+    else:
+        viewable_pages = None
+        users_with_perms = None
+        users_without_perms = User.objects.exclude(username='AnonymousUser')
+        can_edit = False
+        can_edit_notebook = False
     if request.method == 'POST':
-        sharePage_form = SharePageForm(request.POST)
         if 'page_tag_submit' in request.POST:
             page_tag_form = PageTagForm(request.POST)
             if page_tag_form.is_valid():
@@ -300,35 +328,6 @@ def page(request, page_id):
             assign_perm('dg_edit_page', request.user, new_page)
             assign_perm('dg_delete_page', request.user, new_page)
             return redirect('page', new_page.id)
-        if 'sharePage_submit' in request.POST:
-            new_page = Page.objects.get(id=page_id)
-            if sharePage_form.is_valid():
-                email = sharePage_form.cleaned_data['email']
-                page = sharePage_form.cleaned_data['page']
-                user = request.user.username
-                encryped_id = signing.dumps(page.id)
-                base_url = f"{request.scheme}://{request.get_host()}"
-                new_url = f"{base_url}{reverse('page', args=[encryped_id])}"
-                subject = f'You have been shared with this page: {page}'
-                html_content = f'<p>You have been shared with this page: {new_url}\n</p> <p>by {user}\n</p>'
-                mail = Mail(
-                    from_email='winniethepooh.notely@gmail.com',
-                    to_emails=email,
-                    subject=subject,
-                    html_content=html_content)
-                try:
-                    sg = SendGridAPIClient(
-                        api_key=settings.EMAIL_HOST_PASSWORD
-                    )
-                    response = sg.send(mail)
-                    print(response.status_code)
-                    print(response.body)
-                    print(response.headers)
-                except Exception as ex:
-                    print("some exceptions")
-                messages.add_message(request, messages.SUCCESS, "Page Shared!")
-                return redirect('page', new_page.id)
-
     return render(request, 'page.html',
                   {'page': page, 'page_tag_form': page_tag_form, 'tags': tags, 'users': users_without_perms,
                    'viewable_pages': viewable_pages, 'can_edit': can_edit, 'can_edit_notebook': can_edit_notebook,
@@ -525,9 +524,12 @@ def get_options_folder(request, folder_id):
     except Notebook.DoesNotExist:
         return JsonResponse({'status': 'fail'})
 
-
-@login_required
+@login_required(login_url='/sign_up/')
 def share_notebook(request, notebook_id):
+    try:
+        notebook_id = signing.loads(notebook_id)
+    except signing.BadSignature:
+        pass
     try:
         notebook = Notebook.objects.get(id=notebook_id)
         return share_obj(request, notebook)
@@ -554,20 +556,18 @@ def share_folder_ex(request, folder_id):
         pass
     folder = Folder.objects.get(id=folder_id)
     if request.method == 'POST':
-        selected_emails = request.POST.getlist('selected_users[]')
+        selected_emails = request.POST.getlist('createdUsers[]')
         print(selected_emails)
         if selected_emails:
             email = selected_emails[0]
-            print(email)
         else:
             email = None
-            print(email)
         user = request.user.username
         encryped_id = signing.dumps(folder_id)
         base_url = f"{request.scheme}://{request.get_host()}"
-        # new_url = f"{base_url}{reverse('page', args=[encryped_id])}"
-        subject = f'You have been shared with this page: {folder}'
-        html_content = f'<p>You have been shared with this page: {"hi"}\n</p> <p>by {user}\n</p>'
+        new_url = f"{base_url}{reverse('sub_folders_tab', args=[encryped_id])}"
+        subject = f'You have been shared with this folder: {folder}'
+        html_content = f'<p>You have been shared with this folder: {new_url}\n</p> <p>by {user}\n</p>'
         mail = Mail(
             from_email='winniethepooh.notely@gmail.com',
             to_emails=email,
@@ -597,7 +597,7 @@ def share_notebook_ex(request, notebook_id):
         pass
     notebook = Notebook.objects.get(id=notebook_id)
     if request.method == 'POST':
-        selected_emails = request.POST.getlist('selected_emails[]')
+        selected_emails = request.POST.getlist('createdUsers[]')
         if selected_emails:
             email = selected_emails[0]
         else:
@@ -605,7 +605,7 @@ def share_notebook_ex(request, notebook_id):
         user = request.user.username
         encryped_id = signing.dumps(notebook_id)
         base_url = f"{request.scheme}://{request.get_host()}"
-        new_url = f"{base_url}{reverse('notebook', args=[encryped_id])}"
+        new_url = f"{base_url}{reverse('share_notebook', args=[encryped_id])}"
         subject = f'You have been shared with this notebook: {notebook}'
         html_content = f'<p>You have been shared with this page: {new_url}\n</p> <p>by {user}\n</p>'
         mail = Mail(
@@ -624,8 +624,45 @@ def share_notebook_ex(request, notebook_id):
         except Exception as ex:
             print("some exceptions")
         messages.add_message(request, messages.SUCCESS, "Notebook Shared!")
-    return redirect('folder', notebook.id)
+    return redirect('folders_tab')
 
+
+@login_required(login_url='/sign_up/')
+def share_page_ex(request, page_id):
+    try:
+        page_id = signing.loads(page_id)
+    except signing.BadSignature:
+        pass
+    page = Page.objects.get(id=page_id)
+    if request.method == 'POST':
+        selected_emails = request.POST.getlist('createdUsers[]')
+        if selected_emails:
+            email = selected_emails[0]
+        else:
+            email = None
+        user = request.user.username
+        encryped_id = signing.dumps(page.id)
+        base_url = f"{request.scheme}://{request.get_host()}"
+        new_url = f"{base_url}{reverse('page', args=[encryped_id])}"
+        subject = f'You have been shared with this page: {page}'
+        html_content = f'<p>You have been shared with this page: {new_url}\n</p> <p>by {user}\n</p>'
+        mail = Mail(
+            from_email='winniethepooh.notely@gmail.com',
+            to_emails=email,
+            subject=subject,
+            html_content=html_content)
+        try:
+            sg = SendGridAPIClient(
+                api_key=settings.EMAIL_HOST_PASSWORD
+            )
+            response = sg.send(mail)
+            print(response.status_code)
+            print(response.body)
+            print(response.headers)
+        except Exception as ex:
+            print("some exceptions")
+        messages.add_message(request, messages.SUCCESS, "Page Shared!")
+        return redirect('page', page_id)
 
 @login_required
 def share_event(request, event_id):
