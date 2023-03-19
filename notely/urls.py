@@ -56,7 +56,9 @@ urlpatterns = [
     path('confirm_share_page/<page_id>', views.confirm_share_page, name='confirm_share_page'),
     path('confirm_share_notebook/<notebook_id>', views.confirm_share_notebook, name='confirm_share_notebook'),
     path('confirm_share_folder/<folder_id>', views.confirm_share_folder, name='confirm_share_folder'),
-    path('share_page_ex/<page_id>', views.share_page_ex, name='share_page_ex')
+    path('share_page_ex/<page_id>', views.share_page_ex, name='share_page_ex'),
+    path('share_notebook_ex/<notebook_id>', views.share_notebook_ex, name='share_notebook_ex'),
+    path('share_folder_ex/<folder_id>', views.share_folder_ex, name='share_folder_ex'),
 ]
 
 if settings.DEBUG:

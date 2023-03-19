@@ -4,11 +4,13 @@ import re
 
 from django.core import signing
 from django.http import JsonResponse
+from django.urls import reverse
 from google.auth.transport.requests import Request
 from guardian.shortcuts import get_users_with_perms, assign_perm
 from notifications.models import Notification
 from notifications.signals import notify
-
+from sendgrid import Mail, SendGridAPIClient
+from django.conf import settings
 from notes.forms import FolderForm, NotebookForm
 from django.contrib import messages
 from django.shortcuts import redirect
@@ -222,3 +224,39 @@ def assign_perm_after_sign_up(obj_type, next, user):
     }
     if obj_class in assign_perm_functions:
         assign_perm_functions[obj_class](user, obj, edit_perm)
+
+
+def share_obj_external(request, obj_id, obj_type, obj_type_str):
+    try:
+        obj = obj_type.objects.get(id=obj_id)
+    except obj_type.DoesNotExist:
+        return JsonResponse({'status': 'fail'})
+    if obj.get_owner() != request.user:
+        return JsonResponse({'status': 'fail'})
+    if request.method == 'POST':
+        selected_emails = request.POST.getlist('selected_users[]')
+        edit_perm = request.POST.get('edit_perm')
+        for email in selected_emails:
+            user = request.user.username
+            encryped_id = signing.dumps(obj.id)
+            base_url = f"{request.scheme}://{request.get_host()}"
+            sign_up_url = f"{base_url}{reverse('sign_up')}?next=/{obj_type_str}/{encryped_id}/{edit_perm}"
+            subject = f'You have been shared with this {obj_type_str}: {obj}'
+            html_content = f'<p>You have been shared with this {obj_type_str}: {sign_up_url}\n</p> <p>by {user}\n</p>'
+            mail = Mail(
+                from_email='winniethepooh.notely@gmail.com',
+                to_emails=email,
+                subject=subject,
+                html_content=html_content)
+            try:
+                sg = SendGridAPIClient(
+                    api_key=settings.EMAIL_HOST_PASSWORD
+                )
+                response = sg.send(mail)
+                print(response.status_code)
+                print(response.body)
+                print(response.headers)
+            except Exception as ex:
+                print("some exceptions")
+        messages.add_message(request, messages.SUCCESS, "Page Shared!")
+        return JsonResponse({'status': 'success'})

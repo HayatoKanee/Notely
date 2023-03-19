@@ -93,6 +93,9 @@ class Folder(models.Model):
     def get_owner(self):
         return self.user
 
+    def __str__(self):
+        return self.folder_name
+
 
 class Notebook(models.Model):
     user = models.ForeignKey(User, related_name="notebooks", on_delete=models.CASCADE)
@@ -115,6 +118,9 @@ class Notebook(models.Model):
 
     def get_owner(self):
         return self.user
+
+    def __str__(self):
+        return self.notebook_name
 
 
 class Page(models.Model):
@@ -160,6 +166,9 @@ class Page(models.Model):
         page_number = index + 1
 
         return page_number
+
+    def __str__(self):
+        return f"{self.notebook}:{self.get_page_number()}"
 
     def get_owner(self):
         return self.notebook.user

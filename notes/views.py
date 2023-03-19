@@ -25,7 +25,7 @@ from django.contrib.auth.hashers import check_password
 from guardian.shortcuts import get_objects_for_user, get_users_with_perms, assign_perm
 from .view_helper import sort_items_by_created_time, save_folder_notebook_forms, get_or_create_event_from_google, \
     get_options, assign_perm_notebook, assign_perm_folder, share_obj, send_share_obj_noti, confirm_share_obj, \
-    assign_perm_after_sign_up
+    assign_perm_after_sign_up, share_obj_external
 from datetime import datetime
 from django.utils import timezone
 from google_auth_oauthlib.flow import Flow
@@ -643,36 +643,14 @@ def confirm_share_folder(request, folder_id):
 
 @login_required
 def share_page_ex(request, page_id):
-    try:
-        page = Page.objects.get(id=page_id)
-    except Page.DoesNotExist:
-        return JsonResponse({'status': 'fail'})
-    if page.notebook.user != request.user:
-        return JsonResponse({'status': 'fail'})
-    if request.method == 'POST':
-        selected_emails = request.POST.getlist('selected_users[]')
-        edit_perm = request.POST.get('edit_perm')
-        for email in selected_emails:
-            user = request.user.username
-            encryped_id = signing.dumps(page.id)
-            base_url = f"{request.scheme}://{request.get_host()}"
-            sign_up_url = f"{base_url}{reverse('sign_up')}?next=/page/{encryped_id}/{edit_perm}"
-            subject = f'You have been shared with this page: {page}'
-            html_content = f'<p>You have been shared with this page: {sign_up_url}\n</p> <p>by {user}\n</p>'
-            mail = Mail(
-                from_email='winniethepooh.notely@gmail.com',
-                to_emails=email,
-                subject=subject,
-                html_content=html_content)
-            try:
-                sg = SendGridAPIClient(
-                    api_key=settings.EMAIL_HOST_PASSWORD
-                )
-                response = sg.send(mail)
-                print(response.status_code)
-                print(response.body)
-                print(response.headers)
-            except Exception as ex:
-                print("some exceptions")
-        messages.add_message(request, messages.SUCCESS, "Page Shared!")
-        return JsonResponse({'status': 'success'})
+    return share_obj_external(request, page_id, Page, 'page')
+
+
+@login_required
+def share_notebook_ex(request, notebook_id):
+    return share_obj_external(request, notebook_id, Notebook, 'notebook')
+
+
+@login_required
+def share_folder_ex(request, folder_id):
+    return share_obj_external(request, folder_id, Folder, 'folder')

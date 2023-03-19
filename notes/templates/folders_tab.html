@@ -73,6 +73,7 @@
                                                data-bs-target="#shareModal"
                                                data-options-url="{% url 'get_options_folder' item.id %}"
                                                data-share-url="{% url 'share_folder' item.id %}"
+                                               data-share-ex-url="{% url 'share_folder_ex' item.id %}"
                                                style="color: rgb(60, 120, 216);">Share</a>
                                             <a href="#" style="color: rgb(60, 120, 216);">Link 3</a>
                                         </div>
@@ -88,6 +89,7 @@
                                                    data-bs-target="#shareModal"
                                                    data-options-url="{% url 'get_options_notebook' item.id %}"
                                                    data-share-url="{% url 'share_notebook' item.id %}"
+                                                   data-share-ex-url="{% url 'share_notebook_ex' item.id %}"
                                                    style="color: rgb(60, 120, 216);">Share</a>
                                                 <a href="#" style="color: rgb(60, 120, 216);">Link 3</a>
                                             </div>
@@ -154,7 +156,10 @@
     <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
     <script>
+        let createdUsers = [];
         const t_select = new TomSelect("#select-user", {
+            create: true,
+            createFilter: /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/,
             plugins: ['remove_button'],
             persist: false,
             maxItems: null,
@@ -183,8 +188,16 @@
             }
         });
         let share_url;
+        let share_ex_url;
+        let originalList = JSON.parse(JSON.stringify(t_select.options));
+        t_select.on('item_add', function (value, item) {
+            if (!(value in originalList)) {
+                createdUsers.push(value)
+            }
+        });
         $('.share').click(function () {
             share_url = this.getAttribute('data-share-url')
+            share_ex_url = this.getAttribute('data-share-ex-url')
             $.ajax({
                 url: this.getAttribute('data-options-url'),
                 success: function (data) {
@@ -192,6 +205,8 @@
                     for (const option of data) {
                         t_select.addOption(option);
                     }
+                    createdUsers = [];
+                    originalList = JSON.parse(JSON.stringify(t_select.options));
                 },
                 error: function () {
                     alert('Error retrieving data');
@@ -200,17 +215,33 @@
         });
         $('#shareBtn').click(function () {
             const selectedUsers = t_select.getValue();
+            const existingUsers = selectedUsers.filter(user => !createdUsers.includes(user));
+            const nonExistingUsers = selectedUsers.filter(user => createdUsers.includes(user));
             const edit_perm = $('#editBox').prop('checked');
-            $.ajax({
-                url: share_url,
-                type: 'POST',
-                async: true,
-                data: {
-                    'selected_users[]': selectedUsers,
-                    'edit_perm': edit_perm,
-                    csrfmiddlewaretoken: '{{csrf_token}}'
-                },
-            });
+            if (existingUsers.length !== 0) {
+                $.ajax({
+                    url: share_url,
+                    type: 'POST',
+                    async: true,
+                    data: {
+                        'selected_users[]': existingUsers,
+                        'edit_perm': edit_perm,
+                        csrfmiddlewaretoken: '{{csrf_token}}'
+                    },
+                });
+            }
+            if (nonExistingUsers.length !== 0) {
+                $.ajax({
+                    url: share_ex_url,
+                    type: 'POST',
+                    async: true,
+                    data: {
+                        'selected_users[]': nonExistingUsers,
+                        'edit_perm': edit_perm,
+                        csrfmiddlewaretoken: '{{csrf_token}}'
+                    },
+                });
+            }
             while (selectedUsers.length != 0) {
                 t_select.removeOption(selectedUsers[0]);
             }
