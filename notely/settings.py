@@ -28,7 +28,7 @@ if 'SECRET_KEY' in os.environ:
     SECRET_KEY = os.environ["SECRET_KEY"]
 
 if IS_HEROKU:
-    ALLOWED_HOSTS = ["*"]
+    ALLOWED_HOSTS = ['notely-winnie.herokuapp.com']
 else:
     ALLOWED_HOSTS = []
 

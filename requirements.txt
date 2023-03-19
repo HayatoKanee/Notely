@@ -17,3 +17,6 @@ celery
 channels-redis
 sendgrid
 django-notifications-hq
+dj-database-url
+whitenoise
+psycopg2
