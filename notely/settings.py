@@ -199,4 +199,4 @@ CELERY_RESULT_BACKEND = "redis://localhost:6379"
 
 DJANGO_NOTIFICATIONS_CONFIG = {'USE_JSONFIELD': True}
 
-CSRF_TRUSTED_ORIGINS = ["https://notely-winnie.herokuapp.com/"]
+CSRF_COOKIE_DOMAIN = 'notely-winnie.herokuapp.com'
