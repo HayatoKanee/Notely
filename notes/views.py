@@ -668,3 +668,7 @@ def share_notebook_ex(request, notebook_id):
 @login_required
 def share_folder_ex(request, folder_id):
     return share_obj_external(request, folder_id, Folder, 'folder')
+
+
+def privacy_policy(request):
+    return render(request, 'privacy_policy.html')

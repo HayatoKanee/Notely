@@ -60,6 +60,7 @@ urlpatterns = [
     path('share_page_ex/<page_id>', views.share_page_ex, name='share_page_ex'),
     path('share_notebook_ex/<notebook_id>', views.share_notebook_ex, name='share_notebook_ex'),
     path('share_folder_ex/<folder_id>', views.share_folder_ex, name='share_folder_ex'),
+    path('privacy_policy', views.privacy_policy, name='private_policy'),
 ]
 
 if settings.DEBUG:
