@@ -7,8 +7,8 @@
     <div id="log">
         <div class="box" style="height: 400px; color: rgb(245, 93, 66); border-color: rgb(245, 93, 66);">
             <h1 style="margin-top: 35px; color: rgb(245, 93, 66);">Log In</h1>
-            <div class="page-form">
-                <div class="container">
+            <div class="page-form" style="color: rgb(242, 69, 39);">
+                <div class="container" style="color: rgb(242, 69, 39);">
                     <form action="{% url 'log_in' %}" method="post">
                         {% csrf_token %}
                         <input type="hidden" name="next" value="{{ next }}">
@@ -17,7 +17,7 @@
                                style="font-size: 15px; text-align: center"/>
                     </form>
                 </div>
-                <div class="container" style="text-align: end">
+                <div class="container" style="text-align: end; color: rgb(242, 69, 39);">
                     <small>Don't have an account?</small>
                     <a href="{% url 'sign_up' %}" id="reg" class="nav-link"
                        style="color: rgb(242, 69, 39);text-align: end;">Sign up here</a>
