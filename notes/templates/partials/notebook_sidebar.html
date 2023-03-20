@@ -74,21 +74,32 @@
     <div class="tag-buttons" style="display: flex;">
         {% if can_edit_notebook %}
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
-                        style="font-size: 16px; border-radius: 5px; background-color: rgb(60, 120, 216); color:white; margin-bottom: 10px;">
+                        style="font-size: 16px; border-radius: 5px; background-color: rgb(60, 120, 216); color:white; margin-bottom: 10px; margin-right: 10px;">
                     New Tag
                 </button>
         {% endif %}
         <div class="tag-buttons">
             <button class="show-all-tags-button"
                     style="font-size: 16px; background-color: rgb(60, 120, 216); color: white; margin-bottom: 10px; border-radius: 5px; border: none;">
-                All
+                Show All Pages
             </button>
-            {% for tag in tags %}
-                <span style="color: {{ tag.color }}">&#x25CF;<button class="tag-button"
-                                                                     data-tag-id="{{ tag.id }}">tag</button></span>
-            {% endfor %}
+        </div>
+
+    </div>
+    <div class="tag-buttons">
+        <div class="container" style="margin-left: 35px;">
+            <div class="row">
+                {% for tag in tags %}
+                    <div class="col-md-4">
+          <button class="show-all-tags-button" data-tag-id="{{ tag.id }}" style="background-color: {{ tag.color }}; font-size: 12px; width: 60px;">
+            &#x25CF;{{ tag.title }}
+          </button>
+                    </div>
+                {% endfor %}
+            </div>
         </div>
     </div>
+
 </div>
 
 <style>
@@ -99,6 +110,7 @@
     .tag-buttons button {
         margin-left: 45px;
         font-size: 16px;
+        background-color: rgb(60, 120, 216);
         color: white;
         margin-bottom: 10px;
         border-radius: 5px;
@@ -181,6 +193,7 @@
     }
 
     .page:hover {
+        background-color: rgb(60, 120, 216, 0.1);
         border-radius: 50%;
         padding-right: 20px;
     }

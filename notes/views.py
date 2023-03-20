@@ -292,7 +292,7 @@ def page(request, page_id):
                 print(event)
     print(related_events)
     page_tag_form = PageTagForm()
-    tags = PageTag.objects.all()
+    tags_1 = PageTag.objects.all()
     viewable_pages = get_objects_for_user(request.user, 'dg_view_page', klass=Page).filter(notebook=page.notebook)
     users_with_perms = get_users_with_perms(page, only_with_perms_in=['dg_view_page'])
     users_without_perms = User.objects.exclude(pk__in=users_with_perms).exclude(username='AnonymousUser')
@@ -343,7 +343,7 @@ def page(request, page_id):
             new_page = Page.objects.get(id=page_id)
             return redirect('page', new_page.id)
     return render(request, 'page.html',
-                  {'page': page, 'page_tag_form': page_tag_form, 'tags': tags, 'users': users_without_perms,
+                  {'page': page, 'page_tag_form': page_tag_form, 'tags': tags_1, 'users': users_without_perms,
                    'viewable_pages': viewable_pages, 'can_edit': can_edit, 'can_edit_notebook': can_edit_notebook,
                    'events': related_events, 'templates': page.templates.all(),
                    'event_form': event_form})
