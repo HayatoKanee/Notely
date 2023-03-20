@@ -49,41 +49,43 @@
                             style="background-color: rgb(60, 120, 216, 0.1); border-color: rgb(60, 120, 216); width: 100px; color: rgb(60, 120, 216);">
                         Cancel
                     </button>
-                    <div class="modal fade" id="helpModal" tabindex="-1" aria-labelledby="helpModalLabel"
-                         aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="helpModalLabel">Feature Description</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                            aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <p>This code editor supports multiple languages, including Python, Javascript, and
-                                        HTML,
-                                        which will be automatically recognized as you type. </p>
-                                    <p>It also has an auto complete feature to make coding more convenient.</p>
-                                    <p>The code editor window can be scrolled to other positions across the page,
-                                        and each page has a separate code editor window with all the code saved to that
-                                        page.</p>
-                                    <p>New tabs of code editor can be created by clicking the '+' button,
-                                        and the tab can be renamed through double clicking the title of the tab</p>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    
                 </div>
             </div>
         </div>
     </div>
+</div>
+<div class="modal fade" id="helpModalCode" tabindex="-1" aria-labelledby="helpModalCodeLabel"
+        aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="helpModalCodeLabel">Feature Description</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>This code editor supports multiple languages, including Python, Javascript, and
+                    HTML,
+                    which will be automatically recognized as you type. </p>
+                <p>It also has an auto complete feature to make coding more convenient.</p>
+                <p>The code editor window can be scrolled to other positions across the page,
+                    and each page has a separate code editor window with all the code saved to that
+                    page.</p>
+                <p>New tabs of code editor can be created by clicking the '+' button,
+                    and the tab can be renamed through double clicking the title of the tab</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
     <script>
         var helpBtn = document.getElementById("help_btn");
-        var helpModal = new bootstrap.Modal(document.getElementById("helpModal"));
+        var helpModal = new bootstrap.Modal(document.getElementById("helpModalCode"));
         helpBtn.addEventListener("click", function () {
             helpModal.show();
         });
