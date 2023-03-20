@@ -12,14 +12,15 @@ The members of the team are:
 - *Jeremy Lin*
 
 ## Deployed version of the application
-The deployed version of the application can be found at *<>*.
-The admin interface can be found at *<>*
+The deployed version of the application can be found at *<https://notely-winnie.herokuapp.com/>*.
 
 ## Installation instructions
 To install the software and use it in your local development environment, you must first set up and activate a local development environment.  From the root of the project:
 
 ```
 $ virtualenv venv
+```
+```
 $ source venv/bin/activate
 ```
 
@@ -58,6 +59,9 @@ $ sudo apt install redis-server
 Run server with(for development and testing ONLY):
 ```
 $ daphne -e ssl:8000:privateKey=key.pem:certKey=cert.pem notely.asgi:application
+```
+Celery for background tasks:
+```
 $ celery -A notely worker -l INFO
 ```
 
