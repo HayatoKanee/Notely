@@ -44,9 +44,9 @@
                 {% for page in viewable_pages %}
                     <div class="col page" data-tag-id={{ page.get_all_tags_id }}; data-page2-id= {{ page.id }}>
                         <div class="dropdown">
-                            <a href="{% url 'page' page.id %}" style="color: rgb(60, 120, 216,0.9);"
+                            <a href="{% url 'page' page.id %}"
                                data-page-num= {{ forloop.counter }}>
-                                <span style="color: {{ p.tags.first.color }}">&#x25CF{% if page.thumbnail %}
+                                <span style="color: {{ page.tags.first.color }}">&#x25CF{% if page.thumbnail %}
                                     <img src="{{ page.thumbnail.url }}">
                                 {% else %}
                                     {% load static %}
@@ -73,12 +73,10 @@
     </div>
     <div class="tag-buttons" style="display: flex;">
         {% if can_edit_notebook %}
-            <div class="offcanva-footer">
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
                         style="font-size: 16px; border-radius: 5px; background-color: rgb(60, 120, 216); color:white; margin-bottom: 10px;">
                     New Tag
                 </button>
-            </div>
         {% endif %}
         <div class="tag-buttons">
             <button class="show-all-tags-button"
@@ -101,7 +99,6 @@
     .tag-buttons button {
         margin-left: 45px;
         font-size: 16px;
-        background-color: rgb(60, 120, 216);
         color: white;
         margin-bottom: 10px;
         border-radius: 5px;
@@ -163,6 +160,7 @@
     tagButtons.forEach(button => {
         button.addEventListener('click', event => {
             const tag_id = button.getAttribute('data-tag-id');
+            console.log("hello")
             $(".page").hide();
             $(".page[data-tag-id*=" + tag_id + "]").show();
         });
@@ -183,7 +181,6 @@
     }
 
     .page:hover {
-        background-color: rgb(60, 120, 216, 0.1);
         border-radius: 50%;
         padding-right: 20px;
     }
