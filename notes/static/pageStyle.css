@@ -121,3 +121,35 @@
     height: 32px;
     border: none;
 }
+
+#linkPage {
+    background: url("images/link-file.png") no-repeat;
+    background-size: contain;
+    width: 35px;
+    height: 35px;
+    border: none;
+}
+
+#template {
+    background: url("images/template.png") no-repeat;
+    background-size: contain;
+    width: 28px;
+    height: 28px;
+    border: none;
+}
+
+#share {
+    background: url("images/share.png") no-repeat;
+    background-size: contain;
+    width: 30px;
+    height: 30px;
+    border: none;
+}
+
+#event {
+    background: url("images/events.png") no-repeat;
+    background-size: contain;
+    width: 30px;
+    height: 30px;
+    border: none;
+}

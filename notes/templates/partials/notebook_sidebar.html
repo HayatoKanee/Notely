@@ -1,9 +1,8 @@
 <div class="offcanvas offcanvas-start" data-bs-scroll="true" id="sidebar" aria-labelledby="sidebarLabel"
      data-bs-backdrop="false"
-     data-bs-keyboard="false" aria-hidden="true" aria-labelledby="symbolsLabel" tabindex="-1"
-     style="color: rgb(60, 120, 216);">
+     data-bs-keyboard="false" aria-hidden="true" aria-labelledby="symbolsLabel" tabindex="-1">
     <div class="offcanvas-header"
-         style="font-size: 20px; color: rgb(60, 120, 216); text-align: center; line-height: 70px; background: rgb(60, 120, 216, 0.1); user-select: none; color: rgb(60, 120, 216);">
+         style="font-size: 20px; text-align: center; line-height: 70px; background: rgb(60, 120, 216, 0.1); user-select: none; color: rgb(60, 120, 216);">
         <h5 class="offcanvas-title" style="font-size: 30px;" id="sidebarLabel">{{ page.notebook.notebook_name }}
             {% if user != page.notebook.user %}(shared by {{ page.notebook.user.username }}){% endif %}</h5>
         <nav class="navbar navbar-expand-lg">
@@ -44,9 +43,8 @@
                 {% for page in viewable_pages %}
                     <div class="col page" data-tag-id={{ page.get_all_tags_id }}; data-page2-id= {{ page.id }}>
                         <div class="dropdown">
-                            <a href="{% url 'page' page.id %}" style="color: rgb(60, 120, 216,0.9);"
-                               data-page-num= {{ forloop.counter }}>
-                                <span style="color: {{ p.tags.first.color }}">&#x25CF{% if page.thumbnail %}
+                            <a href="{% url 'page' page.id %}" data-page-num= {{ forloop.counter }}>
+                                <span style="color: {{ page.tags.first.color }}">&#x25CF{% if page.thumbnail %}
                                     <img src="{{ page.thumbnail.url }}">
                                 {% else %}
                                     {% load static %}
@@ -60,7 +58,7 @@
                                         Add tags
                                     </button>
                                     <button class="dropdown-item" type="button"><a
-                                            href="{% url 'delete_page'  page.id %}">Delete</a></button>
+                                            href="{% url 'delete_page' page.id %}">Delete</a></button>
                                 </div>
                             {% endif %}
                         </div>
@@ -84,8 +82,7 @@
                 All
             </button>
             {% for tag in tags %}
-                <span style="color: {{ tag.color }}">&#x25CF;<button class="tag-button"
-                                                                     data-tag-id="{{ tag.id }}">tag</button></span>
+                <span style="color: {{ page.tag.color }}">&#x25CF;<button class="tag-button" data-tag-id="{{ tag.id }}">tag</button></span>
             {% endfor %}
         </div>
     </div>
@@ -99,7 +96,6 @@
     .tag-buttons button {
         margin-left: 45px;
         font-size: 16px;
-        background-color: rgb(60, 120, 216);
         color: white;
         margin-bottom: 10px;
         border-radius: 5px;
