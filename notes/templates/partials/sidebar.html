@@ -4,18 +4,22 @@
         <h5 class="offcanvas-title" id="sidebarLabel" style="font-size: 30px;"> Notely </h5>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
-    <div class="offcanvas-body" style="background-color: #FFF0F5; transition: all .5s ease;">
-        <div style="color: #DB7093;"></div>
-        <div class="dropdown mt-3" style="display: block;height: 100%;width: 100%;line-height: 65px;font-size: 20px;color: #CD5C5C;padding-left: 40px;box-sizing: border-box;border-top: 1px solid rgba(255, 255, 255, .1);border-bottom: 1px solid black;transition: .4s">
+    <div class="offcanvas-body" style="transition: all .5s ease;">
+        <div style="color: rgb(60, 120, 216);;"></div>
+        <div class="dropdown mt-3"
+             style="display: block; height: 100%; width: 100%; line-height: 65px; font-size: 20px; color: rgb(60, 120, 216, 0.5); padding-left: 40px; box-sizing: border-box; border-top: 1px solid rgba(255, 255, 255, .1); border-bottom: 1px solid black; transition: .4s">
             <ul style="padding-left:0;">
                 <!--<li><a href="#"><i class="fas fa-qrcode"></i> type the barName </a></li>-->
-                <li><a href="#" style="color: #CD5C5C"><i class="far fa-question-circle"></i>About</a></li>
-                <li><a href="{% url 'calendar_tab'%}" style="color: #CD5C5C"><i class="fas fa-calendar"></i>Calendar</a></li>
-                <li><a href="{% url 'folders_tab' %}" style="color: #CD5C5C"><i class="fas fa-note"></i>Notes</a></li>
-                <li><a href="{% url 'tutorial' %}" style="color: #CD5C5C"><i class="fas fa-link"></i>Tutorial</a></li>
-                <li><a href="{% url 'private_policy' %}" style="color: #CD5C5C"><i class="fas fa-stream"></i>Privacy Policy</a></li>
-                <li><a href="{% url 'profile_tab' %}" style="color: #CD5C5C"><i class="fas fa-sliders-h"></i>Profile</a></li>
-                <li><a href="#" style="color: #CD5C5C"><i class="far fa-share"></i>Contact</a></li>
+                <li><a href="#" style="color: rgb(60, 120, 216);"><i class="far fa-question-circle"></i>About</a></li>
+                <li><a href="{% url 'calendar_tab' %}" style="color: rgb(60, 120, 216);"><i class="fas fa-calendar"></i>Calendar</a>
+                </li>
+                <li><a href="{% url 'folders_tab' %}" style="color: rgb(60, 120, 216);"><i class="fas fa-note"></i>Notes</a>
+                </li>
+                <li><a href="{% url 'tutorial' %}" style="color: rgb(60, 120, 216);"><i class="fas fa-link"></i>Tutorial</a>
+                </li>
+                <li><a href="{% url 'profile_tab' %}" style="color: rgb(60, 120, 216);"><i class="fas fa-sliders-h"></i>Profile</a>
+                </li>
+                <li><a href="#" style="color: rgb(60, 120, 216);"><i class="far fa-share"></i>Contact</a></li>
                 <!-- <li><a href="#"><i class="fas fa-qrcode"></i></a></li> -->
             </ul>
         </div>

@@ -1,4 +1,5 @@
-<form action="{% url 'event_detail' event.id %}" method="post" class="collapse multi-collapse">
+<form action="{% url 'event_detail' event.id %}" method="post" class="collapse multi-collapse"
+      style="color: rgb(60, 120, 216);">
     {% csrf_token %}
     {% include 'partials/bootstrap_form.html' with form=form %}
     <input type="submit" value="Save Changes" class="btn-chocolate fw-bold" style="color: rgb(60, 120, 216);">
