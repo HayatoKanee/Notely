@@ -194,12 +194,10 @@ EMAIL_HOST_PASSWORD = 'SG.7KiHkyW9ThWJkgaaOVWe_g.I2ziDq7QAQLlsnCTpxu3M8gWjgooh45
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
-CELERY_BROKER_URL = "redis://localhost:6379"
-CELERY_RESULT_BACKEND = "redis://localhost:6379"
-
 DJANGO_NOTIFICATIONS_CONFIG = {'USE_JSONFIELD': True}
 
 CSRF_TRUSTED_ORIGINS = ['https://notely-winnie.herokuapp.com']
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 CELERY_BROKER_URL = os.environ.get('REDIS_URL', 'redis://localhost:6379')
+CELERY_RESULT_BACKEND = os.environ.get('REDIS_URL', 'redis://localhost:6379')
