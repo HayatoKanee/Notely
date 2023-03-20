@@ -87,6 +87,11 @@ $('.template-item').click(function () {
 function loadTemplates(content) {
     fabric.util.enlivenObjects(content, function (enlivenedObjects) {
         const group = new fabric.Group(enlivenedObjects);
+        group.set({
+            left: canvas.width / 2 - group.width/2,
+            top: $(window).height() / 2 + window.scrollY - group.height/2
+        });
+
         canvas.add(group);
         canvas.renderAll();
     });
