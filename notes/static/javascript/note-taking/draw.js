@@ -6,6 +6,12 @@ const initCanvas = (id) => {
     });
 
 }
+
+function resizeCanvas() {
+    canvas.setWidth(window.innerWidth);
+    canvas.setHeight(window.innerHeight);
+}
+
 if (can_edit === "True") {
     function clearCanvas(canvas) {
         canvas.getObjects().forEach((obj) => {
@@ -375,3 +381,12 @@ if (can_edit === "True") {
         canvas.renderAll();
     });
 }
+
+window.addEventListener('resize', resizeCanvas);
+window.addEventListener('scroll', () => {
+    const newHeight = window.innerHeight + window.scrollY;
+    if (newHeight > canvas.getHeight()) {
+        canvas.setHeight(newHeight);
+        canvas.renderAll();
+    }
+});
