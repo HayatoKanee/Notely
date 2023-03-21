@@ -87,11 +87,11 @@
 
     </div>
     <div class="tag-buttons">
-        <div class="container" style="margin-left: 35px;">
+        <div class="container" style="margin-right: 60px;">
             <div class="row">
                 {% for tag in tags %}
                     <div class="col-md-4">
-          <button class="show-all-tags-button" data-tag-id="{{ tag.id }}" style="background-color: {{ tag.color }}; font-size: 12px; width: 60px;">
+          <button class="tag-button" data-tag-id="{{ tag.id }}" style="background-color: {{ tag.color }}; font-size: 12px; width: 60px;">
             &#x25CF;{{ tag.title }}
           </button>
                     </div>
