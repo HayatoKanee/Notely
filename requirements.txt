@@ -20,3 +20,6 @@ django-notifications-hq
 dj-database-url
 whitenoise
 psycopg2-binary
+django-storages
+boto3
+python-decouple
