@@ -22,7 +22,6 @@ if (can_edit === "True") {
     }
 
     function undo(btn) {
-        selectBtn(btn);
         if (canvas._objects.length > 0) {
             canvasObj.push(canvas._objects.pop());
             canvas.renderAll();
@@ -30,9 +29,7 @@ if (can_edit === "True") {
     }
 
     function redo(btn) {
-        selectBtn(btn);
         if (canvasObj.length > 0) {
-            _redo = true;
             canvas.add(canvasObj.pop());
         }
     }
@@ -46,6 +43,7 @@ if (can_edit === "True") {
         });
         canvas.isDrawingMode = false;
         btn.classList.add('active');
+        canvasObj = [];
     }
 
     function toggleText(btn) {
@@ -217,7 +215,6 @@ if (can_edit === "True") {
     }
 }
 let currentMode;
-let _redo = false;
 let canvasObj = [];
 
 let reader = new FileReader()
@@ -287,12 +284,6 @@ if (can_edit === "True") {
         })
     });
 
-    canvas.on('object:added', function () {
-        if (!_redo) {
-            canvasObj = [];
-        }
-        _redo = false;
-    });
 
     canvas.on('mouse:down', function (options) {
         if (currentMode === 'text') {

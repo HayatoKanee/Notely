@@ -77,6 +77,7 @@ The packages used by this application are specified in `requirements.txt`
 - [jQuery](https://jquery.com/)
 - [jQuery UI](https://jqueryui.com/)
 - [FullCalendar](https://fullcalendar.io/)
+- [jsPDF](https://parall.ax/products/jspdf)
 
 ### Images
 signup_login.jpg:https://www.wikihow.com/Take-Better-Notes
@@ -94,3 +95,11 @@ notebook.png:https://www.flaticon.com/free-icon/notebook_2904859?term=notebook&p
 bell.png:https://www.flaticon.com/free-icons/notification-bell
 
 erase.png:https://www.clipartmax.com/middle/m2i8Z5K9b1m2m2N4_eraser-icon-eraser-icon-png/
+
+linkPage.png:https://www.flaticon.com/free-icon/link_455691?term=link&page=1&position=2&origin=search&related_id=455691
+
+templates.png:https://www.flaticon.com/free-icon/layout_721764?term=templates&page=1&position=7&origin=search&related_id=721764
+
+share.png:https://www.flaticon.com/free-icon/share_1828954?term=share&page=1&position=7&origin=search&related_id=1828954
+
+event.png:https://www.flaticon.com/free-icon/event_2558957?term=event&page=1&position=7&origin=search&related_id=2558957
