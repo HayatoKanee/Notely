@@ -1,4 +1,8 @@
 # Notely
+[![Django](https://img.shields.io/badge/Django-4.17-092E20)](https://www.djangoproject.com/)
+[![Python 3.9](https://img.shields.io/badge/Python-3.11.2-blue.svg)](https://www.python.org/)
+[![codecov](https://codecov.io/gh/yourusername/yourrepository/branch/main/graph/badge.svg?token=YOUR_CODECOV_TOKEN)](https://codecov.io/gh/yourusername/yourrepository)
+
 Notely is a note-taking application that aims to help students take notes during their studies.
 
 ## Team members
