@@ -260,31 +260,33 @@ class Event(models.Model):
     def save(
             self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
-        if self.sync and self.cred:
-            creds = Credentials.from_authorized_user_info(info=json.loads(self.cred.google_cred))
-            # Create a service object to interact with the Google Calendar API
-            service = build('calendar', 'v3', credentials=creds)
-            g_event = {
-                'summary': self.title,
-                'description': self.description,
-                'start': {
-                    'dateTime': self.start_time.isoformat(),
-                    'timeZone': self.start_time.strftime('%Z')
-                },
-                'end': {
-                    'dateTime': self.end_time.isoformat(),
-                    'timeZone': self.start_time.strftime('%Z')
+        if self.sync:
+            if not self.cred:
+                self.cred = self.user.creds.first()
+            if self.cred:
+                creds = Credentials.from_authorized_user_info(info=json.loads(self.cred.google_cred))
+                # Create a service object to interact with the Google Calendar API
+                service = build('calendar', 'v3', credentials=creds)
+                g_event = {
+                    'summary': self.title,
+                    'description': self.description,
+                    'start': {
+                        'dateTime': self.start_time.isoformat(),
+                        'timeZone': self.start_time.strftime('%Z')
+                    },
+                    'end': {
+                        'dateTime': self.end_time.isoformat(),
+                        'timeZone': self.start_time.strftime('%Z')
+                    }
                 }
-            }
-            if self.google_id:
-                try:
-                    service.events().update(calendarId='primary', eventId=self.google_id, body=g_event).execute()
-                except HttpError:
-                    return
-            else:
-                created_event = service.events().insert(calendarId='primary', body=g_event).execute()
-                self.google_id = created_event['id']
-
+                if self.google_id:
+                    try:
+                        service.events().update(calendarId='primary', eventId=self.google_id, body=g_event).execute()
+                    except HttpError:
+                        return
+                else:
+                    created_event = service.events().insert(calendarId='primary', body=g_event).execute()
+                    self.google_id = created_event['id']
         super().save()
 
     def delete(self, using=None, keep_parents=False):
