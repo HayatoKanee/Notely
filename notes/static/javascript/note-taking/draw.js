@@ -103,21 +103,6 @@ if (can_edit === "True") {
         })
     }
 
-    function chooseTextColor() {
-        const chooser = document.getElementById('chooseTextColor')
-        const observer = new MutationObserver((mutations) => {
-            mutations.forEach((mutation) => {
-                if (mutation.attributeName === 'data-current-color') {
-                    const newColor = chooser.getAttribute('data-current-color')
-                    textColor = newColor;
-                    canvas.freeDrawingBrush.color = textColor;
-                    canvas.requestRenderAll();
-                }
-            });
-        });
-        observer.observe(chooser, {attributes: true})
-    }
-
 // reference: https://github.com/av01d/fabric-brushes
     function chooseMode() {
         const chooser = document.getElementById('chooseMode')
@@ -265,6 +250,22 @@ if (can_edit === "True") {
 
     let penColor = '#000000'
     let textColor = '#000000'
+
+    function chooseTextColor() {
+        const chooser = document.getElementById('chooseTextColor')
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.attributeName === 'data-current-color') {
+                    const newColor = chooser.getAttribute('data-current-color')
+                    textColor = newColor;
+                    canvas.freeDrawingBrush.color = textColor;
+                    canvas.requestRenderAll();
+                }
+            });
+        });
+        observer.observe(chooser, {attributes: true})
+    }
+
     choosePenColor()
     chooseTextColor()
 
@@ -284,7 +285,6 @@ if (can_edit === "True") {
         })
     });
 
-
     canvas.on('mouse:down', function (options) {
         if (currentMode === 'text') {
             let pointer = canvas.getPointer(options.e);
@@ -298,12 +298,9 @@ if (can_edit === "True") {
                 });
                 canvas.add(textbox);
             }
-
-
         }
         canvas.renderAll();
     });
-
     document.onkeydown = function (e) {
         if (e.keyCode === 46) {
             const selection = canvas.getActiveObject();
