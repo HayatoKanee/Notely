@@ -366,11 +366,11 @@ function save(sync) {
 
 if (can_edit === "True") {
     window.setInterval(function () {
-        save(false);
+        save(true);
     }, 50000);
 
     window.onbeforeunload = function (event) {
-        save(false);
+        save(true);
         return "";
     };
 } else {
