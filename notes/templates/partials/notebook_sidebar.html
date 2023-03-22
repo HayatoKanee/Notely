@@ -170,7 +170,6 @@
     tagButtons.forEach(button => {
         button.addEventListener('click', event => {
             const tag_id = button.getAttribute('data-tag-id');
-            console.log("hello")
             $(".page").hide();
             $(".page[data-tag-id*=" + tag_id + "]").show();
         });

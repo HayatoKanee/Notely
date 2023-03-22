@@ -292,7 +292,7 @@ def page(request, page_id):
                 print(event)
     print(related_events)
     page_tag_form = PageTagForm()
-    tags_1 = PageTag.objects.all()
+    tags_1 = request.user.page_tags.all()
     viewable_pages = get_objects_for_user(request.user, 'dg_view_page', klass=Page).filter(notebook=page.notebook)
     users_with_perms = get_users_with_perms(page, only_with_perms_in=['dg_view_page'])
     users_without_perms = User.objects.exclude(pk__in=users_with_perms).exclude(username='AnonymousUser')
