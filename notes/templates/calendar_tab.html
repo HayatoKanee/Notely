@@ -1,8 +1,21 @@
 {% extends 'base_content.html' %}
 {% block content %}
     <div class="container">
+        <div class="filter">
+                <h3>Filter</h3>
+                <div class="event_filter_wrapper">
+                    <input id="noTag" class="event_filter" name="event_filter_select" type="checkbox" value="noTag" data-type="tags" />
+                    <label for="noTag"> No Tag </label>
+                </div>
+                {% for tag in tags %}
+                <div class="event_filter_wrapper">
+                    <input id="{{tag.title}}" class="event_filter" name="event_filter_select" type="checkbox" value="{{tag.title}}" data-type="tags" />
+                    <label for="{{tag.title}}"> {{tag.title}} </label>
+                </div>
+                {% endfor %}
+        </div>
         <div id='calendar' style="color: rgb(60, 120, 216);"></div>
-        <button onclick="checkPermission()" id="addEvent" type="button" class="btn btn-primary" data-bs-toggle="modal"
+        <button onclick="checkPermission();applyTemp();" id="addEvent" type="button" class="btn btn-primary" data-bs-toggle="modal"
                 data-bs-target="#eventModal">
             Add New Event
         </button>
@@ -18,19 +31,19 @@
             <div class="modal-content" style="color: rgb(60, 120, 216);">
                 <div class="modal-header">
                     <h5 class="modal-title" style="color: rgb(60, 120, 216);">Event Modal</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="tempEvent()"></button>
                 </div>
                 <div class="modal-body">
                     {{ event_form.media }}
                     <form action="{% url 'calendar_tab' %}" method="post">
                         {% csrf_token %}
                         {% include 'partials/bootstrap_form.html' with form=event_form %}
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="tempEvent()">Close</button>
                         <input type="submit" name="event_submit" value="Create event" class="btn btn-primary"
                                style="margin-left: 3px;">
                     </form>
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tagModal"
-                            data-bs-dismiss="modal" style="margin-top: 7px;">
+                            data-bs-dismiss="modal" onclick="tempEvent()" style="margin-top: 7px;">
                         New tag
                     </button>
                 </div>
@@ -69,7 +82,7 @@
         const calendarEl = document.getElementById('calendar');
         const calendar = new FullCalendar.Calendar(calendarEl, {
             headerToolbar: {
-                left: 'today prev,next',
+                left: 'today prev,next tutorial',
                 center: 'title',
                 right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
             },
@@ -86,6 +99,30 @@
                     },
                 {% endfor %}
             ],
+        eventClassNames: function(info) {
+            var display = true;
+            var tags = [];
+
+            $("input[name='event_filter_select']:checked").each(function() {
+                if ($(this).data('type') == 'tags') {
+                    tags.push($(this).val());
+                }
+            });
+
+            if (tags.length) {
+                if (info.event.extendedProps.tags.length == 0) {
+                    display = display && tags.includes('noTag');
+                } else {
+                    display = display && tags.indexOf(info.event.extendedProps.tags) >= 0;
+                }
+            }
+            if (!display) {
+                display = "hidden";
+            }
+
+            return display;
+        },
+
             eventClick: function (e) {
                 event_id = e.event.id;
                 $.ajax({
@@ -137,36 +174,70 @@
                 });
             },
             customButtons: {
-                selectAll: {
-                    text: '•All',
-                    click: function () {
-                        calendar.getEvents().forEach(function (event) {
-                            event.setProp('display', 'auto');
-                        });
-                    }
-                },
-        {% for tag in tags %}
-            {{ forloop.counter }}: {
-            text: '•{{ tag }}',
-                click
-        :
-
-            function () {
-                const tag = '{{ tag.title }}';
-                calendar.getEvents().forEach(function (event) {
-                    if (event.extendedProps.tags.includes(tag)) {
-                        event.setProp('display', 'auto');
+            tutorial: {
+                text: 'tutorial',
+                click: function() {
+                    tourCalendar.start();
+                }
+            },
+            selectAll:{
+                text: '•All',
+                 click: function() {
+                     calendar.getEvents().forEach(function(event) {
+                         event.setProp('display', 'auto');
+                     });
+                     tagList.length = 0;
+                 }
+            },
+            noTag:{
+                text: '•No Tag',
+                 click: function() {
+                    const tag = 'noTag';
+                    if (tagList.includes(tag)) {
+                        tagList.splice(tagList.indexOf(tag), 1);
+                        $(this).text('No Tag');
                     } else {
-                        event.setProp('display', 'none');
+                        tagList.push(tag);
+                        $(this).text('No Tag');
                     }
-                });
-                calendar.rerenderEvents();
-            }
-        },
 
-        {% endfor %}
-
+                    calendar.getEvents().forEach(function(event) {
+                        if (tagList.includes('noTag') && event.extendedProps.tags.length == 0) {
+                            event.setProp('display', 'auto');
+                        } else if (tagList.some(r=> event.extendedProps.tags.includes(r))) {
+                            event.setProp('display', 'auto');
+                        } else {
+                            event.setProp('display', 'none');
+                        }
+                    });
+                 }
+            },
+    {% for tag in tags %}
+        {{ forloop.counter }}: {
+          text: '•{{ tag }}',
+          click: function() {
+             const tag = '{{ tag.title }}';
+             if (tagList.includes(tag)) {
+                tagList.splice(tagList.indexOf(tag), 1);
+                $(this).text('•{{ tag }}');
+             } else {
+                tagList.push(tag);
+                $(this).text('•{{ tag }}');
+             }
+          calendar.getEvents().forEach(function(event) {
+             if (tagList.some(r=> event.extendedProps.tags.includes(r))) {
+                event.setProp('display', 'auto');
+             } else if (tagList.includes('noTag') && event.extendedProps.tags.length == 0) {
+                event.setProp('display', 'auto');
+             } else {
+                event.setProp('display', 'none');
+             }
+          });
+          calendar.rerenderEvents();
+          }
         },
+    {% endfor %}
+      },
         footerToolbar:{
             start: '',
                 center
@@ -174,12 +245,16 @@
             '',
                 end
         :
-            "selectAll {% for tag in tags %}{{ forloop.counter }} {% endfor %}".slice(0, -1)
+            "selectAll noTag {% for tag in tags %}{{ forloop.counter }} {% endfor %}".slice(0, -1)
         }
         ,
         })
         ;
         calendar.render();
+        $('input[class=event_filter]').change(function() {
+            calendar.render();
+        });
+        $('.fc-noTag-button').css('color', 'blue')
         {% for tag in tags %}
             console.log($('.fc-{{ forloop.counter }}-button'));
             $('.fc-{{ forloop.counter }}-button').css('color', '{{ tag.color }}')
@@ -229,7 +304,8 @@
             emailjs.init("service_7fj9to5");
         })();
     </script>
-    <link rel="stylesheet" href="{% static 'css_style/calendarTabStyle.css' %}"/>
+    <link rel="stylesheet" href="{%static 'css_style/calendarTabStyle.css' %}"/>
+    <link rel="stylesheet" href="{%static 'css_style/calendarEventFilter.css' %}"/>
 
 
     <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
@@ -323,5 +399,303 @@
             {% endif %}
 
         });
+    </script>
+    <script>
+    const tourCalendar = new Shepherd.Tour({
+        useModalOverlay: true,
+        defaultStepOptions: {
+            exitOnEsc: true
+        }
+    });
+
+    tourCalendar.addStep({
+        id: 'begin',
+        text: "Welcome to the tutorial, this will help you to understand features in Notely's calendar. Press Esc at any time to quit this tutorial. Due to a bug shepherd js has, press f10 if the tutorial is not loaded.",
+        scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+        },
+        beforeShowPromise: function() {
+            return new Promise(function(resolve) {
+                sessionStorage.removeItem("eventModalCheck");
+                resolve();
+            });
+        },
+        buttons: [
+            {
+                 text: 'Exit',
+                 action: tourCalendar.cancel
+            },
+            {
+                 text: 'Next',
+                 action: tourCalendar.next
+            }
+        ],
+    });
+
+    tourCalendar.addStep({
+        id: 'filter',
+        text: "By choosing checkbox all the relavent events will be shown. When no checkbox clicked then all events will be shown",
+        scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+        },
+        attachTo: {
+            element: '.filter > h3:nth-child(1)',
+            on: 'right'
+        },
+        buttons: [
+            {
+                 text: 'Exit',
+                 action: tourCalendar.cancel
+            },
+            {
+                 text: 'Back',
+                 action: tourCalendar.back
+            },
+            {
+                 text: 'Next',
+                 action: tourCalendar.next
+            }
+        ],
+    });
+
+    tourCalendar.addStep({
+        id: 'left',
+        text: "This allows you to change respected time range",
+        scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+        },
+        attachTo: {
+            element: '.fc-header-toolbar > div:nth-child(1)',
+            on: 'bottom'
+        },
+        buttons: [
+            {
+                 text: 'Exit',
+                 action: tourCalendar.cancel
+            },
+            {
+                 text: 'Back',
+                 action: tourCalendar.back
+            },
+            {
+                 text: 'Next',
+                 action: tourCalendar.next
+            }
+        ],
+    });
+
+    tourCalendar.addStep({
+        id: 'month',
+        text: "This is where you can view the calendar in respected range",
+        scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+        },
+        attachTo: {
+            element: 'div.fc-button-group:nth-child(1)',
+            on: 'bottom'
+        },
+        buttons: [
+            {
+                 text: 'Exit',
+                 action: tourCalendar.cancel
+            },
+            {
+                 text: 'Back',
+                 action: tourCalendar.back
+            },
+            {
+                 text: 'Next',
+                 action: tourCalendar.next
+            }
+        ],
+    });
+
+    tourCalendar.addStep({
+        id: 'newEvent',
+        text: "To create new event, press this",
+        scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+        },
+        attachTo: {
+            element: '#addEvent',
+            on: 'top'
+        },
+        beforeShowPromise: function() {
+            return new Promise(function(resolve) {
+                if (sessionStorage.getItem("eventModalCheck") == 'true') {
+                    document.querySelector('#addEvent').click();
+                    sessionStorage.removeItem("eventModalCheck");
+                }
+                resolve();
+            });
+        },
+        buttons: [
+            {
+                 text: 'Exit',
+                 action: tourCalendar.cancel
+            },
+            {
+                 text: 'Back',
+                 action: tourCalendar.back
+            },
+            {
+                 text: 'Next',
+                 action: tourCalendar.next
+            }
+        ],
+    });
+
+    tourCalendar.addStep({
+        id: 'eventModalPage',
+        text: "This is the form to complete. Title, Start Time and End Time are needed for the form to be valid",
+        scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+        },
+        attachTo: {
+            element: '#eventModal > div:nth-child(1) > div:nth-child(1) > div:nth-child(2)',
+            on: 'left'
+        },
+        beforeShowPromise: function() {
+            return new Promise(function(resolve) {
+                if (sessionStorage.getItem("eventModalCheck") == null) {
+                    document.querySelector('#addEvent').click();
+                    sessionStorage.setItem("eventModalCheck", "true");
+                }
+                resolve();
+            });
+        },
+        buttons: [
+            {
+                 text: 'Exit',
+                 action: tourCalendar.cancel
+            },
+            {
+                 text: 'Back',
+                 action: tourCalendar.back
+            },
+            {
+                 text: 'Next',
+                 action: tourCalendar.next
+            }
+        ],
+    });
+
+    tourCalendar.addStep({
+        id: 'tags',
+        text: "To select multiple tags, click on desired tags while pressing Ctrl on the keyboard",
+        scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+        },
+        attachTo: {
+            element: '#id_tag',
+            on: 'top'
+        },
+        buttons: [
+            {
+                 text: 'Exit',
+                 action: tourCalendar.cancel
+            },
+            {
+                 text: 'Back',
+                 action: tourCalendar.back
+            },
+            {
+                 text: 'Next',
+                 action: tourCalendar.next
+            }
+        ],
+    });
+
+    tourCalendar.addStep({
+        id: 'newTag',
+        text: "To create a new tag, press this button",
+        scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+        },
+        attachTo: {
+            element: 'button.btn-primary:nth-child(8)',
+            on: 'top'
+        },
+        beforeShowPromise: function() {
+            return new Promise(function(resolve) {
+                if (sessionStorage.getItem("eventModalCheck") == null) {
+                    document.querySelector('#addEvent').click();
+                    sessionStorage.setItem("eventModalCheck", "true");
+                }
+                resolve();
+            });
+        },
+        buttons: [
+            {
+                 text: 'Exit',
+                 action: tourCalendar.cancel
+            },
+            {
+                 text: 'Back',
+                 action: tourCalendar.back
+            },
+            {
+                 text: 'Next',
+                 action: tourCalendar.next
+            }
+        ],
+    });
+
+    tourCalendar.addStep({
+        id: 'tutorial',
+        text: "this is the end of the tutorial, if you want to watch it again please click this button",
+        scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+        },
+        attachTo: {
+            element: '.fc-tutorial-button',
+            on: 'bottom'
+        },
+        beforeShowPromise: function() {
+            return new Promise(function(resolve) {
+                document.querySelector('#eventModal > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > button:nth-child(2)').click();
+                sessionStorage.removeItem("eventModalCheck");
+                resolve();
+            });
+        },
+        buttons: [
+            {
+                 text: 'Back',
+                 action: tourCalendar.back
+            },
+            {
+                 text: 'Done',
+                 action: tourCalendar.complete
+            }
+        ],
+    });
+
+    if (localStorage.getItem("seen_tour_calendar") == null) {
+        tourCalendar.start();
+        localStorage.setItem("seen_tour_calendar", "true");
+    }
+
+    function tempEvent() {
+        sessionStorage.setItem("title", document.querySelector('#id_title').value);
+        sessionStorage.setItem("description", document.querySelector('#id_description').value);
+        sessionStorage.setItem("start", document.querySelector('#id_start_time').value);
+        sessionStorage.setItem("end", document.querySelector('#id_end_time').value);
+    }
+
+    function applyTemp() {
+        document.getElementById("id_title").value = sessionStorage.getItem("title");
+        document.getElementById("id_description").value = sessionStorage.getItem("description");
+        document.getElementById("id_start_time").value = sessionStorage.getItem("start");
+        document.getElementById("id_end_time").value = sessionStorage.getItem("end");
+    }
     </script>
 {% endblock %}

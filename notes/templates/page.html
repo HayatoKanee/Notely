@@ -8,6 +8,7 @@
         <a href={% url 'folders_tab' %} style="color:rgb(60,120,216);margin-left:20px;font-size:18px;"> <i
                 class="bi bi-arrow-left"></i> Go back</a>
     {% endif %}
+    <button style="color: rgb(60, 120, 216);background-color: transparent;" onclick="startTour();">Start Tour</button>
     <canvas id="canvas"></canvas>
     <nav class="navbar navbar-expand-lg fixed-bottom navbar-light bg-light">
         <div class="container-fluid">
@@ -28,58 +29,62 @@
                     <li class="nav-item">
                         <button class="toolbox" id="select" onclick="toggleSelect(this)"></button>
                     </li>
-                    <li class="nav-item">
-                        <button class="toolbox" id="draw" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapsePen" aria-expanded="false"
-                                aria-controls="collapsePen" onclick="toggleDraw(this)"></button>
+                    <div class="accordion accordion-flush" id="accordionFlush">
+                    <div class="accordion-item">
+                    <li class="accordion-header" id="flush-headingPen">
+                        <li class="nav-item">
+                        <button class="toolbox" id="draw" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapsePen"
+                                aria-expanded="false" aria-controls="flush-collapsePen" onclick="toggleDraw(this)"></button>
+                        </li>
                     </li>
-                    <li class="nav-item">
-                        <div style="min-height: 120px;">
-                            <div class="collapse collapse-horizontal" id="collapsePen"
-                                 style="color: rgb(60, 120, 216);">
+                    <div id="flush-collapsePen" class="accordion-collapse collapse" aria-labelledby="flush-headingPen" data-bs-parent="#accordionFlush">
+                        <li class="nav-item">
+                            <div style="min-height: 120px;">
                                 <div class="card card-body" style="width: 300px;">
                                     <label>Pen Mode</label>
                                     <select id="chooseMode" style="color: rgb(60, 120, 216);">
-                                        <option value="circle">Circle Brush</option>
-                                        <option value="crayon">Crayon</option>
-                                        <option value="ink">Ink Pen</option>
-                                        <option value="fur">Fur Brush</option>
-                                        <option value="longfur">Long Fur Brush</option>
-                                        <option value="marker">Marker</option>
-                                        <option value="ribbon">Ribbon Brush</option>
-                                        <option value="shaded">Shaded Brush</option>
-                                        <option value="sketchy">Sketchy Brush</option>
-                                        <option value="spraypaint">Spray Paint</option>
-                                        <option value="square">Square brush</option>
-                                        <option value="web">Web Brush</option>
-                                    </select>
-                                    <label>Pen Colour</label>
-                                    <input id='choosePenColor' value="#000000" data-jscolor=""
-                                           style="color: rgb(60, 120, 216);">
-                                    <label>Pen Width</label>
-                                    <input id='chooseWidth' value='1' type=range min='1' max='20'>
-                                </div>
+                                    <option value="circle">Circle Brush</option>
+                                    <option value="crayon">Crayon</option>
+                                    <option value="ink">Ink Pen</option>
+                                    <option value="fur">Fur Brush</option>
+                                    <option value="longfur">Long Fur Brush</option>
+                                    <option value="marker">Marker</option>
+                                    <option value="ribbon">Ribbon Brush</option>
+                                    <option value="shaded">Shaded Brush</option>
+                                    <option value="sketchy">Sketchy Brush</option>
+                                    <option value="spraypaint">Spray Paint</option>
+                                    <option value="square">Square brush</option>
+                                    <option value="web">Web Brush</option>
+                                </select>
+                                <label>Pen Colour</label>
+                                <input id='choosePenColor' value="#000000" data-jscolor="" style="color: rgb(60, 120, 216);">
+                                <label>Pen Width</label>
+                                <input id='chooseWidth' value='1' type=range min='1' max='20'>
                             </div>
-                        </div>
+                            </div>
+                        </li>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <li class="accordion-header" id="flush-headingText">
+                        <li class="nav-item">
+                            <button class="toolbox" id="text" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseText" aria-expanded="false"
+                                    aria-controls="flush-collapseText" onclick="toggleText(this)" style="color: rgb(60, 120, 216);">
+                            </button>
+                        </li>
                     </li>
-                    <li class="nav-item">
-                        <button class="toolbox" id="text" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapseText" aria-expanded="false"
-                                aria-controls="collapseText" onclick="toggleText(this)"
-                                style="color: rgb(60, 120, 216);">
-                        </button>
-                    </li>
-                    <li class="nav-item">
-                        <div style="min-height: 120px;">
-                            <div class="collapse collapse-horizontal" id="collapseText">
+                    <div id="flush-collapseText" class="accordion-collapse collapse" aria-labelledby="flush-headingText" data-bs-parent="#accordionFlush">
+                        <li class="nav-item">
+                            <div style="min-height: 120px;">
                                 <div class="card card-body" style="width: 300px; color: rgb(60, 120, 216);">
                                     <label>Text Colour</label>
-                                    <input id='chooseTextColor' value="#000000" data-jscolor=""
-                                           style="color: rgb(60, 120, 216);">
+                                    <input id='chooseTextColor' value="#000000" data-jscolor="" style="color: rgb(60, 120, 216);">
                                 </div>
                             </div>
-                        </div>
-                    </li>
+                        </li>
+                    </div>
+                </div>
+            </div>
                     <li class="nav-item">
                         <button class="toolbox" id="erase" type="button" onclick="toggleErase(this)"
                                 style="color: rgb(60, 120, 216);">
@@ -519,6 +524,678 @@
                 handle: ".modal-header"
             });
         });
+    </script>
+    <script>
+        $(document).click(function(e) {
+            if ($("#draw").is(e.target)) {
+                sessionStorage.setItem("currentTool", "draw");
+            }
+
+            if ($("#text").is(e.target)) {
+                sessionStorage.setItem("currentTool", "text");
+            }
+
+            if ($("#erase").is(e.target)) {
+                sessionStorage.setItem("currentTool", "erase");
+            }
+
+            if (!$("#draw").is(e.target) && !$("#draw").has(e.target).length) {
+                if ($("#draw").attr("aria-expanded") == 'true') {
+                    document.querySelector('#draw').click();
+                }
+            }
+
+            if (!$("#text").is(e.target) && !$("#text").has(e.target).length) {
+                if ($("#text").attr("aria-expanded") == 'true') {
+                    document.querySelector('#text').click();
+                }
+            }
+
+
+
+
+        });
+    </script>
+    <script>
+    const tour = new Shepherd.Tour({
+        useModalOverlay: true,
+        defaultStepOptions: {
+            exitOnEsc: true
+        }
+    });
+
+    tour.addStep({
+        id: 'begin',
+        text: "Welcome to the tutorial, this will help you to understand features in Notely's pages. Due to a bug shepherd js has, press f10 if the tutorial is not loaded",
+        scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+        },
+        beforeShowPromise: function() {
+            return new Promise(function(resolve) {
+                sessionStorage.removeItem("codeEditorCheck");
+                resolve();
+            });
+        },
+        buttons: [
+            {
+                 text: 'Exit',
+                 action: tour.cancel
+            },
+            {
+                 text: 'Next',
+                 action: tour.next
+            }
+        ],
+    });
+
+    tour.addStep({
+        id: 'clearAll',
+        text: 'This button clears the whole page.',
+        scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+        },
+        attachTo: {
+            element: '#clearAll',
+            on: 'top'
+        },
+        buttons: [
+            {
+                 text: 'Exit',
+                 action: tour.cancel
+            },
+            {
+                 text: 'Back',
+                 action: tour.back
+            },
+            {
+                 text: 'Next',
+                 action: tour.next
+            }
+        ],
+    });
+
+    tour.addStep({
+        id: 'undo',
+        text: 'This button undo the last input on the canvas.',
+        scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+        },
+        attachTo: {
+            element: '#undo',
+            on: 'top'
+        },
+        buttons: [
+            {
+                 text: 'Exit',
+                 action: tour.cancel
+            },
+            {
+                 text: 'Back',
+                 action: tour.back
+            },
+            {
+                 text: 'Next',
+                 action: tour.next
+            }
+        ],
+    });
+
+    tour.addStep({
+        id: 'redo',
+        text: 'This button redo the previous undo.',
+        scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+        },
+        attachTo: {
+            element: '#redo',
+            on: 'top'
+        },
+        buttons: [
+            {
+                 text: 'Exit',
+                 action: tour.cancel
+            },
+            {
+                 text: 'Back',
+                 action: tour.back
+            },
+            {
+                 text: 'Next',
+                 action: tour.next
+            }
+        ],
+    });
+
+    tour.addStep({
+        id: 'select',
+        text: 'This button gives mouse the ability to select all included inputs.',
+        scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+        },
+        attachTo: {
+            element: '#select',
+            on: 'top'
+        },
+        buttons: [
+            {
+                 text: 'Exit',
+                 action: tour.cancel
+            },
+            {
+                 text: 'Back',
+                 action: tour.back
+            },
+            {
+                 text: 'Next',
+                 action: tour.next
+            }
+        ],
+    });
+
+    tour.addStep({
+        id: 'draw',
+        text: 'This button gives the mouse the ability to draw on the canvas.',
+        scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+        },
+        attachTo: {
+            element: '#draw',
+            on: 'top'
+        },
+        buttons: [
+            {
+                 text: 'Exit',
+                 action: tour.cancel
+            },
+            {
+                 text: 'Back',
+                 action: tour.back
+            },
+            {
+                 text: 'Next',
+                 action: tour.next
+            }
+        ],
+    });
+
+    tour.addStep({
+        id: 'text',
+        text: 'This button gives the mouse the ability to create a text field.',
+        scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+        },
+        attachTo: {
+            element: '#text',
+            on: 'top'
+        },
+        buttons: [
+            {
+                 text: 'Exit',
+                 action: tour.cancel
+            },
+            {
+                 text: 'Back',
+                 action: tour.back
+            },
+            {
+                 text: 'Next',
+                 action: tour.next
+            }
+        ],
+    });
+
+    tour.addStep({
+        id: 'erase',
+        text: 'This button gives mouse the ability to erase pixels.',
+        scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+        },
+        attachTo: {
+            element: '#erase',
+            on: 'top'
+        },
+        buttons: [
+            {
+                 text: 'Exit',
+                 action: tour.cancel
+            },
+            {
+                 text: 'Back',
+                 action: tour.back
+            },
+            {
+                 text: 'Next',
+                 action: tour.next
+            }
+        ],
+    });
+
+    tour.addStep({
+        id: 'upload',
+        text: 'This button imports a selected image into the canvas.',
+        scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+        },
+        attachTo: {
+            element: '#upload',
+            on: 'top'
+        },
+        buttons: [
+            {
+                 text: 'Exit',
+                 action: tour.cancel
+            },
+            {
+                 text: 'Back',
+                 action: tour.back
+            },
+            {
+                 text: 'Next',
+                 action: tour.next
+            }
+        ],
+    });
+
+    tour.addStep({
+        id: 'table',
+        text: 'This button insert a table into the canvas.',
+        scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+        },
+        attachTo: {
+            element: '#table',
+            on: 'top'
+        },
+        buttons: [
+            {
+                 text: 'Exit',
+                 action: tour.cancel
+            },
+            {
+                 text: 'Back',
+                 action: tour.back
+            },
+            {
+                 text: 'Next',
+                 action: tour.next
+            }
+        ],
+    });
+
+    tour.addStep({
+        id: 'showCodeEditor',
+        text: 'This button creates a code editor on the canvas.',
+        scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+        },
+        attachTo: {
+            element: '#showCodeEditor',
+            on: 'top'
+        },
+        beforeShowPromise: function() {
+            return new Promise(function(resolve) {
+                if (sessionStorage.getItem("codeEditorCheck") == "true") {
+                    document.querySelector('#codeEditor > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > button:nth-child(2)').click();
+                    sessionStorage.removeItem("codeEditorCheck");
+                }
+                resolve();
+            });
+        },
+        buttons: [
+            {
+                 text: 'Exit',
+                 action: tour.cancel
+            },
+            {
+                 text: 'Back',
+                 action: tour.back
+            },
+            {
+                 text: 'Next',
+                 action: tour.next
+            }
+        ],
+
+    });
+
+    tour.addStep({
+        id: 'codeEditor',
+        text: 'By clicking the name of the code editor twice it allows you to rename it',
+        scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+        },
+        attachTo: {
+            element: '.editorTab',
+            on: 'top'
+        },
+        beforeShowPromise: function() {
+            return new Promise(function(resolve) {
+                if (sessionStorage.getItem("codeEditorCheck") == null) {
+                    document.querySelector('#showCodeEditor').click();
+                    sessionStorage.setItem("codeEditorCheck", "true");
+                }
+                resolve();
+            });
+        },
+        buttons: [
+            {
+                 text: 'Exit',
+                 action: tour.cancel
+            },
+            {
+                 text: 'Back',
+                 action: tour.back
+            },
+            {
+                 text: 'Next',
+                 action: tour.next
+            }
+        ],
+    });
+
+    tour.addStep({
+        id: 'moreTab',
+        text: 'By clicking the button it allows you to add a new tab',
+        scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+        },
+        attachTo: {
+            element: '#add-tab-btn',
+            on: 'top'
+        },
+        beforeShowPromise: function() {
+            return new Promise(function(resolve) {
+                if (sessionStorage.getItem("codeEditorCheck") == null) {
+                    document.querySelector('#showCodeEditor').click();
+                    sessionStorage.setItem("codeEditorCheck", "true");
+                }
+                resolve();
+            });
+        },
+        buttons: [
+            {
+                 text: 'Exit',
+                 action: tour.cancel
+            },
+            {
+                 text: 'Back',
+                 action: tour.back
+            },
+            {
+                 text: 'Next',
+                 action: tour.next
+            }
+        ],
+    });
+
+    tour.addStep({
+        id: 'codeEdHelp',
+        text: 'More help can be found here',
+        scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+        },
+        attachTo: {
+            element: '#help_btn',
+            on: 'top'
+        },
+        beforeShowPromise: function() {
+            return new Promise(function(resolve) {
+                if (sessionStorage.getItem("codeEditorCheck") == null) {
+                    document.querySelector('#showCodeEditor').click();
+                    sessionStorage.setItem("codeEditorCheck", "true");
+                }
+                resolve();
+            });
+        },
+        buttons: [
+            {
+                 text: 'Exit',
+                 action: tour.cancel
+            },
+            {
+                 text: 'Back',
+                 action: tour.back
+            },
+            {
+                 text: 'Next',
+                 action: tour.next
+            }
+        ],
+    });
+
+    tour.addStep({
+        id: 'showTemplate',
+        text: 'This tool allows you to group selected canvas objects together for duplications.',
+        scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+        },
+        attachTo: {
+            element: '#template',
+            on: 'top'
+        },
+        beforeShowPromise: function() {
+            return new Promise(function(resolve) {
+                if (sessionStorage.getItem("codeEditorCheck") == "true") {
+                    document.querySelector('#codeEditor > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > button:nth-child(2)').click();
+                    sessionStorage.removeItem("codeEditorCheck");
+                }
+                resolve();
+            });
+        },
+        buttons: [
+            {
+                 text: 'Exit',
+                 action: tour.cancel
+            },
+            {
+                 text: 'Back',
+                 action: tour.back
+            },
+            {
+                 text: 'Next',
+                 action: tour.next
+            }
+        ],
+    });
+
+    tour.addStep({
+        id: 'templateExplain',
+        text: 'By clicking Apply Template Notely will store the canvas objects that you have already selected',
+        scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+        },
+        attachTo: {
+            element: '#addTemplate',
+            on: 'top'
+        },
+        beforeShowPromise: function() {
+            return new Promise(function(resolve) {
+                if (sessionStorage.getItem("codeEditorCheck") == null) {
+                    document.querySelector('#template').click();
+                    sessionStorage.setItem("codeEditorCheck", "true");
+                }
+                resolve();
+            });
+        },
+        buttons: [
+            {
+                 text: 'Exit',
+                 action: tour.cancel
+            },
+            {
+                 text: 'Back',
+                 action: tour.back
+            },
+            {
+                 text: 'Next',
+                 action: tour.next
+            }
+        ],
+    });
+
+    tour.addStep({
+        id: 'templateHelp',
+        text: 'More help can be found here',
+        scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+        },
+        attachTo: {
+            element: '#helpTool',
+            on: 'top'
+        },
+        beforeShowPromise: function() {
+            return new Promise(function(resolve) {
+                if (sessionStorage.getItem("codeEditorCheck") == null) {
+                    document.querySelector('#template').click();
+                    sessionStorage.setItem("codeEditorCheck", "true");
+                }
+                resolve();
+            });
+        },
+        buttons: [
+            {
+                 text: 'Exit',
+                 action: tour.cancel
+            },
+            {
+                 text: 'Back',
+                 action: tour.back
+            },
+            {
+                 text: 'Next',
+                 action: tour.next
+            }
+        ],
+    });
+
+    tour.addStep({
+        id: 'showShare',
+        text: 'To share the page with others, press this.',
+        scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+        },
+        attachTo: {
+            element: '#sharePage',
+            on: 'top'
+        },
+        beforeShowPromise: function() {
+            return new Promise(function(resolve) {
+                if (sessionStorage.getItem("codeEditorCheck") == "true") {
+                    document.querySelector('#templateModal > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > button:nth-child(2)').click();
+                    sessionStorage.removeItem("codeEditorCheck");
+                }
+                resolve();
+            });
+        },
+        buttons: [
+            {
+                 text: 'Exit',
+                 action: tour.cancel
+            },
+            {
+                 text: 'Back',
+                 action: tour.back
+            },
+            {
+                 text: 'Next',
+                 action: tour.next
+            }
+        ],
+    });
+
+    tour.addStep({
+        id: 'shareExplain',
+        text: "Enters username to find internal user. Pages can also be shared externally by emails, simply enters them.",
+        scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+        },
+        attachTo: {
+            element: 'div.userEmail:nth-child(2)',
+            on: 'top'
+        },
+        beforeShowPromise: function() {
+            return new Promise(function(resolve) {
+                if (sessionStorage.getItem("codeEditorCheck") == null) {
+                    document.querySelector('#sharePage').click();
+                    sessionStorage.setItem("codeEditorCheck", "true");
+                }
+                resolve();
+            });
+        },
+        buttons: [
+            {
+                 text: 'Exit',
+                 action: tour.cancel
+            },
+            {
+                 text: 'Back',
+                 action: tour.back
+            },
+            {
+                 text: 'Next',
+                 action: tour.next
+            }
+        ],
+    });
+
+    tour.addStep({
+        id: 'tutorial',
+        text: 'That is the end of the tutorial, if you want to watch it again please click this button',
+        scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+        },
+        attachTo: {
+            element: 'body > button:nth-child(12)',
+            on: 'bottom'
+        },
+        beforeShowPromise: function() {
+            return new Promise(function(resolve) {
+                document.querySelector('#shareModal > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > button:nth-child(2)').click();
+                sessionStorage.removeItem("codeEditorCheck");
+                resolve();
+            });
+        },
+        buttons: [
+            {
+                 text: 'Back',
+                 action: tour.back
+            },
+            {
+                 text: 'Done',
+                 action: tour.complete
+            }
+        ],
+    });
+
+
+    if (localStorage.getItem("seen_tour") == null) {
+        tour.start();
+        localStorage.setItem("seen_tour", "true");
+    }
+
+    function startTour() {
+        tour.start();
+    }
     </script>
 
 {% endblock %}

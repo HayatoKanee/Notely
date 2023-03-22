@@ -1,0 +1,15 @@
+.accordion.accordion-flush {
+    --bs-accordion-bg: transparent;
+    --bs-accordion-transition: color 0.35s ease-in-out,
+        background-color 0.35s ease-in-out,
+        border-color 0.35s ease-in-out,
+        box-shadow 0.35s ease-in-out,
+        border-radius 0.35s ease;
+    display: flex;
+}
+
+.accordion.accordion-flush .accordion-item {
+    flex-direction: row;
+    min-width: min-content;
+}
+
