@@ -302,23 +302,23 @@
             });
             const t_select2 = new TomSelect('#search-bar', {
                 valueField: 'id',
-                searchField: 'id',
+                searchField: 'page_number',
                 options: [
                     {% for page in viewable_pages %}
                         {% if page.thumbnail %}
-                            {id: "{{ page.id }}", image: "{{ page.thumbnail.url }}"},
+                            {id: "{{ page.id }}", image: "{{ page.thumbnail.url }}", page_number: "{{page.get_page_number}}"},
                         {% endif %}
                     {% endfor %}
                 ],
                 render: {
                     option: function (data, escape) {
                         return '<div>' +
-                            '<span class="id">' + escape(data.id) + '</span>' +
+                            '<span class="id">' + escape(data.page_number) + '</span>' +
                             '<span>' + '<img src="' + escape(data.image) + '">' + '</span>' +
                             '</div>';
                     },
                     item: function (data, escape) {
-                        return '<div>' + escape(data.id) + '</div>';
+                        return '<div>' + escape(data.page_number) + '</div>';
                     }
                 }
 
