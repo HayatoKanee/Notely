@@ -640,6 +640,14 @@ def tutorial(request):
     return render(request, 'tutorial.html')
 
 
+def about(request):
+    return render(request, 'about.html')
+
+
+def privacy_policy(request):
+    return render(request, 'privacy_policy.html')
+
+
 @login_required
 def confirm_share_page(request, page_id):
     return confirm_share_obj(request, page_id, Page)
