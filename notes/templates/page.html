@@ -186,17 +186,17 @@
 
             if ($("#undo").is(e.target)) {
                 if (sessionStorage.getItem("currentTool") == 'draw') {
-                    document.querySelector('#draw').click();
+                    document.querySelector('#draw').onclick();
                 } else if (sessionStorage.getItem("currentTool") == 'text') {
-                    document.querySelector('#text').click();
+                    document.querySelector('#text').onclick();
                 }
             }
 
             if ($("#redo").is(e.target)) {
                 if (sessionStorage.getItem("currentTool") == 'draw') {
-                    document.querySelector('#draw').click();
+                    document.querySelector('#draw').onclick();
                 } else if (sessionStorage.getItem("currentTool") == 'text') {
-                    document.querySelector('#text').click();
+                    document.querySelector('#text').onclick();
                 }
             }
 
@@ -217,7 +217,17 @@
             behavior: 'smooth',
             block: 'center'
         },
+        beforeShowPromise: function() {
+            return new Promise(function(resolve) {
+                sessionStorage.removeItem("codeEditorCheck");
+                resolve();
+            });
+        },
         buttons: [
+            {
+                 text: 'Exit',
+                 action: tour.cancel
+            },
             {
                  text: 'Next',
                  action: tour.next
@@ -238,6 +248,10 @@
         },
         buttons: [
             {
+                 text: 'Exit',
+                 action: tour.cancel
+            },
+            {
                  text: 'Back',
                  action: tour.back
             },
@@ -250,7 +264,7 @@
 
     tour.addStep({
         id: 'undo',
-        text: 'This button undo the page.',
+        text: 'This button undo the last input on the canvas.',
         scrollTo: {
             behavior: 'smooth',
             block: 'center'
@@ -260,6 +274,10 @@
             on: 'top'
         },
         buttons: [
+            {
+                 text: 'Exit',
+                 action: tour.cancel
+            },
             {
                  text: 'Back',
                  action: tour.back
@@ -273,7 +291,7 @@
 
     tour.addStep({
         id: 'redo',
-        text: 'This button redo the page.',
+        text: 'This button redo the previous undo.',
         scrollTo: {
             behavior: 'smooth',
             block: 'center'
@@ -283,6 +301,10 @@
             on: 'top'
         },
         buttons: [
+            {
+                 text: 'Exit',
+                 action: tour.cancel
+            },
             {
                  text: 'Back',
                  action: tour.back
@@ -307,6 +329,10 @@
         },
         buttons: [
             {
+                 text: 'Exit',
+                 action: tour.cancel
+            },
+            {
                  text: 'Back',
                  action: tour.back
             },
@@ -329,6 +355,10 @@
             on: 'top'
         },
         buttons: [
+            {
+                 text: 'Exit',
+                 action: tour.cancel
+            },
             {
                  text: 'Back',
                  action: tour.back
@@ -353,6 +383,10 @@
         },
         buttons: [
             {
+                 text: 'Exit',
+                 action: tour.cancel
+            },
+            {
                  text: 'Back',
                  action: tour.back
             },
@@ -375,6 +409,10 @@
             on: 'top'
         },
         buttons: [
+            {
+                 text: 'Exit',
+                 action: tour.cancel
+            },
             {
                  text: 'Back',
                  action: tour.back
@@ -399,6 +437,10 @@
         },
         buttons: [
             {
+                 text: 'Exit',
+                 action: tour.cancel
+            },
+            {
                  text: 'Back',
                  action: tour.back
             },
@@ -422,6 +464,10 @@
         },
         buttons: [
             {
+                 text: 'Exit',
+                 action: tour.cancel
+            },
+            {
                  text: 'Back',
                  action: tour.back
             },
@@ -443,7 +489,20 @@
             element: '#showCodeEditor',
             on: 'top'
         },
+        beforeShowPromise: function() {
+            return new Promise(function(resolve) {
+                if (sessionStorage.getItem("codeEditorCheck") == "true") {
+                    document.querySelector('#codeEditor > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > button:nth-child(2)').click();
+                    sessionStorage.removeItem("codeEditorCheck");
+                }
+                resolve();
+            });
+        },
         buttons: [
+            {
+                 text: 'Exit',
+                 action: tour.cancel
+            },
             {
                  text: 'Back',
                  action: tour.back
@@ -458,7 +517,7 @@
 
     tour.addStep({
         id: 'codeEditor',
-        text: 'Features about the Code Editor... To be continue',
+        text: 'By clicking the name of the code editor twice it allows you to rename it',
         scrollTo: {
             behavior: 'smooth',
             block: 'center'
@@ -469,11 +528,18 @@
         },
         beforeShowPromise: function() {
             return new Promise(function(resolve) {
-                document.querySelector('#showCodeEditor').click();
+                if (sessionStorage.getItem("codeEditorCheck") == null) {
+                    document.querySelector('#showCodeEditor').click();
+                    sessionStorage.setItem("codeEditorCheck", "true");
+                }
                 resolve();
             });
         },
         buttons: [
+            {
+                 text: 'Exit',
+                 action: tour.cancel
+            },
             {
                  text: 'Back',
                  action: tour.back
@@ -499,6 +565,7 @@
         beforeShowPromise: function() {
             return new Promise(function(resolve) {
                 document.querySelector('#codeEditor > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > button:nth-child(2)').click();
+                sessionStorage.removeItem("codeEditorCheck");
                 resolve();
             });
         },
@@ -509,7 +576,7 @@
             },
             {
                  text: 'Done',
-                 action: tour.next
+                 action: tour.complete
             }
         ],
     });

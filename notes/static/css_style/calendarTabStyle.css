@@ -8,6 +8,19 @@
     border: 5px;
     
 }
+
+.wrapper {
+    display: flex;
+}
+
+.filter {
+    flex: 1;
+}
+
+#calendar {
+    flex: 1;
+}
+
 .calendar {
     width: 98%;
     margin: auto;

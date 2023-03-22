@@ -1,6 +1,7 @@
 {% extends 'base_content.html' %}
  {% block content %}
      <div class="container">
+         <div class="wrapper">
             <div class="filter">
                 <h3>Filter</h3>
                 <div class="event_filter_wrapper">
@@ -15,6 +16,7 @@
                 {% endfor %}
             </div>
             <div id='calendar' style="color: rgb(245, 93, 66)"></div>
+         </div>
                 <button id="addEvent" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#eventModal" onclick="applyTemp()">
                     Add New Event
                 </button>
@@ -122,7 +124,6 @@
                     tags.push($(this).val());
                 }
             });
-            //alert(tags);
 
             if (tags.length) {
                 if (info.event.extendedProps.tags.length == 0) {
@@ -134,7 +135,6 @@
             if (!display) {
                 display = "hidden";
             }
-            //alert(display);
 
             return display;
         },
@@ -284,7 +284,17 @@
             behavior: 'smooth',
             block: 'center'
         },
+        beforeShowPromise: function() {
+            return new Promise(function(resolve) {
+                sessionStorage.removeItem("eventModalCheck");
+                resolve();
+            });
+        },
         buttons: [
+            {
+                 text: 'Exit',
+                 action: tourCalendar.cancel
+            },
             {
                  text: 'Next',
                  action: tourCalendar.next
@@ -304,6 +314,10 @@
             on: 'right'
         },
         buttons: [
+            {
+                 text: 'Exit',
+                 action: tourCalendar.cancel
+            },
             {
                  text: 'Back',
                  action: tourCalendar.back
@@ -328,6 +342,10 @@
         },
         buttons: [
             {
+                 text: 'Exit',
+                 action: tourCalendar.cancel
+            },
+            {
                  text: 'Back',
                  action: tourCalendar.back
             },
@@ -351,6 +369,10 @@
         },
         buttons: [
             {
+                 text: 'Exit',
+                 action: tourCalendar.cancel
+            },
+            {
                  text: 'Back',
                  action: tourCalendar.back
             },
@@ -372,7 +394,20 @@
             element: '#addEvent',
             on: 'top'
         },
+        beforeShowPromise: function() {
+            return new Promise(function(resolve) {
+                if (sessionStorage.getItem("eventModalCheck") == 'true') {
+                    document.querySelector('#addEvent').click();
+                    sessionStorage.removeItem("eventModalCheck");
+                }
+                resolve();
+            });
+        },
         buttons: [
+            {
+                 text: 'Exit',
+                 action: tourCalendar.cancel
+            },
             {
                  text: 'Back',
                  action: tourCalendar.back
@@ -385,23 +420,30 @@
     });
 
     tourCalendar.addStep({
-        id: 'eventModal',
+        id: 'eventModalPage',
         text: "This is the form to complete. Title, Start Time and End Time are needed for the form to be valid",
         scrollTo: {
             behavior: 'smooth',
             block: 'center'
         },
         attachTo: {
-            element: '#eventModal > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > h5:nth-child(1)',
-            on: 'bottom'
+            element: '#eventModal > div:nth-child(1) > div:nth-child(1) > div:nth-child(2)',
+            on: 'left'
         },
         beforeShowPromise: function() {
             return new Promise(function(resolve) {
-                document.querySelector('#addEvent').click();
+                if (sessionStorage.getItem("eventModalCheck") == null) {
+                    document.querySelector('#addEvent').click();
+                    sessionStorage.setItem("eventModalCheck", "true");
+                }
                 resolve();
             });
         },
         buttons: [
+            {
+                 text: 'Exit',
+                 action: tourCalendar.cancel
+            },
             {
                  text: 'Back',
                  action: tourCalendar.back
@@ -426,6 +468,10 @@
         },
         buttons: [
             {
+                 text: 'Exit',
+                 action: tourCalendar.cancel
+            },
+            {
                  text: 'Back',
                  action: tourCalendar.back
             },
@@ -447,7 +493,20 @@
             element: 'button.btn-primary:nth-child(8)',
             on: 'top'
         },
+        beforeShowPromise: function() {
+            return new Promise(function(resolve) {
+                if (sessionStorage.getItem("eventModalCheck") == null) {
+                    document.querySelector('#addEvent').click();
+                    sessionStorage.setItem("eventModalCheck", "true");
+                }
+                resolve();
+            });
+        },
         buttons: [
+            {
+                 text: 'Exit',
+                 action: tourCalendar.cancel
+            },
             {
                  text: 'Back',
                  action: tourCalendar.back
@@ -473,6 +532,7 @@
         beforeShowPromise: function() {
             return new Promise(function(resolve) {
                 document.querySelector('#eventModal > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > button:nth-child(2)').click();
+                sessionStorage.removeItem("eventModalCheck");
                 resolve();
             });
         },
@@ -483,7 +543,7 @@
             },
             {
                  text: 'Done',
-                 action: tourCalendar.next
+                 action: tourCalendar.complete
             }
         ],
     });
