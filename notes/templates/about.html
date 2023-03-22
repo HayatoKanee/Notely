@@ -1,0 +1,79 @@
+{% extends 'base_content.html' %}
+{% block content %}
+{% load static %}
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title class="my-header">About</title>
+    </head>
+    <body class="page">
+    <h1 class="my-header">About</h1><br/>
+
+    <div class="card-columns">
+        <div class="my-card">
+            <div class="row">
+                <div class="col-sm-6">
+                    <header class="my-header">Online Note Taking Website</header>
+                    <body>
+                    Supporting both drawing and typing function, make things easy for u to take note.....
+                    Schedule events and share it to friends.....
+                    and more!!
+                    </body>
+                    
+                </div>
+                <div class="col-sm-6">
+                    
+                    <img src="{% static "home_page_image/takingnote.jpg" %}" class="img-fluid">
+                </div>
+            </div>
+        </div>
+        <div class="my-card">
+            <div class="row">
+                <div class="col-sm-6">
+                    <img src="{% static "home_page_image/canvas.jpg" %}" class="img-fluid">
+                </div>
+                <div class="col-sm-6">
+                    <header class="my-header">Take down your ideas with our magic canvas</header>
+                    <body>
+                    There are multiple features to support your learning!!
+                    draw, type, math equations, tables, code and more.....
+                    </body>
+                </div>
+            </div>
+        </div>
+        <div class="my-card">
+            <div class="row">
+                <div class="col-sm-6">
+                    <header class="my-header">Book an event for your note</header>
+                    <body>
+                    You can book an event with calendar for notes. 
+                    Also set reminder and share the event!
+                    </body>
+                </div>
+                <div class="col-sm-6">
+                    <img src="{% static "home_page_image/bookingevent.jpg" %}" class="img-fluid">
+                </div>
+            </div>
+        </div>
+        <div class="my-card">
+            <div class="row">
+                <div class="col-sm-6">
+                    <img src="{% static "home_page_image/sharingnote.jpg" %}" class="img-fluid">
+                </div>
+                <div class="col-sm-6">
+                    <header class="my-header">Taking notes with your friends</header>
+                    <body>
+                    User can also share notes and events with others.
+                    The pages support you and your friends to edit the file together as well, 
+                    works perfect for your group meetings and projects!
+                    </body>
+                </div>
+            </div>
+        </div>
+    </div>
+     
+</body>
+</html>
+
+{% endblock %}
