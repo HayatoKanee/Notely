@@ -67,6 +67,7 @@
     <script>
         let event_id;
         const calendarEl = document.getElementById('calendar');
+        var tagList = [];
         const calendar = new FullCalendar.Calendar(calendarEl, {
             headerToolbar: {
                 left: 'today prev,next tutorial',
@@ -512,6 +513,7 @@
             element: 'a.btn',
             on: 'top'
         },
+
         buttons: [
             {
                  text: 'Exit',
