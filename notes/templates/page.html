@@ -1130,6 +1130,78 @@
     });
 
     tour.addStep({
+        id: 'showEvent',
+        text: 'This tool allows you to link the page to a created event.',
+        scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+        },
+        attachTo: {
+            element: '#event',
+            on: 'top'
+        },
+        beforeShowPromise: function() {
+            return new Promise(function(resolve) {
+                if (sessionStorage.getItem("eventEditorCheck") == "true") {
+                    document.querySelector('button.btn-close:nth-child(1)').click();
+                    sessionStorage.removeItem("eventEditorCheck");
+                }
+                resolve();
+            });
+        },
+        buttons: [
+            {
+                 text: 'Exit',
+                 action: tour.cancel
+            },
+            {
+                 text: 'Back',
+                 action: tour.back
+            },
+            {
+                 text: 'Next',
+                 action: tour.next
+            }
+        ],
+    });
+
+    tour.addStep({
+        id: 'eventDetail',
+        text: 'Click on the event you want to link with and press Add New Event',
+        scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+        },
+        attachTo: {
+            element: '#calendar',
+            on: 'top'
+        },
+        beforeShowPromise: function() {
+            return new Promise(function(resolve) {
+                if (sessionStorage.getItem("eventEditorCheck") == null) {
+                    document.querySelector('#event').click();
+                    sessionStorage.setItem("eventEditorCheck", "true");
+                }
+                resolve();
+            });
+        },
+        buttons: [
+            {
+                 text: 'Exit',
+                 action: tour.cancel
+            },
+            {
+                 text: 'Back',
+                 action: tour.back
+            },
+            {
+                 text: 'Next',
+                 action: tour.next
+            }
+        ],
+    });
+
+    tour.addStep({
         id: 'tutorial',
         text: 'That is the end of the tutorial, if you want to watch it again please click this button',
         scrollTo: {
@@ -1142,8 +1214,8 @@
         },
         beforeShowPromise: function() {
             return new Promise(function(resolve) {
-                document.querySelector('#shareModal > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > button:nth-child(2)').click();
-                sessionStorage.removeItem("codeEditorCheck");
+                document.querySelector('button.btn-close:nth-child(1)').click();
+                sessionStorage.removeItem("eventEditorCheck");
                 resolve();
             });
         },
