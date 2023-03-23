@@ -994,6 +994,10 @@
                     document.querySelector('#codeEditor > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > button:nth-child(2)').click();
                     sessionStorage.removeItem("codeEditorCheck");
                 }
+                if (sessionStorage.getItem("templateEditorCheck") == "true") {
+                    document.querySelector('#templateModal > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > button:nth-child(2)').click();
+                    sessionStorage.removeItem("templateEditorCheck");
+                }
                 resolve();
             });
         },
@@ -1026,9 +1030,9 @@
         },
         beforeShowPromise: function() {
             return new Promise(function(resolve) {
-                if (sessionStorage.getItem("codeEditorCheck") == null) {
+                if (sessionStorage.getItem("templateEditorCheck") == null) {
                     document.querySelector('#template').click();
-                    sessionStorage.setItem("codeEditorCheck", "true");
+                    sessionStorage.setItem("templateEditorCheck", "true");
                 }
                 resolve();
             });
@@ -1062,9 +1066,9 @@
         },
         beforeShowPromise: function() {
             return new Promise(function(resolve) {
-                if (sessionStorage.getItem("codeEditorCheck") == null) {
+                if (sessionStorage.getItem("templateEditorCheck") == null) {
                     document.querySelector('#template').click();
-                    sessionStorage.setItem("codeEditorCheck", "true");
+                    sessionStorage.setItem("templateEditorCheck", "true");
                 }
                 resolve();
             });
@@ -1087,7 +1091,7 @@
 
     tour.addStep({
         id: 'showShare',
-        text: 'To share the page with others, press this.',
+        text: 'Enters username to find internal user. Pages can also be shared externally by emails, simply enters them.',
         scrollTo: {
             behavior: 'smooth',
             block: 'center'
@@ -1098,45 +1102,13 @@
         },
         beforeShowPromise: function() {
             return new Promise(function(resolve) {
-                if (sessionStorage.getItem("codeEditorCheck") == "true") {
+                if (sessionStorage.getItem("templateEditorCheck") == "true") {
                     document.querySelector('#templateModal > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > button:nth-child(2)').click();
-                    sessionStorage.removeItem("codeEditorCheck");
+                    sessionStorage.removeItem("templateEditorCheck");
                 }
-                resolve();
-            });
-        },
-        buttons: [
-            {
-                 text: 'Exit',
-                 action: tour.cancel
-            },
-            {
-                 text: 'Back',
-                 action: tour.back
-            },
-            {
-                 text: 'Next',
-                 action: tour.next
-            }
-        ],
-    });
-
-    tour.addStep({
-        id: 'shareExplain',
-        text: "Enters username to find internal user. Pages can also be shared externally by emails, simply enters them.",
-        scrollTo: {
-            behavior: 'smooth',
-            block: 'center'
-        },
-        attachTo: {
-            element: 'div.userEmail:nth-child(2)',
-            on: 'top'
-        },
-        beforeShowPromise: function() {
-            return new Promise(function(resolve) {
-                if (sessionStorage.getItem("codeEditorCheck") == null) {
-                    document.querySelector('#sharePage').click();
-                    sessionStorage.setItem("codeEditorCheck", "true");
+                if (sessionStorage.getItem("shareEditorCheck") == "true") {
+                    document.querySelector('#shareModal > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > button:nth-child(2)').click();
+                    sessionStorage.removeItem("shareEditorCheck");
                 }
                 resolve();
             });
